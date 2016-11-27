@@ -1,0 +1,1011 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     47952,       1003]
+NotebookOptionsPosition[     46742,        957]
+NotebookOutlinePosition[     47099,        973]
+CellTagsIndexPosition[     47056,        970]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["FileBrowser", "Title",
+ CellChangeTimes->{{3.68920875917887*^9, 3.689208761609845*^9}}],
+
+Cell["\<\
+A simple finder-like file browser to be dropped into a GUI or project. Has \
+various little customizations that can be added.\
+\>", "Text",
+ CellChangeTimes->{{3.689208763521881*^9, 3.689208804526318*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"FileBrowser", "::", "usage"}], "=", 
+   "\"\<A finder-like file browser\>\""}], ";"}]], "Input",
+ CellChangeTimes->{{3.689208812806552*^9, 3.6892088188703537`*^9}, {
+  3.689209543064836*^9, 3.689209552990572*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Code", "Subsection",
+ ShowGroupOpener->True,
+ InitializationGroup->True,
+ CellChangeTimes->{{3.6892088077898483`*^9, 3.689208808894026*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "@", "FileBrowser"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "FileBrowser", "]"}], "=", "\[IndentingNewLine]", 
+   RowBox[{"Join", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Options", "@", "Pane"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Options", "@", "Framed"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"\"\<MaxLength\>\"", "\[Rule]", "20"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<FrameWidth\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<BarSize\>\"", "\[Rule]", "150"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Function", "\[Rule]", "SystemOpen"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"DeleteCases", "\[Rule]", "\"\<.*\>\""}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<TopBar\>\"", "\[Rule]", "True"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<SideBar\>\"", "\[Rule]", "True"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Show", "\[Rule]", "All"}]}], "\[IndentingNewLine]", "}"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"FileBrowser", "[", "\[IndentingNewLine]", 
+   RowBox[{"directory_", ",", "\[IndentingNewLine]", 
+    RowBox[{"defaultDirectories", ":", 
+     RowBox[{
+      RowBox[{"{", "__String", "}"}], "|", "Automatic"}], ":", "Automatic"}], 
+    ",", "\[IndentingNewLine]", 
+    RowBox[{"ops", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"DynamicModule", "[", 
+   RowBox[{
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"browserMaxFileNameLength", "=", "\[IndentingNewLine]", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "@", "\"\<MaxLength\>\""}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Except", "@", "_Integer"}], "\[Rule]", "20"}]}], 
+        "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserBasePaneNumber", "=", 
+       RowBox[{"OptionValue", "@", "Show"}]}], ",", "browserPaneNumber", ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"browserActiveDirectory", "=", 
+       RowBox[{"ExpandFileName", "@", "directory"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"browserActiveFile", "=", 
+       RowBox[{"{", "\"\<\>\"", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserDirectoryFrameWidth", "=", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "@", "\"\<FrameWidth\>\""}], ",", 
+         RowBox[{
+          RowBox[{"Except", "[", "_Integer", "]"}], "\[Rule]", "250"}]}], 
+        "]"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserSideBarWidth", "=", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "@", "\"\<BarSize\>\""}], ",", 
+         RowBox[{
+          RowBox[{"Except", "[", "_Integer", "]"}], "\[Rule]", "150"}]}], 
+        "]"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserDeleteFilesPattern", "=", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "@", "DeleteCases"}], ",", 
+         RowBox[{"s_String", "\[RuleDelayed]", 
+          RowBox[{"{", "s", "}"}]}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserFileFilterPattern", "=", "\"\<\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"browserOnClickFunction", "=", 
+       RowBox[{"OptionValue", "@", "Function"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"browserWidthHeight", "=", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "@", "ImageSize"}], ",", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"w_", ",", "h_"}], "}"}], "\[RuleDelayed]", 
+            RowBox[{"{", 
+             RowBox[{"w", ",", "h"}], "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"Automatic", "->", 
+            RowBox[{"{", 
+             RowBox[{"500", ",", "250"}], "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"w_", "\[RuleDelayed]", 
+            RowBox[{"{", 
+             RowBox[{"w", ",", "250"}], "}"}]}]}], "\[IndentingNewLine]", 
+          "}"}]}], "\[IndentingNewLine]", "]"}]}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"browserPaneNumber", "=", "browserBasePaneNumber"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"topBar", "=", "\[IndentingNewLine]", 
+          RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Pane", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"Grid", "@", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                   RowBox[{"Dynamic", "@", "browserActiveDirectory"}], ","}], 
+                  "*)"}], "\[IndentingNewLine]", 
+                 RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"InputField", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"browserFileFilterPattern", ",", 
+                    RowBox[{
+                    RowBox[{"(", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"#", "===", "\"\<\>\""}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"browserPaneNumber", "=", 
+                    "browserBasePaneNumber"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"browserPaneNumber", "=", "1"}]}], 
+                    "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"browserFileFilterPattern", "=", "#"}], ";"}], 
+                    ")"}], "&"}]}], "\[IndentingNewLine]", "]"}], ",", 
+                    "\[IndentingNewLine]", "String", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"FieldHint", "\[Rule]", "\"\<Filter by...\>\""}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{"FieldSize", "\[Rule]", "8"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Appearance", "\[Rule]", "\"\<Frameless\>\""}]}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                   
+                   RowBox[{"RoundingRadius", "\[Rule]", "5"}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"FrameStyle", "\[Rule]", 
+                    RowBox[{"GrayLevel", "[", ".8", "]"}]}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Background", "\[Rule]", 
+                    RowBox[{"GrayLevel", "[", ".98", "]"}]}]}], 
+                  "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "}"}], 
+                "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{"Alignment", "\[Rule]", "Right"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"ImageSize", "\[Rule]", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"First", "@", "browserWidthHeight"}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"i_Integer", ":>", "\[IndentingNewLine]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"OptionValue", "@", "\"\<SideBar\>\""}], "//", 
+                    "TrueQ"}], ",", "\[IndentingNewLine]", 
+                    "browserSideBarWidth", ",", "\[IndentingNewLine]", "0"}], 
+                    "]"}], "+", "i"}], ")"}]}]}], "\[IndentingNewLine]", 
+                  "]"}], ",", "Automatic"}], "}"}]}]}], "\[IndentingNewLine]",
+              "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"Background", "\[Rule]", 
+             RowBox[{"GrayLevel", "[", ".9", "]"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"FrameStyle", "\[Rule]", 
+             RowBox[{"GrayLevel", "[", ".4", "]"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"RoundingRadius", "\[Rule]", "3"}]}], 
+           "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"sideBar", "=", 
+          RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Pane", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"Deploy", "@", 
+               RowBox[{"Column", "[", 
+                RowBox[{
+                 RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"d", "=", "d"}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Pane", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"FileBaseName", "@", "d"}], ",", 
+                    "\[IndentingNewLine]", "Full"}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"FrameStyle", "\[Rule]", "None"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Background", "\[Rule]", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"browserActiveDirectory", "===", "d"}], ",", 
+                    RowBox[{"GrayLevel", "[", ".9", "]"}], ",", "None"}], 
+                    "]"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"\"\<MouseClicked\>\"", "\[RuleDelayed]", 
+                    RowBox[{"(", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"browserActiveDirectory", "=", "d"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"browserActiveFile", "=", 
+                    RowBox[{"{", "\"\<\>\"", "}"}]}]}], "\[IndentingNewLine]",
+                     ")"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                   
+                   RowBox[{"{", 
+                    RowBox[{"d", ",", "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "defaultDirectories", ",", "\[IndentingNewLine]", 
+                    RowBox[{"Automatic", "\[RuleDelayed]", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "$HomeDirectory", ",", "\[IndentingNewLine]", 
+                    "$UserDocumentsDirectory", ",", "\[IndentingNewLine]", 
+                    "$UserBaseDirectory"}], "}"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"ItemSize", "\[Rule]", "Full"}]}], 
+                "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{"{", 
+               RowBox[{"browserSideBarWidth", ",", 
+                RowBox[{"Last", "@", "browserWidthHeight"}]}], "}"}]}], 
+             "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"FrameStyle", "->", "None"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"Background", "\[Rule]", 
+             RowBox[{"GrayLevel", "[", ".95", "]"}]}]}], 
+           "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"panes", "=", "\[IndentingNewLine]", 
+          RowBox[{"Dynamic", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Pane", "[", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"Pane", "["}], "*)"}], "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Grid", "[", 
+                RowBox[{
+                 RowBox[{"{", "\[IndentingNewLine]", 
+                  RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"d", "=", 
+                    RowBox[{"FileNameTake", "[", 
+                    RowBox[{"browserActiveDirectory", ",", "i"}], "]"}]}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{"filterPattern", "=", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{"browserFileFilterPattern", ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"_String", "?", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringLength", "@", "#"}], ">", "0"}], "&"}], 
+                    ")"}]}], "\[RuleDelayed]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    "___", "~~", "browserFileFilterPattern", "~~", "___"}], 
+                    ")"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"_", "\[RuleDelayed]", 
+                    RowBox[{"Except", "[", 
+                    RowBox[{"Alternatives", "@@", 
+                    "browserDeleteFilesPattern"}], "]"}]}]}], 
+                    "\[IndentingNewLine]", "}"}]}], "]"}]}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"ListPicker", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "@", "browserActiveFile"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"#", "\[Rule]", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringLength", "@", 
+                    RowBox[{"FileNameTake", "@", "#"}]}], ">", 
+                    "browserMaxFileNameLength"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{
+                    RowBox[{"StringTake", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Floor", "[", 
+                    RowBox[{"browserMaxFileNameLength", "/", "2"}], "]"}], 
+                    "-", "2"}]}], "]"}], "\[IndentingNewLine]", "<>", 
+                    "\"\<...\>\"", "<>", "\[IndentingNewLine]", 
+                    RowBox[{"StringTake", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", 
+                    RowBox[{
+                    RowBox[{"-", 
+                    RowBox[{"Floor", "[", 
+                    RowBox[{"browserMaxFileNameLength", "/", "2"}], "]"}]}], 
+                    "-", "1"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameTake", "@", "#"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ")"}], "&"}], "/@", 
+                    RowBox[{"If", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MatchQ", "[", 
+                    RowBox[{"filterPattern", ",", "_Except"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"fp", "=", 
+                    RowBox[{"First", "@", "filterPattern"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{
+                    RowBox[{"Quiet", "@", 
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*\>\"", ",", "d"}], "]"}]}], ",", 
+                    RowBox[{"_", "?", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"StringMatchQ", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", "fp"}], "]"}], 
+                    "&"}], ")"}]}]}], "]"}]}], "\[IndentingNewLine]", "]"}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{"Cases", "[", 
+                    RowBox[{
+                    RowBox[{"Quiet", "@", 
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*\>\"", ",", "d"}], "]"}]}], ",", 
+                    RowBox[{"_", "?", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"StringMatchQ", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", 
+                    "filterPattern"}], "]"}], "&"}], ")"}]}]}], "]"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], "\[RuleDelayed]", 
+                    RowBox[{"If", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"browserFileFilterPattern", "===", "\"\<\>\""}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{"browserActiveDirectory", "=", 
+                    RowBox[{"DirectoryName", "@", "d"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", "\"\<No files\>\"", "}"}]}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Multiselection", "\[Rule]", "False"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"ImageSize", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"browserDirectoryFrameWidth", ",", 
+                    RowBox[{"Last", "@", "browserWidthHeight"}]}], 
+                    RowBox[{"(*", 
+                    RowBox[{"-", "20"}], "*)"}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Scrollbars", "\[Rule]", "False"}], 
+                    RowBox[{"(*", 
+                    RowBox[{"{", 
+                    RowBox[{"False", ",", "Automatic"}], "}"}], "*)"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Appearance", "\[Rule]", "\"\<Frameless\>\""}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{"browserPaneNumber", ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Except", "@", "_Integer"}], "->", "2"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"n_", "\[RuleDelayed]", 
+                    RowBox[{"Max", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileNameDepth", "@", "browserActiveDirectory"}], 
+                    "-", 
+                    RowBox[{"Max", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"n", ",", "1"}], "}"}]}], "+", "1"}], ",", "2"}], 
+                    "}"}]}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+                    RowBox[{
+                    "FileNameDepth", "@", "browserActiveDirectory"}]}], 
+                    "}"}]}], "\[IndentingNewLine]", "]"}], "}"}], ",", 
+                 RowBox[{"Dividers", "\[Rule]", 
+                  RowBox[{"{", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Array", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#", "\[Rule]", "Gray"}], "&"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{"browserPaneNumber", ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Except", "@", "_Integer"}], "\[RuleDelayed]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"FileNameDepth", "@", "browserActiveDirectory"}], 
+                    "-", "2"}], ")"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"_", "\[Rule]", 
+                    RowBox[{"Max", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"browserPaneNumber", "-", "2"}], ",", "2"}], 
+                    "}"}]}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+                    "2"}], "]"}], ",", 
+                    RowBox[{"{", "}"}]}], "}"}]}]}], "]"}], 
+               "\[IndentingNewLine]", "~", "EventHandler", "~", 
+               "\[IndentingNewLine]", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                  "\"\<MouseClicked\>\"", "\[RuleDelayed]", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CurrentValue", "@", "\"\<MouseClickCount\>\""}], 
+                    ">", "1"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"First", "@", "browserActiveFile"}], "=!=", 
+                    "\"\<\>\""}], "&&", 
+                    RowBox[{"FileExistsQ", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"browserOnClickFunction", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"First", "@", "browserActiveFile"}], "=!=", 
+                    "\"\<\>\""}], "&&", 
+                    RowBox[{"FileExistsQ", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"DirectoryQ", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"browserActiveDirectory", "=", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DirectoryName", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}], "=!=", 
+                    "browserActiveDirectory"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"browserActiveDirectory", "=", 
+                    RowBox[{"DirectoryName", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                  "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"First", "@", "browserActiveFile"}], "=!=", 
+                    "\"\<\>\""}], "&&", 
+                    RowBox[{"FileExistsQ", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"browserOnClickFunction", "@", 
+                    RowBox[{"First", "@", "browserActiveFile"}]}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"\"\<BackspaceKeyDown\>\"", "\[RuleDelayed]", 
+                   RowBox[{"(", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"browserActiveDirectory", "=", 
+                    RowBox[{
+                    "ParentDirectory", "@", "browserActiveDirectory"}]}], ";",
+                     "\[IndentingNewLine]", 
+                    RowBox[{"browserActiveFile", "=", 
+                    RowBox[{"{", "\"\<\>\"", "}"}]}]}], "\[IndentingNewLine]",
+                     ")"}]}], ",", "\[IndentingNewLine]", 
+                  RowBox[{"PassEventsDown", "\[Rule]", "True"}]}], 
+                 "\[IndentingNewLine]", "}"}], "\[IndentingNewLine]", "}"}]}],
+               ",", "\[IndentingNewLine]", 
+              RowBox[{"FilterRules", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"FilterRules", "[", 
+                 RowBox[{
+                  RowBox[{"{", "ops", "}"}], ",", 
+                  RowBox[{"Except", "@", "ImageSize"}]}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Options", "@", "Pane"}]}], "\[IndentingNewLine]", 
+               "]"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"ImageSize", "\[Rule]", "browserWidthHeight"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"AppearanceElements", "\[Rule]", "None"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"ScrollPosition", "\[Rule]", "\[IndentingNewLine]", 
+               RowBox[{"With", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"testPoint", "=", "\[IndentingNewLine]", 
+                   RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"First", "@", "browserWidthHeight"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Except", "@", "_Integer"}], "\[Rule]", "0"}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{"w_", "\[RuleDelayed]", 
+                    RowBox[{"(", 
+                    RowBox[{"w", "/", "browserDirectoryFrameWidth"}], 
+                    ")"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+                  "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"MatchQ", "[", 
+                    RowBox[{"browserPaneNumber", ",", 
+                    RowBox[{"Except", "@", "_Integer"}]}], "]"}], "||", 
+                    RowBox[{"browserPaneNumber", ">", "testPoint"}]}], ")"}], 
+                    "\[IndentingNewLine]", "&&", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"FileNameDepth", "@", "browserActiveDirectory"}], 
+                    "-", "1"}], ")"}], ">", "testPoint"}]}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Scaled", "@", "1"}], ",", "0"}], "}"}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"{", 
+                    RowBox[{"0", ",", "0"}], "}"}]}], "]"}]}], 
+                "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"TrackedSymbols", "\[RuleDelayed]", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+              "browserActiveDirectory", ",", "\[IndentingNewLine]", 
+               "browserActiveFile", ",", "\[IndentingNewLine]", 
+               "browserPaneNumber"}], "}"}]}]}], "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{",", "\[IndentingNewLine]", 
+             RowBox[{"UpdateInterval", "\[Rule]", ".01"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"TrackedSymbols", "\[RuleDelayed]", 
+              RowBox[{"{", "browserActiveDirectory", "}"}]}]}], "*)"}], 
+           "\[IndentingNewLine]", "]"}]}]}], 
+        RowBox[{"(*", 
+         RowBox[{"//", 
+          RowBox[{
+           RowBox[{"Framed", "[", 
+            RowBox[{"#", ",", "\[IndentingNewLine]", 
+             RowBox[{"FrameMargins", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"2", ",", "0"}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}]}], "}"}]}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"FrameStyle", "\[Rule]", "Gray"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"RoundingRadius", "\[Rule]", "5"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Background", "\[Rule]", "White"}]}], 
+            "\[IndentingNewLine]", "]"}], "&"}]}], "*)"}], 
+        "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Grid", "[", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"OptionValue", "@", "\"\<TopBar\>\""}], "//", 
+               "TrueQ"}], ",", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{"topBar", ",", "SpanFromLeft"}], "}"}], ",", 
+              "Nothing"}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"OptionValue", "@", "\"\<SideBar\>\""}], "//", 
+                 "TrueQ"}], ",", "sideBar", ",", "Nothing"}], "]"}], ",", 
+              "panes"}], "}"}]}], "\[IndentingNewLine]", "}"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Alignment", "\[Rule]", "Right"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Spacings", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", ".025"}], "}"}]}]}], "\[IndentingNewLine]", 
+         "]"}], "//", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"#", ",", "\[IndentingNewLine]", "\"\<Text\>\""}], 
+              "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+             RowBox[{"FrameStyle", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Background", "\[Rule]", "White"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"RoundingRadius", "\[Rule]", "5"}]}], 
+            "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"FilterRules", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"FilterRules", "[", 
+              RowBox[{
+               RowBox[{"{", "ops", "}"}], ",", 
+               RowBox[{"Except", "@", "ImageSize"}]}], "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Options", "@", "Framed"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"FrameMargins", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"2", ",", "2"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"2", ",", "2"}], "}"}]}], "}"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"RoundingRadius", "\[Rule]", "5"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Background", "\[Rule]", "Purple"}]}], 
+          "\[IndentingNewLine]", "]"}], "&"}]}]}], "\[IndentingNewLine]", 
+      "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.689180198915223*^9, 3.689180531282382*^9}, {
+   3.689180579822036*^9, 3.6891806121149683`*^9}, {3.689180665618874*^9, 
+   3.68918073425251*^9}, {3.689180807158854*^9, 3.6891813424435253`*^9}, {
+   3.6891813934888153`*^9, 3.689181394361367*^9}, {3.689182046733089*^9, 
+   3.689182200501403*^9}, {3.689182235491591*^9, 3.689182240834812*^9}, {
+   3.689182293120028*^9, 3.689182379528235*^9}, {3.6891824148034286`*^9, 
+   3.689182453328507*^9}, {3.689182484631888*^9, 3.689182519302619*^9}, {
+   3.689182551046768*^9, 3.689182553084248*^9}, {3.6891825837093487`*^9, 
+   3.689182597936986*^9}, {3.689182634127994*^9, 3.689182697221919*^9}, {
+   3.6891827778335943`*^9, 3.689182806758851*^9}, {3.689183376827849*^9, 
+   3.689183445136001*^9}, {3.689183571781457*^9, 3.68918364372058*^9}, {
+   3.689183682307214*^9, 3.6891836824597473`*^9}, {3.6891837158560667`*^9, 
+   3.689183914742278*^9}, {3.689183974821447*^9, 3.689184126450697*^9}, {
+   3.689184173749898*^9, 3.6891846969055233`*^9}, {3.689184747585224*^9, 
+   3.689184794092567*^9}, {3.6891849647906303`*^9, 3.689184965046979*^9}, {
+   3.68918509675453*^9, 3.689185122089634*^9}, {3.689185192228923*^9, 
+   3.6891853051684303`*^9}, {3.689185339471532*^9, 3.689185404093093*^9}, {
+   3.689185482230976*^9, 3.6891854826436*^9}, {3.689185512794074*^9, 
+   3.689185527076839*^9}, {3.68918556514655*^9, 3.6891856753452997`*^9}, {
+   3.689185712457323*^9, 3.689185785662705*^9}, {3.689185882197998*^9, 
+   3.689186078022956*^9}, {3.689186111822494*^9, 3.689186160772541*^9}, {
+   3.6891862371935253`*^9, 3.689186305825304*^9}, {3.689186340687118*^9, 
+   3.689186383692646*^9}, {3.6891864186661367`*^9, 3.689186458011631*^9}, {
+   3.689186495702138*^9, 3.689186532251288*^9}, {3.689186568543825*^9, 
+   3.689186573872016*^9}, {3.689186669123773*^9, 3.6891866947624493`*^9}, {
+   3.6891869011761847`*^9, 3.689186924004816*^9}, {3.6891869676389523`*^9, 
+   3.689187011534253*^9}, {3.6891870738667507`*^9, 3.689187102642555*^9}, {
+   3.689187160148274*^9, 3.689187166826539*^9}, {3.689187446391831*^9, 
+   3.689187650434725*^9}, {3.6891877308118763`*^9, 3.689187764378237*^9}, {
+   3.689187832389039*^9, 3.6891879303134413`*^9}, {3.6891879882529583`*^9, 
+   3.689188060929859*^9}, {3.6891881711335993`*^9, 3.6891882427725487`*^9}, {
+   3.689188282864559*^9, 3.689188477435478*^9}, {3.689188516341673*^9, 
+   3.689188552636713*^9}, {3.689188635283236*^9, 3.6891887714123898`*^9}, {
+   3.689188809627533*^9, 3.689188815659206*^9}, {3.689188904055376*^9, 
+   3.6891889296063013`*^9}, {3.689188967805592*^9, 3.689189009939992*^9}, {
+   3.6891890841030416`*^9, 3.68918914707272*^9}, {3.689189178549584*^9, 
+   3.689189206196349*^9}, {3.689189249662339*^9, 3.689189291667843*^9}, {
+   3.689189322419335*^9, 3.6891893232250223`*^9}, {3.689189356314126*^9, 
+   3.689189383977442*^9}, {3.6891895383664837`*^9, 3.689189617801972*^9}, {
+   3.689189749147195*^9, 3.689189796443618*^9}, {3.689189860885621*^9, 
+   3.689189925759552*^9}, {3.689189961422111*^9, 3.6891899906368*^9}, {
+   3.689190030332365*^9, 3.689190106309317*^9}, {3.689190654829784*^9, 
+   3.689190666340576*^9}, {3.6891909422828293`*^9, 3.689190953963501*^9}, {
+   3.689190994456449*^9, 3.689190998119231*^9}, {3.689191422005912*^9, 
+   3.689191482512533*^9}, {3.6891915233295517`*^9, 3.689191624782227*^9}, {
+   3.6891917046984158`*^9, 3.68919172503274*^9}, {3.6891917742731133`*^9, 
+   3.68919179190866*^9}, {3.689191847112125*^9, 3.689191974194344*^9}, {
+   3.6891920470232277`*^9, 3.689192064520563*^9}, {3.689192143998816*^9, 
+   3.68919219400766*^9}, {3.6891922952319307`*^9, 3.6891923297014933`*^9}, 
+   3.689192376100016*^9, {3.6891924268518267`*^9, 3.689192454578207*^9}, {
+   3.689192487616282*^9, 3.68919254788947*^9}, {3.6891926270305862`*^9, 
+   3.689192632076933*^9}, {3.689192737428113*^9, 3.689192824183859*^9}, {
+   3.689192872096368*^9, 3.689192877862329*^9}, {3.689192919975731*^9, 
+   3.68919292246419*^9}, {3.689193295794875*^9, 3.689193345803101*^9}, {
+   3.689193376128153*^9, 3.6891933777124357`*^9}, {3.6891934364529457`*^9, 
+   3.6891934383480864`*^9}, {3.689193470979019*^9, 3.6891934796980257`*^9}, {
+   3.6891935695602016`*^9, 3.689193574464074*^9}, {3.689194141851869*^9, 
+   3.68919414265909*^9}, {3.689194219103075*^9, 3.689194325920108*^9}, {
+   3.689194397252829*^9, 3.689194498687174*^9}, {3.689198567975893*^9, 
+   3.6891985816225367`*^9}, {3.6891986173270693`*^9, 3.689198626501443*^9}, {
+   3.689199392748752*^9, 3.689199407210949*^9}, {3.689199490373887*^9, 
+   3.689199507830666*^9}, {3.689199541045136*^9, 3.689199567292948*^9}, {
+   3.68919959894619*^9, 3.6891996460257187`*^9}, {3.689199980790037*^9, 
+   3.689200117529203*^9}, {3.689200175836321*^9, 3.689200181210107*^9}, {
+   3.689200218764583*^9, 3.689200255786789*^9}, {3.689200318739005*^9, 
+   3.689200402321578*^9}, {3.689200448131118*^9, 3.689200551904711*^9}, 
+   3.689200600376792*^9, 3.689200810139517*^9, {3.6892008797784843`*^9, 
+   3.68920088700219*^9}, 3.689201582588237*^9, {3.6892016367201967`*^9, 
+   3.68920169720138*^9}, {3.689201727757284*^9, 3.6892017287401752`*^9}, {
+   3.6892021887802353`*^9, 3.6892021948050213`*^9}, {3.689202584671158*^9, 
+   3.68920260695636*^9}, {3.689202711643861*^9, 3.689202717722954*^9}, {
+   3.689202755362351*^9, 3.689202787775137*^9}, {3.689202827585917*^9, 
+   3.689202846025282*^9}, {3.689202894148868*^9, 3.689202904971747*^9}, {
+   3.6892050898592377`*^9, 3.6892051024166737`*^9}, {3.689205162533751*^9, 
+   3.6892052249883432`*^9}, {3.689205358351247*^9, 3.689205405758664*^9}, {
+   3.689205518165989*^9, 3.689205522222547*^9}, {3.6892055939891148`*^9, 
+   3.6892056598888073`*^9}, {3.689205815474456*^9, 3.689205850736258*^9}, {
+   3.6892060053317337`*^9, 3.689206079739024*^9}, {3.689206631803113*^9, 
+   3.689206653737021*^9}, {3.68920671735629*^9, 3.689206718187731*^9}, {
+   3.6892068488625717`*^9, 3.6892068504795837`*^9}, 3.689206898945993*^9, {
+   3.6892069894182034`*^9, 3.68920698964904*^9}, {3.689207135087947*^9, 
+   3.689207160850308*^9}, {3.68920730601742*^9, 3.689207334642153*^9}, {
+   3.689207407400704*^9, 3.689207464225498*^9}, {3.689207498288806*^9, 
+   3.6892075318546467`*^9}, {3.689207582141481*^9, 3.689207602868125*^9}, {
+   3.6892077169886208`*^9, 3.689207719259041*^9}, {3.6892088752436647`*^9, 
+   3.689208902862213*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Testing", "Section",
+ CellChangeTimes->{{3.6892089377091913`*^9, 3.689208941738587*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Basic example", "Subsubsection",
+ CellChangeTimes->{{3.689208950650817*^9, 3.689208952594377*^9}}],
+
+Cell["\<\
+The default file browser is about 500 wide, 250 tall, has a purple border\
+\>", "Text",
+ CellChangeTimes->{{3.689208959618335*^9, 3.689208980705525*^9}}],
+
+Cell[BoxData[
+ RowBox[{"FileBrowser", "@", "$UserBaseDirectory"}]], "Input",
+ CellChangeTimes->{{3.689208861845048*^9, 3.689208864052031*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Pared down", "Subsubsection",
+ CellChangeTimes->{{3.689208986169383*^9, 3.68920898984097*^9}}],
+
+Cell["\<\
+It can also be used without the side and top bars or with a different frame \
+width/ background\
+\>", "Text",
+ CellChangeTimes->{{3.689208991960601*^9, 3.689209010848609*^9}, {
+  3.689209047076479*^9, 3.6892090515732527`*^9}, {3.689209100532857*^9, 
+  3.6892091073720503`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"FileBrowser", "[", 
+  RowBox[{"$UserBaseDirectory", ",", "\[IndentingNewLine]", 
+   RowBox[{"Background", "\[Rule]", "Gray"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"FrameStyle", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"150", ",", "150"}], "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<SideBar\>\"", "\[Rule]", "False"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<FrameWidth\>\"", "\[Rule]", "150"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<BarSize\>\"", "\[Rule]", "100"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.689180441484536*^9, 3.689180446897797*^9}, {
+   3.689187212549828*^9, 3.689187219278844*^9}, {3.6891872640256577`*^9, 
+   3.689187344951377*^9}, {3.6891877185212708`*^9, 3.68918779846587*^9}, {
+   3.689190600467535*^9, 3.689190639239167*^9}, {3.689190675669763*^9, 
+   3.689190713988638*^9}, {3.689190768835849*^9, 3.689190785306459*^9}, {
+   3.68919084892286*^9, 3.689190855362673*^9}, 3.6891909656912193`*^9, {
+   3.689191274429863*^9, 3.68919127669347*^9}, {3.68919175503915*^9, 
+   3.6891917647041597`*^9}, 3.6891918108720007`*^9, {3.689191988380374*^9, 
+   3.689192000166964*^9}, {3.6891920989406433`*^9, 3.689192119195857*^9}, {
+   3.68919357768246*^9, 3.689193578455154*^9}, {3.689194179051341*^9, 
+   3.689194184473583*^9}, {3.689194346784227*^9, 3.689194348118496*^9}, {
+   3.689207203064921*^9, 3.689207238150773*^9}, {3.68920762133451*^9, 
+   3.6892076218615913`*^9}, {3.689207761332262*^9, 3.689207790513937*^9}, {
+   3.6892087451002607`*^9, 3.6892087471929293`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Browser palette", "Subsubsection",
+ CellChangeTimes->{{3.689209119428028*^9, 3.689209123818803*^9}}],
+
+Cell["It can work well in a palette too", "Text",
+ CellChangeTimes->{{3.689209132673498*^9, 3.689209142115014*^9}, {
+  3.68920931687754*^9, 3.689209349938714*^9}, {3.6892094942981586`*^9, 
+  3.689209516334738*^9}}],
+
+Cell[BoxData[
+ RowBox[{"CreatePalette", "@", "\[IndentingNewLine]", 
+  RowBox[{"FileBrowser", "[", 
+   RowBox[{"$InstallationDirectory", ",", "\[IndentingNewLine]", 
+    RowBox[{"Background", "\[Rule]", "Gray"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"FrameStyle", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ImageSize", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"500", ",", "300"}], "}"}]}], ",", "\[IndentingNewLine]", 
+    RowBox[{"\"\<FrameWidth\>\"", "\[Rule]", "200"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.689209147652816*^9, 3.689209202673668*^9}, {
+  3.689209234371122*^9, 3.689209242120284*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["File chooser", "Subsubsection",
+ CellChangeTimes->{{3.6892095259267693`*^9, 3.689209527582704*^9}}],
+
+Cell["\<\
+It can also be used as a file name chooser by using the function bound to the \
+double click\
+\>", "Text",
+ CellChangeTimes->{{3.689209520873423*^9, 3.689209524830933*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"fileName", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"FileBrowser", "[", 
+  RowBox[{"$InstallationDirectory", ",", "\[IndentingNewLine]", 
+   RowBox[{"Background", "\[Rule]", "Gray"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"FrameMargins", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"FrameStyle", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ImageSize", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"400", ",", "200"}], "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<FrameWidth\>\"", "\[Rule]", "150"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Function", "\[Rule]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"fileName", "=", "#"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"NotebookWrite", "[", 
+        RowBox[{
+         RowBox[{"EvaluationCell", "[", "]"}], ",", 
+         RowBox[{"Cell", "[", 
+          RowBox[{"fileName", ",", "\"\<Text\>\""}], "]"}]}], "]"}], ";"}], 
+      "\[IndentingNewLine]", "&"}], ")"}]}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.6892093584601107`*^9, 3.6892094751705303`*^9}}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 93, 1, 92, "Title"],
+Cell[676, 25, 215, 4, 49, "Text"],
+Cell[894, 31, 260, 6, 32, "Input"],
+Cell[CellGroupData[{
+Cell[1179, 41, 146, 3, 44, "Subsection",
+ InitializationGroup->True],
+Cell[1328, 46, 40113, 780, 5661, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[41478, 831, 94, 1, 50, "Section"],
+Cell[CellGroupData[{
+Cell[41597, 836, 104, 1, 35, "Subsubsection"],
+Cell[41704, 839, 163, 3, 30, "Text"],
+Cell[41870, 844, 142, 2, 32, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42049, 851, 100, 1, 35, "Subsubsection"],
+Cell[42152, 854, 287, 6, 30, "Text"],
+Cell[42442, 862, 1699, 27, 180, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44178, 894, 106, 1, 35, "Subsubsection"],
+Cell[44287, 897, 214, 3, 30, "Text"],
+Cell[44504, 902, 714, 12, 159, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[45255, 919, 105, 1, 35, "Subsubsection"],
+Cell[45363, 922, 182, 4, 30, "Text"],
+Cell[45548, 928, 1154, 24, 243, "Input"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
