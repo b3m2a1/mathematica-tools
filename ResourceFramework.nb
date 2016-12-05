@@ -1,0 +1,1461 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     57646,       1453]
+NotebookOptionsPosition[     53419,       1325]
+NotebookOutlinePosition[     54770,       1362]
+CellTagsIndexPosition[     54727,       1359]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Custom Resource Framework", "Section",
+ CellChangeTimes->{{3.6899037192998857`*^9, 3.689903725499737*^9}, {
+  3.6899037620430527`*^9, 3.689903778650893*^9}}],
+
+Cell["\<\
+A package designed to provide a uniform interface to data file management in \
+the cloud and on a local file system.\
+\>", "Text",
+ CellChangeTimes->{{3.689949944314845*^9, 3.689950072894191*^9}}],
+
+Cell["\<\
+Standardizes file names, provides key-word and file-name based lookup.\
+\>", "Text",
+ CellChangeTimes->{{3.689949944314845*^9, 3.689950076109975*^9}}],
+
+Cell["\<\
+Provides an OOP style interface for simple resource management across \
+multiple directories/cloud locations as well as two global variables for \
+standard idiomatic usage.\
+\>", "Text",
+ CellChangeTimes->{{3.689949944314845*^9, 3.689950116791428*^9}, {
+  3.689950201344103*^9, 3.689950217915868*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<resourceFramework`\>\"", "]"}], 
+  ";"}]], "SubsectionInput",
+ CellChangeTimes->{{3.689899856198257*^9, 3.68989986704462*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Exposed", "Subsection",
+ CellChangeTimes->{{3.689903799993992*^9, 3.689903813888788*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"$resourceMode", "::", "usage"}], "=", 
+   "\"\<Specifies how to manage resources. Can be \\\"Cloud\\\" or \
+\\\"Local\\\"\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"$resourceDirectory", "::", "usage"}], "=", 
+   "\"\<Default location to get/send resources from/to\>\""}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.6898999260917788`*^9, 3.689900019342976*^9}, {
+  3.689900554986104*^9, 3.689900572233246*^9}, {3.689900728325933*^9, 
+  3.6899007377960377`*^9}, {3.6899012069003687`*^9, 3.689901208073935*^9}, {
+  3.6899438083231688`*^9, 3.689943816433876*^9}, {3.689944267655208*^9, 
+  3.689944292187296*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePath", "::", "usage"}], 
+   "\"\<Formats an object path for a file/user/location/mode set\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSubmit", "::", "usage"}], "=", 
+   "\"\<Stores a resource to the path gotten by resourcePath\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePull", "::", "usage"}], "=", 
+   "\"\<Gets a resource from the path gotten by resourcePath\>\""}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.6898999260917788`*^9, 3.689900019342976*^9}, {
+   3.689900554986104*^9, 3.689900572233246*^9}, {3.689900728325933*^9, 
+   3.6899007377960377`*^9}, {3.6899012069003687`*^9, 3.689901208073935*^9}, 
+   3.6899438083231688`*^9, {3.689950120832231*^9, 3.689950154945985*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceInformation", "::", "usage"}], "=", 
+   "\"\<Gets the information for a resource\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceList", "::", "usage"}], "=", 
+   "\"\<Gets all the resources in the storage repository\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSearch", "::", "usage"}], "=", 
+   "\"\<Searches for all resources matching a spec\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceFind", "::", "usage"}], "=", 
+   "\"\<Attempts to find a single resource from a spec\>\""}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.6898999260917788`*^9, 3.689900019342976*^9}, {
+  3.689900554986104*^9, 3.689900572233246*^9}, {3.689900728325933*^9, 
+  3.6899007377960377`*^9}, {3.6899012069003687`*^9, 3.689901209179397*^9}, {
+  3.689903890012699*^9, 3.689903903051139*^9}, {3.68994375542344*^9, 
+  3.6899438050342073`*^9}, {3.6899501580164557`*^9, 3.689950194589303*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceManager", "::", "usage"}], "=", 
+   "\"\<A delegator to all the other functions\>\""}], ";"}]], "Input",
+ CellChangeTimes->{{3.6898999260917788`*^9, 3.689900019342976*^9}, {
+  3.689900554986104*^9, 3.689900572233246*^9}, {3.689900728325933*^9, 
+  3.6899007377960377`*^9}, {3.6899012069003687`*^9, 3.689901209179397*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], ";"}]], "SubsectionInput",\
+
+ CellChangeTimes->{{3.689899875573971*^9, 3.689899880588203*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Internals", "Subsection",
+ CellChangeTimes->{{3.689901009083144*^9, 3.689901014258946*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"$resourceMode", "::", "sry"}], "=", 
+   "\"\<Bad mode ``: $resourceMode can only be \\\"Cloud\\\" or \\\"Local\\\"\
+\>\""}], ";"}]], "Input",
+ CellChangeTimes->{{3.689944019137957*^9, 3.6899440687492733`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"$resourceMode", "=", "\"\<Cloud\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$resourceMode", "/:", 
+   RowBox[{"HoldPattern", "[", 
+    RowBox[{"Set", "[", 
+     RowBox[{"$resourceMode", ",", 
+      RowBox[{"v", ":", 
+       RowBox[{"Except", "[", 
+        RowBox[{"\"\<Cloud\>\"", "|", "\"\<Local\>\""}], "]"}]}]}], "]"}], 
+    "]"}], ":=", 
+   RowBox[{"Message", "[", 
+    RowBox[{
+     RowBox[{"$resourceMode", "::", "sry"}], ",", "v"}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.689941932661376*^9, 3.689941952641747*^9}, {
+   3.689942220918915*^9, 3.6899422267922153`*^9}, 3.689943041878326*^9, {
+   3.689943826635295*^9, 3.689943857487755*^9}, {3.689943897457171*^9, 
+   3.689943899407323*^9}, {3.689943948998393*^9, 3.689943985574296*^9}, {
+   3.6899440467770433`*^9, 3.689944071077333*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$resourceMode", "/:", 
+   RowBox[{"HoldPattern", "[", 
+    RowBox[{
+     RowBox[{"Set", "[", 
+      RowBox[{"$resourceMode", ",", "v_"}], "]"}], "/;", 
+     RowBox[{"!", 
+      RowBox[{"TrueQ", "@", "$resourceModeOverride"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"CompoundExpression", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Block", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"$resourceModeOverride", "=", "True"}], "}"}], ",", 
+        RowBox[{"$resourceMode", "=", "v"}]}], "]"}], ";"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Switch", "[", 
+      RowBox[{
+      "v", ",", "\[IndentingNewLine]", "\"\<Cloud\>\"", ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"$resourceDirectory", "=", "\"\<resource_framework\>\""}], ",",
+        "\[IndentingNewLine]", "\"\<Local\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"$resourceDirectory", "=", 
+        RowBox[{"FileNameJoin", "@", 
+         RowBox[{"{", 
+          RowBox[{
+          "$UserDocumentsDirectory", ",", "\"\<resource_framework\>\""}], 
+          "}"}]}]}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6899440899726458`*^9, 3.689944192291524*^9}, {
+  3.689944225589491*^9, 3.689944248500451*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$resourceDirectory", "=", "\"\<resource_framework\>\""}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.689941932661376*^9, 3.689941952641747*^9}, {
+   3.689942220918915*^9, 3.6899422267922153`*^9}, 3.689943041878326*^9, {
+   3.689943826635295*^9, 3.6899438352592373`*^9}, {3.689944202476244*^9, 
+   3.689944223727025*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["resourceFileName", "Subsubsection",
+ CellChangeTimes->{{3.6899454794627743`*^9, 3.689945484190113*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"resourceFileName", "[", "file_", "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"StringJoin", "@", "\[IndentingNewLine]", 
+   RowBox[{"Riffle", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"FileNameSplit", "@", "\[IndentingNewLine]", 
+      RowBox[{"StringReplace", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"ExpandFileName", "@", "file"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"$HomeDirectory", "\[Rule]", "\"\<~\>\""}]}], 
+       "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+     "\"\</\>\""}], "\[IndentingNewLine]", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6899449632147617`*^9, 3.689944971283307*^9}, {
+  3.689945131918974*^9, 3.689945155261052*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourcePath", "Subsubsection",
+ CellChangeTimes->{{3.689900872148934*^9, 3.689900880223768*^9}, {
+  3.6899421552042503`*^9, 3.689942156834878*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePath", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", "\"\<Cloud\>\""}], "\[IndentingNewLine]", "]"}], ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"URLBuild", "@", "\[IndentingNewLine]", 
+    RowBox[{"DeleteCases", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Replace", "[", 
+         RowBox[{"user", ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", "\[RuleDelayed]", "None"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"u_", "\[RuleDelayed]", 
+             RowBox[{"\"\<user:\>\"", "<>", "u"}]}]}], "\[IndentingNewLine]", 
+           "}"}]}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+        
+        RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+         RowBox[{"resourceLocation", ",", "\[IndentingNewLine]", 
+          RowBox[{"Automatic", "->", "$resourceDirectory"}]}], 
+         "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ToString", "@", 
+         RowBox[{"Hash", "@", 
+          RowBox[{"resourceFileName", "@", "file"}]}]}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", "None"}], 
+     "]"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689899394137841*^9, 3.689899450332323*^9}, {
+   3.689899483643162*^9, 3.689899557180839*^9}, {3.689899590703608*^9, 
+   3.68989959149424*^9}, {3.689899842243195*^9, 3.689899850959136*^9}, {
+   3.6899041745321198`*^9, 3.6899041906900473`*^9}, {3.689941649277216*^9, 
+   3.689941656075756*^9}, {3.6899419582737217`*^9, 3.68994197084016*^9}, 
+   3.6899422209230556`*^9, {3.689944957631671*^9, 3.68994497922115*^9}, {
+   3.6899462565247*^9, 3.6899462809002132`*^9}, {3.689946852749578*^9, 
+   3.689946854282219*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePath", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", "\"\<Local\>\""}], "\[IndentingNewLine]", "]"}], ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"ExpandFileName", "@", "\[IndentingNewLine]", 
+    RowBox[{"FileNameJoin", "@", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Replace", "[", 
+        RowBox[{"resourceLocation", ",", 
+         RowBox[{"Automatic", "\[RuleDelayed]", "$resourceDirectory"}]}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Replace", "[", 
+        RowBox[{"user", ",", 
+         RowBox[{"Automatic", "\[RuleDelayed]", "\"\<\>\""}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ToString", "@", "\[IndentingNewLine]", 
+        RowBox[{"Hash", "@", 
+         RowBox[{"resourceFileName", "@", "file"}]}]}]}], 
+      "\[IndentingNewLine]", "}"}]}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689942201593635*^9, 3.689942235544299*^9}, 
+   3.689942345029869*^9, {3.6899423866827517`*^9, 3.689942510164753*^9}, {
+   3.689944988664192*^9, 3.689944992947527*^9}, {3.689946680240384*^9, 
+   3.6899466826404743`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePath", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "Automatic", ":", "Automatic"}]}], 
+    "\[IndentingNewLine]", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourcePath", "[", 
+    RowBox[{
+    "file", ",", "user", ",", "resourceLocation", ",", "$resourceMode"}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689942244041087*^9, 3.689942259959279*^9}, {
+  3.689942317345798*^9, 3.689942340469805*^9}, {3.689945617607736*^9, 
+  3.689945621205971*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceSubmit", "Subsubsection",
+ CellChangeTimes->{{3.6899421603463182`*^9, 3.689942164962484*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSubmit", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"desc", ":", 
+      RowBox[{"_String", "|", "None"}], ":", "None"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"keyWords", ":", 
+      RowBox[{"_String", "|", "_List"}], ":", 
+      RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "\"\<Cloud\>\""}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"data", "=", 
+       RowBox[{"Import", "[", 
+        RowBox[{"file", ",", "\"\<Text\>\""}], "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"data", "=!=", "$Failed"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"CloudExport", "[", "\[IndentingNewLine]", 
+        RowBox[{
+        "data", ",", "\[IndentingNewLine]", "\"\<Text\>\"", ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"resourcePath", "[", 
+          RowBox[{"file", ",", "user", ",", "resourceLocation", ",", "mode"}],
+           "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"MetaInformation", "\[Rule]", "\[IndentingNewLine]", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"\"\<File\>\"", "\[Rule]", 
+             RowBox[{"resourceFileName", "@", "file"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"\"\<Description\>\"", "\[Rule]", "desc"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"\"\<KeyWords\>\"", "\[Rule]", 
+             RowBox[{"Flatten", "@", 
+              RowBox[{"{", "keyWords", "}"}]}]}]}], "\[IndentingNewLine]", 
+           "}"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]", "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689899394137841*^9, 3.689899450332323*^9}, {
+   3.689899483643162*^9, 3.689899557180839*^9}, {3.689899590703608*^9, 
+   3.68989959149424*^9}, {3.689899842243195*^9, 3.689899850959136*^9}, {
+   3.689900591146059*^9, 3.689900632647749*^9}, {3.689900672263071*^9, 
+   3.689900720789328*^9}, 3.689941669477483*^9, 3.689941979474288*^9, 
+   3.6899422208724537`*^9, 3.689944997864155*^9, 3.689945256300989*^9, {
+   3.689945302225768*^9, 3.689945318978366*^9}, {3.689946525979849*^9, 
+   3.689946535242124*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSubmit", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"desc", ":", 
+      RowBox[{"_String", "|", "None"}], ":", "None"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"keyWords", ":", 
+      RowBox[{"_String", "|", "_List"}], ":", 
+      RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "\"\<Local\>\""}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"data", "=", 
+       RowBox[{"Import", "[", 
+        RowBox[{"file", ",", "\"\<Text\>\""}], "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"data", "=!=", "$Failed"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"With", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"p", "=", 
+           RowBox[{"resourcePath", "[", 
+            RowBox[{
+            "file", ",", "user", ",", "resourceLocation", ",", "mode"}], 
+            "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"i", "=", 
+              RowBox[{"FileNameJoin", "@", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"DirectoryName", "@", "p"}], ",", 
+                 RowBox[{
+                  RowBox[{"FileBaseName", "@", "p"}], "<>", 
+                  "\"\<_info.m\>\""}]}], "}"}]}]}], "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Export", "[", "\[IndentingNewLine]", 
+              RowBox[{"i", ",", "\[IndentingNewLine]", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"\"\<File\>\"", "\[Rule]", 
+                  RowBox[{"resourceFileName", "@", "file"}]}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"\"\<Description\>\"", "\[Rule]", "desc"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"\"\<KeyWords\>\"", "\[Rule]", 
+                  RowBox[{"Flatten", "@", 
+                   RowBox[{"{", "keyWords", "}"}]}]}]}], 
+                "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], 
+             ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"CopyFile", "[", "\[IndentingNewLine]", 
+           RowBox[{
+           "file", ",", "\[IndentingNewLine]", "p", ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"OverwriteTarget", "\[Rule]", "True"}]}], 
+           "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ",", "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]", 
+      "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689899394137841*^9, 3.689899450332323*^9}, {
+   3.689899483643162*^9, 3.689899557180839*^9}, {3.689899590703608*^9, 
+   3.68989959149424*^9}, {3.689899842243195*^9, 3.689899850959136*^9}, {
+   3.689900591146059*^9, 3.689900632647749*^9}, {3.689900672263071*^9, 
+   3.689900720789328*^9}, 3.689941669477483*^9, 3.689941979474288*^9, 
+   3.6899422208724537`*^9, {3.689942519781884*^9, 3.689942735379532*^9}, {
+   3.689943245603292*^9, 3.689943253786148*^9}, 3.6899450000297747`*^9, {
+   3.689945250618326*^9, 3.689945296921144*^9}, 3.6899453276028*^9, {
+   3.6899465206507883`*^9, 3.6899465416516047`*^9}, {3.6899467072244797`*^9, 
+   3.6899467102921867`*^9}, {3.689949016426399*^9, 3.689949021288621*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSubmit", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_", ",", "\[IndentingNewLine]", 
+     RowBox[{"desc", ":", 
+      RowBox[{"_String", "|", "None"}], ":", "None"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"keyWords", ":", 
+      RowBox[{"_String", "|", "_List"}], ":", 
+      RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "Automatic", ":", "Automatic"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"resourceSubmit", "[", 
+    RowBox[{
+    "file", ",", "desc", ",", "keyWords", ",", "user", ",", 
+     "resourceLocation", ",", "$resourceMode"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689942759997525*^9, 3.689942784091147*^9}, {
+  3.689945578281146*^9, 3.689945600733715*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourcePull", "Subsubsection",
+ CellChangeTimes->{{3.689942172675478*^9, 3.6899421744341516`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePull", "[", "co_CloudObject", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"CloudImport", "[", 
+    RowBox[{"co", ",", "\"\<Text\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePull", "[", "f_File", "]"}], ":=", "\[IndentingNewLine]", 
+   
+   RowBox[{"Import", "[", 
+    RowBox[{
+     RowBox[{"First", "@", "f"}], ",", "\"\<Text\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourcePull", "[", "\[IndentingNewLine]", 
+    RowBox[{"file_String", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", 
+      RowBox[{"\"\<Cloud\>\"", "|", "\"\<Local\>\"", "|", "Automatic"}], ":", 
+      "Automatic"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourcePull", "@", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Switch", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Replace", "[", 
+        RowBox[{"mode", ",", 
+         RowBox[{"Automatic", "\[Rule]", "$resourceMode"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", "\"\<Local\>\"", ",", "\[IndentingNewLine]", 
+       "File", ",", "\[IndentingNewLine]", "\"\<Cloud\>\"", ",", 
+       "\[IndentingNewLine]", "CloudObject"}], "\[IndentingNewLine]", "]"}], 
+     "@", 
+     RowBox[{"resourcePath", "[", 
+      RowBox[{"file", ",", "user", ",", "resourceLocation", ",", "mode"}], 
+      "]"}]}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.689899394137841*^9, 3.689899450332323*^9}, {
+   3.689899483643162*^9, 3.689899557180839*^9}, {3.689899590703608*^9, 
+   3.68989959149424*^9}, {3.689899842243195*^9, 3.689899850112254*^9}, {
+   3.689904263704981*^9, 3.6899042709078703`*^9}, {3.689941547241592*^9, 
+   3.689941602557879*^9}, 3.6899419880894947`*^9, {3.689942220876904*^9, 
+   3.689942220882873*^9}, {3.689942793814618*^9, 3.689942804490719*^9}, {
+   3.6899428502406807`*^9, 3.689942952117208*^9}, {3.689945548966063*^9, 
+   3.689945549812443*^9}, {3.689945724235865*^9, 3.689945778002288*^9}, {
+   3.68994675458298*^9, 3.689946755590925*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceInformation", "Subsubsection",
+ CellChangeTimes->{{3.6899010613929167`*^9, 3.689901071264319*^9}, {
+  3.689902330225268*^9, 3.689902343176296*^9}, {3.689943193406604*^9, 
+  3.6899431961631117`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceInformation", "[", "co_CloudObject", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Association", "@", "\[IndentingNewLine]", 
+    RowBox[{"Append", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"MetaInformation", "/.", 
+       RowBox[{"Options", "[", 
+        RowBox[{"co", ",", "MetaInformation"}], "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"\"\<Resource\>\"", "\[Rule]", "co"}]}], "\[IndentingNewLine]", 
+     "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceInformation", "[", "f_File", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Association", "@", "\[IndentingNewLine]", 
+    RowBox[{"Append", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Get", "@", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"DirectoryName", "@", "f"}], ",", 
+          RowBox[{
+           RowBox[{"FileBaseName", "@", "f"}], "<>", "\"\<_info.m\>\""}]}], 
+         "}"}]}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Resource\>\"", "\[Rule]", "f"}]}], "\[IndentingNewLine]", 
+     "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6899011776431026`*^9, 3.689901201841734*^9}, {
+   3.689902084557736*^9, 3.6899021012685537`*^9}, {3.6899419968365173`*^9, 
+   3.689942005785541*^9}, 3.689942220886945*^9, {3.6899429576868896`*^9, 
+   3.689943005846075*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceList", "Subsubsection",
+ CellChangeTimes->{{3.6899431993549147`*^9, 3.6899432011469584`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceList", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "\"\<Cloud\>\""}]}], "\[IndentingNewLine]", "]"}], ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"resourceInformation", "/@", "\[IndentingNewLine]", 
+    RowBox[{"CloudObjects", "@", "\[IndentingNewLine]", 
+     RowBox[{"URLBuild", "@", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"URLParse", "[", "\[IndentingNewLine]", 
+         RowBox[{"resourcePath", "[", 
+          RowBox[{
+          "\"\<None\>\"", ",", "user", ",", "resourceLocation", ",", "mode"}],
+           "]"}], "\[IndentingNewLine]", "]"}], "[", "\"\<Path\>\"", "]"}], 
+       "[", 
+       RowBox[{"[", 
+        RowBox[{";;", 
+         RowBox[{"-", "2"}]}], "]"}], "]"}]}]}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6899010735077343`*^9, 3.689901075976441*^9}, {
+   3.689901108044587*^9, 3.689901174171308*^9}, {3.689901653015995*^9, 
+   3.689901697841257*^9}, {3.6899021099281883`*^9, 3.689902113820232*^9}, 
+   3.6899021439166603`*^9, 3.6899420075402613`*^9, {3.689942220890868*^9, 
+   3.6899422208935204`*^9}, {3.689942809130574*^9, 3.6899428099933453`*^9}, {
+   3.689943058776952*^9, 3.689943082934314*^9}, {3.689949856935637*^9, 
+   3.689949860926031*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceList", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "\"\<Local\>\""}]}], "\[IndentingNewLine]", "]"}], ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"resourceInformation", "/@", "\[IndentingNewLine]", 
+    RowBox[{"File", "/@", "\[IndentingNewLine]", 
+     RowBox[{"StringTrim", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"FileNames", "[", "\[IndentingNewLine]", 
+        RowBox[{"\"\<*_info.m\>\"", ",", "\[IndentingNewLine]", 
+         RowBox[{"DirectoryName", "@", 
+          RowBox[{"resourcePath", "[", 
+           RowBox[{
+           "\"\<None\>\"", ",", "user", ",", "resourceLocation", ",", 
+            "mode"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", "\"\<_info.m\>\""}], "\[IndentingNewLine]", 
+      "]"}]}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6899010735077343`*^9, 3.689901075976441*^9}, {
+   3.689901108044587*^9, 3.689901174171308*^9}, {3.689901653015995*^9, 
+   3.689901697841257*^9}, {3.6899021099281883`*^9, 3.689902113820232*^9}, 
+   3.6899021439166603`*^9, 3.6899420075402613`*^9, {3.689942220890868*^9, 
+   3.6899422208935204`*^9}, {3.689942809130574*^9, 3.6899428099933453`*^9}, {
+   3.689943058776952*^9, 3.689943185325573*^9}, {3.689949282496236*^9, 
+   3.689949303519362*^9}, {3.689949348337186*^9, 3.689949382135755*^9}, {
+   3.689949634552369*^9, 3.689949637256538*^9}, {3.6899498465981607`*^9, 
+   3.6899498658143587`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceList", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", "Automatic", ":", "Automatic"}]}], 
+    "\[IndentingNewLine]", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourceList", "[", 
+    RowBox[{"user", ",", "resourceLocation", ",", "$resourceMode"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.689944880097966*^9, 3.689944904201748*^9}, {
+  3.68994563880862*^9, 3.689945639924863*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceSearch", "Subsubsection",
+ CellChangeTimes->{3.689943206167653*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceSearch", "[", "\[IndentingNewLine]", 
+    RowBox[{"pat_", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", 
+      RowBox[{"\"\<Cloud\>\"", "|", "\"\<Local\>\"", "|", "Automatic"}], ":", 
+      "Automatic"}]}], "\[IndentingNewLine]", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"patFile", "=", 
+       RowBox[{"Replace", "[", 
+        RowBox[{"pat", ",", "\[IndentingNewLine]", 
+         RowBox[{"_String", "\[RuleDelayed]", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"resourceFileName", "@", "pat"}], "|", "pat"}], ")"}]}]}],
+         "\[IndentingNewLine]", "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Select", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"resourceList", "[", 
+        RowBox[{"user", ",", "resourceLocation", ",", "mode"}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"StringContainsQ", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"\"\<File\>\"", "/.", "#"}], ",", "\[IndentingNewLine]", 
+           "patFile"}], "\[IndentingNewLine]", "]"}], "||", 
+         "\[IndentingNewLine]", 
+         RowBox[{"AnyTrue", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"\"\<KeyWords\>\"", "/.", "#"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"StringMatchQ", "[", 
+             RowBox[{"#", ",", "pat"}], "]"}], "&"}]}], "\[IndentingNewLine]",
+           "]"}]}], "\[IndentingNewLine]", "&"}]}], "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689901730240795*^9, 3.6899017827002563`*^9}, {
+   3.6899019981712427`*^9, 3.6899020818936462`*^9}, {3.689902130831587*^9, 
+   3.689902138926889*^9}, {3.6899021850606937`*^9, 3.689902294357877*^9}, {
+   3.6899045680906277`*^9, 3.689904572834199*^9}, {3.689941848765987*^9, 
+   3.6899418617835197`*^9}, 3.689942015348035*^9, 3.68994222089752*^9, {
+   3.689943218037521*^9, 3.689943233859145*^9}, {3.689945018702886*^9, 
+   3.6899450839757442`*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceFind", "Subsubsection",
+ CellChangeTimes->{{3.6899433804824*^9, 3.689943382209505*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceFind", "[", "\[IndentingNewLine]", 
+    RowBox[{"pat_", ",", "\[IndentingNewLine]", 
+     RowBox[{"user", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"resourceLocation", ":", 
+      RowBox[{"_String", "|", "Automatic"}], ":", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"mode", ":", 
+      RowBox[{"\"\<Cloud\>\"", "|", "\"\<Local\>\"", "|", "Automatic"}], ":", 
+      "Automatic"}]}], "\[IndentingNewLine]", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"path", "=", 
+       RowBox[{"resourcePath", "[", 
+        RowBox[{"pat", ",", "user", ",", "resourceLocation", ",", "mode"}], 
+        "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Switch", "[", 
+      RowBox[{
+       RowBox[{"Replace", "[", 
+        RowBox[{"mode", ",", 
+         RowBox[{"Automatic", "\[Rule]", "$resourceMode"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", "\"\<Cloud\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Quiet", "[", 
+           RowBox[{"CloudObjectInformation", "@", 
+            RowBox[{"CloudObject", "@", "path"}]}], "]"}], "=!=", "$Failed"}],
+          ",", "\[IndentingNewLine]", 
+         RowBox[{"CloudObject", "@", "path"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"resourceSearch", "[", 
+            RowBox[{
+            "pat", ",", "user", ",", "resourceLocation", ",", "mode"}], "]"}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"{", "a_", "}"}], "\[RuleDelayed]", 
+            RowBox[{"a", "[", "\"\<Resource\>\"", "]"}]}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", "\"\<Local\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"FileExistsQ", "@", "path"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"File", "@", "path"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"resourceSearch", "[", 
+            RowBox[{
+            "pat", ",", "user", ",", "resourceLocation", ",", "mode"}], "]"}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"{", "a_", "}"}], "\[RuleDelayed]", 
+            RowBox[{"a", "[", "\"\<Resource\>\"", "]"}]}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.6899433937134857`*^9, 3.6899436196303997`*^9}, {
+  3.6899436755344677`*^9, 3.689943750806252*^9}, {3.689947876479987*^9, 
+  3.6899478795121613`*^9}, {3.689947980162385*^9, 3.6899479818584337`*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["resourceManager", "Subsubsection",
+ CellChangeTimes->{{3.689901050138118*^9, 3.689901054328986*^9}, 
+   3.689902341872203*^9, {3.68994326328382*^9, 3.689943264760479*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceManager", "[", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourceManager", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\"\<User\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Location\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Mode\>\"", "\[Rule]", "Automatic"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceManager", "[", 
+    RowBox[{"r", ":", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"\"\<User\>\"", "|", "\"\<Location\>\"", "|", "\"\<Mode\>\""}],
+        "\[Rule]", "_"}], ")"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourceManager", "@@", 
+    RowBox[{"DeleteDuplicatesBy", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"r", ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<User\>\"", "\[Rule]", "Automatic"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<Location\>\"", "\[Rule]", "Automatic"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<Mode\>\"", "\[Rule]", "Automatic"}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", "First"}], 
+     "\[IndentingNewLine]", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resourceManager", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"r1", ":", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+        "\"\<User\>\"", "|", "\"\<Location\>\"", "|", "\"\<Mode\>\""}], 
+        "\[Rule]", "_"}], ")"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"r2", ":", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+        "\"\<User\>\"", "|", "\"\<Location\>\"", "|", "\"\<Mode\>\""}], 
+        "\[Rule]", "_"}], ")"}]}]}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourceManager", "@@", 
+    RowBox[{"DeleteDuplicatesBy", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+       "r1", ",", "\[IndentingNewLine]", "r2", ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<User\>\"", "\[Rule]", "Automatic"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<Location\>\"", "\[Rule]", "Automatic"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<Mode\>\"", "\[Rule]", "Automatic"}]}], 
+       "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", "First"}], 
+     "\[IndentingNewLine]", "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.689944771503091*^9, 3.6899447855017023`*^9}, {
+  3.6899461942967043`*^9, 3.6899461980698557`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"resourceManager", "/:", "\[IndentingNewLine]", 
+   RowBox[{"HoldPattern", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"f", ":", 
+       RowBox[{
+       "resourcePath", "|", "resourceSubmit", "|", "resourcePull", "|", 
+        "resourceList", "|", "resourceSearch", "|", "resourceFind"}]}], ")"}],
+      "[", 
+     RowBox[{"args___", ",", "rm_resourceManager"}], "]"}], 
+    "\[IndentingNewLine]", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"m", "=", 
+       RowBox[{"List", "@@", "rm"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"f", "[", "\[IndentingNewLine]", 
+      RowBox[{"args", ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<User\>\"", "/.", "m"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Location\>\"", "/.", "m"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Mode\>\"", "/.", "m"}]}], "\[IndentingNewLine]", "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.689944375440549*^9, 3.689944429102153*^9}, {
+  3.689944470093567*^9, 3.6899444735084963`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "\"\<Path\>\""}], ",", "file_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"resourcePath", "[", 
+    RowBox[{"file", ",", "m"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "\"\<Submit\>\""}], ",", "file_", ",", 
+     RowBox[{"desc_:", "None"}], ",", 
+     RowBox[{"keyWords_:", 
+      RowBox[{"{", "}"}]}]}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"resourceSubmit", "[", 
+    RowBox[{"file", ",", "desc", ",", "keyWords", ",", "m"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "\"\<Pull\>\""}], ",", "file_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"resourcePull", "[", 
+    RowBox[{"file", ",", "m"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{"Key", "@", "\"\<List\>\""}], "]"}], ":=", "\[IndentingNewLine]", 
+   
+   RowBox[{"resourceList", "[", "m", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "\"\<Search\>\""}], ",", "key_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"resourceSearch", "[", 
+    RowBox[{"key", ",", "m"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "\"\<Find\>\""}], ",", "key_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"resourceFind", "[", 
+    RowBox[{"key", ",", "m"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", 
+    RowBox[{"f_String", ",", "args__"}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"m", "[", 
+    RowBox[{
+     RowBox[{"Key", "@", "f"}], ",", "args"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", "key_String",
+     "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"m", "[", 
+      RowBox[{
+       RowBox[{"Key", "@", "\"\<Find\>\""}], ",", "key"}], "]"}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", "}"}], "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"o", ":", 
+         RowBox[{"Except", "[", 
+          RowBox[{"{", 
+           RowBox[{"_", ",", "__"}], "}"}], "]"}]}], "\[RuleDelayed]", 
+        RowBox[{"resourcePull", "@", "o"}]}]}], "\[IndentingNewLine]", 
+      "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", ":", 
+      RowBox[{"resourceManager", "[", "__", "]"}]}], ")"}], "[", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"m", "[", 
+    RowBox[{"Key", "@", "\"\<List\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQAWIQ3dX0cv6b2teOZR/WLwTRHKyxj0H0MieeJyD6wPop
+/0H0D1Ml5rdAuvFlscU7IH1pa5E1iO55HhUCoh08+6JBtKVGZDyIXhW3KAdE
+b0i/2QSigzR72kB0n6GT73sgbWEv6Qeil294XQuib95tawHRPE+m9oHoNX+Y
+JoFoVZajFox1rx2F6+84gujdZldjQXS/1NE0EP1KYe5MEK3jDaEnfiyUZQLS
+L5hL5UC0js13DRD9uZlVC0TrJQctANFNq1IWgei78dfjmYG02nazAhC90JNr
+Poh+v2buQhDtsEfgDguQdjvichdEv+OR+gyi/yXWfAHRAE9opTg=
+  "]]
+}, Closed]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]], "SubsectionInput",
+ CellChangeTimes->{{3.689899875573971*^9, 3.689899888395804*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], ";"}]], "SubsectionInput",
+ CellChangeTimes->{{3.689899856198257*^9, 3.68989986704462*^9}, {
+  3.689900865553129*^9, 3.689900866768474*^9}}]
+}, Open  ]],
+
+Cell["", "Separator",
+ CellChangeTimes->{3.6899034617455053`*^9}],
+
+Cell[CellGroupData[{
+
+Cell["Testing", "Section",
+ CellChangeTimes->{{3.689900989811487*^9, 3.689900990778681*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Clear", "@", "\"\<resourceFramework`*\>\""}]], "Input",
+ CellChangeTimes->{{3.689946213112406*^9, 3.689946218044269*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Pulling and submitting data", "Subsection",
+ CellChangeTimes->{{3.689949926697815*^9, 3.689949931658087*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Test Data", "Subsubsection",
+ CellChangeTimes->{{3.689949921859486*^9, 3.689949923794416*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"testFile", "=", 
+   RowBox[{"FileNameJoin", "@", 
+    RowBox[{"{", 
+     RowBox[{"$TemporaryDirectory", ",", "\"\<test_data.txt\>\""}], "}"}]}]}],
+   ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"testData", "=", "\[IndentingNewLine]", 
+   RowBox[{"Export", "[", "\[IndentingNewLine]", 
+    RowBox[{"testFile", ",", "\[IndentingNewLine]", 
+     RowBox[{"Prepend", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Normal", "@", 
+         RowBox[{"Last", "@", 
+          RowBox[{"First", "@", 
+           RowBox[{"Normal", "@", 
+            RowBox[{"ResourceData", "[", 
+             RowBox[{
+             "\"\<US High School Dropouts by Sex and Race\>\"", ",", 
+              "\"\<RawData\>\""}], "]"}]}]}]}]}], "/.", "\[IndentingNewLine]", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"d_DateObject", ":>", 
+           RowBox[{"UnixTime", "@", "d"}]}], ",", "\[IndentingNewLine]", 
+          RowBox[{"q_Quantity", "\[RuleDelayed]", 
+           RowBox[{"QuantityMagnitude", "@", "q"}]}]}], "\[IndentingNewLine]",
+          "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"\"\<Time (Unix)\>\"", ",", " ", "\"\<Dropout Rate (%)\>\""}],
+         "}"}]}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+     "\"\<TSV\>\""}], "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.689946937766053*^9, 3.689947012640335*^9}, {
+  3.6899473174961853`*^9, 3.689947424016696*^9}, {3.689947575083683*^9, 
+  3.6899476014099493`*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Cloud", "Subsubsection",
+ CellChangeTimes->{{3.689949910722477*^9, 3.68994991261082*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"$cloudRepo", "=", 
+   RowBox[{"resourceManager", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$cloudRepo", "[", 
+   RowBox[{
+   "\"\<Submit\>\"", ",", "\[IndentingNewLine]", "testFile", ",", 
+    "\[IndentingNewLine]", 
+    "\"\<Dropout rates across all American High School students over \
+time\>\"", ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<American\>\"", ",", "\"\<School\>\"", ",", "\"\<Dropout\>\"", ",", 
+      "\"\<Rates\>\""}], "}"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"fromFullFile", "=", 
+      RowBox[{"$cloudRepo", "[", "testFile", "]"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"fromFilePart", "=", 
+      RowBox[{"$cloudRepo", "[", "\"\<test_data.txt\>\"", "]"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"fromKeyWord", "=", 
+      RowBox[{"$cloudRepo", "[", "\"\<American\>\"", "]"}]}]}], 
+    "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Column", "@", 
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"fromFullFile", "===", "fromFilePart", "===", "fromKeyWord"}], 
+      ",", "\[IndentingNewLine]", "fromFullFile"}], "\[IndentingNewLine]", 
+     "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.689903432199196*^9, 3.689903440646287*^9}, {
+   3.68994608766746*^9, 3.689946101587323*^9}, {3.6899474303859863`*^9, 
+   3.6899474485698547`*^9}, 3.689947620279222*^9, {3.689947709380643*^9, 
+   3.689947806352818*^9}, 3.689947839441128*^9, {3.689948010457692*^9, 
+   3.689948105533905*^9}, 3.6899487123138866`*^9, 3.689948936417161*^9}],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"True"},
+    {"\<\"Time (Unix)\\tDropout Rate \
+(%)\\n157784400\\t13.903199648599404\\n189320400\\t14.142050824542924\\\
+n220942800\\t14.10976818974054\\n252478800\\t14.232003005761044\\n284014800\\\
+t14.570883728654064\\n315550800\\t14.06966256452598\\n347173200\\t13.\
+919618728369704\\n378709200\\t13.86877301296974\\n410245200\\t13.\
+66877995764129\\n441781200\\t13.140703134322893\\n473403600\\t12.\
+576397533593159\\n504939600\\t12.203015925584568\\n536475600\\t12.\
+645158790826267\\n568011600\\t12.866970811246887\\n599634000\\t12.\
+616148363971927\\n631170000\\t12.074630283369906\\n662706000\\t12.\
+450373744826923\\n694242000\\t11.019595978567995\\n725864400\\t11.\
+01001134705787\\n757400400\\t11.445124632174675\\n788936400\\t11.\
+970075290483162\\n820472400\\t11.126410388432538\\n852094800\\t10.\
+996433695016481\\n883630800\\t11.787271565706892\\n915166800\\t11.\
+19862673463347\\n946702800\\t10.92235100723838\\n978325200\\t10.\
+724330082584919\\n1009861200\\t10.481792847140243\\n1041397200\\t9.\
+861575440341072\\n1072933200\\t10.31627889163867\\n1104555600\\t9.\
+405658586330818\\n1136091600\\t9.34529540099389\\n1167627600\\t8.\
+744686874190467\\n1199163600\\t8.011285341805648\\n1230786000\\t8.\
+053901304706484\\n1262322000\\t7.4210132594332\\n1293858000\\t7.\
+102652081590589\\n1325394000\\t6.603999046779801\\n1357016400\\t6.\
+758088263153786\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{3.689948939628209*^9}]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Local file system", "Subsubsection",
+ CellChangeTimes->{{3.689949901179078*^9, 3.689949905875231*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"!", 
+     RowBox[{"DirectoryQ", "@", "\"\<~/Desktop/resource_framework\>\""}]}], 
+    ",", 
+    RowBox[{
+    "CreateDirectory", "@", "\"\<~/Desktop/resource_framework\>\""}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$desktopRepo", "=", "\[IndentingNewLine]", 
+   RowBox[{"resourceManager", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+     "\"\<Location\>\"", "->", "\"\<~/Desktop/resource_framework\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Mode\>\"", "\[Rule]", "\"\<Local\>\""}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$desktopRepo", "[", 
+   RowBox[{
+   "\"\<Submit\>\"", ",", "\[IndentingNewLine]", "testFile", ",", 
+    "\[IndentingNewLine]", 
+    "\"\<Dropout rates across all American High School students over \
+time\>\"", ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<American\>\"", ",", "\"\<School\>\"", ",", "\"\<Dropout\>\"", ",", 
+      "\"\<Rates\>\""}], "}"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"fromFullFile", "=", 
+      RowBox[{"$desktopRepo", "[", "testFile", "]"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"fromFilePart", "=", 
+      RowBox[{"$desktopRepo", "[", "\"\<test_data.txt\>\"", "]"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"fromKeyWord", "=", 
+      RowBox[{"$desktopRepo", "[", "\"\<American\>\"", "]"}]}]}], 
+    "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Column", "@", 
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"fromFullFile", "===", "fromFilePart", "===", "fromKeyWord"}], 
+      ",", "\[IndentingNewLine]", "fromFullFile"}], "\[IndentingNewLine]", 
+     "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.689946104974732*^9, 3.689946179760788*^9}, 
+   3.6899464875738688`*^9, {3.689946561135015*^9, 3.68994663424332*^9}, {
+   3.6899469085387373`*^9, 3.6899469328142357`*^9}, {3.689947550588674*^9, 
+   3.6899475621223907`*^9}, {3.689948240858037*^9, 3.689948246778885*^9}, {
+   3.689948952436467*^9, 3.689948969107211*^9}}],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"True"},
+    {"\<\"Time (Unix)\\tDropout Rate \
+(%)\\n157784400\\t13.903199648599404\\n189320400\\t14.142050824542924\\\
+n220942800\\t14.10976818974054\\n252478800\\t14.232003005761044\\n284014800\\\
+t14.570883728654064\\n315550800\\t14.06966256452598\\n347173200\\t13.\
+919618728369704\\n378709200\\t13.86877301296974\\n410245200\\t13.\
+66877995764129\\n441781200\\t13.140703134322893\\n473403600\\t12.\
+576397533593159\\n504939600\\t12.203015925584568\\n536475600\\t12.\
+645158790826267\\n568011600\\t12.866970811246887\\n599634000\\t12.\
+616148363971927\\n631170000\\t12.074630283369906\\n662706000\\t12.\
+450373744826923\\n694242000\\t11.019595978567995\\n725864400\\t11.\
+01001134705787\\n757400400\\t11.445124632174675\\n788936400\\t11.\
+970075290483162\\n820472400\\t11.126410388432538\\n852094800\\t10.\
+996433695016481\\n883630800\\t11.787271565706892\\n915166800\\t11.\
+19862673463347\\n946702800\\t10.92235100723838\\n978325200\\t10.\
+724330082584919\\n1009861200\\t10.481792847140243\\n1041397200\\t9.\
+861575440341072\\n1072933200\\t10.31627889163867\\n1104555600\\t9.\
+405658586330818\\n1136091600\\t9.34529540099389\\n1167627600\\t8.\
+744686874190467\\n1199163600\\t8.011285341805648\\n1230786000\\t8.\
+053901304706484\\n1262322000\\t7.4210132594332\\n1293858000\\t7.\
+102652081590589\\n1325394000\\t6.603999046779801\\n1357016400\\t6.\
+758088263153786\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{3.689949896064392*^9}]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Testing",
+WindowSize->{808, 755},
+WindowMargins->{{Automatic, 69}, {Automatic, 9}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+21, 2016)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["Section"], WholeCellGroupOpener -> True], 
+   Cell[
+    StyleData["Subsection"], ShowGroupOpener -> True], 
+   Cell[
+    StyleData["Subsubsection"], ShowGroupOpener -> True], 
+   Cell[
+    StyleData["SubsectionInput", StyleDefinitions -> StyleData["Input"]], 
+    CellGroupingRules -> {"SectionGrouping", 40}], 
+   Cell[
+    StyleData["Separator", Style -> "Section"], CellFrame -> {{0, 0}, {2, 2}},
+     CellMargins -> {{0, 0}, {Inherited, Inherited}}, 
+    CellBracketOptions -> {"Color" -> None, "OverlapContent" -> True}, 
+    Deployed -> True, CellGroupingRules -> {"GroupTogetherGrouping", 0}, 
+    CellFrameColor -> RGBColor[0, 0, 0.4], MenuCommandKey -> "8", FontOpacity -> 
+    0, Background -> GrayLevel[0.9]]}, Visible -> False, FrontEndVersion -> 
+  "11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 21, 2016)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 163, 2, 64, "Section"],
+Cell[746, 26, 206, 4, 49, "Text"],
+Cell[955, 32, 160, 3, 30, "Text"],
+Cell[1118, 37, 311, 6, 49, "Text"],
+Cell[1432, 45, 186, 4, 32, "SubsectionInput"],
+Cell[CellGroupData[{
+Cell[1643, 53, 95, 1, 36, "Subsection"],
+Cell[1741, 56, 685, 15, 75, "Input"],
+Cell[2429, 73, 816, 19, 75, "Input"],
+Cell[3248, 94, 1032, 25, 96, "Input"],
+Cell[4283, 121, 375, 7, 32, "Input"]
+}, Open  ]],
+Cell[4673, 131, 170, 4, 32, "SubsectionInput"],
+Cell[CellGroupData[{
+Cell[4868, 139, 97, 1, 36, "Subsection"],
+Cell[4968, 142, 256, 6, 32, "Input"],
+Cell[5227, 150, 842, 20, 75, "Input"],
+Cell[6072, 172, 1344, 33, 222, "Input"],
+Cell[7419, 207, 354, 7, 32, "Input"],
+Cell[CellGroupData[{
+Cell[7798, 218, 109, 1, 35, "Subsubsection"],
+Cell[7910, 221, 748, 15, 222, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[8695, 241, 154, 2, 29, "Subsubsection"],
+Cell[8852, 245, 2138, 43, 453, "Input"],
+Cell[10993, 290, 1446, 31, 285, "Input"],
+Cell[12442, 323, 847, 19, 159, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[13326, 347, 107, 1, 29, "Subsubsection"],
+Cell[13436, 350, 2686, 57, 495, "Input"],
+Cell[16125, 409, 3836, 83, 621, "Input"],
+Cell[19964, 494, 1061, 24, 180, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[21062, 523, 105, 1, 29, "Subsubsection"],
+Cell[21170, 526, 2333, 51, 369, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[23540, 582, 212, 3, 29, "Subsubsection"],
+Cell[23755, 587, 1435, 34, 264, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[25227, 626, 107, 1, 29, "Subsubsection"],
+Cell[25337, 629, 1552, 33, 243, "Input"],
+Cell[26892, 664, 1756, 34, 306, "Input"],
+Cell[28651, 700, 740, 17, 138, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[29428, 722, 81, 1, 29, "Subsubsection"],
+Cell[29512, 725, 2413, 53, 453, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[31962, 783, 101, 1, 29, "Subsubsection"],
+Cell[32066, 786, 2973, 65, 558, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[35076, 856, 177, 2, 29, "Subsubsection"],
+Cell[35256, 860, 2640, 62, 621, "Input"],
+Cell[37899, 924, 1130, 25, 285, "Input"],
+Cell[39032, 951, 4108, 119, 495, "Input"]
+}, Closed]]
+}, Open  ]],
+Cell[43167, 1074, 145, 3, 32, "SubsectionInput"],
+Cell[43315, 1079, 200, 4, 26, "SubsectionInput"]
+}, Open  ]],
+Cell[43530, 1086, 65, 1, 40, "Separator"],
+Cell[CellGroupData[{
+Cell[43620, 1091, 92, 1, 64, "Section"],
+Cell[43715, 1094, 145, 2, 32, "Input"],
+Cell[CellGroupData[{
+Cell[43885, 1100, 115, 1, 44, "Subsection"],
+Cell[CellGroupData[{
+Cell[44025, 1105, 100, 1, 35, "Subsubsection"],
+Cell[44128, 1108, 1582, 35, 348, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[45747, 1148, 95, 1, 29, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[45867, 1153, 1740, 39, 348, "Input"],
+Cell[47610, 1194, 1635, 29, 871, "Output"]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[49294, 1229, 108, 1, 29, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[49427, 1234, 2302, 54, 495, "Input"],
+Cell[51732, 1290, 1635, 29, 871, "Output"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
