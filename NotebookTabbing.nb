@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    122095,       2807]
-NotebookOptionsPosition[    113854,       2606]
-NotebookOutlinePosition[    114756,       2637]
-CellTagsIndexPosition[    114713,       2634]
+NotebookDataLength[    122486,       2809]
+NotebookOptionsPosition[    114382,       2612]
+NotebookOutlinePosition[    115284,       2643]
+CellTagsIndexPosition[    115241,       2640]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -687,32 +687,10 @@ Cell[BoxData[
      "\[IndentingNewLine]", 
      RowBox[{"Interpretation", "[", "\[IndentingNewLine]", 
       RowBox[{
-       RowBox[{"Graphics", "[", 
+       RowBox[{"DynamicWrapper", "[", "\[IndentingNewLine]", 
         RowBox[{
-         RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"Graphics", "[", 
           RowBox[{
-           RowBox[{"Dynamic", "@", "\[IndentingNewLine]", 
-            RowBox[{"If", "[", 
-             RowBox[{
-              RowBox[{"(", 
-               RowBox[{
-                RowBox[{"$ActiveNotebookTab", "[", "nb", "]"}], "===", 
-                "tag"}], ")"}], ",", "\[IndentingNewLine]", 
-              "$TabBackgroundActive", ",", "\[IndentingNewLine]", 
-              "$TabBackgroundInactive"}], "\[IndentingNewLine]", "]"}]}], ",",
-            "\[IndentingNewLine]", 
-           RowBox[{"Dynamic", "@", "\[IndentingNewLine]", 
-            RowBox[{"If", "[", 
-             RowBox[{
-              RowBox[{"(", 
-               RowBox[{
-                RowBox[{"$ActiveNotebookTab", "[", "nb", "]"}], "===", 
-                "tag"}], ")"}], ",", "\[IndentingNewLine]", 
-              RowBox[{"EdgeForm", "@", "$TabBorderActive"}], ",", 
-              "\[IndentingNewLine]", 
-              RowBox[{"EdgeForm", "@", "$TabBorderInactive"}]}], 
-             "\[IndentingNewLine]", "]"}]}], ",", " ", "\[IndentingNewLine]", 
-           "$TabShape", ",", 
            RowBox[{"{", "\[IndentingNewLine]", 
             RowBox[{
              RowBox[{"Dynamic", "@", "\[IndentingNewLine]", 
@@ -722,39 +700,74 @@ Cell[BoxData[
                  RowBox[{
                   RowBox[{"$ActiveNotebookTab", "[", "nb", "]"}], "===", 
                   "tag"}], ")"}], ",", "\[IndentingNewLine]", 
-                "$TabForegroundActive", ",", "\[IndentingNewLine]", 
-                "$TabForegroundInactive"}], "\[IndentingNewLine]", "]"}]}], 
+                "$TabBackgroundActive", ",", "\[IndentingNewLine]", 
+                "$TabBackgroundInactive"}], "\[IndentingNewLine]", "]"}]}], 
              ",", "\[IndentingNewLine]", 
-             RowBox[{"Inset", "[", "\[IndentingNewLine]", 
-              RowBox[{"name", ",", "\[IndentingNewLine]", 
-               RowBox[{"Scaled", "[", 
-                RowBox[{"{", 
-                 RowBox[{".2", ",", "0"}], "}"}], "]"}], ",", 
-               "\[IndentingNewLine]", 
-               RowBox[{"{", 
-                RowBox[{"Left", ",", "Bottom"}], "}"}]}], 
-              "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}]}], 
-          "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
-         RowBox[{"ImageMargins", "\[Rule]", 
-          RowBox[{"{", 
-           RowBox[{
+             RowBox[{"Dynamic", "@", "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"$ActiveNotebookTab", "[", "nb", "]"}], "===", 
+                  "tag"}], ")"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"EdgeForm", "@", "$TabBorderActive"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"EdgeForm", "@", "$TabBorderInactive"}]}], 
+               "\[IndentingNewLine]", "]"}]}], ",", " ", 
+             "\[IndentingNewLine]", "$TabShape", ",", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Dynamic", "@", "\[IndentingNewLine]", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"$ActiveNotebookTab", "[", "nb", "]"}], "===", 
+                    "tag"}], ")"}], ",", "\[IndentingNewLine]", 
+                  "$TabForegroundActive", ",", "\[IndentingNewLine]", 
+                  "$TabForegroundInactive"}], "\[IndentingNewLine]", "]"}]}], 
+               ",", "\[IndentingNewLine]", 
+               RowBox[{"Inset", "[", "\[IndentingNewLine]", 
+                RowBox[{"name", ",", "\[IndentingNewLine]", 
+                 RowBox[{"Scaled", "[", 
+                  RowBox[{"{", 
+                   RowBox[{".2", ",", "0"}], "}"}], "]"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"{", 
+                  RowBox[{"Left", ",", "Bottom"}], "}"}]}], 
+                "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+              "}"}]}], "\[IndentingNewLine]", "}"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"ImageMargins", "\[Rule]", 
             RowBox[{"{", 
-             RowBox[{"0", ",", "0"}], "}"}], ",", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", "0"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"ImagePadding", "\[Rule]", 
             RowBox[{"{", 
-             RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], ",", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", "0"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"PlotRangePadding", "\[Rule]", "None"}], ",", 
+           "\[IndentingNewLine]", "ops"}], "\[IndentingNewLine]", "]"}], ",", 
          "\[IndentingNewLine]", 
-         RowBox[{"ImagePadding", "\[Rule]", 
-          RowBox[{"{", 
+         RowBox[{"If", "[", 
+          RowBox[{
            RowBox[{
-            RowBox[{"{", 
-             RowBox[{"0", ",", "0"}], "}"}], ",", 
-            RowBox[{"{", 
-             RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], ",", 
-         "\[IndentingNewLine]", 
-         RowBox[{"PlotRangePadding", "\[Rule]", "None"}], ",", 
-         "\[IndentingNewLine]", "ops"}], "\[IndentingNewLine]", "]"}], ",", 
-       "\[IndentingNewLine]", "tag"}], "]"}]}], "\[IndentingNewLine]", 
-    "]"}]}], ";"}]], "Input",
+            RowBox[{"DownValues", "[", "SwitchTabs", "]"}], "===", 
+            RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+           "CloudGet", "@", "\[IndentingNewLine]", 
+            "\"\<https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-\
+8cc4-4d107e2bf04a/NotebookTabbing.m\>\""}]}], "\[IndentingNewLine]", "]"}]}], 
+        "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", "tag"}], 
+      "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.688906044403702*^9, 3.688906157531601*^9}, {
    3.688906420841319*^9, 3.688906754062174*^9}, {3.688906820122389*^9, 
    3.688906848650116*^9}, {3.688906922435471*^9, 3.688906938937299*^9}, {
@@ -779,7 +792,8 @@ Cell[BoxData[
    3.688934022771093*^9, 3.688934053824814*^9}, 3.688934087607956*^9, 
    3.688934124381672*^9, {3.688934185888838*^9, 3.688934229125374*^9}, {
    3.68893426982076*^9, 3.688934285538612*^9}, {3.68893431658984*^9, 
-   3.688934321378107*^9}},ExpressionUUID->"09fb9e5e-521e-4260-be12-\
+   3.688934321378107*^9}, {3.706916036896861*^9, 
+   3.706916066982294*^9}},ExpressionUUID->"09fb9e5e-521e-4260-be12-\
 6181bc7a5e5e"],
 
 Cell[BoxData[{
@@ -959,7 +973,8 @@ Cell[BoxData[
    3.6889338320875263`*^9}, {3.6889940966589108`*^9, 
    3.6889940998968897`*^9}, {3.68903049834503*^9, 3.68903049938087*^9}, {
    3.706915661647819*^9, 3.706915689916153*^9}, {3.7069158295492907`*^9, 
-   3.706915830926193*^9}},ExpressionUUID->"f5b79dde-03c1-43a4-8175-\
+   3.706915830926193*^9}, 
+   3.706916062767353*^9},ExpressionUUID->"f5b79dde-03c1-43a4-8175-\
 61f1cd33f81e"]
 }, Open  ]],
 
@@ -2452,8 +2467,6 @@ Cell[BoxData[
   3.688930890745085*^9}},ExpressionUUID->"9f88ceef-afc8-45e8-85a7-\
 ea06e8856d01"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{"(*", 
   RowBox[{
@@ -2470,15 +2483,8 @@ Cell[BoxData[
    "First"}], "*)"}]], "Input",
  CellChangeTimes->{{3.706915742668682*^9, 3.706915763071279*^9}, {
   3.706915799645638*^9, 
-  3.706915826435161*^9}},ExpressionUUID->"a9c2dcb2-665a-4d79-832c-\
-3bdfc7400655"],
-
-Cell[BoxData["\<\"https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-\
-4ccc-8cc4-4d107e2bf04a/NotebookTabbing.m\"\>"], "Output",
- CellChangeTimes->{
-  3.7069158270795116`*^9},ExpressionUUID->"328c6706-a6b0-455c-bd76-\
-9e0ed226bafd"]
-}, Open  ]]
+  3.706915826435161*^9}},ExpressionUUID->"4e3be0ad-f87e-4d17-b00d-\
+a3db2445648e"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2606,7 +2612,7 @@ c2daf3171edc"]
 },
 AutoGeneratedPackage->Automatic,
 WindowSize->{808, 755},
-WindowMargins->{{278, Automatic}, {Automatic, 0}},
+WindowMargins->{{43, Automatic}, {Automatic, 29}},
 DockedCells->None,
 FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 16, \
 2017)",
@@ -2731,81 +2737,77 @@ Cell[23298, 594, 3137, 65, 138, "Input", "ExpressionUUID" -> \
 Cell[CellGroupData[{
 Cell[26472, 664, 186, 3, 29, "Subsubsection", "ExpressionUUID" -> \
 "ccefa05f-b851-41b0-bf8a-02350de69add"],
-Cell[26661, 669, 5620, 113, 768, "Input", "ExpressionUUID" -> \
+Cell[26661, 669, 6396, 127, 915, "Input", "ExpressionUUID" -> \
 "09fb9e5e-521e-4260-be12-6181bc7a5e5e"],
-Cell[32284, 784, 5168, 109, 873, "Input", "ExpressionUUID" -> \
+Cell[33060, 798, 5168, 109, 873, "Input", "ExpressionUUID" -> \
 "11941069-acdd-4dab-920e-9177d4876535"],
-Cell[37455, 895, 3383, 67, 390, "Input", "ExpressionUUID" -> \
+Cell[38231, 909, 3409, 68, 390, "Input", "ExpressionUUID" -> \
 "f5b79dde-03c1-43a4-8175-61f1cd33f81e"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[40875, 967, 114, 1, 35, "Subsubsection", "ExpressionUUID" -> \
+Cell[41677, 982, 114, 1, 35, "Subsubsection", "ExpressionUUID" -> \
 "3b15b538-8eff-4f5e-982b-a4b60db555dd"],
-Cell[40992, 970, 4332, 87, 432, "Input", "ExpressionUUID" -> \
+Cell[41794, 985, 4332, 87, 432, "Input", "ExpressionUUID" -> \
 "1c42b783-0346-4a36-8dfb-864561fdffab"],
-Cell[45327, 1059, 4136, 79, 89, "Input", "ExpressionUUID" -> \
+Cell[46129, 1074, 4136, 79, 89, "Input", "ExpressionUUID" -> \
 "7728a898-dfc8-49c6-a623-8c61a7dfdc87"],
-Cell[49466, 1140, 8596, 166, 1587, "Input", "ExpressionUUID" -> \
+Cell[50268, 1155, 8596, 166, 1587, "Input", "ExpressionUUID" -> \
 "9ef5664e-f595-4d3f-bae5-9998d603c3bb"],
-Cell[58065, 1308, 3491, 81, 558, "Input", "ExpressionUUID" -> \
+Cell[58867, 1323, 3491, 81, 558, "Input", "ExpressionUUID" -> \
 "71b0ee4e-c499-48af-ba89-32041d2abf18"],
-Cell[61559, 1391, 3319, 77, 453, "Input", "ExpressionUUID" -> \
+Cell[62361, 1406, 3319, 77, 453, "Input", "ExpressionUUID" -> \
 "b1a2418c-24c3-4d0e-89b8-138e3a2fcd00"]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[64915, 1473, 220, 4, 29, "Subsubsection", "ExpressionUUID" -> \
+Cell[65717, 1488, 220, 4, 29, "Subsubsection", "ExpressionUUID" -> \
 "17ae829e-4884-47e5-a84a-1f09d739d957"],
-Cell[65138, 1479, 4294, 94, 705, "Input", "ExpressionUUID" -> \
+Cell[65940, 1494, 4294, 94, 705, "Input", "ExpressionUUID" -> \
 "c1b7191b-f3bd-45fa-a6cc-5d09b1092599"],
-Cell[69435, 1575, 3404, 73, 684, "Input", "ExpressionUUID" -> \
+Cell[70237, 1590, 3404, 73, 684, "Input", "ExpressionUUID" -> \
 "c12b4897-67d4-4d8f-83e9-06735c2d0e08"],
-Cell[72842, 1650, 3090, 68, 411, "Input", "ExpressionUUID" -> \
+Cell[73644, 1665, 3090, 68, 411, "Input", "ExpressionUUID" -> \
 "be4615b0-1f54-4d8a-b6d8-cf109b16d14c"],
-Cell[75935, 1720, 4102, 90, 516, "Input", "ExpressionUUID" -> \
+Cell[76737, 1735, 4102, 90, 516, "Input", "ExpressionUUID" -> \
 "bb57e10f-0799-4679-a3e6-a5853dbab2d8"]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[80074, 1815, 262, 4, 29, "Subsubsection", "ExpressionUUID" -> \
+Cell[80876, 1830, 262, 4, 29, "Subsubsection", "ExpressionUUID" -> \
 "6c30197a-9ffe-4b17-a71d-b9da162b0a5c"],
-Cell[80339, 1821, 6826, 141, 978, "Input", "ExpressionUUID" -> \
+Cell[81141, 1836, 6826, 141, 978, "Input", "ExpressionUUID" -> \
 "77c52e87-ffd0-4daf-9b66-7ccd2f57a445"],
-Cell[87168, 1964, 3920, 93, 516, "Input", "ExpressionUUID" -> \
+Cell[87970, 1979, 3920, 93, 516, "Input", "ExpressionUUID" -> \
 "9fdb38f0-8f30-4abd-9059-5e724eacb2ca"],
-Cell[91091, 2059, 3023, 70, 516, "Input", "ExpressionUUID" -> \
+Cell[91893, 2074, 3023, 70, 516, "Input", "ExpressionUUID" -> \
 "e8c5f32a-d122-4ad0-89e8-8be75ef7d75f"],
-Cell[94117, 2131, 4946, 102, 705, "Input", "ExpressionUUID" -> \
+Cell[94919, 2146, 4946, 102, 705, "Input", "ExpressionUUID" -> \
 "2faea56b-44a2-4b00-a20d-3a4cc46eed82"],
-Cell[99066, 2235, 3261, 72, 411, "Input", "ExpressionUUID" -> \
+Cell[99868, 2250, 3261, 72, 411, "Input", "ExpressionUUID" -> \
 "565e7a33-bc76-4494-b8b1-ff1e90d53b1b"]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[102364, 2312, 157, 3, 29, "Subsubsection", "ExpressionUUID" -> \
+Cell[103166, 2327, 157, 3, 29, "Subsubsection", "ExpressionUUID" -> \
 "85f1c17a-df2a-4a15-ad7a-af16dfe3d513"],
-Cell[102524, 2317, 4960, 114, 810, "Input", "ExpressionUUID" -> \
+Cell[103326, 2332, 4960, 114, 810, "Input", "ExpressionUUID" -> \
 "c308d917-5bfd-4e34-bc4c-8cc9301675b7"]
 }, Closed]]
 }, Open  ]],
-Cell[107511, 2435, 295, 7, 32, "Input", "ExpressionUUID" -> \
+Cell[108313, 2450, 295, 7, 32, "Input", "ExpressionUUID" -> \
 "cbfeb0da-f9d6-40a5-b3f7-d6bdc91e63b9",
  CellGroupingRules->{"SectionGrouping", 40}],
 Cell[CellGroupData[{
-Cell[107831, 2446, 247, 6, 26, "Input", "ExpressionUUID" -> \
+Cell[108633, 2461, 247, 6, 26, "Input", "ExpressionUUID" -> \
 "9f88ceef-afc8-45e8-85a7-ea06e8856d01",
  CellGroupingRules->{"SectionGrouping", 40}],
-Cell[CellGroupData[{
-Cell[108103, 2456, 710, 17, 117, "Input", "ExpressionUUID" -> \
-"a9c2dcb2-665a-4d79-832c-3bdfc7400655"],
-Cell[108816, 2475, 237, 4, 54, "Output", "ExpressionUUID" -> \
-"328c6706-a6b0-455c-bd76-9e0ed226bafd"]
-}, Open  ]]
+Cell[108883, 2469, 710, 17, 117, "Input", "ExpressionUUID" -> \
+"4e3be0ad-f87e-4d17-b00d-a3db2445648e"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[109114, 2486, 156, 3, 64, "Section", "ExpressionUUID" -> \
+Cell[109642, 2492, 156, 3, 64, "Section", "ExpressionUUID" -> \
 "74a3af45-ea56-4f21-85e5-24681f223462"],
-Cell[109273, 2491, 1236, 28, 201, "Input", "ExpressionUUID" -> \
+Cell[109801, 2497, 1236, 28, 201, "Input", "ExpressionUUID" -> \
 "815a7dad-1dcd-47d8-9d71-f490bb2619fa"],
-Cell[110512, 2521, 3314, 81, 558, "Input", "ExpressionUUID" -> \
+Cell[111040, 2527, 3314, 81, 558, "Input", "ExpressionUUID" -> \
 "68a86caa-cfc2-49c5-87f6-c2daf3171edc"]
 }, Open  ]]
 }, Open  ]]
