@@ -1,0 +1,280 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     12033,        272]
+NotebookOptionsPosition[      1311,         46]
+NotebookOutlinePosition[     11704,        263]
+CellTagsIndexPosition[     11661,        260]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["This notebook caches permanently", "Subsection",
+ CellChangeTimes->{{3.7069176623860493`*^9, 
+  3.706917670144188*^9}},ExpressionUUID->"f9892c8f-bb09-4eb9-a05e-\
+0af5849ddcb5"],
+
+Cell["So you can just pass it around", "Text",
+ CellChangeTimes->{{3.706917672295925*^9, 
+  3.7069176792877693`*^9}},ExpressionUUID->"eb21f863-204c-4441-82b6-\
+088c70f970c8"],
+
+Cell[CellGroupData[{
+
+Cell["Or whatever", "Subsubsection",
+ CellChangeTimes->{{3.706917692977179*^9, 
+  3.70691769448733*^9}},ExpressionUUID->"d8456e57-3096-4d6e-91df-\
+be5d3ccd1625"],
+
+Cell["Theoretically", "Text",
+ CellChangeTimes->{{3.706918444731279*^9, 
+  3.706918447722362*^9}},ExpressionUUID->"2d4a5f73-5b98-417d-a87b-\
+01c2f6905fb4"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{314, Automatic}, {Automatic, 50}},
+DockedCells->Cell[
+  BoxData[
+   TagBox[
+    PaneBox[
+     RowBox[{
+       TagBox[
+        InterpretationBox[
+         DynamicWrapperBox[
+          GraphicsBox[{
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 1,
+                NotebookTabbing`$TabBackgroundActive, 
+               NotebookTabbing`$TabBackgroundInactive], StandardForm, 
+              Graphics]], 
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 1, 
+               EdgeForm[NotebookTabbing`$TabBorderActive], 
+               EdgeForm[NotebookTabbing`$TabBorderInactive]], StandardForm, 
+              Graphics]], 
+            PolygonBox[CompressedData["
+1:eJxTTMoPSmViYGBQAmIQDQECB4o2X1m6g/W4PYTPc6Dmjbxgy6FLUD7HgYjM
+Ld6OUfegfJYDUVIvwnzdXkD5DAd453tb9wp9hvJ/7J+9aIOTmsFfKP/Dfo2X
+mTNfN7M6QPgP9otff5/NYcLnwIACRGDy9qUiHKd+P5WA8j/Y53B7G3PZyUL5
+P+zXvF5p/jtSAabfQa5nWsS6uYpQPotDdN1ErdnVSlA+h8O2mEVfdXmVoXwe
+hzkM5fdfZ8L4Ag5GazNkXy6G8R1R+Q6OqOobHFHNO+CIZp8TqnscnBxQ3Nvg
+5IDinwNODqj+dXZACQ8HZweU8GpwdkAJzwPODqjh7eKAEh8OLg4o8dXg4oAS
+nwdcHFDj29UBlh4AGYKL8w==
+             "]], {
+             DynamicBox[
+              Typeset`ToBoxes[
+               If[NotebookTabbing`$ActiveNotebookTab[
+                  Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 
+                1, NotebookTabbing`$TabForegroundActive, 
+                NotebookTabbing`$TabForegroundInactive], StandardForm, 
+               Graphics]], 
+             InsetBox[
+              BoxData[
+               FormBox["1", TraditionalForm]], 
+              Scaled[{0.2, 0}], {Left, Bottom}]}}, 
+           ImageMargins -> {{0, 0}, {0, 3}}, ImagePadding -> {{0, 0}, {0, 3}},
+            PlotRangePadding -> None], 
+          If[DownValues[NotebookTabbing`SwitchTabs] === {}, 
+           CloudGet[
+           "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-8cc4-\
+4d107e2bf04a/NotebookTabbing.m"]]], 1], 
+        EventHandlerTag[{"MouseClicked" :> (If[
+             And[
+             NotebookTabbing`SwitchTabs === NotebookTabbing`SwitchTabs, 
+              DownValues[NotebookTabbing`SwitchTabs] === {}], 
+             CloudGet[
+             "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-\
+8cc4-4d107e2bf04a/NotebookTabbing.m"]]; 
+           NotebookTabbing`SwitchTabs[Automatic, 1]), Method -> "Preemptive", 
+          PassEventsDown -> Automatic, PassEventsUp -> True}]], 
+       TagBox[
+        InterpretationBox[
+         DynamicWrapperBox[
+          GraphicsBox[{
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 2,
+                NotebookTabbing`$TabBackgroundActive, 
+               NotebookTabbing`$TabBackgroundInactive], StandardForm, 
+              Graphics]], 
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 2, 
+               EdgeForm[NotebookTabbing`$TabBorderActive], 
+               EdgeForm[NotebookTabbing`$TabBorderInactive]], StandardForm, 
+              Graphics]], 
+            PolygonBox[CompressedData["
+1:eJxTTMoPSmViYGBQAmIQDQECB4o2X1m6g/W4PYTPc6Dmjbxgy6FLUD7HgYjM
+Ld6OUfegfJYDUVIvwnzdXkD5DAd453tb9wp9hvJ/7J+9aIOTmsFfKP/Dfo2X
+mTNfN7M6QPgP9otff5/NYcLnwIACRGDy9qUiHKd+P5WA8j/Y53B7G3PZyUL5
+P+zXvF5p/jtSAabfQa5nWsS6uYpQPotDdN1ErdnVSlA+h8O2mEVfdXmVoXwe
+hzkM5fdfZ8L4Ag5GazNkXy6G8R1R+Q6OqOobHFHNO+CIZp8TqnscnBxQ3Nvg
+5IDinwNODqj+dXZACQ8HZweU8GpwdkAJzwPODqjh7eKAEh8OLg4o8dXg4oAS
+nwdcHFDj29UBlh4AGYKL8w==
+             "]], {
+             DynamicBox[
+              Typeset`ToBoxes[
+               If[NotebookTabbing`$ActiveNotebookTab[
+                  Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 
+                2, NotebookTabbing`$TabForegroundActive, 
+                NotebookTabbing`$TabForegroundInactive], StandardForm, 
+               Graphics]], 
+             InsetBox[
+              BoxData[
+               FormBox["2", TraditionalForm]], 
+              Scaled[{0.2, 0}], {Left, Bottom}]}}, 
+           ImageMargins -> {{0, 0}, {0, 3}}, ImagePadding -> {{0, 0}, {0, 3}},
+            PlotRangePadding -> None], 
+          If[DownValues[NotebookTabbing`SwitchTabs] === {}, 
+           CloudGet[
+           "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-8cc4-\
+4d107e2bf04a/NotebookTabbing.m"]]], 2], 
+        EventHandlerTag[{"MouseClicked" :> (If[
+             And[
+             NotebookTabbing`SwitchTabs === NotebookTabbing`SwitchTabs, 
+              DownValues[NotebookTabbing`SwitchTabs] === {}], 
+             CloudGet[
+             "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-\
+8cc4-4d107e2bf04a/NotebookTabbing.m"]]; 
+           NotebookTabbing`SwitchTabs[Automatic, 2]), Method -> "Preemptive", 
+          PassEventsDown -> Automatic, PassEventsUp -> True}]], 
+       TagBox[
+        InterpretationBox[
+         DynamicWrapperBox[
+          GraphicsBox[{
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 3,
+                NotebookTabbing`$TabBackgroundActive, 
+               NotebookTabbing`$TabBackgroundInactive], StandardForm, 
+              Graphics]], 
+            DynamicBox[
+             Typeset`ToBoxes[
+              If[NotebookTabbing`$ActiveNotebookTab[
+                 Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 3, 
+               EdgeForm[NotebookTabbing`$TabBorderActive], 
+               EdgeForm[NotebookTabbing`$TabBorderInactive]], StandardForm, 
+              Graphics]], 
+            PolygonBox[CompressedData["
+1:eJxTTMoPSmViYGBQAmIQDQECB4o2X1m6g/W4PYTPc6Dmjbxgy6FLUD7HgYjM
+Ld6OUfegfJYDUVIvwnzdXkD5DAd453tb9wp9hvJ/7J+9aIOTmsFfKP/Dfo2X
+mTNfN7M6QPgP9otff5/NYcLnwIACRGDy9qUiHKd+P5WA8j/Y53B7G3PZyUL5
+P+zXvF5p/jtSAabfQa5nWsS6uYpQPotDdN1ErdnVSlA+h8O2mEVfdXmVoXwe
+hzkM5fdfZ8L4Ag5GazNkXy6G8R1R+Q6OqOobHFHNO+CIZp8TqnscnBxQ3Nvg
+5IDinwNODqj+dXZACQ8HZweU8GpwdkAJzwPODqjh7eKAEh8OLg4o8dXg4oAS
+nwdcHFDj29UBlh4AGYKL8w==
+             "]], {
+             DynamicBox[
+              Typeset`ToBoxes[
+               If[NotebookTabbing`$ActiveNotebookTab[
+                  Replace[Automatic, Automatic :> EvaluationNotebook[]]] === 
+                3, NotebookTabbing`$TabForegroundActive, 
+                NotebookTabbing`$TabForegroundInactive], StandardForm, 
+               Graphics]], 
+             InsetBox["docs", 
+              Scaled[{0.2, 0}], {Left, Bottom}]}}, 
+           ImageMargins -> {{0, 0}, {0, 3}}, ImagePadding -> {{0, 0}, {0, 3}},
+            PlotRangePadding -> None], 
+          If[DownValues[NotebookTabbing`SwitchTabs] === {}, 
+           CloudGet[
+           "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-8cc4-\
+4d107e2bf04a/NotebookTabbing.m"]]], 3], 
+        EventHandlerTag[{"MouseClicked" :> (If[
+             And[
+             NotebookTabbing`SwitchTabs === NotebookTabbing`SwitchTabs, 
+              DownValues[NotebookTabbing`SwitchTabs] === {}], 
+             CloudGet[
+             "https://www.wolframcloud.com/objects/user-affd7b1c-ecb6-4ccc-\
+8cc4-4d107e2bf04a/NotebookTabbing.m"]]; 
+           NotebookTabbing`SwitchTabs[Automatic, 3]), Method -> "Preemptive", 
+          PassEventsDown -> Automatic, PassEventsUp -> True}]]}], ImageSize -> 
+     Scaled[1]], "Tabs"]], CellMargins -> {{0, 0}, {0, 0}}, 
+  CellFrame -> {{0, 0}, {2, 0}}, CellFrameColor -> 
+  Dynamic[NotebookTabbing`$TabBorderActive], 
+  CellFrameMargins -> {{0, 0}, {-2, 3}}, Background -> GrayLevel[0.95]],
+TaggingRules->{
+ "DocuToolsSettingsInternal" -> {"$CondensedBlogMenus" -> "True"}, 
+  "DocuToolsSettings" -> {
+   "ShowMetaDataMessage" -> "False", "$ShowPacletVariablesPrompt" -> "True", 
+    "$ApplicationName" -> "", "$ApplicationDirectory" -> 
+    "/Applications/Mathematica.app/Contents/", "$DocumentationDirectory" -> 
+    "/Applications/Mathematica.app/Contents/Documentation/English/", 
+    "$LinkBase" -> "Schloop"}, "ActiveTab" -> 1, "NotebookTabs" -> 
+  Association[
+   1 -> "1:eJydTztOw0AQNYQGIosboOEGNJFoo4BokCJlXdGtnXF2E2fX8sxC0ucQaYDLUCJxjoh\
+LsBMs8VGapJk3I73PvMvcj8qjJEnoJI57S/\
+xzDbCqymO50va6a3yobzTrsvNH0vktURCXzFgC5xlz72dQ6MIgQY3NXDt0XC3VWSSpkBMWbL37jhGH\
+UaiQzlurgdFugpmdI6Ew5DXB1cN7kb989q+e38aC/\
+x64EG8PSx9isoNpIIZaE4Fl0LGCGyvhZrjgPYOvF6cogaa3wR3B3bgMG3gymvERG5W2JQ/tmd6+\
+TiSmt/7Y4lY5rNF9ARw6c80=", 3 -> 
+    "1:eJzNVl1IFFEUXnXtj8qyCCmCcUUQ6kFXxDKS/\
+EkzZJWdfYhS8M7OXXfa3bnrzsyukEaFBT7kSxAEEtRDhL34ELZlQk8RSBFKCVHQe/\
+YaQpDdc2fWdncmnF0H6mHmzNw5d75zvu+be6daIP5QicvlUtz01Csp6p+\
+7DhyNhkrhbo9x150gWrwTqSi0PWdKWfYUHrL9SBZJjFPDkjys8LvoCK8JCg6qEpH1d0K6X4tipcKY1\
+xFG8jAOSDGsYMjIHO1fJy4L97+1HZ7hIxDPNC3HIda/nhiBmIdeQy/\
+O4QQeaPHWN5xUuDBJcSrhogSJtBzMxVEwgoYxDxMCeFQtsJrzkzUJQG2ee8hisLl2CqJ/\
+vHXKXI1OJpDVTkYZcWxgG6CRFB0LubOJ5MvphQ9jUeEh7xJfSc8eH1GxQEgkgASB0jnkYQ8HWXKPHN\
+fstlBitPClfzkGpa6fviGzkm0pnlOoheIGGhJ8KIbZCCheqOiZGudOrDF6ry2eUixErtwAVDjEqUjg\
+ZEAtUtOjbz4yZ/2KHYxCfF93h4H69n62AC9UUzM5TFvTrLKcWfC0kZ2P85DkEUlQ2aryve9aWYMT+\
+34SG43p321KUoNhWrpSNOy0b5IZbuzpd2Y4NrMvjmV7zsshJs8Iu+\
+lFmyh2kmAEi7RIx4xX4z6mWRjvkI6XcR1dWGBNodpECjVfBjBRt86Ari4NJrduNhMf+\
+jqyExykYkWl60exJiozCk7fTrFCf6THRiFOf3r2CKJ24d5jiGtPDsxCdKWrZh1WG0rz4xhJYucEv1k\
+rPYcyZxYrXlgIfmQDMqN5KME2tuJUzxz5qq9W32LoK6+q5rfuAiuenDOCu0gjXN+xwnobSq/\
+OO2wMWKi6sUr77JFDxDFPXEw+eGnhif06msJJFIwjMthCcdoJS3e9C/Z359K/\
+k1OoefK4tLNZwXZ8NomiGgKyM/8rhuV0k/0bq/X2v10o5nMy78VXTDnlOZRv/\
+oYGto8PtHQ1eb2bSJC9B1vzb87vIokYfWJLL7jzNHiM3wsgP5BAogTioSi8KEc0lmWjQe9/\
+1qDX6QYbsxrM/ykbZwN9mmrP3CXGalM/8mEhZy00X/wGhGB2eA==", 2 -> 
+    "1:eJxTTMoPSmNkYGAoZgESPpnFJWnMMJ5zak5OsByQEZKRqpCXX5KalJ+\
+frVBanFqsEJKYnp6Zlx5UmpNaHMwFVBJcmlScmlySmZ+\
+XxgTTD5blhxrknJGYl54akpmbWpwKUgHDKp8CM5LmvXZUUHkOpo85/jgAor0OWB0E0QAvozB8"]},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 16, \
+2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 182, 3, 44, "Subsection", "ExpressionUUID" -> \
+"f9892c8f-bb09-4eb9-a05e-0af5849ddcb5"],
+Cell[765, 27, 174, 3, 30, "Text", "ExpressionUUID" -> \
+"eb21f863-204c-4441-82b6-088c70f970c8"],
+Cell[CellGroupData[{
+Cell[964, 34, 161, 3, 35, "Subsubsection", "ExpressionUUID" -> \
+"d8456e57-3096-4d6e-91df-be5d3ccd1625"],
+Cell[1128, 39, 155, 3, 30, "Text", "ExpressionUUID" -> \
+"2d4a5f73-5b98-417d-a87b-01c2f6905fb4"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
