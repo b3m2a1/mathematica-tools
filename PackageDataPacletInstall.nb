@@ -12,7 +12,8 @@ Cell[BoxData[
    RowBox[{"PDInstallPaclet", "::", "usage"}], "=", "\n", "\t", 
    "\"\<Installs a paclet from a site\>\""}], ";"}]], "CodeInput",
  CellChangeTimes->{{3.710422047099622*^9, 3.710422063850913*^9}, 
-   3.710426099272492*^9},ExpressionUUID->"43d3db56-9e13-4cf5-b887-\
+   3.710426099272492*^9, 
+   3.7104291105736513`*^9},ExpressionUUID->"43d3db56-9e13-4cf5-b887-\
 8f62a5888358"],
 
 Cell[CellGroupData[{
@@ -20,8 +21,8 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{
   RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
-  ";"}]], "InputSection",ExpressionUUID->"e1343f98-31f2-4e38-8a5f-\
-38ca047c7239"],
+  ";"}]], "InputSection",ExpressionUUID->"a1e9c4b5-c44f-4537-9d7a-\
+d8dbdc163ce7"],
 
 Cell[BoxData[{
  RowBox[{
@@ -33,33 +34,30 @@ Cell[BoxData[{
    RowBox[{"PDInstallPaclet", "::", "laywha"}], "=", 
    "\"\<Couldn't detect package layout from directory ``\>\""}], 
   ";"}]}], "CodeInput",
- CellChangeTimes->{{3.703597700362913*^9, 3.703597725324935*^9}, 
-   3.70405366602284*^9, 3.705589998426799*^9, {3.705590125426359*^9, 
-   3.705590130321109*^9}, {3.7055908578191757`*^9, 3.7055908775285683`*^9}, {
-   3.70559201133099*^9, 3.705592011334714*^9}, 
-   3.7104260993184967`*^9},ExpressionUUID->"4888dd98-19ba-4925-85dd-\
-0938872dfb57"],
+ CellChangeTimes->{{3.710429342321012*^9, 
+  3.710429342322266*^9}},ExpressionUUID->"11976e96-1ff0-4f13-b5d0-\
+cdf65d12f3a5"],
 
 Cell[CellGroupData[{
 
-Cell["pacletInfo", "Subsubsubsection",
+Cell["PDpacletInfo", "Subsubsubsection",
  CellChangeTimes->{{3.699937572999563*^9, 3.699937574968251*^9}, 
-   3.7027305115789537`*^9, {3.705594811172037*^9, 
-   3.705594820072814*^9}},ExpressionUUID->"4a164cd9-148c-49bc-8070-\
-524b63b6a601"],
+   3.7027305115789537`*^9, {3.705594811172037*^9, 3.705594820072814*^9}, 
+   3.7104223364737253`*^9},ExpressionUUID->"1dce3dd0-6325-42b0-91ca-\
+8862cd40430d"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"pacletInfoAssociation", "[", 
+   RowBox[{"PDpacletInfoAssociation", "[", 
     RowBox[{"PacletManager`Paclet", "[", "k__", "]"}], "]"}], ":=", "\n", 
    RowBox[{
     RowBox[{"With", "[", 
      RowBox[{
       RowBox[{"{", 
        RowBox[{"o", "=", 
-        RowBox[{"Options", "[", "pacletExpression", "]"}]}], "}"}], ",", "\n",
-       "\t", 
+        RowBox[{"Options", "[", "PDpacletExpression", "]"}]}], "}"}], ",", 
+      "\n", "\t", 
       RowBox[{"KeySortBy", "[", 
        RowBox[{
         RowBox[{"First", "@", 
@@ -92,26 +90,26 @@ Cell[BoxData[{
   ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletInfoAssociation", "[", "infoFile_", "]"}], ":=", "\n", 
+   RowBox[{"PDpacletInfoAssociation", "[", "infoFile_", "]"}], ":=", "\n", 
    RowBox[{"Replace", "[", 
     RowBox[{
-     RowBox[{"pacletInfo", "[", "infoFile", "]"}], ",", 
+     RowBox[{"PDpacletInfo", "[", "infoFile", "]"}], ",", 
      RowBox[{"{", "\n", "\t\t", 
       RowBox[{
        RowBox[{
         RowBox[{"p", ":", 
          RowBox[{"PacletManager`Paclet", "[", "__", "]"}]}], ":>", "\n", 
         "\t\t", 
-        RowBox[{"pacletInfoAssociation", "@", "p"}]}], ",", "\n", "\t\t", 
+        RowBox[{"PDpacletInfoAssociation", "@", "p"}]}], ",", "\n", "\t\t", 
        RowBox[{"_", "\[Rule]", 
         RowBox[{"<|", "|>"}]}]}], "\n", "\t\t", "}"}]}], "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletInfo", "[", "infoFile_", "]"}], ":=", "\n", 
+   RowBox[{"PDpacletInfo", "[", "infoFile_", "]"}], ":=", "\n", 
    RowBox[{"With", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"pacletInfo", "=", "\n", "\t\t", 
+      RowBox[{"PDpacletInfo", "=", "\n", "\t\t", 
        RowBox[{"Replace", "[", 
         RowBox[{"infoFile", ",", 
          RowBox[{"{", "\n", "\t\t\t\t", 
@@ -135,7 +133,8 @@ Cell[BoxData[{
                RowBox[{
                 RowBox[{
                  RowBox[{"FileExtension", "[", "#", "]"}], "\[Equal]", 
-                 "\"\<paclet\>\""}], "&"}], ")"}]}]}], ":>", "\n", "\t\t\t\t", 
+                 "\"\<PDpaclet\>\""}], "&"}], ")"}]}]}], ":>", "\n", 
+            "\t\t\t\t", 
             RowBox[{"With", "[", 
              RowBox[{
               RowBox[{"{", 
@@ -157,14 +156,14 @@ Cell[BoxData[{
             RowBox[{"StringContainsQ", "[", "\n", "\t\t\t\t", 
              RowBox[{
               RowBox[{"Nest", "[", 
-               RowBox[{"DirectoryName", ",", "pacletInfo", ",", "3"}], "]"}], 
-              ",", "\n", "\t\t\t\t", "$TemporaryDirectory"}], "\n", 
+               RowBox[{"DirectoryName", ",", "PDpacletInfo", ",", "3"}], 
+               "]"}], ",", "\n", "\t\t\t\t", "$TemporaryDirectory"}], "\n", 
              "\t\t\t\t", "]"}], "&&", "\n", "\t\t\t", 
             RowBox[{"(", 
              RowBox[{
               RowBox[{"StringTrim", "[", 
                RowBox[{
-                RowBox[{"DirectoryName", "@", "pacletInfo"}], ",", 
+                RowBox[{"DirectoryName", "@", "PDpacletInfo"}], ",", 
                 RowBox[{"$PathnameSeparator", "~~", "EndOfString"}]}], "]"}], 
               "!=", "\n", "\t\t\t\t", 
               RowBox[{"StringTrim", "[", "\n", "\t\t\t\t\t", 
@@ -180,14 +179,14 @@ Cell[BoxData[{
            RowBox[{"DeleteDirectory", "[", 
             RowBox[{
              RowBox[{"Nest", "[", 
-              RowBox[{"DirectoryName", ",", "pacletInfo", ",", "2"}], "]"}], 
-             ",", 
+              RowBox[{"DirectoryName", ",", "PDpacletInfo", ",", "2"}], "]"}],
+              ",", 
              RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], "\n", 
           "\t\t\t", "]"}], ";", "#"}], ")"}], "&"}], "@", "\n", "\t", 
       RowBox[{"If", "[", 
        RowBox[{
-        RowBox[{"FileExistsQ", "@", "pacletInfo"}], ",", "\n", "\t\t", "\n", 
-        "\t\t", 
+        RowBox[{"FileExistsQ", "@", "PDpacletInfo"}], ",", "\n", "\t\t", "\n",
+         "\t\t", 
         RowBox[{
          RowBox[{"Begin", "[", "\"\<PacletManager`\>\"", "]"}], ";", "\n", 
          "\t\t", 
@@ -210,8 +209,8 @@ Cell[BoxData[{
                     RowBox[{"SymbolName", "[", "s", "]"}], "\[Rule]", "v"}], 
                     ")"}]}]}], "\n", "\t\t\t\t\t", "]"}], "&"}], ",", "\n", 
                "\t\t\t\t", "#"}], "]"}]}], ")"}], "&"}], "@", 
-          RowBox[{"Import", "[", "pacletInfo", "]"}]}]}], ",", "\n", "\t\t", 
-        RowBox[{"pacletManager`Paclet", "[", "]"}]}], "\n", "\t\t", "]"}]}]}],
+          RowBox[{"Import", "[", "PDpacletInfo", "]"}]}]}], ",", "\n", "\t\t", 
+        RowBox[{"PacletManager`Paclet", "[", "]"}]}], "\n", "\t\t", "]"}]}]}],
      "\n", "\t", "]"}]}], ";"}]}], "CodeInput",
  CellChangeTimes->{{3.699937576561064*^9, 3.699937842671096*^9}, {
    3.699937980781375*^9, 3.699937981170021*^9}, {3.6999380430549593`*^9, 
@@ -230,22 +229,25 @@ Cell[BoxData[{
    3.704669152129554*^9}, {3.704669222280706*^9, 3.704669275481935*^9}, {
    3.704669379542976*^9, 3.704669429734663*^9}, {3.704669461072893*^9, 
    3.704669467181246*^9}, {3.705594369386701*^9, 3.705594428441638*^9}, 
-   3.705596850456167*^9, 
-   3.7104260994000072`*^9},ExpressionUUID->"3abab5e1-df9b-46e2-8836-\
-2f92fffdc92d"]
+   3.705596850456167*^9, {3.710422336482489*^9, 3.710422336544141*^9}, {
+   3.710427615147128*^9, 3.710427615768461*^9}, {3.710428373950049*^9, 
+   3.710428395785067*^9}, 
+   3.710429110633007*^9},ExpressionUUID->"632f6c1c-bf18-430c-9205-\
+e0b2d54d720a"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletDocsInfo", "Subsubsubsection",
+Cell["PDpacletDocsInfo", "Subsubsubsection",
  CellChangeTimes->{{3.702731329446846*^9, 3.7027313313654203`*^9}, 
-   3.7055944322821407`*^9},ExpressionUUID->"30b7290b-a5bc-4311-b578-\
-0bc37b1d635b"],
+   3.7055944322821407`*^9, 
+   3.7104223365567703`*^9},ExpressionUUID->"de64f531-053f-4f4f-b125-\
+8cf016e634a3"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "pacletDocsInfo", "]"}], "=", 
+   RowBox[{"Options", "[", "PDpacletDocsInfo", "]"}], "=", 
    RowBox[{"{", "\n", "\t", 
     RowBox[{
      RowBox[{"\"\<Language\>\"", "\[Rule]", "\"\<English\>\""}], ",", "\n", 
@@ -259,7 +261,7 @@ Cell[BoxData[{
     "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletDocsInfo", "[", 
+   RowBox[{"PDpacletDocsInfo", "[", 
     RowBox[{"ops", ":", 
      RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", "\n", 
    RowBox[{"SortBy", "[", 
@@ -274,7 +276,7 @@ Cell[BoxData[{
       RowBox[{
        RowBox[{"{", 
         RowBox[{"o", "=", 
-         RowBox[{"Options", "@", "pacletDocsInfo"}]}], "}"}], ",", 
+         RowBox[{"Options", "@", "PDpacletDocsInfo"}]}], "}"}], ",", 
        RowBox[{
         RowBox[{"Position", "[", 
          RowBox[{"o", ",", 
@@ -282,7 +284,7 @@ Cell[BoxData[{
   ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletDocsInfo", "[", 
+   RowBox[{"PDpacletDocsInfo", "[", 
     RowBox[{
      RowBox[{"dest_String", "?", "DirectoryQ"}], ",", 
      RowBox[{"ops", ":", 
@@ -305,7 +307,7 @@ Cell[BoxData[{
       RowBox[{
        RowBox[{"MissingQ", "@", "lang"}], ",", "\n", "\t\t", 
        RowBox[{"{", "}"}], ",", "\n", "\t\t", 
-       RowBox[{"pacletDocsInfo", "[", 
+       RowBox[{"PDpacletDocsInfo", "[", 
         RowBox[{"ops", ",", "\n", "\t\t\t", 
          RowBox[{"\"\<Language\>\"", "\[Rule]", "\n", "\t\t\t", "lang"}], ",",
           "\n", "\t\t\t", 
@@ -366,21 +368,24 @@ Cell[BoxData[{
    3.703469785443849*^9, 3.703469821543401*^9}, {3.7034706071369047`*^9, 
    3.7034706098812037`*^9}, 3.703470702999569*^9, {3.703470733925055*^9, 
    3.703470736892271*^9}, 3.70347117860063*^9, 3.705594362952306*^9, {
-   3.7055944330984907`*^9, 3.705594436529271*^9}, 
-   3.71042609948457*^9},ExpressionUUID->"6eef0278-34d2-4cc4-8e61-9ef4cd7ea790"]
+   3.7055944330984907`*^9, 3.705594436529271*^9}, {3.710422336577326*^9, 
+   3.710422336595326*^9}, 
+   3.710429110715848*^9},ExpressionUUID->"27f16f82-a556-4c20-93a0-\
+d0bd34a15ace"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletExtensionData", "Subsubsubsection",
+Cell["PDpacletExtensionData", "Subsubsubsection",
  CellChangeTimes->{{3.703450897443469*^9, 3.703450900273913*^9}, 
-   3.70559443824907*^9},ExpressionUUID->"a0c6aa59-b4a3-4de6-acb0-\
-07836496837f"],
+   3.70559443824907*^9, 
+   3.710422336604162*^9},ExpressionUUID->"7c793db3-3b53-46dc-a3a7-\
+a21f6e26138d"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "pacletExtensionData", "]"}], "=", 
+   RowBox[{"Options", "[", "PDpacletExtensionData", "]"}], "=", 
    RowBox[{"{", "\n", "\t", 
     RowBox[{
      RowBox[{"\"\<Documentation\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
@@ -392,8 +397,8 @@ Cell[BoxData[{
     "\t", "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletExtensionData", "[", 
-    RowBox[{"pacletInfo_Association", ",", "dest_", ",", 
+   RowBox[{"PDpacletExtensionData", "[", 
+    RowBox[{"PDpacletInfo_Association", ",", "dest_", ",", 
      RowBox[{"ops", ":", 
       RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "\n", 
    RowBox[{
@@ -404,8 +409,8 @@ Cell[BoxData[{
       RowBox[{"Replace", "[", 
        RowBox[{
         RowBox[{"Lookup", "[", 
-         RowBox[{"pacletInfo", ",", "\"\<Extensions\>\""}], "]"}], ",", "\n", 
-        "\t\t", 
+         RowBox[{"PDpacletInfo", ",", "\"\<Extensions\>\""}], "]"}], ",", 
+        "\n", "\t\t", 
         RowBox[{
          RowBox[{"Except", "[", 
           RowBox[{"_Association", "?", "AssociationQ"}], "]"}], ":>", "\n", 
@@ -431,7 +436,7 @@ Cell[BoxData[{
                    ",", "\n", "\t\t\t\t\t\t", "\[Infinity]"}], "]"}]}], ">", 
                 "0"}], ",", "\n", "\t\t\t\t\t", 
                RowBox[{"\"\<Documentation\>\"", "->", "\n", "\t\t\t\t\t", 
-                RowBox[{"pacletDocsInfo", "[", "dest", "]"}]}], ",", "\n", 
+                RowBox[{"PDpacletDocsInfo", "[", "dest", "]"}]}], ",", "\n", 
                "\t\t\t\t\t", "Nothing"}], "\n", "\t\t\t\t\t", "]"}]}], ",", 
             "\n", "\t\t\t\t", 
             RowBox[{
@@ -704,23 +709,24 @@ Cell[BoxData[{
    3.7049332789253597`*^9, 3.704933301238986*^9}, {3.7049338174070873`*^9, 
    3.7049338182133007`*^9}, {3.704933864349413*^9, 3.704933936307232*^9}, {
    3.704934803907208*^9, 3.704934804071639*^9}, 3.705594356008121*^9, {
-   3.705594438797793*^9, 3.7055944413256617`*^9}, 
-   3.710426099595933*^9},ExpressionUUID->"657650f8-0af8-4bdc-a566-\
-178ffef98c4d"]
+   3.705594438797793*^9, 3.7055944413256617`*^9}, {3.710422336629513*^9, 
+   3.710422336659424*^9}, 
+   3.710429110826561*^9},ExpressionUUID->"91a7dcc1-5425-42fe-b18f-\
+99e6e28d72e2"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletExpression", "Subsubsubsection",
+Cell["PDpacletExpression", "Subsubsubsection",
  CellChangeTimes->{{3.69993520784684*^9, 3.699935209336134*^9}, 
-   3.7027313408184547`*^9, 
-   3.705594442520713*^9},ExpressionUUID->"36e526f3-a3ef-403b-abad-\
-f66a8dc9e462"],
+   3.7027313408184547`*^9, 3.705594442520713*^9, 
+   3.71042233666893*^9},ExpressionUUID->"13f75305-f7f0-4876-b9c2-\
+4ec3fbc25d95"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "pacletExpression", "]"}], "=", "\n", 
+   RowBox[{"Options", "[", "PDpacletExpression", "]"}], "=", "\n", 
    RowBox[{"Join", "[", "\n", "\t", 
     RowBox[{
      RowBox[{"{", "\n", "\t\t", 
@@ -743,11 +749,11 @@ Cell[BoxData[{
        "\t\t", 
        RowBox[{"\"\<Extensions\>\"", "\[Rule]", "Automatic"}]}], "\n", "\t\t",
        "}"}], ",", "\n", "\t", 
-     RowBox[{"Options", "@", "pacletExtensionData"}]}], "\n", "\t", "]"}]}], 
-  ";"}], "\n", 
+     RowBox[{"Options", "@", "PDpacletExtensionData"}]}], "\n", "\t", "]"}]}],
+   ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletExpression", "[", 
+   RowBox[{"PDpacletExpression", "[", 
     RowBox[{"ops", ":", 
      RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", "\n", 
    RowBox[{"PacletManager`Paclet", "@@", "\n", 
@@ -763,7 +769,7 @@ Cell[BoxData[{
        RowBox[{
         RowBox[{"{", 
          RowBox[{"o", "=", 
-          RowBox[{"Options", "@", "pacletExpression"}]}], "}"}], ",", 
+          RowBox[{"Options", "@", "PDpacletExpression"}]}], "}"}], ",", 
         RowBox[{
          RowBox[{"Position", "[", 
           RowBox[{"o", ",", 
@@ -795,14 +801,15 @@ Cell[BoxData[{
    3.70344666388721*^9, 3.703446665035096*^9}, {3.70345106791057*^9, 
    3.703451083764427*^9}, {3.703470797442131*^9, 3.7034708197245293`*^9}, {
    3.705594341150548*^9, 3.705594344758917*^9}, {3.705594443050112*^9, 
-   3.705594449999565*^9}, 
-   3.71042609967483*^9},ExpressionUUID->"896ef28c-3f38-4c6a-8278-\
-d46249395df5"],
+   3.705594449999565*^9}, {3.710422336681469*^9, 3.710422336696206*^9}, {
+   3.7104283740101852`*^9, 3.710428395793686*^9}, 
+   3.710429110929728*^9},ExpressionUUID->"349d4afd-85f1-403a-9ef4-\
+65e4abc16de5"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{
-   RowBox[{"pacletExpression", "[", "\n", "\t", 
+   RowBox[{"PDpacletExpression", "[", "\n", "\t", 
     RowBox[{
      RowBox[{"dest_String", "?", "DirectoryQ"}], ",", "\n", "\t", 
      RowBox[{"ops", ":", 
@@ -810,10 +817,10 @@ Cell[BoxData[
    RowBox[{"With", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"pacletInfo", "=", 
-       RowBox[{"pacletInfoAssociation", "[", "dest", "]"}]}], "}"}], ",", 
+      RowBox[{"PDpacletInfo", "=", 
+       RowBox[{"PDpacletInfoAssociation", "[", "dest", "]"}]}], "}"}], ",", 
      "\n", "\t", 
-     RowBox[{"pacletExpression", "[", "\n", "\t\t", 
+     RowBox[{"PDpacletExpression", "[", "\n", "\t\t", 
       RowBox[{
        RowBox[{"Sequence", "@@", 
         RowBox[{"FilterRules", "[", 
@@ -840,14 +847,14 @@ Cell[BoxData[
                  RowBox[{
                   RowBox[{"Normal", "@", "#2"}], ",", "#"}], "]"}], "&"}], 
                ",", "\n", "\t\t\t\t\t", 
-               RowBox[{"pacletExtensionData", "[", 
+               RowBox[{"PDpacletExtensionData", "[", 
                 RowBox[{
-                "pacletInfo", ",", "\n", "\t\t\t\t\t\t", "dest", ",", "\n", 
+                "PDpacletInfo", ",", "\n", "\t\t\t\t\t\t", "dest", ",", "\n", 
                  "\t\t\t\t\t\t", 
                  RowBox[{"FilterRules", "[", 
                   RowBox[{
                    RowBox[{"{", "ops", "}"}], ",", "\n", "\t\t\t\t\t\t\t", 
-                   RowBox[{"Options", "@", "pacletExtensionData"}]}], "\n", 
+                   RowBox[{"Options", "@", "PDpacletExtensionData"}]}], "\n", 
                   "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t", "]"}]}], 
               "\n", "\t\t\t\t\t", "]"}]}], ",", "\n", "\t\t\t\t", 
             RowBox[{
@@ -856,16 +863,16 @@ Cell[BoxData[
               RowBox[{
                RowBox[{"{", 
                 RowBox[{"baseData", "=", "\n", "\t\t\t\t\t\t", 
-                 RowBox[{"pacletExtensionData", "[", 
+                 RowBox[{"PDpacletExtensionData", "[", 
                   RowBox[{
-                  "pacletInfo", ",", "\n", "\t\t\t\t\t\t\t", "dest", ",", 
+                  "PDpacletInfo", ",", "\n", "\t\t\t\t\t\t\t", "dest", ",", 
                    "\n", "\t\t\t\t\t\t\t", 
                    RowBox[{"FilterRules", "[", 
                     RowBox[{
                     RowBox[{"{", "ops", "}"}], ",", "\n", "\t\t\t\t\t\t\t\t", 
                     
-                    RowBox[{"Options", "@", "pacletExtensionData"}]}], "\n", 
-                    "\t\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t\t", 
+                    RowBox[{"Options", "@", "PDpacletExtensionData"}]}], "\n",
+                     "\t\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t\t", 
                   "]"}]}], "}"}], ",", "\n", "\t\t\t\t\t", 
                RowBox[{"Map", "[", "\n", "\t\t\t\t\t\t", 
                 RowBox[{
@@ -907,7 +914,7 @@ Cell[BoxData[
                     "\t\t\t\t\t\t\t\t", "}"}]}], "]"}], "&"}], ",", "\n", 
                  "\t\t\t\t\t\t", 
                  RowBox[{"Keys", "@", 
-                  RowBox[{"Options", "[", "pacletExtensionData", "]"}]}]}], 
+                  RowBox[{"Options", "[", "PDpacletExtensionData", "]"}]}]}], 
                 "\n", "\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t", "]"}]}]}], 
            "\n", "\t\t\t\t", "}"}]}], "]"}]}], ",", "\n", "\t\t", 
        RowBox[{"\"\<Version\>\"", "->", "\n", "\t\t", 
@@ -925,7 +932,7 @@ Cell[BoxData[
                  RowBox[{"ToString", "[", 
                   RowBox[{"Lookup", "[", 
                    RowBox[{
-                   "pacletInfo", ",", "\"\<Version\>\"", ",", 
+                   "PDpacletInfo", ",", "\"\<Version\>\"", ",", 
                     "\"\<1.0.-1\>\""}], "]"}], "]"}], ",", "\n", 
                  "\t\t\t\t\t\t", "\"\<.\>\""}], "\n", "\t\t\t\t\t\t", "]"}]}],
                "\n", "\t\t\t\t\t", "}"}], ",", "\n", "\t\t\t\t", 
@@ -953,7 +960,7 @@ Cell[BoxData[
             "\n", "\t\t\t\t", "]"}]}]}], "\n", "\t\t\t", "]"}]}], ",", "\n", 
        "\t\t", 
        RowBox[{"Sequence", "@@", 
-        RowBox[{"Normal", "@", "pacletInfo"}]}]}], "\n", "\t\t", "]"}]}], 
+        RowBox[{"Normal", "@", "PDpacletInfo"}]}]}], "\n", "\t\t", "]"}]}], 
     "\n", "\t", "]"}]}], ";"}]], "CodeInput",
  CellChangeTimes->{{3.69993521029556*^9, 3.69993525248245*^9}, {
    3.699935289370064*^9, 3.699935381071134*^9}, {3.699935450310876*^9, 
@@ -986,26 +993,28 @@ Cell[BoxData[
    3.7034686037111673`*^9, {3.703470145353877*^9, 3.703470408158183*^9}, {
    3.703470501133217*^9, 3.7034705220476*^9}, {3.703766844133236*^9, 
    3.7037668546208687`*^9}, 3.705177422908684*^9, {3.705594324267028*^9, 
-   3.705594337555359*^9}, {3.7055944511414347`*^9, 3.705594457333202*^9}, 
-   3.710426099735793*^9},ExpressionUUID->"19a1a134-571f-4964-b560-\
-42add5e298cb"]
+   3.705594337555359*^9}, {3.7055944511414347`*^9, 3.705594457333202*^9}, {
+   3.710422336710122*^9, 3.7104223367750883`*^9}, 
+   3.710429111019133*^9},ExpressionUUID->"8f3ca742-c9e0-4f10-aa7d-\
+26ef8966a050"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletExpressionBundle", "Subsubsubsection",
+Cell["PDpacletExpressionBundle", "Subsubsubsection",
  CellChangeTimes->{{3.702731569451943*^9, 3.702731570815073*^9}, 
-   3.7055944583633623`*^9},ExpressionUUID->"5d8e3926-21e2-48d8-8454-\
-b13305166782"],
+   3.7055944583633623`*^9, 
+   3.7104223367865868`*^9},ExpressionUUID->"7bf5ed8b-7b4a-4e50-a110-\
+2b9b42115eab"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "pacletExpressionBundle", "]"}], "=", "\n", 
-   RowBox[{"Options", "[", "pacletExpression", "]"}]}], ";"}], "\n", 
+   RowBox[{"Options", "[", "PDpacletExpressionBundle", "]"}], "=", "\n", 
+   RowBox[{"Options", "[", "PDpacletExpression", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletExpressionBundle", "[", "\n", "\t", 
+   RowBox[{"PDpacletExpressionBundle", "[", "\n", "\t", 
     RowBox[{"paclet_PacletManager`Paclet", ",", "\n", "\t", 
      RowBox[{"dest_String", "?", "DirectoryQ"}]}], "]"}], ":=", "\n", 
    RowBox[{"With", "[", 
@@ -1014,17 +1023,17 @@ Cell[BoxData[{
       RowBox[{"pacletFile", "=", 
        RowBox[{"FileNameJoin", "@", 
         RowBox[{"{", 
-         RowBox[{"dest", ",", "\"\<pacletInfo.m\>\""}], "}"}]}]}], "}"}], ",",
+         RowBox[{"dest", ",", "\"\<PacletInfo.m\>\""}], "}"}]}]}], "}"}], ",",
       "\n", "\t", 
      RowBox[{
-      RowBox[{"Begin", "[", "\"\<pacletManager`\>\"", "]"}], ";", "\n", "\t", 
+      RowBox[{"Begin", "[", "\"\<PacletManager`\>\"", "]"}], ";", "\n", "\t", 
       
       RowBox[{"Block", "[", 
        RowBox[{
         RowBox[{"{", 
          RowBox[{"$ContextPath", "=", 
           RowBox[{"{", 
-           RowBox[{"\"\<System`\>\"", ",", "\"\<pacletManager`\>\""}], 
+           RowBox[{"\"\<System`\>\"", ",", "\"\<PacletManager`\>\""}], 
            "}"}]}], "}"}], ",", "\n", "\t\t", 
         RowBox[{"With", "[", 
          RowBox[{
@@ -1043,18 +1052,18 @@ Cell[BoxData[{
           RowBox[{"Export", "[", 
            RowBox[{"pacletFile", ",", "pac"}], "]"}]}], "\n", "\t\t\t", 
          "]"}]}], "\n", "\t\t", "]"}], ";", "\n", "\t", 
-      RowBox[{"End", "[", "]"}], ";", "\n", "\t", "pacletFile"}]}], "\n", 
+      RowBox[{"End", "[", "]"}], ";", "\n", "\t", "PDpacletFile"}]}], "\n", 
     "\t", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletExpressionBundle", "[", "\n", "\t", 
+   RowBox[{"PDpacletExpressionBundle", "[", "\n", "\t", 
     RowBox[{
      RowBox[{"dest_String", "?", "DirectoryQ"}], ",", "\n", "\t", 
      RowBox[{"ops", ":", 
       RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "\t", "]"}], ":=", "\n", 
-   RowBox[{"pacletExpressionBundle", "[", "\n", "\t", 
+   RowBox[{"PDpacletExpressionBundle", "[", "\n", "\t", 
     RowBox[{
-     RowBox[{"pacletExpression", "[", 
+     RowBox[{"PDpacletExpression", "[", 
       RowBox[{"dest", ",", "ops"}], "]"}], ",", "\n", "\t", "dest"}], "\n", 
     "\t", "]"}]}], ";"}]}], "CodeInput",
  CellChangeTimes->{{3.702731572068799*^9, 3.7027316164333887`*^9}, {
@@ -1063,22 +1072,26 @@ Cell[BoxData[{
    3.7034692772385693`*^9, 3.703469279796817*^9}, {3.704482488945374*^9, 
    3.7044824912550087`*^9}, {3.704482575132791*^9, 3.704482579345921*^9}, 
    3.705177422918612*^9, {3.705594307945446*^9, 3.7055943160676126`*^9}, {
-   3.705594458775401*^9, 3.705594470346282*^9}, 
-   3.710426099808777*^9},ExpressionUUID->"815808c2-6845-4db5-aadd-\
-d0ad309d45b9"]
+   3.705594458775401*^9, 3.705594470346282*^9}, {3.71042233679979*^9, 
+   3.7104223368563557`*^9}, {3.7104276252455263`*^9, 
+   3.7104276252508307`*^9}, {3.710428374034554*^9, 3.710428395801655*^9}, {
+   3.710428451750381*^9, 3.7104284640309362`*^9}, 3.710428699241617*^9, 
+   3.710429111090333*^9},ExpressionUUID->"d5b733b8-6556-4ed4-8944-\
+a5769373b93a"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletLookup", "Subsubsubsection",
+Cell["PDpacletLookup", "Subsubsubsection",
  CellChangeTimes->{{3.703956038411504*^9, 3.7039560411305857`*^9}, 
-   3.7055944715195837`*^9},ExpressionUUID->"c6b3820b-ee19-4f49-9bc3-\
-86ac72fd5a42"],
+   3.7055944715195837`*^9, 
+   3.710422336869114*^9},ExpressionUUID->"8070a4b8-8aa3-4798-9151-\
+d1c0211b842c"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"pacletLookup", "[", 
+   RowBox[{"PDpacletLookup", "[", 
     RowBox[{
      RowBox[{"p", ":", 
       RowBox[{"{", "__PacletManager`Paclet", "}"}]}], ",", "props_"}], "]"}], 
@@ -1089,7 +1102,7 @@ Cell[BoxData[{
     "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletLookup", "[", 
+   RowBox[{"PDpacletLookup", "[", 
     RowBox[{"p_PacletManager`Paclet", ",", "props_"}], "]"}], ":=", "\n", 
    RowBox[{"Lookup", "[", 
     RowBox[{
@@ -1097,42 +1110,43 @@ Cell[BoxData[{
     "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletLookup", "[", 
+   RowBox[{"PDpacletLookup", "[", 
     RowBox[{
      RowBox[{"p", ":", 
       RowBox[{"_String", "|", 
        RowBox[{"{", 
         RowBox[{"_String", ",", "_String"}], "}"}]}]}], ",", "props_"}], 
     "]"}], ":=", "\n", 
-   RowBox[{"pacletLookup", "[", 
+   RowBox[{"PDpacletLookup", "[", 
     RowBox[{
      RowBox[{"PacletManager`PacletFind", "[", "p", "]"}], ",", "props"}], 
     "]"}]}], ";"}]}], "CodeInput",
  CellChangeTimes->{{3.703956045980041*^9, 3.703956158947846*^9}, 
    3.703956303628257*^9, 3.705594298525673*^9, {3.705594472592491*^9, 
-   3.7055944855235987`*^9}, 
-   3.710426099846026*^9},ExpressionUUID->"c978e6e9-4745-48f8-a524-\
-a4eba415749b"]
+   3.7055944855235987`*^9}, {3.7104223368812647`*^9, 
+   3.7104223368910418`*^9}, {3.710428374058825*^9, 3.710428395824808*^9}, 
+   3.7104291111334047`*^9},ExpressionUUID->"4b891d8e-a075-4f65-8e65-\
+726b962b8831"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletOpen", "Subsubsubsection",
- CellChangeTimes->{3.7039559965225763`*^9, 
-  3.705594488653529*^9},ExpressionUUID->"2026ebd0-02ed-41a0-821f-\
-378545afdda6"],
+Cell["PDpacletOpen", "Subsubsubsection",
+ CellChangeTimes->{3.7039559965225763`*^9, 3.705594488653529*^9, 
+  3.7104223369031897`*^9},ExpressionUUID->"98c37476-20bb-4d2d-acff-\
+578beca9dd7d"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{
-   RowBox[{"pacletOpen", "[", 
+   RowBox[{"PDpacletOpen", "[", 
     RowBox[{"p_", ",", 
      RowBox[{"which", ":", "_", ":", "First"}]}], "]"}], ":=", "\n", 
    RowBox[{"With", "[", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"locs", "=", 
-       RowBox[{"pacletLookup", "[", 
+       RowBox[{"PDpacletLookup", "[", 
         RowBox[{"p", ",", "\"\<Location\>\""}], "]"}]}], "}"}], ",", "\n", 
      "\t", 
      RowBox[{
@@ -1165,22 +1179,24 @@ Cell[BoxData[
    3.703956122381256*^9, 3.7039561289715233`*^9}, {3.703956183905292*^9, 
    3.7039562468149014`*^9}, {3.7039563214829893`*^9, 3.703956391740719*^9}, {
    3.7039564297843647`*^9, 3.703956460509791*^9}, 3.705594288394129*^9, {
-   3.705594489132063*^9, 3.7055944897011766`*^9}, 
-   3.7104260998851748`*^9},ExpressionUUID->"5db9b429-d25c-4836-b7ca-\
-53cc8155e79c"]
+   3.705594489132063*^9, 3.7055944897011766`*^9}, {3.7104223369158297`*^9, 
+   3.710422336919421*^9}, 
+   3.710429111188756*^9},ExpressionUUID->"a676dede-349e-4768-b64e-\
+47d79e8030a7"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["pacletBundle", "Subsubsubsection",
+Cell["PDpacletBundle", "Subsubsubsection",
  CellChangeTimes->{{3.70267262355492*^9, 3.7026726255120993`*^9}, 
-   3.705595728162962*^9},ExpressionUUID->"4f88ad89-d61f-4254-b521-\
-ab585653ac5e"],
+   3.705595728162962*^9, 
+   3.7104223369304457`*^9},ExpressionUUID->"4aec8e9e-d5ab-4419-8e7f-\
+6819f52f8a6e"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "pacletBundle", "]"}], "=", 
+   RowBox[{"Options", "[", "PDpacletBundle", "]"}], "=", 
    RowBox[{"{", "\n", "\t", 
     RowBox[{
      RowBox[{"\"\<RemovePaths\>\"", "\[Rule]", 
@@ -1191,7 +1207,7 @@ Cell[BoxData[{
      ","}], "\n", "\t", "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"pacletBundle", "[", 
+   RowBox[{"PDpacletBundle", "[", 
     RowBox[{
      RowBox[{"dir", ":", 
       RowBox[{
@@ -1203,12 +1219,12 @@ Cell[BoxData[{
    RowBox[{"With", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"pacletDir", "=", "\n", "\t\t\t", 
+      RowBox[{"PDpacletDir", "=", "\n", "\t\t\t", 
        RowBox[{"FileNameJoin", "@", 
         RowBox[{"{", "\n", "\t\t\t\t", 
          RowBox[{
           RowBox[{"OptionValue", "[", "\"\<BuildRoot\>\"", "]"}], ",", "\n", 
-          "\t\t\t\t", "\"\<_paclets\>\"", ",", "\n", "\t\t\t\t", 
+          "\t\t\t\t", "\"\<_PDpaclets\>\"", ",", "\n", "\t\t\t\t", 
           RowBox[{"FileBaseName", "@", "dir"}]}], "\n", "\t\t\t\t", "}"}]}]}],
        "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
      RowBox[{
@@ -1216,20 +1232,20 @@ Cell[BoxData[{
        RowBox[{
         RowBox[{"!", 
          RowBox[{"FileExistsQ", "@", 
-          RowBox[{"DirectoryName", "[", "pacletDir", "]"}]}]}], ",", "\n", 
+          RowBox[{"DirectoryName", "[", "PDpacletDir", "]"}]}]}], ",", "\n", 
         "\t\t\t", 
         RowBox[{"CreateDirectory", "@", 
-         RowBox[{"DirectoryName", "[", "pacletDir", "]"}]}]}], "\n", "\t\t\t",
-        "]"}], ";", "\n", "\t\t", 
+         RowBox[{"DirectoryName", "[", "PDpacletDir", "]"}]}]}], "\n", 
+       "\t\t\t", "]"}], ";", "\n", "\t\t", 
       RowBox[{"If", "[", 
        RowBox[{
-        RowBox[{"FileExistsQ", "@", "pacletDir"}], ",", "\n", "\t\t\t", 
+        RowBox[{"FileExistsQ", "@", "PDpacletDir"}], ",", "\n", "\t\t\t", 
         RowBox[{"DeleteDirectory", "[", 
-         RowBox[{"pacletDir", ",", 
+         RowBox[{"PDpacletDir", ",", 
           RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], "\n", 
        "\t\t\t", "]"}], ";", "\n", "\t\t", 
       RowBox[{"CopyDirectory", "[", 
-       RowBox[{"dir", ",", "pacletDir"}], "]"}], ";", "\n", "\t\t", 
+       RowBox[{"dir", ",", "PDpacletDir"}], "]"}], ";", "\n", "\t\t", 
       RowBox[{"Do", "[", "\n", "\t\t\t", 
        RowBox[{
         RowBox[{"With", "[", 
@@ -1242,7 +1258,7 @@ Cell[BoxData[{
                RowBox[{"FileExistsQ", "@", "path"}]}], ",", 
               RowBox[{"FileNameJoin", "@", 
                RowBox[{"{", 
-                RowBox[{"pacletDir", ",", "path"}], "}"}]}], ",", "path"}], 
+                RowBox[{"PDpacletDir", ",", "path"}], "}"}]}], ",", "path"}], 
              "]"}]}], "}"}], ",", "\n", "\t\t\t\t", 
           RowBox[{"If", "[", 
            RowBox[{
@@ -1270,20 +1286,20 @@ Cell[BoxData[{
              RowBox[{
               RowBox[{"FileNameDrop", "[", 
                RowBox[{"#", ",", 
-                RowBox[{"FileNameDepth", "@", "pacletDir"}]}], "]"}], "&"}], "/@",
-              "\n", "\t\t\t\t\t\t", 
+                RowBox[{"FileNameDepth", "@", "PDpacletDir"}]}], "]"}], "&"}],
+              "/@", "\n", "\t\t\t\t\t\t", 
              RowBox[{"FileNames", "[", 
               RowBox[{
                RowBox[{"OptionValue", "[", "\"\<RemovePatterns\>\"", "]"}], 
-               ",", "pacletDir", ",", "\[Infinity]"}], "]"}]}]}], "\n", 
+               ",", "PDpacletDir", ",", "\[Infinity]"}], "]"}]}]}], "\n", 
            "\t\t\t\t\t", "]"}]}], "}"}]}], "\n", "\t\t\t", "]"}], ";", "\n", 
       "\t\t", 
       RowBox[{"With", "[", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"pacletFile", "=", 
-          RowBox[{"PacletManager`PackPaclet", "[", "pacletDir", "]"}]}], 
-         "}"}], ",", "\n", "\t\t\t", "pacletFile"}], "\n", "\t\t\t", 
+         RowBox[{"PDpacletFile", "=", 
+          RowBox[{"PacletManager`PackPaclet", "[", "PDpacletDir", "]"}]}], 
+         "}"}], ",", "\n", "\t\t\t", "PDpacletFile"}], "\n", "\t\t\t", 
        "]"}]}]}], "\n", "\t\t", "]"}]}], ";"}]}], "CodeInput",
  CellChangeTimes->{{3.700343920134439*^9, 3.70034392013544*^9}, {
    3.700346503511764*^9, 3.700346564301044*^9}, 3.700346607867813*^9, {
@@ -1311,17 +1327,18 @@ Cell[BoxData[{
    3.704484010607278*^9}, {3.704484046787312*^9, 3.704484056049549*^9}, {
    3.704484435853209*^9, 3.7044844373398657`*^9}, 3.70517742297222*^9, {
    3.7055956622617064`*^9, 3.705595694162424*^9}, {3.705595728176223*^9, 
-   3.705595728181074*^9}, 
-   3.710426099927787*^9},ExpressionUUID->"55e9b95d-a0c1-4826-bdbd-\
-f8257a25ec66"]
+   3.705595728181074*^9}, {3.710422336953581*^9, 3.710422337028553*^9}, {
+   3.7104283741062117`*^9, 3.710428374115323*^9}, 
+   3.710429111255127*^9},ExpressionUUID->"0df2bf72-13e6-4f5b-9202-\
+936b20d48bb8"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]installPacletGenerate\[RightFloor]", "Subsubsubsection",
- CellChangeTimes->{
-  3.7055904028112698`*^9},ExpressionUUID->"bf534770-6c9a-439f-a5c4-\
-eb1cd8c4f61b"],
+ CellChangeTimes->{3.7055904028112698`*^9, 
+  3.7104283741710777`*^9},ExpressionUUID->"57fb0010-b1e7-494f-bbe2-\
+a17543475088"],
 
 Cell[BoxData[
  RowBox[{
@@ -1344,8 +1361,9 @@ Cell[BoxData[
    3.703762138591441*^9, 3.703762139885727*^9}, {3.7037648079831543`*^9, 
    3.7037648318290863`*^9}, {3.703765994785977*^9, 3.703766116005128*^9}, 
    3.704053666030692*^9, 3.704451039015747*^9, 3.705592290644772*^9, 
-   3.710426099966058*^9},ExpressionUUID->"fdd94bdd-db74-41b2-a58a-\
-99b96197369f"],
+   3.710428374181711*^9, 
+   3.710429111312028*^9},ExpressionUUID->"336db1c8-1352-4b43-ab2d-\
+86eac6adb49e"],
 
 Cell[BoxData[
  RowBox[{
@@ -1370,7 +1388,7 @@ Cell[BoxData[
         RowBox[{"DisplayTemporary", "@", "\n", "\t\t", 
          RowBox[{"Internal`LoadingPanel", "[", "\n", "\t\t\t", 
           RowBox[{"TemplateApply", "[", 
-           RowBox[{"\"\<Bundling paclet for ``\>\"", ",", "dir"}], "]"}], 
+           RowBox[{"\"\<Bundling PDpaclet for ``\>\"", ",", "dir"}], "]"}], 
           "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", "]"}], ";", "\n", "\t", 
       RowBox[{"(*", " ", 
        RowBox[{
@@ -1462,7 +1480,7 @@ Cell[BoxData[
         ",", "\n", "\t\t", 
         RowBox[{
          RowBox[{"bundleDir", "=", "dir"}], ";", "\n", "\t\t", 
-         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+         RowBox[{"PDpacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
         "\n", "\t\t", 
         RowBox[{"FileExistsQ", "@", 
          RowBox[{"FileNameJoin", "@", 
@@ -1491,7 +1509,7 @@ Cell[BoxData[
             RowBox[{"dir", ",", 
              RowBox[{"FileBaseName", "@", "dir"}]}], "}"}]}]}], ";", "\n", 
          "\t\t", 
-         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+         RowBox[{"PDpacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
         "\n", "\t\t", 
         RowBox[{"FileExistsQ", "@", 
          RowBox[{"FileNameJoin", "@", 
@@ -1503,19 +1521,18 @@ Cell[BoxData[
         RowBox[{
          RowBox[{"Export", "[", "\n", "\t\t\t", 
           RowBox[{
-           RowBox[{
-            RowBox[{"FileNameJoin", "@", 
-             RowBox[{"{", 
-              RowBox[{"dir", ",", 
-               RowBox[{
-                RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
-                "\"\<.m\>\""}]}], "}"}]}], ";", "\n", "\t\t\t", 
-            "\"\<(*Open package notebook*)\nCreateDocument[\n\tImport@\n\t\t\
-StringReplace[$InputFileName,\\\".m\\\"->\\\".nb\\\"]\n\t]\>\""}], ",", "\n", 
+           RowBox[{"FileNameJoin", "@", 
+            RowBox[{"{", 
+             RowBox[{"dir", ",", 
+              RowBox[{
+               RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
+               "\"\<.m\>\""}]}], "}"}]}], ",", "\n", "\t\t\t", 
+           "\"\<(*Open package notebook*)\nCreateDocument[\n\tImport@\n\t\t\
+StringReplace[$InputFileName,\\\".m\\\"->\\\".nb\\\"]\n\t]\>\"", ",", "\n", 
            "\t\t\t", "\"\<Text\>\""}], "\n", "\t\t\t", "]"}], ";", "\n", 
          "\t\t", 
          RowBox[{"bundleDir", "=", "dir"}], ";", "\n", "\t\t", 
-         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+         RowBox[{"PDpacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
         "\n", "\t\t", "_", ",", "\n", "\t\t", 
         RowBox[{
          RowBox[{"Message", "[", 
@@ -1523,7 +1540,7 @@ StringReplace[$InputFileName,\\\".m\\\"->\\\".nb\\\"]\n\t]\>\""}], ",", "\n",
          "\t\t", 
          RowBox[{"Throw", "[", "$Failed", "]"}]}]}], "\n", "\t\t", "]"}], ";",
        "\n", "\t", 
-      RowBox[{"pacletBundle", "[", "bundleDir", "]"}]}]}], "\n", "\t", 
+      RowBox[{"PDpacletBundle", "[", "bundleDir", "]"}]}]}], "\n", "\t", 
     "]"}]}], ";"}]], "CodeInput",
  CellChangeTimes->{{3.703596882451902*^9, 3.703596909310603*^9}, 
    3.703596963629928*^9, {3.703596994206448*^9, 3.70359705828927*^9}, {
@@ -1543,9 +1560,11 @@ StringReplace[$InputFileName,\\\".m\\\"->\\\".nb\\\"]\n\t]\>\""}], ",", "\n",
    3.705590552119382*^9}, {3.705590587489524*^9, 3.70559085153755*^9}, {
    3.7055908932857943`*^9, 3.705590974912464*^9}, {3.7055910442194643`*^9, 
    3.705591130356502*^9}, {3.705591359965331*^9, 3.705591409555851*^9}, 
-   3.705592011347321*^9, 3.705592368411703*^9, 3.7055955861753807`*^9, 
-   3.7104261000736237`*^9},ExpressionUUID->"ec7c95fa-73c5-4ce8-b8c6-\
-23f69c389ef1"],
+   3.705592011347321*^9, 3.705592368411703*^9, 3.7055955861753807`*^9, {
+   3.710422320423832*^9, 3.7104223422855864`*^9}, {3.7104283741933937`*^9, 
+   3.710428374224494*^9}, {3.710428633044978*^9, 3.7104286333229094`*^9}, 
+   3.7104291113618727`*^9},ExpressionUUID->"752c4b71-d032-4346-8050-\
+d6b5ca941d39"],
 
 Cell[BoxData[
  RowBox[{
@@ -1569,7 +1588,7 @@ Cell[BoxData[
         RowBox[{"DisplayTemporary", "@", "\n", "\t\t", 
          RowBox[{"Internal`LoadingPanel", "[", "\n", "\t\t\t", 
           RowBox[{"TemplateApply", "[", 
-           RowBox[{"\"\<Bundling paclet for ``\>\"", ",", "file"}], "]"}], 
+           RowBox[{"\"\<Bundling PDpaclet for ``\>\"", ",", "file"}], "]"}], 
           "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", "]"}], ";", "\n", "\t", 
       RowBox[{"With", "[", 
        RowBox[{
@@ -1638,7 +1657,7 @@ Cell[BoxData[
              "}"}]}], ",", "\n", "\t\t\t", 
            RowBox[{"OverwriteTarget", "\[Rule]", "True"}]}], "\n", "\t\t\t", 
           "]"}], ";", "\n", "\t\t", 
-         RowBox[{"PacletExpressionBundle", "[", 
+         RowBox[{"PDpacletExpressionBundle", "[", 
           RowBox[{"dir", ",", "\n", "\t\t\t", 
            RowBox[{"\"\<Name\>\"", "\[Rule]", "\n", "\t\t\t", 
             RowBox[{"StringReplace", "[", 
@@ -1650,7 +1669,7 @@ Cell[BoxData[
                 RowBox[{"WordCharacter", "|", "\"\<$\>\""}], "]"}], 
                "\[Rule]", "\"\<\>\""}]}], "]"}]}]}], "\n", "\t\t\t", "]"}], 
          ";", "\n", "\t\t", 
-         RowBox[{"pacletBundle", "[", 
+         RowBox[{"PDpacletBundle", "[", 
           RowBox[{"dir", ",", "\n", "\t\t\t", 
            RowBox[{"\"\<BuildRoot\>\"", "\[Rule]", "$TemporaryDirectory"}]}], 
           "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", "]"}]}], ",", "\n", "\t", 
@@ -1688,8 +1707,8 @@ Cell[BoxData[
              RowBox[{"FileNameTake", "@", "file"}]}], "}"}]}]}], "]"}], ";", 
         "\n", "\t\t", 
         RowBox[{"installPacletGenerate", "[", "dir", "]"}]}]}], "\n", "\t\t", 
-      "]"}], ",", "\n", "\t", "\"\<paclet\>\"", ",", "\n", "\t", "file", ",", 
-     "\n", "\t", "_", ",", "\n", "\t", 
+      "]"}], ",", "\n", "\t", "\"\<PDpaclet\>\"", ",", "\n", "\t", "file", 
+     ",", "\n", "\t", "_", ",", "\n", "\t", 
      RowBox[{"Message", "[", 
       RowBox[{
        RowBox[{"PDInstallPaclet", "::", "howdo"}], ",", "\n", "\t\t", 
@@ -1713,25 +1732,226 @@ Cell[BoxData[
    3.705591300361092*^9}, 3.7055913322257633`*^9, {3.705591424162081*^9, 
    3.7055914797616043`*^9}, 3.705592011357726*^9, 3.705592296013603*^9, 
    3.7055923601861963`*^9, {3.7055924068225937`*^9, 3.705592406832511*^9}, 
-   3.705595586188922*^9, 
-   3.710426100175161*^9},ExpressionUUID->"43e59949-d708-4c4e-a740-\
-49ce4154cac0"]
-}, Open  ]],
+   3.705595586188922*^9, {3.710422320446965*^9, 3.710422342295809*^9}, {
+   3.710428374234049*^9, 3.710428374271735*^9}, 
+   3.7104291114534903`*^9},ExpressionUUID->"a948d214-3694-4c1c-be2b-\
+c1d09ba6002f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gitHubPathQ", "Subsubsubsection",
+ CellChangeTimes->{{3.710427868203845*^9, 3.710427896429298*^9}, {
+  3.710427956048293*^9, 3.710427985891961*^9}, {3.710428218494169*^9, 
+  3.7104282186661873`*^9}},ExpressionUUID->"35efd7b8-6386-49b9-94cb-\
+755232d4af7b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubPathQ", "[", 
+    RowBox[{"path", ":", 
+     RowBox[{"_String", "|", "_URL"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"p", "=", 
+       RowBox[{"URLParse", "[", "path", "]"}]}], "}"}], ",", "\n", "\t", "\t", 
+     RowBox[{
+      RowBox[{"MatchQ", "[", 
+       RowBox[{
+        RowBox[{"p", "[", "\"\<Scheme\>\"", "]"}], ",", 
+        RowBox[{"\"\<http\>\"", "|", "\"\<https\>\""}]}], "]"}], "&&", "\n", 
+      "\t", "\t", 
+      RowBox[{
+       RowBox[{"p", "[", "\"\<Domain\>\"", "]"}], "==", 
+       "\"\<github.com\>\""}], "&&", "\n", "\t", "\t", 
+      RowBox[{
+       RowBox[{"Length", "@", 
+        RowBox[{"p", "[", "\"\<Path\>\"", "]"}]}], ">", "0"}]}]}], "\n", 
+    "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubPathQ", "[", "_PDgitHubPath", "]"}], ":=", "\n", "\t", 
+   "True"}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.710428007266982*^9, 3.710428009092298*^9}, {
+   3.710428082802273*^9, 3.71042808603749*^9}, 
+   3.710429111514059*^9},ExpressionUUID->"f6901664-9a6a-44b6-9af4-\
+19eb3fe18716"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gitHubPathParse", "Subsubsubsection",
+ CellChangeTimes->{{3.710427868203845*^9, 3.710427896429298*^9}, {
+   3.710427956048293*^9, 3.7104279579789886`*^9}, 
+   3.71042822045049*^9},ExpressionUUID->"2cd7be8d-b66e-4cc5-bc37-\
+ea8e35c77805"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubPathParse", "[", 
+    RowBox[{"path", ":", 
+     RowBox[{"_String", "|", "_URL"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"PDgitHubPathQ", "[", "path", "]"}], ",", "\n", "\t\t", 
+     RowBox[{"Replace", "[", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"DeleteCases", "[", "\"\<\>\"", "]"}], "@", "\n", "\t\t\t\t", 
+        
+        RowBox[{"URLParse", "[", 
+         RowBox[{"path", ",", "\"\<Path\>\""}], "]"}]}], ",", 
+       RowBox[{"{", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"user_", ",", "parts__"}], "}"}], "|", "\n", "\t\t\t", 
+          RowBox[{"{", 
+           RowBox[{"user_", ",", "parts__"}], "}"}]}], ":>", "\n", "\t\t\t\t", 
+         RowBox[{"PDgitHubPath", "[", 
+          RowBox[{"parts", ",", 
+           RowBox[{"\"\<Username\>\"", "\[Rule]", "user"}]}], "]"}]}], "\n", 
+        "\t\t\t", "}"}]}], "]"}], ",", "\n", "\t\t", "$Failed"}], "\n", 
+    "\t\t", "]"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{
+  3.710427959633032*^9, {3.710428099827207*^9, 3.710428099832466*^9}, 
+   3.710429111549686*^9},ExpressionUUID->"1d159def-623c-40b8-8716-\
+143daddc8ac0"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gitHubReleaseQ", "Subsubsubsection",
+ CellChangeTimes->{{3.710427868203845*^9, 
+  3.710427896429298*^9}},ExpressionUUID->"e5a1bdcb-1dc6-482c-ac05-\
+84cde44cd680"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubReleaseQ", "[", 
+    RowBox[{"PDgitHubPath", "[", 
+     RowBox[{"p__String", ",", 
+      RowBox[{"___", "?", "OptionQ"}]}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"MatchQ", "[", 
+    RowBox[{
+     RowBox[{"{", "p", "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"__", ",", "\"\<releases\>\""}], "}"}], "|", "\n", "\t\t", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "\"\<releases\>\"", ",", "\"\<tag\>\"", ",", "_"}], 
+       "}"}]}]}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubReleaseQ", "[", 
+    RowBox[{"path", ":", 
+     RowBox[{"_String", "|", "_URL"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"PDgitHubPathQ", "@", "path"}], ",", "\n", "\t\t", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"PDgitHubPathParse", "[", "path", "]"}], ",", 
+       RowBox[{"{", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"g_PDgitHubPath", ":>", "\n", "\t\t\t\t", 
+          RowBox[{"PDgitHubReleaseQ", "@", "g"}]}], ",", "\n", "\t\t\t", 
+         RowBox[{"_", "\[Rule]", "False"}]}], "\n", "\t\t\t", "}"}]}], "]"}], 
+     ",", "\n", "\t\t", "False"}], "\n", "\t\t", "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.710427897662096*^9, 3.710427929141279*^9}, {
+   3.710428099839779*^9, 3.710428099844185*^9}, 
+   3.710429111607045*^9},ExpressionUUID->"d0d2060a-0473-423c-8c97-\
+d320c9115b36"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["gitHubRepoQ", "Subsubsubsection",
+ CellChangeTimes->{
+  3.710427868203845*^9},ExpressionUUID->"4a6e738a-f1af-4623-80c5-\
+60c7dbf295ad"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubRepoQ", "[", 
+    RowBox[{"path", ":", 
+     RowBox[{"_String", "|", "_URL"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"p", "=", 
+       RowBox[{"URLParse", "[", "path", "]"}]}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"MatchQ", "[", 
+       RowBox[{
+        RowBox[{"p", "[", "\"\<Scheme\>\"", "]"}], ",", 
+        RowBox[{"\"\<http\>\"", "|", "\"\<https\>\""}]}], "]"}], "&&", "\n", 
+      "\t\t", 
+      RowBox[{
+       RowBox[{"p", "[", "\"\<Domain\>\"", "]"}], "==", 
+       "\"\<github.com\>\""}], "&&", "\n", "\t", "\t", 
+      RowBox[{
+       RowBox[{"Length", "@", 
+        RowBox[{"p", "[", "\"\<Path\>\"", "]"}]}], ">", "0"}], "&&", "\n", 
+      "\t\t", 
+      RowBox[{"!", 
+       RowBox[{"MatchQ", "[", 
+        RowBox[{
+         RowBox[{"p", "[", "\"\<Path\>\"", "]"}], ",", "\n", "\t\t\t", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"\"\<repos\>\"", ",", "__"}], "}"}], "|", "\n", "\t\t\t", 
+          RowBox[{"{", 
+           RowBox[{"__", ",", 
+            RowBox[{"\"\<releases\>\"", "|", "\"\<deployments\>\""}]}], "}"}],
+           "|", "\n", "\t\t\t", 
+          RowBox[{"{", 
+           RowBox[{"__", ",", 
+            RowBox[{"\"\<releases\>\"", "|", "\"\<deployments\>\""}], ",", 
+            "\"\<tag\>\"", ",", "___"}], "}"}]}]}], "\n", "\t\t\t", 
+        "]"}]}]}]}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDgitHubRepoQ", "[", 
+    RowBox[{"PDgitHubPath", "[", 
+     RowBox[{"path__String", ",", 
+      RowBox[{"___", "?", "OptionQ"}]}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"!", 
+    RowBox[{"MatchQ", "[", 
+     RowBox[{
+      RowBox[{"{", "path", "}"}], ",", "\n", "\t\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\"\<repos\>\"", ",", "__"}], "}"}], "|", "\n", "\t\t", 
+       RowBox[{"{", 
+        RowBox[{"__", ",", 
+         RowBox[{"\"\<releases\>\"", "|", "\"\<deployments\>\""}]}], "}"}], 
+       "|", "\n", "\t\t", 
+       RowBox[{"{", 
+        RowBox[{"__", ",", 
+         RowBox[{"\"\<releases\>\"", "|", "\"\<deployments\>\""}], ",", 
+         "\"\<tag\>\"", ",", "___"}], "}"}]}]}], "\n", "\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"PDgitHubRepoQ", "[", "_", "]"}], ":=", "False"}]}], "CodeInput",
+ CellChangeTimes->{{3.7104278499282017`*^9, 3.7104278607867317`*^9}, 
+   3.7104291116646852`*^9},ExpressionUUID->"bead3f26-1bb4-4d8e-a342-\
+d8991297de55"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]gitPacletPull\[RightFloor]", "Subsubsubsection",
  CellChangeTimes->{{3.7035961456249523`*^9, 3.703596153527396*^9}, 
    3.7035996135640783`*^9, 3.703599681187086*^9, {3.703754773337569*^9, 
-   3.703754774078949*^9}},ExpressionUUID->"1b7d24bf-082b-440b-bba5-\
-1eab0e7be215"],
-
-Cell[BoxData[
- RowBox[{"gitPacletPull", "//", "Clear"}]], "CodeInput",
- CellChangeTimes->{{3.70376200433486*^9, 3.703762005460475*^9}, {
-   3.7055923108023653`*^9, 3.705592311826536*^9}, 
-   3.710426100246024*^9},ExpressionUUID->"ec984b5c-9dd8-4c8c-bea4-\
-4b55c0ef12d7"],
+   3.703754774078949*^9}, 
+   3.710428374335799*^9},ExpressionUUID->"e50356fe-53eb-47f0-90e1-\
+9a6fc6b0e8ad"],
 
 Cell[BoxData[
  RowBox[{
@@ -1893,17 +2113,17 @@ Cell[BoxData[
    3.705592747326363*^9, 3.7055929696470747`*^9}, {3.7055930016452*^9, 
    3.705593154543199*^9}, {3.7055932336446257`*^9, 3.705593362216304*^9}, {
    3.7055934695736027`*^9, 3.705593470310925*^9}, {3.7055958904153833`*^9, 
-   3.70559589137283*^9}, 3.7055969531599197`*^9, 
-   3.710426100300153*^9},ExpressionUUID->"a2d6fced-2f8e-4624-961d-\
-b16b2950b111"]
+   3.70559589137283*^9}, 3.7055969531599197`*^9, 3.710428374366918*^9, 
+   3.710429111735949*^9},ExpressionUUID->"f421acd7-53f5-47f0-ae7c-\
+f9abf8da8b02"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]wolframLibraryPull\[RightFloor]", "Subsubsubsection",
  CellChangeTimes->{{3.70376451939939*^9, 
-  3.7037645297433167`*^9}},ExpressionUUID->"379a4b25-484f-4f0e-8d6b-\
-68aeed0dd1e8"],
+  3.7037645297433167`*^9}},ExpressionUUID->"23eda98d-de07-4318-aa88-\
+2c79f7c78ded"],
 
 Cell[BoxData[
  RowBox[{
@@ -1982,8 +2202,8 @@ Cell[BoxData[
              RowBox[{"Switch", "[", 
               RowBox[{
                RowBox[{"FileExtension", "[", "#", "]"}], ",", "\n", 
-               "\t\t\t\t\t", "\"\<paclet\>\"", ",", "\n", "\t\t\t\t\t", "0", 
-               ",", "\n", "\t\t\t\t\t", 
+               "\t\t\t\t\t", "\"\<PDpaclet\>\"", ",", "\n", "\t\t\t\t\t", "0",
+                ",", "\n", "\t\t\t\t\t", 
                RowBox[{"\"\<zip\>\"", "|", "\"\<gz\>\""}], ",", "\n", 
                "\t\t\t\t\t", "1", ",", "\n", "\t\t\t\t\t", 
                RowBox[{"\"\<wl\>\"", "|", "\"\<m\>\""}], ",", "\n", 
@@ -2049,17 +2269,17 @@ Cell[BoxData[
    3.7037665696119556`*^9, {3.703766699598633*^9, 3.703766709741173*^9}, {
    3.7037667442328176`*^9, 3.703766780324774*^9}, {3.7037669636283693`*^9, 
    3.703767034427094*^9}, {3.703767072850956*^9, 3.703767082584444*^9}, 
-   3.705592091687153*^9, 3.705592326611661*^9, 
-   3.710426100397271*^9},ExpressionUUID->"3d35b2b4-491c-414c-8f6b-\
-27a3005c1755"]
+   3.705592091687153*^9, 3.705592326611661*^9, 3.710422336257193*^9, 
+   3.710429111874075*^9},ExpressionUUID->"7e1e9073-e5d1-40e6-a2d1-\
+36d419db5f93"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]downloadURLIfExists\[RightFloor]", "Subsubsubsection",
  CellChangeTimes->{{3.703604404614912*^9, 3.703604407485958*^9}, 
-   3.7036052489502363`*^9},ExpressionUUID->"4d9aa81c-9020-49a6-a457-\
-56788653d885"],
+   3.7036052489502363`*^9},ExpressionUUID->"02e3f640-286b-47ed-b308-\
+50cb75ac71ec"],
 
 Cell[BoxData[
  RowBox[{
@@ -2100,16 +2320,16 @@ Cell[BoxData[
    3.703604906079907*^9}, {3.7036050306407557`*^9, 3.703605084180829*^9}, {
    3.703605125991049*^9, 3.703605250636724*^9}, 3.7037666379439697`*^9, 
    3.70559206245434*^9, 
-   3.710426100465276*^9},ExpressionUUID->"a86891d9-12a6-4811-999d-\
-7e4d3234ac5c"]
+   3.710429111978451*^9},ExpressionUUID->"3a2283ef-113e-4a2d-992b-\
+90329e7f5016"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["PDInstallPaclet", "Subsubsubsection",
- CellChangeTimes->{{3.705592073060073*^9, 
-  3.705592074201292*^9}},ExpressionUUID->"b9b7cb3e-9ba1-4216-9253-\
-0d21125fc8f7"],
+ CellChangeTimes->{{3.705592073060073*^9, 3.705592074201292*^9}, 
+   3.7104283744287043`*^9},ExpressionUUID->"65b3ca78-9bbf-48c1-ab94-\
+87cdab7b6890"],
 
 Cell[BoxData[{
  RowBox[{
@@ -2179,7 +2399,7 @@ Cell[BoxData[{
                   RowBox[{
                    RowBox[{"{", 
                     RowBox[{"l", "=", 
-                    RowBox[{"PacletLookup", "[", 
+                    RowBox[{"PDpacletLookup", "[", 
                     RowBox[{"p", ",", "\"\<Location\>\""}], "]"}]}], "}"}], 
                    ",", "\n", "\t\t\t\t\t\t\t", 
                    RowBox[{"If", "[", 
@@ -2268,13 +2488,14 @@ Cell[BoxData[{
              "\t\t\t\t\t", 
              RowBox[{"Which", "[", 
               RowBox[{
-               RowBox[{"GitHubRepoQ", "@", "loc"}], ",", "\n", "\t\t\t\t\t\t", 
+               RowBox[{"PDgitHubRepoQ", "@", "loc"}], ",", "\n", 
+               "\t\t\t\t\t\t", 
                RowBox[{"Internal`LoadingPanel", "[", "\n", "\t\t\t\t\t\t\t", 
                 RowBox[{"TemplateApply", "[", 
                  RowBox[{"\"\<Cloning repository at ``\>\"", ",", "loc"}], 
                  "]"}], "\n", "\t\t\t\t\t\t\t", "]"}], ",", "\n", 
                "\t\t\t\t\t\t", 
-               RowBox[{"GitHubReleaseQ", "@", "loc"}], ",", "\n", 
+               RowBox[{"PDgitHubReleaseQ", "@", "loc"}], ",", "\n", 
                "\t\t\t\t\t\t", 
                RowBox[{"Internal`LoadingPanel", "[", "\n", "\t\t\t\t\t\t\t", 
                 RowBox[{"TemplateApply", "[", 
@@ -2327,13 +2548,13 @@ Cell[BoxData[{
          RowBox[{"MatchQ", "[", "\n", "\t\t\t\t", 
           RowBox[{
            RowBox[{"Quiet", "@", 
-            RowBox[{"PacletSiteInfo", "[", "loc", "]"}]}], ",", "\n", 
+            RowBox[{"PDpacletSiteInfo", "[", "loc", "]"}]}], ",", "\n", 
            "\t\t\t\t", 
            RowBox[{
            "PacletManager`PacletSite", "[", "__PacletManager`Paclet", "]"}]}],
            "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "]"}], ",", "\n", 
        "\t\t", 
-       RowBox[{"PacletSiteInstall", "[", "loc", "]"}], ",", "\n", "\t\t", 
+       RowBox[{"PDpacletSiteInstall", "[", "loc", "]"}], ",", "\n", "\t\t", 
        RowBox[{"Switch", "[", 
         RowBox[{
          RowBox[{
@@ -2346,7 +2567,7 @@ Cell[BoxData[{
            RowBox[{
             RowBox[{
              RowBox[{"FileExtension", "[", "#", "]"}], "\[Equal]", 
-             "\"\<paclet\>\""}], "&"}], ")"}]}], ",", "\n", "\t\t\t", 
+             "\"\<PDpaclet\>\""}], "&"}], ")"}]}], ",", "\n", "\t\t\t", 
          RowBox[{"PDInstallPaclet", "@", 
           RowBox[{"URLDownload", "[", "loc", "]"}]}], ",", "\n", "\t\t\t", 
          RowBox[{"_", "?", 
@@ -2386,7 +2607,7 @@ Cell[BoxData[{
           RowBox[{
            RowBox[{"Quiet", "@", 
             RowBox[{"Normal", "@", 
-             RowBox[{"PacletSiteInfoDataset", "[", "loc", "]"}]}]}], ",", 
+             RowBox[{"PDpacletSiteInfoDataset", "[", "loc", "]"}]}]}], ",", 
            RowBox[{"{", "\n", "\t\t\t\t\t", 
             RowBox[{
              RowBox[{
@@ -2449,9 +2670,13 @@ Cell[BoxData[{
    3.7040553594487123`*^9}, {3.705590024238639*^9, 3.7055900243081913`*^9}, {
    3.705590139525435*^9, 3.705590139597629*^9}, {3.705591557267638*^9, 
    3.705591562869088*^9}, 3.7055916019940977`*^9, {3.705591997846665*^9, 
-   3.705592011322154*^9}, {3.7055924068408012`*^9, 3.705592406852414*^9}, 
-   3.7104261005716047`*^9},ExpressionUUID->"aff049ef-e787-4cc8-aa25-\
-d7d4f2aa64d1"]
+   3.705592011322154*^9}, {3.7055924068408012`*^9, 3.705592406852414*^9}, {
+   3.7104223362756844`*^9, 3.7104223362812634`*^9}, {3.7104277762139463`*^9, 
+   3.710427791738995*^9}, {3.7104283731828957`*^9, 3.710428395751392*^9}, {
+   3.710428497843566*^9, 3.7104285259434443`*^9}, 3.71042911223337*^9, {
+   3.710429262848666*^9, 
+   3.7104292630043163`*^9}},ExpressionUUID->"aa6e3411-421d-44d8-b802-\
+9c14f3ddb40a"]
 }, Open  ]]
 }, Open  ]],
 
