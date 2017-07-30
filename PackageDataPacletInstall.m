@@ -20,363 +20,363 @@ PDInstallPaclet::laywha="Couldn't detect package layout from directory ``";
 
 pacletInfoAssociation[PacletManager`Paclet[k__]]:=
 With[{o=Options[pacletExpression]},
-KeySortBy[First@FirstPosition[o,#]&]
-]@
+	KeySortBy[First@FirstPosition[o,#]&]
+	]@
 With[{base=
-KeyMap[Replace[s_Symbol:>SymbolName[s]],<|k|>]
-},
-ReplacePart[base,
-"Extensions"->
-AssociationThread[
-First/@base["Extensions"],
-Association@*Rest/@base["Extensions"]
-]
-]
-];
+		KeyMap[Replace[s_Symbol:>SymbolName[s]],<|k|>]
+		},
+	ReplacePart[base,
+		"Extensions"->
+		AssociationThread[
+			First/@base["Extensions"],
+			Association@*Rest/@base["Extensions"]
+			]
+		]
+	];
 pacletInfoAssociation[infoFile_]:=
 Replace[pacletInfo[infoFile],{
-p:PacletManager`Paclet[__]:>
-pacletInfoAssociation@p,
-_-><||>
-}];
+		p:PacletManager`Paclet[__]:>
+		pacletInfoAssociation@p,
+		_-><||>
+		}];
 pacletInfo[infoFile_]:=
 With[{pacletInfo=
-Replace[infoFile,{
-d:(_String|_File)?DirectoryQ:>
-FileNameJoin@{d,"PacletInfo.m"},
-f:(_String|_File)?(FileExtension[#]=="paclet"&):>
-With[{rd=CreateDirectory[]},
-First@ExtractArchive[f,rd,"*PacletInfo.m"]
-]
-}]
-},
-(If[
-StringContainsQ[
-Nest[DirectoryName,pacletInfo,3],
-$TemporaryDirectory
-]&&
-(StringTrim[DirectoryName@pacletInfo,$PathnameSeparator~~EndOfString]!=
-StringTrim[
-If[DirectoryQ@infoFile,
-infoFile,
-DirectoryName@infoFile],
-$PathnameSeparator~~EndOfString
-]),
-DeleteDirectory[Nest[DirectoryName,pacletInfo,2],DeleteContents->True]
-];#)&@
-If[FileExistsQ@pacletInfo,
-
-Begin["PacletManager`"];
-(End[];
-Map[
-Replace[#,
-(s_Symbol->v_):>
-(SymbolName[s]->v)
-]&,
-#])&@Import[pacletInfo],
-pacletManager`Paclet[]
-]
-];
+		Replace[infoFile,{
+				d:(_String|_File)?DirectoryQ:>
+				FileNameJoin@{d,"PacletInfo.m"},
+				f:(_String|_File)?(FileExtension[#]=="paclet"&):>
+				With[{rd=CreateDirectory[]},
+					First@ExtractArchive[f,rd,"*PacletInfo.m"]
+					]
+				}]
+		},
+	(If[
+			StringContainsQ[
+				Nest[DirectoryName,pacletInfo,3],
+				$TemporaryDirectory
+				]&&
+			(StringTrim[DirectoryName@pacletInfo,$PathnameSeparator~~EndOfString]!=
+				StringTrim[
+					If[DirectoryQ@infoFile,
+						infoFile,
+						DirectoryName@infoFile],
+					$PathnameSeparator~~EndOfString
+					]),
+			DeleteDirectory[Nest[DirectoryName,pacletInfo,2],DeleteContents->True]
+			];#)&@
+	If[FileExistsQ@pacletInfo,
+		
+		Begin["PacletManager`"];
+		(End[];
+			Map[
+				Replace[#,
+					(s_Symbol->v_):>
+					(SymbolName[s]->v)
+					]&,
+				#])&@Import[pacletInfo],
+		pacletManager`Paclet[]
+		]
+	];
 
 
 Options[pacletDocsInfo]={
-"Language"->"English",
-"Root"->None,
-"LinkBase"->None,
-"MainPage"->None(*,
-"Resources"\[Rule]None*)
-};
+	"Language"->"English",
+	"Root"->None,
+	"LinkBase"->None,
+	"MainPage"->None(*,
+	"Resources"\[Rule]None*)
+	};
 pacletDocsInfo[ops:OptionsPattern[]]:=
 SortBy[DeleteCases[DeleteDuplicatesBy[{ops},First],_->None],
-With[{o=Options@pacletDocsInfo},Position[o,First@#]&]];
+	With[{o=Options@pacletDocsInfo},Position[o,First@#]&]];
 pacletDocsInfo[dest_String?DirectoryQ,ops:OptionsPattern[]]:=
 With[{lang=
-FileBaseName@
-SelectFirst[
-FileNames["*",FileNameJoin@{dest,"Documentation"}],
-DirectoryQ]},
-If[MissingQ@lang,
-{},
-pacletDocsInfo[ops,
-"Language"->
-lang,
-"MainPage"->
-Replace[
-Map[
-FileNameTake[#,-2]&,
-Replace[
-FileNames["*.nb",
-FileNameJoin@{dest,"Documentation",lang,"Guides"}],{
-{}:>
-FileNames["*.nb",
-FileNameJoin@{dest,"Documentation",lang},
-2]
-}]
-],{
-{}->None,
-p:{__}:>
-First@
-SortBy[StringTrim[p,".nb"],
-EditDistance[FileBaseName@dest,FileBaseName@#]&]
-}]
-]
-]
-];
+		FileBaseName@
+		SelectFirst[
+			FileNames["*",FileNameJoin@{dest,"Documentation"}],
+			DirectoryQ]},
+	If[MissingQ@lang,
+		{},
+		pacletDocsInfo[ops,
+			"Language"->
+			lang,
+			"MainPage"->
+			Replace[
+				Map[
+					FileNameTake[#,-2]&,
+					Replace[
+						FileNames["*.nb",
+							FileNameJoin@{dest,"Documentation",lang,"Guides"}],{
+							{}:>
+							FileNames["*.nb",
+								FileNameJoin@{dest,"Documentation",lang},
+								2]
+							}]
+					],{
+					{}->None,
+					p:{__}:>
+					First@
+					SortBy[StringTrim[p,".nb"],
+						EditDistance[FileBaseName@dest,FileBaseName@#]&]
+					}]
+			]
+		]
+	];
 
 
 Options[pacletExtensionData]={
-"Documentation"->Automatic,
-"Kernel"->Automatic,
-"FrontEnd"->Automatic,
-"Resource"->Automatic,
-"AutoCompletionData"->Automatic
-};
+	"Documentation"->Automatic,
+	"Kernel"->Automatic,
+	"FrontEnd"->Automatic,
+	"Resource"->Automatic,
+	"AutoCompletionData"->Automatic
+	};
 pacletExtensionData[pacletInfo_Association,dest_,ops:OptionsPattern[]]:=
 Merge[Merge[Last]]@{
-Replace[Lookup[pacletInfo,"Extensions"],
-Except[_Association?AssociationQ]:>
-<||>
-],
-{
-Replace[OptionValue["Documentation"],{
-Automatic:>
-If[Length@
-FileNames["*.nb",
-FileNameJoin@{dest,"Documentation"},
-\[Infinity]]>0,
-"Documentation"->
-pacletDocsInfo[dest],
-Nothing
-],
-r:_Rule|{___Rule}:>
-"Documentation"->Association@Flatten@{r},
-Except[_Association]->Nothing
-}],
-Replace[OptionValue["Kernel"],{
-Automatic:>
-"Kernel"->
-<|
-Root -> ".", 
-Context -> FileBaseName@dest<>"`"
-|>,
-r:_Rule|{___Rule}:>
-"Kernel"->Association@Flatten@{r},
-Except[_Association]->Nothing
-}],
-Replace[OptionValue["FrontEnd"],{
-Automatic:>
-If[Length@Select[Not@*DirectoryQ]@
-Flatten@Join[
-Map[
-FileNames["*.nb",
-FileNameJoin@{dest,"FrontEnd","Documentation",#},
-\[Infinity]]&,{
-"ReferencePages",
-"Guides",
-"Tutorials"
-}],
-Map[
-FileNames["*",
-FileNameJoin@{dest,"FrontEnd",#},
-\[Infinity]
-]&,{
-"TextResources",
-"SystemResources"
-}]
-]>0,
-"FrontEnd"->
-If[
-DirectoryQ@
-FileNameJoin@{dest,
-"FrontEnd",
-"TextResources"
-}||
-DirectoryQ@
-FileNameJoin@{dest,
-"FrontEnd",
-"SystemResources"
-},
-<|Prepend->True|>,
-<||>
-],
-Nothing
-],
-r:_Rule|{___Rule}:>
-"FrontEnd"->Association@Flatten@{r},
-Except[_Association]->Nothing
-}],
-Replace[OptionValue["Resource"],{
-Automatic:>
-If[Length@
-Select[
-FileNames["*",
-FileNameJoin@{dest,"Data"},
-\[Infinity]],
-Not@DirectoryQ@#&&
-Not@StringMatchQ[FileNameTake@#,".DS_Store"]&
-]>0,
-"Resource"->
-<|
-"Root" -> "Data",
-"Resources" -> 
-Map[
-FileNameDrop[#,
-FileNameDepth[dest]+1
-]&,
-Select[
-FileNames["*",
-FileNameJoin@{dest,"Data"},
-\[Infinity]],
-Not@DirectoryQ@#&&
-Not@StringMatchQ[FileNameTake@#,".DS_Store"]&
-]
-]
-|>,
-Nothing
-],
-r:_Rule|{___Rule}:>
-"Resource"->Association@Flatten@{r},
-Except[_Association]->Nothing
-}],
-Replace[OptionValue["AutoCompletionData"],{
-Automatic:>
-If[Length@
-FileNames["*.tr"|"documentedContexts.m",
-FileNameJoin@{dest,"AutoCompletionData"},
-\[Infinity]]>0,
-"AutoCompletionData"->
-<|
-"Root" -> "AutoCompletionData"
-|>,
-Nothing
-],
-r:_Rule|{___Rule}:>
-"Documentation"->Association@Flatten@{r},
-Except[_Association]->Nothing
-}]
-}
-};
+	Replace[Lookup[pacletInfo,"Extensions"],
+		Except[_Association?AssociationQ]:>
+		<||>
+		],
+	{
+		Replace[OptionValue["Documentation"],{
+				Automatic:>
+				If[Length@
+					FileNames["*.nb",
+						FileNameJoin@{dest,"Documentation"},
+						\[Infinity]]>0,
+					"Documentation"->
+					pacletDocsInfo[dest],
+					Nothing
+					],
+				r:_Rule|{___Rule}:>
+				"Documentation"->Association@Flatten@{r},
+				Except[_Association]->Nothing
+				}],
+		Replace[OptionValue["Kernel"],{
+				Automatic:>
+				"Kernel"->
+				<|
+				Root -> ".", 
+				Context -> FileBaseName@dest<>"`"
+				|>,
+				r:_Rule|{___Rule}:>
+				"Kernel"->Association@Flatten@{r},
+				Except[_Association]->Nothing
+				}],
+		Replace[OptionValue["FrontEnd"],{
+				Automatic:>
+				If[Length@Select[Not@*DirectoryQ]@
+					Flatten@Join[
+						Map[
+							FileNames["*.nb",
+								FileNameJoin@{dest,"FrontEnd","Documentation",#},
+								\[Infinity]]&,{
+								"ReferencePages",
+								"Guides",
+								"Tutorials"
+								}],
+						Map[
+							FileNames["*",
+								FileNameJoin@{dest,"FrontEnd",#},
+								\[Infinity]
+								]&,{
+								"TextResources",
+								"SystemResources"
+								}]
+						]>0,
+					"FrontEnd"->
+					If[
+						DirectoryQ@
+						FileNameJoin@{dest,
+							"FrontEnd",
+							"TextResources"
+							}||
+						DirectoryQ@
+						FileNameJoin@{dest,
+							"FrontEnd",
+							"SystemResources"
+							},
+						<|Prepend->True|>,
+						<||>
+						],
+					Nothing
+					],
+				r:_Rule|{___Rule}:>
+				"FrontEnd"->Association@Flatten@{r},
+				Except[_Association]->Nothing
+				}],
+		Replace[OptionValue["Resource"],{
+				Automatic:>
+				If[Length@
+					Select[
+						FileNames["*",
+							FileNameJoin@{dest,"Data"},
+							\[Infinity]],
+						Not@DirectoryQ@#&&
+						Not@StringMatchQ[FileNameTake@#,".DS_Store"]&
+						]>0,
+					"Resource"->
+					<|
+					"Root" -> "Data",
+					"Resources" -> 
+					Map[
+						FileNameDrop[#,
+							FileNameDepth[dest]+1
+							]&,
+						Select[
+							FileNames["*",
+								FileNameJoin@{dest,"Data"},
+								\[Infinity]],
+							Not@DirectoryQ@#&&
+							Not@StringMatchQ[FileNameTake@#,".DS_Store"]&
+							]
+						]
+					|>,
+					Nothing
+					],
+				r:_Rule|{___Rule}:>
+				"Resource"->Association@Flatten@{r},
+				Except[_Association]->Nothing
+				}],
+		Replace[OptionValue["AutoCompletionData"],{
+				Automatic:>
+				If[Length@
+					FileNames["*.tr"|"documentedContexts.m",
+						FileNameJoin@{dest,"AutoCompletionData"},
+						\[Infinity]]>0,
+					"AutoCompletionData"->
+					<|
+					"Root" -> "AutoCompletionData"
+					|>,
+					Nothing
+					],
+				r:_Rule|{___Rule}:>
+				"Documentation"->Association@Flatten@{r},
+				Except[_Association]->Nothing
+				}]
+		}
+	};
 
 
 Options[pacletExpression]=
 Join[
-{
-"Name"->"MyPaclet",
-"Version"->Automatic,
-"Creator"->Automatic,
-"Description"->Automatic,
-"Root"->Automatic,
-"WolframVersion"->Automatic,
-"Internal"->Automatic,
-"Loading"->Automatic,
-"Qualifier"->Automatic,
-"BuildNumber"->Automatic,
-"Extensions"->Automatic
-},
-Options@pacletExtensionData
-];
+	{
+		"Name"->"MyPaclet",
+		"Version"->Automatic,
+		"Creator"->Automatic,
+		"Description"->Automatic,
+		"Root"->Automatic,
+		"WolframVersion"->Automatic,
+		"Internal"->Automatic,
+		"Loading"->Automatic,
+		"Qualifier"->Automatic,
+		"BuildNumber"->Automatic,
+		"Extensions"->Automatic
+		},
+	Options@pacletExtensionData
+	];
 pacletExpression[ops:OptionsPattern[]]:=
 PacletManager`Paclet@@
 SortBy[DeleteCases[DeleteDuplicatesBy[{ops},First],_->None],
-With[{o=Options@pacletExpression},Position[o,First@#]&]
-];
+	With[{o=Options@pacletExpression},Position[o,First@#]&]
+	];
 
 
 pacletExpression[
-dest_String?DirectoryQ,
-ops:OptionsPattern[]]:=
+	dest_String?DirectoryQ,
+	ops:OptionsPattern[]]:=
 With[{pacletInfo=pacletInfoAssociation[dest]},
-pacletExpression[
-Sequence@@FilterRules[{ops},
-Except["Kernel"|"Documentation"|"Extensions"|"FrontEnd"]],
-"Name"->FileBaseName@dest,
-"Extensions"->
-Replace[OptionValue["Extensions"],{
-Automatic:>
-KeyValueMap[Prepend[Normal@#2,#]&,
-pacletExtensionData[pacletInfo,
-dest,
-FilterRules[{ops},
-Options@pacletExtensionData
-]
-]
-],
-Except[_List]:>
-With[{baseData=
-pacletExtensionData[pacletInfo,
-dest,
-FilterRules[{ops},
-Options@pacletExtensionData
-]
-]},
-Map[
-Replace[OptionValue[#],{
-Automatic:>
-Replace[Lookup[baseData,#],{
-a_Association:>
-Flatten@{#,Normal@a},
-_->Nothing
-}],
-r:_Rule|{___Rule}|_Association:>
-Flatten@{
-#,
-Normal@r
-},
-_->Nothing
-}]&,
-Keys@Options[pacletExtensionData]
-]
-]
-}],
-"Version"->
-Replace[OptionValue@"Version",
-Automatic:>
-With[{pointVersions=
-StringSplit[
-ToString[Lookup[pacletInfo,"Version","1.0.-1"]],
-"."
-]
-},
-StringJoin@Riffle[
-If[Length@pointVersions>1,
-Append[Most@pointVersions,
-ToString[ToExpression[Last@pointVersions]+1]
-],
-{pointVersions,"1"}],
-"."]
-]
-],
-Sequence@@Normal@pacletInfo
-]
-];
+	pacletExpression[
+		Sequence@@FilterRules[{ops},
+			Except["Kernel"|"Documentation"|"Extensions"|"FrontEnd"]],
+		"Name"->FileBaseName@dest,
+		"Extensions"->
+		Replace[OptionValue["Extensions"],{
+				Automatic:>
+				KeyValueMap[Prepend[Normal@#2,#]&,
+					pacletExtensionData[pacletInfo,
+						dest,
+						FilterRules[{ops},
+							Options@pacletExtensionData
+							]
+						]
+					],
+				Except[_List]:>
+				With[{baseData=
+						pacletExtensionData[pacletInfo,
+							dest,
+							FilterRules[{ops},
+								Options@pacletExtensionData
+								]
+							]},
+					Map[
+						Replace[OptionValue[#],{
+								Automatic:>
+								Replace[Lookup[baseData,#],{
+										a_Association:>
+										Flatten@{#,Normal@a},
+										_->Nothing
+										}],
+								r:_Rule|{___Rule}|_Association:>
+								Flatten@{
+									#,
+									Normal@r
+									},
+								_->Nothing
+								}]&,
+						Keys@Options[pacletExtensionData]
+						]
+					]
+				}],
+		"Version"->
+		Replace[OptionValue@"Version",
+			Automatic:>
+			With[{pointVersions=
+					StringSplit[
+						ToString[Lookup[pacletInfo,"Version","1.0.-1"]],
+						"."
+						]
+					},
+				StringJoin@Riffle[
+					If[Length@pointVersions>1,
+						Append[Most@pointVersions,
+							ToString[ToExpression[Last@pointVersions]+1]
+							],
+						{pointVersions,"1"}],
+					"."]
+				]
+			],
+		Sequence@@Normal@pacletInfo
+		]
+	];
 
 
 Options[pacletExpressionBundle]=
 Options[pacletExpression];
 pacletExpressionBundle[
-paclet_PacletManager`Paclet,
-dest_String?DirectoryQ]:=
+	paclet_PacletManager`Paclet,
+	dest_String?DirectoryQ]:=
 With[{pacletFile=FileNameJoin@{dest,"pacletInfo.m"}},
-Begin["pacletManager`"];
-Block[{$ContextPath={"System`","pacletManager`"}},
-With[{pac=
-Replace[paclet,
-(n_->v_):>(ToExpression[n]->v),
-1]},
-Export[pacletFile,pac]
-]
-];
-End[];
-pacletFile
-];
+	Begin["pacletManager`"];
+	Block[{$ContextPath={"System`","pacletManager`"}},
+		With[{pac=
+				Replace[paclet,
+					(n_->v_):>(ToExpression[n]->v),
+					1]},
+			Export[pacletFile,pac]
+			]
+		];
+	End[];
+	pacletFile
+	];
 pacletExpressionBundle[
-dest_String?DirectoryQ,
-ops:OptionsPattern[]
-]:=
+	dest_String?DirectoryQ,
+	ops:OptionsPattern[]
+	]:=
 pacletExpressionBundle[
-pacletExpression[dest,ops],
-dest
-];
+	pacletExpression[dest,ops],
+	dest
+	];
 
 
 pacletLookup[p:{__PacletManager`Paclet},props_]:=
@@ -389,19 +389,19 @@ pacletLookup[PacletManager`PacletFind[p],props];
 
 pacletOpen[p_,which:_:First]:=
 With[{locs=pacletLookup[p,"Location"]},
-With[{files=
-Flatten@{
-Replace[
-which@Flatten@{locs},
-HoldPattern[which[f_]]:>f
-]
-}
-},
-Map[SystemOpen,files];
-files
-]/;
-AllTrue[Flatten@{locs},StringQ]
-];
+	With[{files=
+			Flatten@{
+				Replace[
+					which@Flatten@{locs},
+					HoldPattern[which[f_]]:>f
+					]
+				}
+			},
+		Map[SystemOpen,files];
+		files
+		]/;
+	AllTrue[Flatten@{locs},StringQ]
+	];
 
 
 Options[pacletBundle]={
@@ -447,145 +447,145 @@ pacletBundle[dir:(_String|_File)?DirectoryQ,ops:OptionsPattern[]]:=
 
 
 Options[installPacletGenerate]={
-"Verbose"->False
-};
+	"Verbose"->False
+	};
 
 
 installPacletGenerate[dir:(_String|_File)?DirectoryQ,ops:OptionsPattern[]]:=
 Block[{bundleDir=dir},
-If[OptionValue@"Verbose",
-DisplayTemporary@
-Internal`LoadingPanel[
-TemplateApply["Bundling paclet for ``",dir]
-]
-];
-(* ------------ Extract Archive Files --------------- *)
-If[FileExistsQ@#,Quiet@ExtractArchive[#,dir]]&/@
-Map[
-FileNameJoin@{dir,FileBaseName@dir<>#}&,
-{".zip",".gz"}
-];
-(* ------------ Detect Paclet Layout --------------- *)
-Which[
-FileExistsQ@FileNameJoin@{dir,"PacletInfo.m"},
-bundleDir=dir,
-FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".m"}||
-FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".wl"}||
-FileExistsQ@FileNameJoin@{dir,"Kernel","init"<>".m"}||
-FileExistsQ@FileNameJoin@{dir,"Kernel","init"<>".wl"},
-bundleDir=dir;
-PacletExpressionBundle[bundleDir],
-FileExistsQ@FileNameJoin@{dir,FileBaseName@dir,"PacletInfo.m"},
-bundleDir=FileNameJoin@{dir,FileBaseName@dir},
-FileExistsQ@FileNameJoin@{dir,FileBaseName@dir,FileBaseName@dir<>".m"},
-bundleDir=FileNameJoin@{dir,FileBaseName@dir};
-PacletExpressionBundle[bundleDir],
-FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".nb"},
-Export[
-FileNameJoin@{dir,FileBaseName[dir]<>".m"};
-"(*Open package notebook*)
+	If[OptionValue@"Verbose",
+		DisplayTemporary@
+		Internal`LoadingPanel[
+			TemplateApply["Bundling paclet for ``",dir]
+			]
+		];
+	(* ------------ Extract Archive Files --------------- *)
+	If[FileExistsQ@#,Quiet@ExtractArchive[#,dir]]&/@
+	Map[
+		FileNameJoin@{dir,FileBaseName@dir<>#}&,
+		{".zip",".gz"}
+		];
+	(* ------------ Detect Paclet Layout --------------- *)
+	Which[
+		FileExistsQ@FileNameJoin@{dir,"PacletInfo.m"},
+		bundleDir=dir,
+		FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".m"}||
+		FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".wl"}||
+		FileExistsQ@FileNameJoin@{dir,"Kernel","init"<>".m"}||
+		FileExistsQ@FileNameJoin@{dir,"Kernel","init"<>".wl"},
+		bundleDir=dir;
+		PacletExpressionBundle[bundleDir],
+		FileExistsQ@FileNameJoin@{dir,FileBaseName@dir,"PacletInfo.m"},
+		bundleDir=FileNameJoin@{dir,FileBaseName@dir},
+		FileExistsQ@FileNameJoin@{dir,FileBaseName@dir,FileBaseName@dir<>".m"},
+		bundleDir=FileNameJoin@{dir,FileBaseName@dir};
+		PacletExpressionBundle[bundleDir],
+		FileExistsQ@FileNameJoin@{dir,FileBaseName[dir]<>".nb"},
+		Export[
+			FileNameJoin@{dir,FileBaseName[dir]<>".m"};
+			"(*Open package notebook*)
 CreateDocument[
 	Import@
 		StringReplace[$InputFileName,\".m\"->\".nb\"]
 	]",
-"Text"
-];
-bundleDir=dir;
-PacletExpressionBundle[bundleDir],
-_,
-Message[PDInstallPaclet::laywha];
-Throw[$Failed]
-];
-pacletBundle[bundleDir]
-];
+			"Text"
+			];
+		bundleDir=dir;
+		PacletExpressionBundle[bundleDir],
+		_,
+		Message[PDInstallPaclet::laywha];
+		Throw[$Failed]
+		];
+	pacletBundle[bundleDir]
+	];
 
 
 installPacletGenerate[file:(_String|_File)?FileExistsQ,ops:OptionsPattern[]]:=
 Switch[FileExtension[file],
-"m"|"wl",
-If[OptionValue@"Verbose",
-DisplayTemporary@
-Internal`LoadingPanel[
-TemplateApply["Bundling paclet for ``",file]
-]
-];
-With[{dir=
-FileNameJoin@{
-$TemporaryDirectory,
-FileBaseName@file
-}
-},
-Quiet@CreateDirectory[dir];
-If[FileExistsQ@
-FileNameJoin@{
-DirectoryName@file,
-"DependencyInfo.m"
-},
-CopyFile[
-FileNameJoin@{
-DirectoryName@file,
-"DependencyInfo.m"
-},
-FileNameJoin@{
-dir,
-"DependencyInfo.m"
-}	
-]
-];
-If[FileExistsQ@
-FileNameJoin@{
-DirectoryName@file,
-"PacletInfo.m"
-},
-CopyFile[
-FileNameJoin@{
-DirectoryName@file,
-"PacletInfo.m"
-},
-FileNameJoin@{
-dir,
-"PacletInfo.m"
-}	
-]
-];
-CopyFile[file,
-FileNameJoin@{
-dir,
-FileNameTake@file
-},
-OverwriteTarget->True
-];
-PacletExpressionBundle[dir,
-"Name"->
-StringReplace[FileBaseName[dir],
-Except[WordCharacter|"$"]->""]
-];
-pacletBundle[dir,
-"BuildRoot"->$TemporaryDirectory
-]
-],
-"nb",
-With[{dir=
-FileNameJoin@{
-$TemporaryDirectory,
-StringJoin@RandomSample[Alphabet[],10],
-FileBaseName@file
-}
-},
-Quiet[
-DeleteDirectory[dir,DeleteContents->True];
-CreateDirectory[dir,CreateIntermediateDirectories->True]
-];
-CopyFile[file,FileNameJoin@{dir,FileNameTake@file}];
-installPacletGenerate[dir]
-],
-"paclet",
-file,
-_,
-Message[PDInstallPaclet::howdo,
-FileExtension@file
-]
-];
+	"m"|"wl",
+	If[OptionValue@"Verbose",
+		DisplayTemporary@
+		Internal`LoadingPanel[
+			TemplateApply["Bundling paclet for ``",file]
+			]
+		];
+	With[{dir=
+			FileNameJoin@{
+				$TemporaryDirectory,
+				FileBaseName@file
+				}
+			},
+		Quiet@CreateDirectory[dir];
+		If[FileExistsQ@
+			FileNameJoin@{
+				DirectoryName@file,
+				"DependencyInfo.m"
+				},
+			CopyFile[
+				FileNameJoin@{
+					DirectoryName@file,
+					"DependencyInfo.m"
+					},
+				FileNameJoin@{
+					dir,
+					"DependencyInfo.m"
+					}	
+				]
+			];
+		If[FileExistsQ@
+			FileNameJoin@{
+				DirectoryName@file,
+				"PacletInfo.m"
+				},
+			CopyFile[
+				FileNameJoin@{
+					DirectoryName@file,
+					"PacletInfo.m"
+					},
+				FileNameJoin@{
+					dir,
+					"PacletInfo.m"
+					}	
+				]
+			];
+		CopyFile[file,
+			FileNameJoin@{
+				dir,
+				FileNameTake@file
+				},
+			OverwriteTarget->True
+			];
+		PacletExpressionBundle[dir,
+			"Name"->
+			StringReplace[FileBaseName[dir],
+				Except[WordCharacter|"$"]->""]
+			];
+		pacletBundle[dir,
+			"BuildRoot"->$TemporaryDirectory
+			]
+		],
+	"nb",
+	With[{dir=
+			FileNameJoin@{
+				$TemporaryDirectory,
+				StringJoin@RandomSample[Alphabet[],10],
+				FileBaseName@file
+				}
+			},
+		Quiet[
+			DeleteDirectory[dir,DeleteContents->True];
+			CreateDirectory[dir,CreateIntermediateDirectories->True]
+			];
+		CopyFile[file,FileNameJoin@{dir,FileNameTake@file}];
+		installPacletGenerate[dir]
+		],
+	"paclet",
+	file,
+	_,
+	Message[PDInstallPaclet::howdo,
+		FileExtension@file
+		]
+	];
 
 
 gitPacletPull//Clear
@@ -593,306 +593,306 @@ gitPacletPull//Clear
 
 gitPacletPull[loc:(_String|_URL|_File)]:=
 If[StringContainsQ[URLParse[loc,"PathString"],"releases"],
-Block[{
-release=
-SelectFirst[
-Flatten@{
-Import[
-ReplacePart[#,{
-"Domain"->"api.github.com",
-"Path"->
-With[{cleanpath=DeleteCases[#["Path"],""]},
-If[cleanpath[[1]]==="repos",
-cleanpath,
-Prepend[cleanpath,"repos"]
-]
-]
-}]&@URLParse[loc],
-"RawJSON"]},
-KeyMemberQ["assets"]||KeyMemberQ["zipball_url"]
-]
-},
-If[AssociationQ@release,
-If[KeyMemberQ[release,"assets"]&&Length@release["assets"]>0,
-With[{url=
-release[["assets",-1,"browser_download_url"]]
-},
-URLDownload[url,
-FileNameJoin@{
-$TemporaryDirectory,
-URLParse[url,"Path"][[-1]]
-}
-]
-],
-ExtractArchive[
-URLDownload[
-release["zipball_url"],
-FileNameJoin@{
-$TemporaryDirectory,
-URLParse[release["zipball_url"],"Path"][[-1]]
-}
-],
-$TemporaryDirectory
-]
-],
-$Failed
-]
-],
-With[{
-dir=
-FileNameJoin@{
-$TemporaryDirectory,
-DeleteCases[URLParse[loc,"Path"],""][[2]]
-}
-},
-Quiet[
-DeleteDirectory[dir,DeleteContents->True];
-CreateDirectory[dir]
-];
-RunProcess[{"git","clone",loc,dir}];
-dir
-]
-];
+	Block[{
+			release=
+			SelectFirst[
+				Flatten@{
+					Import[
+						ReplacePart[#,{
+								"Domain"->"api.github.com",
+								"Path"->
+								With[{cleanpath=DeleteCases[#["Path"],""]},
+									If[cleanpath[[1]]==="repos",
+										cleanpath,
+										Prepend[cleanpath,"repos"]
+										]
+									]
+								}]&@URLParse[loc],
+						"RawJSON"]},
+				KeyMemberQ["assets"]||KeyMemberQ["zipball_url"]
+				]
+			},
+		If[AssociationQ@release,
+			If[KeyMemberQ[release,"assets"]&&Length@release["assets"]>0,
+				With[{url=
+						release[["assets",-1,"browser_download_url"]]
+						},
+					URLDownload[url,
+						FileNameJoin@{
+							$TemporaryDirectory,
+							URLParse[url,"Path"][[-1]]
+							}
+						]
+					],
+				ExtractArchive[
+					URLDownload[
+						release["zipball_url"],
+						FileNameJoin@{
+							$TemporaryDirectory,
+							URLParse[release["zipball_url"],"Path"][[-1]]
+							}
+						],
+					$TemporaryDirectory
+					]
+				],
+			$Failed
+			]
+		],
+	With[{
+			dir=
+			FileNameJoin@{
+				$TemporaryDirectory,
+				DeleteCases[URLParse[loc,"Path"],""][[2]]
+				}
+			},
+		Quiet[
+			DeleteDirectory[dir,DeleteContents->True];
+			CreateDirectory[dir]
+			];
+		RunProcess[{"git","clone",loc,dir}];
+		dir
+		]
+	];
 
 
 wolframLibraryPull[loc:_String|_URL]:=
 With[{fileURLs=
-URLBuild@
-Merge[{
-URLParse[loc],
-URLParse[#]
-},
-Replace[DeleteCases[#,None],{
-{s_}:>s,
-{___,l_}:>l,
-{}->None
-}]&
-]&/@
-Cases[
-Import[loc,{"HTML","XMLObject"}],
-XMLElement["a",
-{
-___,
-"href"->link_,
-___},
-{___,
-XMLElement["img",
-{___,"src"->"/images/database/download-icon.gif",___},
-_],
-___}
-]:>link,
-\[Infinity]
-]
-},
-With[{name=
-FileBaseName@
-First@
-SortBy[
-Switch[FileExtension[#],
-"paclet",
-0,
-"zip"|"gz",
-1,
-"wl"|"m",
-2,
-_,
-3
-]&
-][URLParse[#,"Path"][[-1]]&/@fileURLs]
-},
-Quiet@
-DeleteDirectory[
-FileNameJoin@{$TemporaryDirectory,name},
-DeleteContents->True
-];
-CreateDirectory@FileNameJoin@{$TemporaryDirectory,name};
-MapThread[
-RenameFile[
-#,
-FileNameJoin@{$TemporaryDirectory,name,URLParse[#2,"Path"][[-1]]}
-]&,{
-URLDownload[fileURLs,
-FileNameJoin@{$TemporaryDirectory,name}],
-fileURLs
-}];
-FileNameJoin@{$TemporaryDirectory,name}
-]
-]
+		URLBuild@
+		Merge[{
+				URLParse[loc],
+				URLParse[#]
+				},
+			Replace[DeleteCases[#,None],{
+					{s_}:>s,
+					{___,l_}:>l,
+					{}->None
+					}]&
+			]&/@
+		Cases[
+			Import[loc,{"HTML","XMLObject"}],
+			XMLElement["a",
+				{
+					___,
+					"href"->link_,
+					___},
+				{___,
+					XMLElement["img",
+						{___,"src"->"/images/database/download-icon.gif",___},
+						_],
+					___}
+				]:>link,
+			\[Infinity]
+			]
+		},
+	With[{name=
+			FileBaseName@
+			First@
+			SortBy[
+				Switch[FileExtension[#],
+					"paclet",
+					0,
+					"zip"|"gz",
+					1,
+					"wl"|"m",
+					2,
+					_,
+					3
+					]&
+				][URLParse[#,"Path"][[-1]]&/@fileURLs]
+			},
+		Quiet@
+		DeleteDirectory[
+			FileNameJoin@{$TemporaryDirectory,name},
+			DeleteContents->True
+			];
+		CreateDirectory@FileNameJoin@{$TemporaryDirectory,name};
+		MapThread[
+			RenameFile[
+				#,
+				FileNameJoin@{$TemporaryDirectory,name,URLParse[#2,"Path"][[-1]]}
+				]&,{
+				URLDownload[fileURLs,
+					FileNameJoin@{$TemporaryDirectory,name}],
+				fileURLs
+				}];
+		FileNameJoin@{$TemporaryDirectory,name}
+		]
+	]
 
 
 downloadURLIfExists[urlBase_,{files__},dir_]:=
 If[
-MatchQ[0|200]@
-URLSave[
-URLBuild@{urlBase,#},
-FileNameJoin@{
-dir,
-#
-},
-"StatusCode"
-],
-FileNameJoin@{
-dir,
-#
-},
-Quiet@
-DeleteFile@
-FileNameJoin@{
-dir,
-#
-};
-Nothing
-]&/@{files}
+	MatchQ[0|200]@
+	URLSave[
+		URLBuild@{urlBase,#},
+		FileNameJoin@{
+			dir,
+			#
+			},
+		"StatusCode"
+		],
+	FileNameJoin@{
+		dir,
+		#
+		},
+	Quiet@
+	DeleteFile@
+	FileNameJoin@{
+		dir,
+		#
+		};
+	Nothing
+	]&/@{files}
 
 
 Options[PDInstallPaclet]=
 {
-"Verbose"->True,
-"InstallSite"->True,
-"InstallDependencies"->
-Automatic,
-"Log"->True
-};
+	"Verbose"->True,
+	"InstallSite"->True,
+	"InstallDependencies"->
+	Automatic,
+	"Log"->True
+	};
 PDInstallPaclet[
-loc:(_String|_File)?FileExistsQ,
-ops:OptionsPattern[]
-]:=
+	loc:(_String|_File)?FileExistsQ,
+	ops:OptionsPattern[]
+	]:=
 Replace[
-installPacletGenerate[loc,ops],{
-File[f_]|(f_String?FileExistsQ):>
-Replace[PacletManager`PacletInstall@f,
-p_PacletManager`Paclet:>
-With[{deps=
-Replace[OptionValue["InstallDependencies"],{
-Automatic->{"Standard"},
-True->All
-}]
-},
-If[MatchQ[deps,_List|All],
-Flatten@{
-p,
-With[{l=PacletLookup[p,"Location"]},
-If[FileExistsQ@FileNameJoin@{l,"DependencyInfo.m"},
-Replace[Import["DependencyInfo.m"],{
-a_Association:>
-Switch[deps,
-All,
-Flatten@
-Map[Map[PDInstallPaclet,#]&,a],
-_,
-Flatten@
-Map[PDInstallPaclet,
-Flatten@Lookup[a,deps,{}]
-]
-],
-l_List:>
-Map[PDInstallPaclet,l]
-}],
-{}
-]
-]
-},
-p
-]
-]
-]
-}];
+	installPacletGenerate[loc,ops],{
+		File[f_]|(f_String?FileExistsQ):>
+		Replace[PacletManager`PacletInstall@f,
+			p_PacletManager`Paclet:>
+			With[{deps=
+					Replace[OptionValue["InstallDependencies"],{
+							Automatic->{"Standard"},
+							True->All
+							}]
+					},
+				If[MatchQ[deps,_List|All],
+					Flatten@{
+						p,
+						With[{l=PacletLookup[p,"Location"]},
+							If[FileExistsQ@FileNameJoin@{l,"DependencyInfo.m"},
+								Replace[Import["DependencyInfo.m"],{
+										a_Association:>
+										Switch[deps,
+											All,
+											Flatten@
+											Map[Map[PDInstallPaclet,#]&,a],
+											_,
+											Flatten@
+											Map[PDInstallPaclet,
+												Flatten@Lookup[a,deps,{}]
+												]
+											],
+										l_List:>
+										Map[PDInstallPaclet,l]
+										}],
+								{}
+								]
+							]
+						},
+					p
+					]
+				]
+			]
+		}];
 PDInstallPaclet[
-loc:(_String?(URLParse[#,"Scheme"]=!=None&)|_URL),
-ops:OptionsPattern[]
-]:=
+	loc:(_String?(URLParse[#,"Scheme"]=!=None&)|_URL),
+	ops:OptionsPattern[]
+	]:=
 Which[
-URLParse[loc,"Domain"]==="github.com",
-With[{dir=
-If[OptionValue@"Verbose"//TrueQ,
-Monitor[
-gitPacletPull[loc],
-Which[GitHubRepoQ@loc,
-Internal`LoadingPanel[
-TemplateApply["Cloning repository at ``",loc]
-],
-GitHubReleaseQ@loc,
-Internal`LoadingPanel[
-TemplateApply["Pulling release at ``",loc]
-],
-True,
-Internal`LoadingPanel[
-TemplateApply["Downloading from ``",loc]
-]
-]
-],
-gitPacletPull[loc]
-]
-},
-PDInstallPaclet@dir
-],
-URLParse[loc,"Domain"]==="library.wolfram.com",
-With[{dir=
-If[OptionValue@"Verbose"//TrueQ,
-Monitor[
-wolframLibraryPull[loc],
-Internal`LoadingPanel[
-TemplateApply["Downloading from library.wolfram.com ``",loc]
-]
-],
-gitPacletPull[loc]
-]
-},
-PDInstallPaclet@dir
-],
-True,
-If[
-And[
-OptionValue["InstallSite"]//TrueQ,
-MatchQ[
-Quiet@PacletSiteInfo[loc],
-PacletManager`PacletSite[__PacletManager`Paclet]
-]
-],
-PacletSiteInstall[loc],
-Switch[URLParse[loc,"Path"][[-1]],
-_?(FileExtension[#]=="paclet"&),
-PDInstallPaclet@URLDownload[loc],
-_?(MatchQ[FileExtension[#],"m"|"wl"]&),
-PDInstallPaclet@
-downloadURLIfExists[
-URLBuild[
-ReplacePart[#,
-"Path"->
-Drop[#Path,-1]
-]&@URLParse[loc]
-],{
-URLParse[loc,"Path"][[-1]],
-"DependencyInfo.m",
-"PacletInfo.m"
-}],
-_,
-Replace[
-Quiet@Normal@PacletSiteInfoDataset[loc],{
-Except[{__Association}]:>
-(
-Message[PDInstallPaclet::nopac,loc];
-$Failed
-),
-a:{__Association}:>
-PDInstallPaclet[
-URLBuild@
-Flatten@{
-loc,
-StringJoin@{
-Lookup[Last@SortBy[a,#Version&],{
-"Name",
-"Version"
-}],
-".paclet"
-}
-},
-ops
-]
-}]
-]
-]
-];
+	URLParse[loc,"Domain"]==="github.com",
+	With[{dir=
+			If[OptionValue@"Verbose"//TrueQ,
+				Monitor[
+					gitPacletPull[loc],
+					Which[GitHubRepoQ@loc,
+						Internal`LoadingPanel[
+							TemplateApply["Cloning repository at ``",loc]
+							],
+						GitHubReleaseQ@loc,
+						Internal`LoadingPanel[
+							TemplateApply["Pulling release at ``",loc]
+							],
+						True,
+						Internal`LoadingPanel[
+							TemplateApply["Downloading from ``",loc]
+							]
+						]
+					],
+				gitPacletPull[loc]
+				]
+			},
+		PDInstallPaclet@dir
+		],
+	URLParse[loc,"Domain"]==="library.wolfram.com",
+	With[{dir=
+			If[OptionValue@"Verbose"//TrueQ,
+				Monitor[
+					wolframLibraryPull[loc],
+					Internal`LoadingPanel[
+						TemplateApply["Downloading from library.wolfram.com ``",loc]
+						]
+					],
+				gitPacletPull[loc]
+				]
+			},
+		PDInstallPaclet@dir
+		],
+	True,
+	If[
+		And[
+			OptionValue["InstallSite"]//TrueQ,
+			MatchQ[
+				Quiet@PacletSiteInfo[loc],
+				PacletManager`PacletSite[__PacletManager`Paclet]
+				]
+			],
+		PacletSiteInstall[loc],
+		Switch[URLParse[loc,"Path"][[-1]],
+			_?(FileExtension[#]=="paclet"&),
+			PDInstallPaclet@URLDownload[loc],
+			_?(MatchQ[FileExtension[#],"m"|"wl"]&),
+			PDInstallPaclet@
+			downloadURLIfExists[
+				URLBuild[
+					ReplacePart[#,
+						"Path"->
+						Drop[#Path,-1]
+						]&@URLParse[loc]
+					],{
+					URLParse[loc,"Path"][[-1]],
+					"DependencyInfo.m",
+					"PacletInfo.m"
+					}],
+			_,
+			Replace[
+				Quiet@Normal@PacletSiteInfoDataset[loc],{
+					Except[{__Association}]:>
+					(
+						Message[PDInstallPaclet::nopac,loc];
+						$Failed
+						),
+					a:{__Association}:>
+					PDInstallPaclet[
+						URLBuild@
+						Flatten@{
+							loc,
+							StringJoin@{
+								Lookup[Last@SortBy[a,#Version&],{
+										"Name",
+										"Version"
+										}],
+								".paclet"
+								}
+							},
+						ops
+						]
+					}]
+			]
+		]
+	];
 
 
 End[];
