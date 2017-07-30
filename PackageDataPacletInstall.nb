@@ -1203,8 +1203,8 @@ Cell[BoxData[{
       RowBox[{"{", "}"}]}], ",", "\n", "\t", 
      RowBox[{"\"\<RemovePatterns\>\"", "\[Rule]", "\"\<.DS_Store\>\""}], ",", 
      "\n", "\t", 
-     RowBox[{"\"\<BuildRoot\>\"", "\[RuleDelayed]", "$TemporaryDirectory"}], 
-     ","}], "\n", "\t", "}"}]}], ";"}], "\n", 
+     RowBox[{"\"\<BuildRoot\>\"", "\[RuleDelayed]", "$TemporaryDirectory"}]}],
+     "\n", "\t", "}"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"PDpacletBundle", "[", 
@@ -1328,8 +1328,8 @@ Cell[BoxData[{
    3.704484435853209*^9, 3.7044844373398657`*^9}, 3.70517742297222*^9, {
    3.7055956622617064`*^9, 3.705595694162424*^9}, {3.705595728176223*^9, 
    3.705595728181074*^9}, {3.710422336953581*^9, 3.710422337028553*^9}, {
-   3.7104283741062117`*^9, 3.710428374115323*^9}, 
-   3.710429111255127*^9},ExpressionUUID->"0df2bf72-13e6-4f5b-9202-\
+   3.7104283741062117`*^9, 3.710428374115323*^9}, 3.710429111255127*^9, 
+   3.7104301215542803`*^9},ExpressionUUID->"0df2bf72-13e6-4f5b-9202-\
 936b20d48bb8"]
 }, Closed]],
 
@@ -1960,35 +1960,36 @@ Cell[BoxData[
     RowBox[{"loc", ":", 
      RowBox[{"(", 
       RowBox[{"_String", "|", "_URL", "|", "_File"}], ")"}]}], "]"}], ":=", 
-   "\n", 
+   "\n", "\t", 
    RowBox[{"If", "[", 
     RowBox[{
      RowBox[{"StringContainsQ", "[", 
       RowBox[{
        RowBox[{"URLParse", "[", 
         RowBox[{"loc", ",", "\"\<PathString\>\""}], "]"}], ",", 
-       "\"\<releases\>\""}], "]"}], ",", "\n", "\t", 
+       "\"\<releases\>\""}], "]"}], ",", "\n", "\t", "\t", 
      RowBox[{"Block", "[", 
       RowBox[{
-       RowBox[{"{", "\n", "\t\t\t", 
-        RowBox[{"release", "=", "\n", "\t\t\t", 
-         RowBox[{"SelectFirst", "[", "\n", "\t\t\t\t", 
+       RowBox[{"{", "\n", "\t", "\t\t\t", 
+        RowBox[{"release", "=", "\n", "\t", "\t\t\t", 
+         RowBox[{"SelectFirst", "[", "\n", "\t", "\t\t\t\t", 
           RowBox[{
            RowBox[{"Flatten", "@", 
-            RowBox[{"{", "\n", "\t\t\t\t\t", 
-             RowBox[{"Import", "[", "\n", "\t\t\t\t\t\t", 
+            RowBox[{"{", "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{"Import", "[", "\n", "\t", "\t\t\t\t\t\t", 
               RowBox[{
                RowBox[{
                 RowBox[{
-                 RowBox[{"ReplacePart", "[", 
-                  RowBox[{"#", ",", 
-                   RowBox[{"{", "\n", "\t\t\t\t\t\t\t\t", 
+                 RowBox[{"URLBuild", "@", "\n", "\t", "\t\t\t\t\t\t", 
+                  RowBox[{"ReplacePart", "[", 
+                   RowBox[{"#", ",", 
+                    RowBox[{"{", "\n", "\t", "\t\t\t\t\t\t\t\t", 
                     RowBox[{
                     RowBox[{
                     "\"\<Domain\>\"", "\[Rule]", "\"\<api.github.com\>\""}], 
-                    ",", "\n", "\t\t\t\t\t\t\t\t", 
+                    ",", "\n", "\t", "\t\t\t\t\t\t\t\t", 
                     RowBox[{
-                    "\"\<Path\>\"", "\[Rule]", "\n", "\t\t\t\t\t\t\t\t", 
+                    "\"\<Path\>\"", "\[Rule]", "\n", "\t", "\t\t\t\t\t\t\t\t", 
                     RowBox[{"With", "[", 
                     RowBox[{
                     RowBox[{"{", 
@@ -1996,112 +1997,144 @@ Cell[BoxData[
                     RowBox[{"DeleteCases", "[", 
                     RowBox[{
                     RowBox[{"#", "[", "\"\<Path\>\"", "]"}], ",", 
-                    "\"\<\>\""}], "]"}]}], "}"}], ",", "\n", 
+                    "\"\<\>\""}], "]"}]}], "}"}], ",", "\n", "\t", 
                     "\t\t\t\t\t\t\t\t\t", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{
                     RowBox[{"cleanpath", "[", 
                     RowBox[{"[", "1", "]"}], "]"}], "===", "\"\<repos\>\""}], 
-                    ",", "\n", "\t\t\t\t\t\t\t\t\t\t", "cleanpath", ",", "\n",
-                     "\t\t\t\t\t\t\t\t\t\t", 
+                    ",", "\n", "\t", "\t\t\t\t\t\t\t\t\t\t", "cleanpath", ",",
+                     "\n", "\t", "\t\t\t\t\t\t\t\t\t\t", 
                     RowBox[{"Prepend", "[", 
                     RowBox[{"cleanpath", ",", "\"\<repos\>\""}], "]"}]}], 
-                    "\n", "\t\t\t\t\t\t\t\t\t\t", "]"}]}], "\n", 
-                    "\t\t\t\t\t\t\t\t\t", "]"}]}]}], "\n", "\t\t\t\t\t\t\t\t",
-                     "}"}]}], "]"}], "&"}], "@", 
-                RowBox[{"URLParse", "[", "loc", "]"}]}], ",", "\n", 
+                    "\n", "\t", "\t\t\t\t\t\t\t\t\t\t", "]"}]}], "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", "]"}]}]}], "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t", "}"}]}], "]"}]}], "&"}], "@", 
+                RowBox[{"URLParse", "[", "loc", "]"}]}], ",", "\n", "\t", 
                "\t\t\t\t\t\t", "\"\<RawJSON\>\""}], "]"}], "}"}]}], ",", "\n",
-            "\t\t\t\t", 
+            "\t", "\t\t\t\t", 
            RowBox[{
-            RowBox[{"KeyMemberQ", "[", "\"\<assets\>\"", "]"}], "||", 
-            RowBox[{"KeyMemberQ", "[", "\"\<zipball_url\>\"", "]"}]}]}], "\n",
-           "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+            RowBox[{
+             RowBox[{"KeyMemberQ", "[", 
+              RowBox[{"#", ",", "\"\<assets\>\""}], "]"}], "||", 
+             RowBox[{
+              RowBox[{"KeyMemberQ", "[", 
+               RowBox[{"#", ",", "\"\<zipball_url\>\""}], "]"}], "&&", "\n", 
+              "\t", "\t\t\t\t", "\t", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"#", "[", "\"\<prerelease\>\"", "]"}], "=!=", 
+                "True"}], ")"}]}]}], "&"}]}], "\n", "\t", "\t\t\t\t", "]"}]}],
+         "\n", "\t", "\t\t\t", "}"}], ",", "\n", "\t", "\t\t", 
        RowBox[{"If", "[", 
         RowBox[{
-         RowBox[{"AssociationQ", "@", "release"}], ",", "\n", "\t\t\t", 
-         RowBox[{"If", "[", 
+         RowBox[{"AssociationQ", "@", "release"}], ",", "\n", "\t", "\t\t\t", 
+         
+         RowBox[{"With", "[", 
           RowBox[{
-           RowBox[{
-            RowBox[{"KeyMemberQ", "[", 
-             RowBox[{"release", ",", "\"\<assets\>\""}], "]"}], "&&", 
+           RowBox[{"{", 
+            RowBox[{"tmp", "=", 
+             RowBox[{"CreateDirectory", "[", "]"}]}], "}"}], ",", "\n", "\t", 
+           "\t\t\t\t", 
+           RowBox[{"First", "@", 
             RowBox[{
-             RowBox[{"Length", "@", 
-              RowBox[{"release", "[", "\"\<assets\>\"", "]"}]}], ">", "0"}]}],
-            ",", "\n", "\t\t\t\t", 
-           RowBox[{"With", "[", 
-            RowBox[{
-             RowBox[{"{", 
-              RowBox[{"url", "=", "\n", "\t\t\t\t\t\t", 
-               RowBox[{"release", "[", 
-                RowBox[{"[", 
-                 RowBox[{"\"\<assets\>\"", ",", 
-                  RowBox[{"-", "1"}], ",", "\"\<browser_download_url\>\""}], 
-                 "]"}], "]"}]}], "\n", "\t\t\t\t\t\t", "}"}], ",", "\n", 
-             "\t\t\t\t\t", 
-             RowBox[{"URLDownload", "[", 
-              RowBox[{"url", ",", "\n", "\t\t\t\t\t\t", 
-               RowBox[{"FileNameJoin", "@", 
-                RowBox[{"{", "\n", "\t\t\t\t\t\t\t", 
-                 RowBox[{"$TemporaryDirectory", ",", "\n", "\t\t\t\t\t\t\t", 
-                  RowBox[{
-                   RowBox[{"URLParse", "[", 
+             RowBox[{"MinimalBy", "[", "FileNameDepth", "]"}], "@", 
+             RowBox[{
+              RowBox[{"Select", "[", "DirectoryQ", "]"}], "@", "\n", "\t", 
+              "\t\t\t\t", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"KeyMemberQ", "[", 
+                  RowBox[{"release", ",", "\"\<assets\>\""}], "]"}], "&&", 
+                 RowBox[{
+                  RowBox[{"Length", "@", 
+                   RowBox[{"release", "[", "\"\<assets\>\"", "]"}]}], ">", 
+                  "0"}]}], ",", "\n", "\t", "\t\t\t\t\t", 
+                RowBox[{"With", "[", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"url", "=", "\n", "\t", "\t\t\t\t\t\t\t", 
+                    RowBox[{"release", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"\"\<assets\>\"", ",", 
+                    RowBox[{"-", "1"}], ",", "\"\<browser_download_url\>\""}],
+                     "]"}], "]"}]}], "\n", "\t", "\t\t\t\t\t\t\t", "}"}], ",",
+                   "\n", "\t", "\t\t\t\t\t\t", 
+                  RowBox[{"ExtractArchive", "[", "\n", "\t", "\t\t\t\t\t\t\t", 
+                   RowBox[{
+                    RowBox[{"URLDownload", "[", 
+                    RowBox[{"url", ",", "\n", "\t", "\t\t\t\t\t\t\t\t", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", "\n", "\t", "\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    "$TemporaryDirectory", ",", "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    RowBox[{"URLParse", "[", 
                     RowBox[{"url", ",", "\"\<Path\>\""}], "]"}], "[", 
-                   RowBox[{"[", 
-                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\n", 
-                 "\t\t\t\t\t\t\t", "}"}]}]}], "\n", "\t\t\t\t\t\t", "]"}]}], 
-            "\n", "\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", 
-           RowBox[{"ExtractArchive", "[", "\n", "\t\t\t\t\t", 
-            RowBox[{
-             RowBox[{"URLDownload", "[", "\n", "\t\t\t\t\t\t", 
-              RowBox[{
-               RowBox[{"release", "[", "\"\<zipball_url\>\"", "]"}], ",", 
-               "\n", "\t\t\t\t\t\t", 
-               RowBox[{"FileNameJoin", "@", 
-                RowBox[{"{", "\n", "\t\t\t\t\t\t\t", 
-                 RowBox[{"$TemporaryDirectory", ",", "\n", "\t\t\t\t\t\t\t", 
-                  RowBox[{
-                   RowBox[{"URLParse", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", "}"}]}]}], "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t", 
+                    "\t\t\t\t\t\t\t", "tmp"}], "\n", "\t", "\t\t\t\t\t\t\t", 
+                   "]"}]}], "\n", "\t", "\t\t\t\t\t\t", "]"}], ",", "\n", 
+                "\t", "\t\t\t\t\t", 
+                RowBox[{"ExtractArchive", "[", "\n", "\t", "\t\t\t\t\t\t", 
+                 RowBox[{
+                  RowBox[{"URLDownload", "[", "\n", "\t", "\t\t\t\t\t\t\t", 
+                   RowBox[{
+                    RowBox[{"release", "[", "\"\<zipball_url\>\"", "]"}], ",",
+                     "\n", "\t", "\t\t\t\t\t\t\t", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", "\n", "\t", "\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    "$TemporaryDirectory", ",", "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    RowBox[{"URLParse", "[", 
                     RowBox[{
                     RowBox[{"release", "[", "\"\<zipball_url\>\"", "]"}], 
                     ",", "\"\<Path\>\""}], "]"}], "[", 
-                   RowBox[{"[", 
-                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\n", 
-                 "\t\t\t\t\t\t\t", "}"}]}]}], "\n", "\t\t\t\t\t\t", "]"}], 
-             ",", "\n", "\t\t\t\t\t", "$TemporaryDirectory"}], "\n", 
-            "\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t", "]"}], ",", "\n", 
-         "\t\t\t", "$Failed"}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", "]"}], 
-     ",", "\n", "\t", 
+                    RowBox[{"[", 
+                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\n", "\t", 
+                    "\t\t\t\t\t\t\t\t", "}"}]}]}], "\n", "\t", 
+                   "\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t\t\t\t\t\t", 
+                  "tmp"}], "\n", "\t", "\t\t\t\t\t\t", "]"}]}], "\n", "\t", 
+               "\t\t\t\t\t", "]"}]}]}]}]}], "\n", "\t", "\t\t\t\t", "]"}], 
+         ",", "\n", "\t", "\t\t\t", "$Failed"}], "\n", "\t", "\t\t\t", 
+        "]"}]}], "\n", "\t", "\t\t", "]"}], ",", "\n", "\t", "\t", 
      RowBox[{"With", "[", 
       RowBox[{
-       RowBox[{"{", "\n", "\t\t\t", 
-        RowBox[{"dir", "=", "\n", "\t\t\t", 
+       RowBox[{"{", "\n", "\t", "\t\t\t", 
+        RowBox[{"dir", "=", "\n", "\t", "\t\t\t", 
          RowBox[{"FileNameJoin", "@", 
-          RowBox[{"{", "\n", "\t\t\t\t", 
-           RowBox[{"$TemporaryDirectory", ",", "\n", "\t\t\t\t", 
+          RowBox[{"{", "\n", "\t", "\t\t\t\t", 
+           RowBox[{"$TemporaryDirectory", ",", "\n", "\t", "\t\t\t\t", 
             RowBox[{
              RowBox[{"DeleteCases", "[", 
               RowBox[{
                RowBox[{"URLParse", "[", 
                 RowBox[{"loc", ",", "\"\<Path\>\""}], "]"}], ",", 
                "\"\<\>\""}], "]"}], "[", 
-             RowBox[{"[", "2", "]"}], "]"}]}], "\n", "\t\t\t\t", "}"}]}]}], 
-        "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\n", "\t", "\t\t\t\t", 
+           "}"}]}]}], "\n", "\t", "\t\t\t", "}"}], ",", "\n", "\t", "\t\t", 
        RowBox[{
-        RowBox[{"Quiet", "[", "\n", "\t\t\t", 
+        RowBox[{"Quiet", "[", "\n", "\t", "\t\t\t", 
          RowBox[{
           RowBox[{"DeleteDirectory", "[", 
            RowBox[{"dir", ",", 
             RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], ";", "\n",
-           "\t\t\t", 
-          RowBox[{"CreateDirectory", "[", "dir", "]"}]}], "\n", "\t\t\t", 
-         "]"}], ";", "\n", "\t\t", 
+           "\t", "\t\t\t", 
+          RowBox[{"CreateDirectory", "[", "dir", "]"}]}], "\n", "\t", 
+         "\t\t\t", "]"}], ";", "\n", "\t", "\t\t", 
         RowBox[{"RunProcess", "[", 
          RowBox[{"{", 
           RowBox[{
           "\"\<git\>\"", ",", "\"\<clone\>\"", ",", "loc", ",", "dir"}], 
-          "}"}], "]"}], ";", "\n", "\t\t", "dir"}]}], "\n", "\t\t", "]"}]}], 
-    "\n", "\t", "]"}]}], ";"}]], "CodeInput",
+          "}"}], "]"}], ";", "\n", "\t", "\t\t", "dir"}]}], "\n", "\t", 
+      "\t\t", "]"}]}], "\n", "\t", "\t", "]"}]}], ";"}]], "CodeInput",
  CellChangeTimes->{{3.703596155944116*^9, 3.7035961610907917`*^9}, {
    3.703598238943207*^9, 3.703598243413394*^9}, {3.703598329461245*^9, 
    3.703598340547501*^9}, {3.703598426349544*^9, 3.703598427210268*^9}, {
@@ -2114,9 +2147,11 @@ Cell[BoxData[
    3.705593154543199*^9}, {3.7055932336446257`*^9, 3.705593362216304*^9}, {
    3.7055934695736027`*^9, 3.705593470310925*^9}, {3.7055958904153833`*^9, 
    3.70559589137283*^9}, 3.7055969531599197`*^9, 3.710428374366918*^9, 
-   3.710429111735949*^9},ExpressionUUID->"f421acd7-53f5-47f0-ae7c-\
+   3.710429111735949*^9, {3.710430085844049*^9, 3.7104300876511497`*^9}, {
+   3.710430829498122*^9, 
+   3.710430837717677*^9}},ExpressionUUID->"f421acd7-53f5-47f0-ae7c-\
 f9abf8da8b02"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 

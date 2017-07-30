@@ -407,7 +407,7 @@ With[{locs=PDpacletLookup[p,"Location"]},
 Options[PDpacletBundle]={
 	"RemovePaths"->{},
 	"RemovePatterns"->".DS_Store",
-	"BuildRoot":>$TemporaryDirectory,
+	"BuildRoot":>$TemporaryDirectory
 	};
 PDpacletBundle[dir:(_String|_File)?DirectoryQ,ops:OptionsPattern[]]:=
 	With[{PDpacletDir=
@@ -648,67 +648,75 @@ PDgitHubRepoQ[_]:=False
 
 
 gitPacletPull[loc:(_String|_URL|_File)]:=
-If[StringContainsQ[URLParse[loc,"PathString"],"releases"],
-	Block[{
-			release=
-			SelectFirst[
-				Flatten@{
-					Import[
-						ReplacePart[#,{
-								"Domain"->"api.github.com",
-								"Path"->
-								With[{cleanpath=DeleteCases[#["Path"],""]},
-									If[cleanpath[[1]]==="repos",
-										cleanpath,
-										Prepend[cleanpath,"repos"]
+	If[StringContainsQ[URLParse[loc,"PathString"],"releases"],
+		Block[{
+				release=
+				SelectFirst[
+					Flatten@{
+						Import[
+							URLBuild@
+							ReplacePart[#,{
+									"Domain"->"api.github.com",
+									"Path"->
+									With[{cleanpath=DeleteCases[#["Path"],""]},
+										If[cleanpath[[1]]==="repos",
+											cleanpath,
+											Prepend[cleanpath,"repos"]
+											]
 										]
-									]
-								}]&@URLParse[loc],
-						"RawJSON"]},
-				KeyMemberQ["assets"]||KeyMemberQ["zipball_url"]
-				]
-			},
-		If[AssociationQ@release,
-			If[KeyMemberQ[release,"assets"]&&Length@release["assets"]>0,
-				With[{url=
-						release[["assets",-1,"browser_download_url"]]
-						},
-					URLDownload[url,
-						FileNameJoin@{
-							$TemporaryDirectory,
-							URLParse[url,"Path"][[-1]]
-							}
+									}]&@URLParse[loc],
+							"RawJSON"]},
+					KeyMemberQ[#,"assets"]||KeyMemberQ[#,"zipball_url"]&&
+						(#["prerelease"]=!=True)&
+					]
+				},
+			If[AssociationQ@release,
+				With[{tmp=CreateDirectory[]},
+					First@MinimalBy[FileNameDepth]@Select[DirectoryQ]@
+					If[KeyMemberQ[release,"assets"]&&Length@release["assets"]>0,
+						With[{url=
+								release[["assets",-1,"browser_download_url"]]
+								},
+							ExtractArchive[
+								URLDownload[url,
+									FileNameJoin@{
+										$TemporaryDirectory,
+										URLParse[url,"Path"][[-1]]
+										}
+									],
+								tmp
+								]
+							],
+						ExtractArchive[
+							URLDownload[
+								release["zipball_url"],
+								FileNameJoin@{
+									$TemporaryDirectory,
+									URLParse[release["zipball_url"],"Path"][[-1]]
+									}
+								],
+							tmp
+							]
 						]
 					],
-				ExtractArchive[
-					URLDownload[
-						release["zipball_url"],
-						FileNameJoin@{
-							$TemporaryDirectory,
-							URLParse[release["zipball_url"],"Path"][[-1]]
-							}
-						],
-					$TemporaryDirectory
-					]
-				],
-			$Failed
+				$Failed
+				]
+			],
+		With[{
+				dir=
+				FileNameJoin@{
+					$TemporaryDirectory,
+					DeleteCases[URLParse[loc,"Path"],""][[2]]
+					}
+				},
+			Quiet[
+				DeleteDirectory[dir,DeleteContents->True];
+				CreateDirectory[dir]
+				];
+			RunProcess[{"git","clone",loc,dir}];
+			dir
 			]
-		],
-	With[{
-			dir=
-			FileNameJoin@{
-				$TemporaryDirectory,
-				DeleteCases[URLParse[loc,"Path"],""][[2]]
-				}
-			},
-		Quiet[
-			DeleteDirectory[dir,DeleteContents->True];
-			CreateDirectory[dir]
-			];
-		RunProcess[{"git","clone",loc,dir}];
-		dir
-		]
-	];
+		];
 
 
 wolframLibraryPull[loc:_String|_URL]:=
