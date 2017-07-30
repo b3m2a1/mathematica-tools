@@ -1,0 +1,2545 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["PDInstallPaclet", "CodeSection",
+ CellChangeTimes->{{3.710422012837708*^9, 
+  3.710422017107584*^9}},ExpressionUUID->"44dc985d-7d58-4187-b9e8-\
+c1ac91e72092"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDInstallPaclet", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Installs a paclet from a site\>\""}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.710422047099622*^9, 
+  3.710422063850913*^9}},ExpressionUUID->"43d3db56-9e13-4cf5-b887-\
+8f62a5888358"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"e1343f98-31f2-4e38-8a5f-\
+38ca047c7239"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDInstallPaclet", "::", "howdo"}], "=", 
+   "\"\<Unsure how to pack a paclet from file type ``\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDInstallPaclet", "::", "laywha"}], "=", 
+   "\"\<Couldn't detect package layout from directory ``\>\""}], 
+  ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.703597700362913*^9, 3.703597725324935*^9}, 
+   3.70405366602284*^9, 3.705589998426799*^9, {3.705590125426359*^9, 
+   3.705590130321109*^9}, {3.7055908578191757`*^9, 3.7055908775285683`*^9}, {
+   3.70559201133099*^9, 
+   3.705592011334714*^9}},ExpressionUUID->"4888dd98-19ba-4925-85dd-\
+0938872dfb57"],
+
+Cell[CellGroupData[{
+
+Cell["pacletInfo", "Subsubsubsection",
+ CellChangeTimes->{{3.699937572999563*^9, 3.699937574968251*^9}, 
+   3.7027305115789537`*^9, {3.705594811172037*^9, 
+   3.705594820072814*^9}},ExpressionUUID->"4a164cd9-148c-49bc-8070-\
+524b63b6a601"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletInfoAssociation", "[", 
+    RowBox[{"PacletManager`Paclet", "[", "k__", "]"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"With", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"o", "=", 
+        RowBox[{"Options", "[", "pacletExpression", "]"}]}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"KeySortBy", "[", 
+       RowBox[{
+        RowBox[{"First", "@", 
+         RowBox[{"FirstPosition", "[", 
+          RowBox[{"o", ",", "#"}], "]"}]}], "&"}], "]"}]}], 
+     "\[IndentingNewLine]", "]"}], "@", "\[IndentingNewLine]", 
+    RowBox[{"With", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"base", "=", "\[IndentingNewLine]", 
+        RowBox[{"KeyMap", "[", 
+         RowBox[{
+          RowBox[{"Replace", "[", 
+           RowBox[{"s_Symbol", ":>", 
+            RowBox[{"SymbolName", "[", "s", "]"}]}], "]"}], ",", 
+          RowBox[{"<|", "k", "|>"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{"ReplacePart", "[", 
+       RowBox[{"base", ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<Extensions\>\"", "->", "\[IndentingNewLine]", 
+         RowBox[{"AssociationThread", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"First", "/@", 
+            RowBox[{"base", "[", "\"\<Extensions\>\"", "]"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Association", "@*", "Rest"}], "/@", 
+            RowBox[{"base", "[", "\"\<Extensions\>\"", "]"}]}]}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+     "\[IndentingNewLine]", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletInfoAssociation", "[", "infoFile_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"pacletInfo", "[", "infoFile", "]"}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"p", ":", 
+         RowBox[{"PacletManager`Paclet", "[", "__", "]"}]}], ":>", 
+        "\[IndentingNewLine]", 
+        RowBox[{"pacletInfoAssociation", "@", "p"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"_", "\[Rule]", 
+        RowBox[{"<|", "|>"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletInfo", "[", "infoFile_", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"pacletInfo", "=", "\[IndentingNewLine]", 
+       RowBox[{"Replace", "[", 
+        RowBox[{"infoFile", ",", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"d", ":", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"_String", "|", "_File"}], ")"}], "?", 
+              "DirectoryQ"}]}], ":>", "\[IndentingNewLine]", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", 
+              RowBox[{"d", ",", "\"\<PacletInfo.m\>\""}], "}"}]}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"f", ":", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"_String", "|", "_File"}], ")"}], "?", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"FileExtension", "[", "#", "]"}], "\[Equal]", 
+                 "\"\<paclet\>\""}], "&"}], ")"}]}]}], ":>", 
+            "\[IndentingNewLine]", 
+            RowBox[{"With", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"rd", "=", 
+                RowBox[{"CreateDirectory", "[", "]"}]}], "}"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"First", "@", 
+               RowBox[{"ExtractArchive", "[", 
+                RowBox[{"f", ",", "rd", ",", "\"\<*PacletInfo.m\>\""}], 
+                "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}], 
+          "\[IndentingNewLine]", "}"}]}], "]"}]}], "\[IndentingNewLine]", 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"If", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"StringContainsQ", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"Nest", "[", 
+               RowBox[{"DirectoryName", ",", "pacletInfo", ",", "3"}], "]"}], 
+              ",", "\[IndentingNewLine]", "$TemporaryDirectory"}], 
+             "\[IndentingNewLine]", "]"}], "&&", "\[IndentingNewLine]", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"StringTrim", "[", 
+               RowBox[{
+                RowBox[{"DirectoryName", "@", "pacletInfo"}], ",", 
+                RowBox[{"$PathnameSeparator", "~~", "EndOfString"}]}], "]"}], 
+              "!=", "\[IndentingNewLine]", 
+              RowBox[{"StringTrim", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"DirectoryQ", "@", "infoFile"}], ",", 
+                  "\[IndentingNewLine]", "infoFile", ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"DirectoryName", "@", "infoFile"}]}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"$PathnameSeparator", "~~", "EndOfString"}]}], 
+               "\[IndentingNewLine]", "]"}]}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"DeleteDirectory", "[", 
+            RowBox[{
+             RowBox[{"Nest", "[", 
+              RowBox[{"DirectoryName", ",", "pacletInfo", ",", "2"}], "]"}], 
+             ",", 
+             RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "#"}], ")"}], "&"}], "@", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"FileExistsQ", "@", "pacletInfo"}], ",", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Begin", "[", "\"\<PacletManager`\>\"", "]"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"End", "[", "]"}], ";", "\[IndentingNewLine]", 
+             RowBox[{"Map", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Replace", "[", 
+                 RowBox[{"#", ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"s_Symbol", "\[Rule]", "v_"}], ")"}], ":>", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"SymbolName", "[", "s", "]"}], "\[Rule]", "v"}], 
+                    ")"}]}]}], "\[IndentingNewLine]", "]"}], "&"}], ",", 
+               "\[IndentingNewLine]", "#"}], "]"}]}], ")"}], "&"}], "@", 
+          RowBox[{"Import", "[", "pacletInfo", "]"}]}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"pacletManager`Paclet", "[", "]"}]}], "\[IndentingNewLine]", 
+       "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.699937576561064*^9, 3.699937842671096*^9}, {
+   3.699937980781375*^9, 3.699937981170021*^9}, {3.6999380430549593`*^9, 
+   3.699938109137146*^9}, {3.6999409404964237`*^9, 3.699940944162681*^9}, {
+   3.700356113008729*^9, 3.700356161020547*^9}, {3.7003563778199*^9, 
+   3.700356384326764*^9}, {3.700363907511817*^9, 3.7003639180829287`*^9}, {
+   3.702730389132752*^9, 3.7027304608831263`*^9}, {3.7027305189399643`*^9, 
+   3.702730618184128*^9}, {3.7027308647499313`*^9, 3.702730882483536*^9}, {
+   3.702731451855854*^9, 3.702731492829652*^9}, {3.7027704241645308`*^9, 
+   3.702770469507577*^9}, {3.7027707198433657`*^9, 3.702770722958209*^9}, {
+   3.7034688435426683`*^9, 3.703468856670109*^9}, {3.703469462143456*^9, 
+   3.70346946912667*^9}, {3.7034695247867603`*^9, 3.703469589138899*^9}, {
+   3.703606453538665*^9, 3.703606480277062*^9}, {3.704668580351658*^9, 
+   3.704668665624916*^9}, {3.7046688430998783`*^9, 3.704668928474918*^9}, {
+   3.704668990805851*^9, 3.704669023592943*^9}, {3.704669060430234*^9, 
+   3.704669152129554*^9}, {3.704669222280706*^9, 3.704669275481935*^9}, {
+   3.704669379542976*^9, 3.704669429734663*^9}, {3.704669461072893*^9, 
+   3.704669467181246*^9}, {3.705594369386701*^9, 3.705594428441638*^9}, 
+   3.705596850456167*^9},ExpressionUUID->"3abab5e1-df9b-46e2-8836-\
+2f92fffdc92d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletDocsInfo", "Subsubsubsection",
+ CellChangeTimes->{{3.702731329446846*^9, 3.7027313313654203`*^9}, 
+   3.7055944322821407`*^9},ExpressionUUID->"30b7290b-a5bc-4311-b578-\
+0bc37b1d635b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "pacletDocsInfo", "]"}], "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\"\<Language\>\"", "\[Rule]", "\"\<English\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Root\>\"", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"\"\<LinkBase\>\"", "\[Rule]", "None"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<MainPage\>\"", "\[Rule]", "None"}]}], 
+    RowBox[{"(*", 
+     RowBox[{",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Resources\>\"", "\[Rule]", "None"}]}], "*)"}], 
+    "\[IndentingNewLine]", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletDocsInfo", "[", 
+    RowBox[{"ops", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"SortBy", "[", 
+    RowBox[{
+     RowBox[{"DeleteCases", "[", 
+      RowBox[{
+       RowBox[{"DeleteDuplicatesBy", "[", 
+        RowBox[{
+         RowBox[{"{", "ops", "}"}], ",", "First"}], "]"}], ",", 
+       RowBox[{"_", "\[Rule]", "None"}]}], "]"}], ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"o", "=", 
+         RowBox[{"Options", "@", "pacletDocsInfo"}]}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"Position", "[", 
+         RowBox[{"o", ",", 
+          RowBox[{"First", "@", "#"}]}], "]"}], "&"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletDocsInfo", "[", 
+    RowBox[{
+     RowBox[{"dest_String", "?", "DirectoryQ"}], ",", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"lang", "=", "\[IndentingNewLine]", 
+       RowBox[{"FileBaseName", "@", "\[IndentingNewLine]", 
+        RowBox[{"SelectFirst", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"FileNames", "[", 
+           RowBox[{"\"\<*\>\"", ",", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", 
+              RowBox[{"dest", ",", "\"\<Documentation\>\""}], "}"}]}]}], 
+           "]"}], ",", "\[IndentingNewLine]", "DirectoryQ"}], "]"}]}]}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"MissingQ", "@", "lang"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"pacletDocsInfo", "[", 
+        RowBox[{"ops", ",", "\[IndentingNewLine]", 
+         RowBox[{
+         "\"\<Language\>\"", "\[Rule]", "\[IndentingNewLine]", "lang"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\"\<MainPage\>\"", "->", "\[IndentingNewLine]", 
+          RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Map", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"FileNameTake", "[", 
+                RowBox[{"#", ",", 
+                 RowBox[{"-", "2"}]}], "]"}], "&"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"FileNames", "[", 
+                 RowBox[{"\"\<*.nb\>\"", ",", "\[IndentingNewLine]", 
+                  RowBox[{"FileNameJoin", "@", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    "dest", ",", "\"\<Documentation\>\"", ",", "lang", ",", 
+                    "\"\<Guides\>\""}], "}"}]}]}], "]"}], ",", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"{", "}"}], ":>", "\[IndentingNewLine]", 
+                  RowBox[{"FileNames", "[", 
+                   RowBox[{"\"\<*.nb\>\"", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "dest", ",", "\"\<Documentation\>\"", ",", "lang"}], 
+                    "}"}]}], ",", "\[IndentingNewLine]", "2"}], "]"}]}], 
+                 "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+             "\[IndentingNewLine]", "]"}], ",", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"{", "}"}], "\[Rule]", "None"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"p", ":", 
+                RowBox[{"{", "__", "}"}]}], ":>", "\[IndentingNewLine]", 
+               RowBox[{"First", "@", "\[IndentingNewLine]", 
+                RowBox[{"SortBy", "[", 
+                 RowBox[{
+                  RowBox[{"StringTrim", "[", 
+                   RowBox[{"p", ",", "\"\<.nb\>\""}], "]"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"EditDistance", "[", 
+                    RowBox[{
+                    RowBox[{"FileBaseName", "@", "dest"}], ",", 
+                    RowBox[{"FileBaseName", "@", "#"}]}], "]"}], "&"}]}], 
+                 "]"}]}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}]}], 
+        "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.702731029659607*^9, 3.702731111924505*^9}, {
+   3.703469785443849*^9, 3.703469821543401*^9}, {3.7034706071369047`*^9, 
+   3.7034706098812037`*^9}, 3.703470702999569*^9, {3.703470733925055*^9, 
+   3.703470736892271*^9}, 3.70347117860063*^9, 3.705594362952306*^9, {
+   3.7055944330984907`*^9, 
+   3.705594436529271*^9}},ExpressionUUID->"6eef0278-34d2-4cc4-8e61-\
+9ef4cd7ea790"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletExtensionData", "Subsubsubsection",
+ CellChangeTimes->{{3.703450897443469*^9, 3.703450900273913*^9}, 
+   3.70559443824907*^9},ExpressionUUID->"a0c6aa59-b4a3-4de6-acb0-\
+07836496837f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "pacletExtensionData", "]"}], "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\"\<Documentation\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Kernel\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<FrontEnd\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Resource\>\"", "\[Rule]", "Automatic"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<AutoCompletionData\>\"", "\[Rule]", "Automatic"}]}], 
+    "\[IndentingNewLine]", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletExtensionData", "[", 
+    RowBox[{"pacletInfo_Association", ",", "dest_", ",", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Merge", "[", 
+     RowBox[{"Merge", "[", "Last", "]"}], "]"}], "@", 
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Replace", "[", 
+       RowBox[{
+        RowBox[{"Lookup", "[", 
+         RowBox[{"pacletInfo", ",", "\"\<Extensions\>\""}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Except", "[", 
+          RowBox[{"_Association", "?", "AssociationQ"}], "]"}], ":>", 
+         "\[IndentingNewLine]", 
+         RowBox[{"<|", "|>"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Documentation\>\"", "]"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "@", "\[IndentingNewLine]", 
+                 RowBox[{"FileNames", "[", 
+                  RowBox[{"\"\<*.nb\>\"", ",", "\[IndentingNewLine]", 
+                   RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"dest", ",", "\"\<Documentation\>\""}], "}"}]}], 
+                   ",", "\[IndentingNewLine]", "\[Infinity]"}], "]"}]}], ">", 
+                "0"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"\"\<Documentation\>\"", "->", "\[IndentingNewLine]", 
+                RowBox[{"pacletDocsInfo", "[", "dest", "]"}]}], ",", 
+               "\[IndentingNewLine]", "Nothing"}], "\[IndentingNewLine]", 
+              "]"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"r", ":", 
+              RowBox[{"_Rule", "|", 
+               RowBox[{"{", "___Rule", "}"}]}]}], ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<Documentation\>\"", "\[Rule]", 
+              RowBox[{"Association", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "r", "}"}]}]}]}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_Association", "]"}], "\[Rule]", 
+             "Nothing"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Kernel\>\"", "]"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<Kernel\>\"", "->", "\[IndentingNewLine]", 
+              RowBox[{"<|", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"Root", " ", "->", " ", "\"\<.\>\""}], ",", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Context", " ", "->", " ", 
+                 RowBox[{
+                  RowBox[{"FileBaseName", "@", "dest"}], "<>", 
+                  "\"\<`\>\""}]}]}], "\[IndentingNewLine]", "|>"}]}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"r", ":", 
+              RowBox[{"_Rule", "|", 
+               RowBox[{"{", "___Rule", "}"}]}]}], ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<Kernel\>\"", "\[Rule]", 
+              RowBox[{"Association", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "r", "}"}]}]}]}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_Association", "]"}], "\[Rule]", 
+             "Nothing"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<FrontEnd\>\"", "]"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "@", 
+                 RowBox[{
+                  RowBox[{"Select", "[", 
+                   RowBox[{"Not", "@*", "DirectoryQ"}], "]"}], "@", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"Flatten", "@", 
+                   RowBox[{"Join", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*.nb\>\"", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "dest", ",", "\"\<FrontEnd\>\"", ",", 
+                    "\"\<Documentation\>\"", ",", "#"}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", "\[Infinity]"}], "]"}], "&"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<ReferencePages\>\"", ",", "\[IndentingNewLine]", 
+                    "\"\<Guides\>\"", ",", "\[IndentingNewLine]", 
+                    "\"\<Tutorials\>\""}], "\[IndentingNewLine]", "}"}]}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*\>\"", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"dest", ",", "\"\<FrontEnd\>\"", ",", "#"}], 
+                    "}"}]}], ",", "\[IndentingNewLine]", "\[Infinity]"}], 
+                    "\[IndentingNewLine]", "]"}], "&"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<TextResources\>\"", ",", "\[IndentingNewLine]", 
+                    "\"\<SystemResources\>\""}], "\[IndentingNewLine]", 
+                    "}"}]}], "]"}]}], "\[IndentingNewLine]", "]"}]}]}]}], ">",
+                 "0"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"\"\<FrontEnd\>\"", "\[Rule]", "\[IndentingNewLine]", 
+                RowBox[{"If", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"DirectoryQ", "@", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "dest", ",", "\[IndentingNewLine]", "\"\<FrontEnd\>\"", 
+                    ",", "\[IndentingNewLine]", "\"\<TextResources\>\""}], 
+                    "\[IndentingNewLine]", "}"}]}]}], "||", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"DirectoryQ", "@", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "dest", ",", "\[IndentingNewLine]", "\"\<FrontEnd\>\"", 
+                    ",", "\[IndentingNewLine]", "\"\<SystemResources\>\""}], 
+                    "\[IndentingNewLine]", "}"}]}]}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"<|", 
+                   RowBox[{"Prepend", "\[Rule]", "True"}], "|>"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"<|", "|>"}]}], "\[IndentingNewLine]", "]"}]}], ",",
+                "\[IndentingNewLine]", "Nothing"}], "\[IndentingNewLine]", 
+              "]"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"r", ":", 
+              RowBox[{"_Rule", "|", 
+               RowBox[{"{", "___Rule", "}"}]}]}], ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<FrontEnd\>\"", "\[Rule]", 
+              RowBox[{"Association", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "r", "}"}]}]}]}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_Association", "]"}], "\[Rule]", 
+             "Nothing"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Resource\>\"", "]"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "@", "\[IndentingNewLine]", 
+                 RowBox[{"Select", "[", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*\>\"", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"dest", ",", "\"\<Data\>\""}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", "\[Infinity]"}], "]"}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"Not", "@", 
+                    RowBox[{"DirectoryQ", "@", "#"}]}], "&&", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Not", "@", 
+                    RowBox[{"StringMatchQ", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", 
+                    "\"\<.DS_Store\>\""}], "]"}]}]}], "&"}]}], 
+                  "\[IndentingNewLine]", "]"}]}], ">", "0"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"\"\<Resource\>\"", "->", "\[IndentingNewLine]", 
+                RowBox[{"<|", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"\"\<Root\>\"", " ", "->", " ", "\"\<Data\>\""}], 
+                  ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                  "\"\<Resources\>\"", " ", "->", " ", "\[IndentingNewLine]", 
+                   
+                   RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileNameDrop", "[", 
+                    RowBox[{"#", ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"FileNameDepth", "[", "dest", "]"}], "+", "1"}]}],
+                     "\[IndentingNewLine]", "]"}], "&"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Select", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"FileNames", "[", 
+                    RowBox[{"\"\<*\>\"", ",", "\[IndentingNewLine]", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"dest", ",", "\"\<Data\>\""}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", "\[Infinity]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Not", "@", 
+                    RowBox[{"DirectoryQ", "@", "#"}]}], "&&", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Not", "@", 
+                    RowBox[{"StringMatchQ", "[", 
+                    RowBox[{
+                    RowBox[{"FileNameTake", "@", "#"}], ",", 
+                    "\"\<.DS_Store\>\""}], "]"}]}]}], "&"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "|>"}]}], ",", 
+               "\[IndentingNewLine]", "Nothing"}], "\[IndentingNewLine]", 
+              "]"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"r", ":", 
+              RowBox[{"_Rule", "|", 
+               RowBox[{"{", "___Rule", "}"}]}]}], ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<Resource\>\"", "\[Rule]", 
+              RowBox[{"Association", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "r", "}"}]}]}]}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_Association", "]"}], "\[Rule]", 
+             "Nothing"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<AutoCompletionData\>\"", "]"}], 
+          ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "@", "\[IndentingNewLine]", 
+                 RowBox[{"FileNames", "[", 
+                  RowBox[{
+                   RowBox[{
+                   "\"\<*.tr\>\"", "|", "\"\<documentedContexts.m\>\""}], ",",
+                    "\[IndentingNewLine]", 
+                   RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"dest", ",", "\"\<AutoCompletionData\>\""}], 
+                    "}"}]}], ",", "\[IndentingNewLine]", "\[Infinity]"}], 
+                  "]"}]}], ">", "0"}], ",", "\[IndentingNewLine]", 
+               RowBox[{
+               "\"\<AutoCompletionData\>\"", "->", "\[IndentingNewLine]", 
+                RowBox[{"<|", "\[IndentingNewLine]", 
+                 RowBox[{
+                 "\"\<Root\>\"", " ", "->", " ", 
+                  "\"\<AutoCompletionData\>\""}], "\[IndentingNewLine]", 
+                 "|>"}]}], ",", "\[IndentingNewLine]", "Nothing"}], 
+              "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"r", ":", 
+              RowBox[{"_Rule", "|", 
+               RowBox[{"{", "___Rule", "}"}]}]}], ":>", "\[IndentingNewLine]", 
+             RowBox[{"\"\<Documentation\>\"", "\[Rule]", 
+              RowBox[{"Association", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "r", "}"}]}]}]}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_Association", "]"}], "\[Rule]", 
+             "Nothing"}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "}"}]}]}], 
+  ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.703450904465002*^9, 3.70345097650543*^9}, {
+   3.7034510552736397`*^9, 3.703451060631516*^9}, {3.703451185218995*^9, 
+   3.7034511876643963`*^9}, {3.703467950958033*^9, 3.703468104304346*^9}, {
+   3.703468272011835*^9, 3.703468386173727*^9}, {3.703468417997353*^9, 
+   3.703468580809701*^9}, {3.7034686316810617`*^9, 3.703468636719306*^9}, 
+   3.703468672649283*^9, {3.7034687085833483`*^9, 3.703468745774809*^9}, {
+   3.703469424284089*^9, 3.703469425898272*^9}, {3.703469975371531*^9, 
+   3.7034699887334843`*^9}, {3.703470770623753*^9, 3.703470783145918*^9}, {
+   3.703470868140491*^9, 3.703470922866765*^9}, {3.703470960273962*^9, 
+   3.703470968767466*^9}, {3.703471111771553*^9, 3.703471119079247*^9}, {
+   3.703471198477932*^9, 3.703471202875317*^9}, {3.7034713957096863`*^9, 
+   3.703471399970703*^9}, {3.703471454042104*^9, 3.7034714789845963`*^9}, {
+   3.703799347881113*^9, 3.703799415700016*^9}, {3.7038718518760023`*^9, 
+   3.703871884104478*^9}, {3.7038719933854723`*^9, 3.7038720587580214`*^9}, {
+   3.703872187593163*^9, 3.70387218773909*^9}, 3.703872688859228*^9, {
+   3.70387332106469*^9, 3.703873333021936*^9}, {3.704933002327221*^9, 
+   3.704933070565832*^9}, {3.7049331540731983`*^9, 3.7049332110251923`*^9}, {
+   3.7049332789253597`*^9, 3.704933301238986*^9}, {3.7049338174070873`*^9, 
+   3.7049338182133007`*^9}, {3.704933864349413*^9, 3.704933936307232*^9}, {
+   3.704934803907208*^9, 3.704934804071639*^9}, 3.705594356008121*^9, {
+   3.705594438797793*^9, 
+   3.7055944413256617`*^9}},ExpressionUUID->"657650f8-0af8-4bdc-a566-\
+178ffef98c4d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletExpression", "Subsubsubsection",
+ CellChangeTimes->{{3.69993520784684*^9, 3.699935209336134*^9}, 
+   3.7027313408184547`*^9, 
+   3.705594442520713*^9},ExpressionUUID->"36e526f3-a3ef-403b-abad-\
+f66a8dc9e462"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "pacletExpression", "]"}], "=", "\n", 
+   RowBox[{"Join", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"\"\<Name\>\"", "\[Rule]", "\"\<MyPaclet\>\""}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Version\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Creator\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Description\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Root\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<WolframVersion\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Internal\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Loading\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Qualifier\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<BuildNumber\>\"", "\[Rule]", "Automatic"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Extensions\>\"", "\[Rule]", "Automatic"}]}], 
+      "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Options", "@", "pacletExtensionData"}]}], "\[IndentingNewLine]",
+     "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletExpression", "[", 
+    RowBox[{"ops", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"PacletManager`Paclet", "@@", "\[IndentingNewLine]", 
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{"DeleteCases", "[", 
+       RowBox[{
+        RowBox[{"DeleteDuplicatesBy", "[", 
+         RowBox[{
+          RowBox[{"{", "ops", "}"}], ",", "First"}], "]"}], ",", 
+        RowBox[{"_", "\[Rule]", "None"}]}], "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"o", "=", 
+          RowBox[{"Options", "@", "pacletExpression"}]}], "}"}], ",", 
+        RowBox[{
+         RowBox[{"Position", "[", 
+          RowBox[{"o", ",", 
+           RowBox[{"First", "@", "#"}]}], "]"}], "&"}]}], "]"}]}], 
+     "\[IndentingNewLine]", "]"}]}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.69993521029556*^9, 3.69993525248245*^9}, {
+   3.699935289370064*^9, 3.699935381071134*^9}, {3.699935450310876*^9, 
+   3.69993562813696*^9}, 3.6999361433766537`*^9, 3.699936323687511*^9, {
+   3.6999389750574093`*^9, 3.699938977865988*^9}, {3.699939029369296*^9, 
+   3.69993904181254*^9}, {3.699939834537401*^9, 3.699939845927816*^9}, {
+   3.699939888960884*^9, 3.699939960582406*^9}, {3.6999400425509977`*^9, 
+   3.699940042703384*^9}, 3.699940155389453*^9, 3.699940191517207*^9, 
+   3.699940223544446*^9, 3.699940281481804*^9, {3.699940319410574*^9, 
+   3.6999403200641203`*^9}, {3.699940376375204*^9, 3.699940378211637*^9}, {
+   3.700342448432473*^9, 3.7003424856821003`*^9}, {3.7003425189641943`*^9, 
+   3.700342582622477*^9}, {3.700342716065605*^9, 3.700342826784768*^9}, {
+   3.7003431997376623`*^9, 3.700343285218247*^9}, {3.700343320584908*^9, 
+   3.7003433691661377`*^9}, {3.70034340956074*^9, 3.700343448547907*^9}, {
+   3.700343492274815*^9, 3.7003435531265697`*^9}, {3.700354523789888*^9, 
+   3.700354676681443*^9}, {3.700354738768631*^9, 3.700354799090105*^9}, {
+   3.700354885400064*^9, 3.700354888183856*^9}, {3.7003550970785837`*^9, 
+   3.7003550989659557`*^9}, {3.70035514725167*^9, 3.700355148578209*^9}, {
+   3.7003562065591793`*^9, 3.7003562071048203`*^9}, {3.700356244561697*^9, 
+   3.700356320069002*^9}, {3.702730738657734*^9, 3.702730760023446*^9}, {
+   3.702730797715949*^9, 3.702730855278475*^9}, {3.702730898445737*^9, 
+   3.702730917164303*^9}, {3.7027316297105494`*^9, 3.702731633762151*^9}, {
+   3.7028416767176037`*^9, 3.7028416813158703`*^9}, {3.703446464012766*^9, 
+   3.7034464691996603`*^9}, {3.7034465186977863`*^9, 3.703446582941861*^9}, {
+   3.70344666388721*^9, 3.703446665035096*^9}, {3.70345106791057*^9, 
+   3.703451083764427*^9}, {3.703470797442131*^9, 3.7034708197245293`*^9}, {
+   3.705594341150548*^9, 3.705594344758917*^9}, {3.705594443050112*^9, 
+   3.705594449999565*^9}},ExpressionUUID->"896ef28c-3f38-4c6a-8278-\
+d46249395df5"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletExpression", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"dest_String", "?", "DirectoryQ"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"pacletInfo", "=", 
+       RowBox[{"pacletInfoAssociation", "[", "dest", "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"pacletExpression", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Sequence", "@@", 
+        RowBox[{"FilterRules", "[", 
+         RowBox[{
+          RowBox[{"{", "ops", "}"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"Except", "[", 
+           RowBox[{
+           "\"\<Kernel\>\"", "|", "\"\<Documentation\>\"", "|", 
+            "\"\<Extensions\>\"", "|", "\"\<FrontEnd\>\""}], "]"}]}], "]"}]}],
+        ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Name\>\"", "\[Rule]", 
+        RowBox[{"FileBaseName", "@", "dest"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Extensions\>\"", "->", "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Extensions\>\"", "]"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+             RowBox[{"KeyValueMap", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Prepend", "[", 
+                 RowBox[{
+                  RowBox[{"Normal", "@", "#2"}], ",", "#"}], "]"}], "&"}], 
+               ",", "\[IndentingNewLine]", 
+               RowBox[{"pacletExtensionData", "[", 
+                RowBox[{
+                "pacletInfo", ",", "\[IndentingNewLine]", "dest", ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"FilterRules", "[", 
+                  RowBox[{
+                   RowBox[{"{", "ops", "}"}], ",", "\[IndentingNewLine]", 
+                   RowBox[{"Options", "@", "pacletExtensionData"}]}], 
+                  "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                "]"}]}], "\[IndentingNewLine]", "]"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Except", "[", "_List", "]"}], ":>", 
+             "\[IndentingNewLine]", 
+             RowBox[{"With", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"baseData", "=", "\[IndentingNewLine]", 
+                 RowBox[{"pacletExtensionData", "[", 
+                  RowBox[{
+                  "pacletInfo", ",", "\[IndentingNewLine]", "dest", ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"FilterRules", "[", 
+                    RowBox[{
+                    RowBox[{"{", "ops", "}"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Options", "@", "pacletExtensionData"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                  "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"Replace", "[", 
+                   RowBox[{
+                    RowBox[{"OptionValue", "[", "#", "]"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"Lookup", "[", 
+                    RowBox[{"baseData", ",", "#"}], "]"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"a_Association", ":>", "\[IndentingNewLine]", 
+                    RowBox[{"Flatten", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"#", ",", 
+                    RowBox[{"Normal", "@", "a"}]}], "}"}]}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"_", "\[Rule]", "Nothing"}]}], 
+                    "\[IndentingNewLine]", "}"}]}], "]"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"r", ":", 
+                    RowBox[{"_Rule", "|", 
+                    RowBox[{"{", "___Rule", "}"}], "|", "_Association"}]}], ":>",
+                     "\[IndentingNewLine]", 
+                    RowBox[{"Flatten", "@", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{"#", ",", "\[IndentingNewLine]", 
+                    RowBox[{"Normal", "@", "r"}]}], "\[IndentingNewLine]", 
+                    "}"}]}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"_", "\[Rule]", "Nothing"}]}], 
+                    "\[IndentingNewLine]", "}"}]}], "]"}], "&"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"Keys", "@", 
+                  RowBox[{"Options", "[", "pacletExtensionData", "]"}]}]}], 
+                "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+              "]"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\"\<Version\>\"", "->", "\[IndentingNewLine]", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "@", "\"\<Version\>\""}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Automatic", ":>", "\[IndentingNewLine]", 
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"pointVersions", "=", "\[IndentingNewLine]", 
+               RowBox[{"StringSplit", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"ToString", "[", 
+                  RowBox[{"Lookup", "[", 
+                   RowBox[{
+                   "pacletInfo", ",", "\"\<Version\>\"", ",", 
+                    "\"\<1.0.-1\>\""}], "]"}], "]"}], ",", 
+                 "\[IndentingNewLine]", "\"\<.\>\""}], "\[IndentingNewLine]", 
+                "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"StringJoin", "@", 
+              RowBox[{"Riffle", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"Length", "@", "pointVersions"}], ">", "1"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"Append", "[", 
+                   RowBox[{
+                    RowBox[{"Most", "@", "pointVersions"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"ToString", "[", 
+                    RowBox[{
+                    RowBox[{"ToExpression", "[", 
+                    RowBox[{"Last", "@", "pointVersions"}], "]"}], "+", "1"}],
+                     "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"{", 
+                   RowBox[{"pointVersions", ",", "\"\<1\>\""}], "}"}]}], 
+                 "]"}], ",", "\[IndentingNewLine]", "\"\<.\>\""}], "]"}]}]}], 
+            "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"Sequence", "@@", 
+        RowBox[{"Normal", "@", "pacletInfo"}]}]}], "\[IndentingNewLine]", 
+      "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.69993521029556*^9, 3.69993525248245*^9}, {
+   3.699935289370064*^9, 3.699935381071134*^9}, {3.699935450310876*^9, 
+   3.69993562813696*^9}, 3.6999361433766537`*^9, 3.699936323687511*^9, {
+   3.6999389750574093`*^9, 3.699938977865988*^9}, {3.699939029369296*^9, 
+   3.69993904181254*^9}, {3.699939834537401*^9, 3.699939845927816*^9}, {
+   3.699939888960884*^9, 3.699939960582406*^9}, {3.6999400425509977`*^9, 
+   3.699940042703384*^9}, 3.699940155389453*^9, 3.699940191517207*^9, 
+   3.699940223544446*^9, 3.699940281481804*^9, {3.699940319410574*^9, 
+   3.6999403200641203`*^9}, {3.699940376375204*^9, 3.699940378211637*^9}, {
+   3.700342448432473*^9, 3.7003424856821003`*^9}, {3.7003425189641943`*^9, 
+   3.700342582622477*^9}, {3.700342716065605*^9, 3.700342826784768*^9}, {
+   3.7003431997376623`*^9, 3.700343285218247*^9}, {3.700343320584908*^9, 
+   3.7003433691661377`*^9}, {3.70034340956074*^9, 3.700343448547907*^9}, {
+   3.700343492274815*^9, 3.7003435531265697`*^9}, {3.700354523789888*^9, 
+   3.700354676681443*^9}, {3.700354738768631*^9, 3.700354799090105*^9}, {
+   3.700354885400064*^9, 3.700354888183856*^9}, {3.7003550970785837`*^9, 
+   3.7003550989659557`*^9}, {3.70035514725167*^9, 3.700355148578209*^9}, {
+   3.7003562065591793`*^9, 3.7003562071048203`*^9}, {3.700356244561697*^9, 
+   3.700356320069002*^9}, {3.702730738657734*^9, 3.702730760023446*^9}, {
+   3.702730797715949*^9, 3.702730855278475*^9}, {3.702730898445737*^9, 
+   3.7027309675980988`*^9}, {3.702731186079154*^9, 3.702731221436178*^9}, {
+   3.702731635829357*^9, 3.702731656083393*^9}, {3.702840803864994*^9, 
+   3.702840972476619*^9}, {3.702841542874977*^9, 3.702841626337743*^9}, {
+   3.7028417233659267`*^9, 3.702841766911294*^9}, {3.703446591785573*^9, 
+   3.703446618023468*^9}, {3.703450784429833*^9, 3.7034508589522123`*^9}, 
+   3.703450892587578*^9, {3.7034509872200813`*^9, 3.7034510459148493`*^9}, {
+   3.703451088777977*^9, 3.70345117532248*^9}, {3.703451208189828*^9, 
+   3.703451254552269*^9}, {3.703467858443678*^9, 3.703467879229782*^9}, 
+   3.7034686037111673`*^9, {3.703470145353877*^9, 3.703470408158183*^9}, {
+   3.703470501133217*^9, 3.7034705220476*^9}, {3.703766844133236*^9, 
+   3.7037668546208687`*^9}, 3.705177422908684*^9, {3.705594324267028*^9, 
+   3.705594337555359*^9}, {3.7055944511414347`*^9, 
+   3.705594457333202*^9}},ExpressionUUID->"19a1a134-571f-4964-b560-\
+42add5e298cb"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletExpressionBundle", "Subsubsubsection",
+ CellChangeTimes->{{3.702731569451943*^9, 3.702731570815073*^9}, 
+   3.7055944583633623`*^9},ExpressionUUID->"5d8e3926-21e2-48d8-8454-\
+b13305166782"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "pacletExpressionBundle", "]"}], "=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Options", "[", "pacletExpression", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletExpressionBundle", "[", "\[IndentingNewLine]", 
+    RowBox[{"paclet_PacletManager`Paclet", ",", "\[IndentingNewLine]", 
+     RowBox[{"dest_String", "?", "DirectoryQ"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"pacletFile", "=", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{"dest", ",", "\"\<pacletInfo.m\>\""}], "}"}]}]}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Begin", "[", "\"\<pacletManager`\>\"", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Block", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"$ContextPath", "=", 
+          RowBox[{"{", 
+           RowBox[{"\"\<System`\>\"", ",", "\"\<pacletManager`\>\""}], 
+           "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"pac", "=", "\[IndentingNewLine]", 
+            RowBox[{"Replace", "[", 
+             RowBox[{"paclet", ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"n_", "\[Rule]", "v_"}], ")"}], "\[RuleDelayed]", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ToExpression", "[", "n", "]"}], "\[Rule]", "v"}], 
+                ")"}]}], ",", "\[IndentingNewLine]", "1"}], "]"}]}], "}"}], 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"Export", "[", 
+           RowBox[{"pacletFile", ",", "pac"}], "]"}]}], "\[IndentingNewLine]",
+          "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"End", "[", "]"}], ";", "\[IndentingNewLine]", "pacletFile"}]}],
+     "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletExpressionBundle", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"dest_String", "?", "DirectoryQ"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+   ":=", "\[IndentingNewLine]", 
+   RowBox[{"pacletExpressionBundle", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"pacletExpression", "[", 
+      RowBox[{"dest", ",", "ops"}], "]"}], ",", "\[IndentingNewLine]", 
+     "dest"}], "\[IndentingNewLine]", "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.702731572068799*^9, 3.7027316164333887`*^9}, {
+   3.7027316645185537`*^9, 3.702731757721492*^9}, {3.702731806244506*^9, 
+   3.7027318527442493`*^9}, {3.703467777153942*^9, 3.703467846492382*^9}, {
+   3.7034692772385693`*^9, 3.703469279796817*^9}, {3.704482488945374*^9, 
+   3.7044824912550087`*^9}, {3.704482575132791*^9, 3.704482579345921*^9}, 
+   3.705177422918612*^9, {3.705594307945446*^9, 3.7055943160676126`*^9}, {
+   3.705594458775401*^9, 
+   3.705594470346282*^9}},ExpressionUUID->"815808c2-6845-4db5-aadd-\
+d0ad309d45b9"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletLookup", "Subsubsubsection",
+ CellChangeTimes->{{3.703956038411504*^9, 3.7039560411305857`*^9}, 
+   3.7055944715195837`*^9},ExpressionUUID->"c6b3820b-ee19-4f49-9bc3-\
+86ac72fd5a42"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletLookup", "[", 
+    RowBox[{
+     RowBox[{"p", ":", 
+      RowBox[{"{", "__PacletManager`Paclet", "}"}]}], ",", "props_"}], "]"}], 
+   ":=", "\[IndentingNewLine]", 
+   RowBox[{"Lookup", "[", 
+    RowBox[{
+     RowBox[{"PacletManager`PacletInformation", "/@", "p"}], ",", "props"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletLookup", "[", 
+    RowBox[{"p_PacletManager`Paclet", ",", "props_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Lookup", "[", 
+    RowBox[{
+     RowBox[{"PacletManager`PacletInformation", "@", "p"}], ",", "props"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletLookup", "[", 
+    RowBox[{
+     RowBox[{"p", ":", 
+      RowBox[{"_String", "|", 
+       RowBox[{"{", 
+        RowBox[{"_String", ",", "_String"}], "}"}]}]}], ",", "props_"}], 
+    "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"pacletLookup", "[", 
+    RowBox[{
+     RowBox[{"PacletManager`PacletFind", "[", "p", "]"}], ",", "props"}], 
+    "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.703956045980041*^9, 3.703956158947846*^9}, 
+   3.703956303628257*^9, 3.705594298525673*^9, {3.705594472592491*^9, 
+   3.7055944855235987`*^9}},ExpressionUUID->"c978e6e9-4745-48f8-a524-\
+a4eba415749b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletOpen", "Subsubsubsection",
+ CellChangeTimes->{3.7039559965225763`*^9, 
+  3.705594488653529*^9},ExpressionUUID->"2026ebd0-02ed-41a0-821f-\
+378545afdda6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletOpen", "[", 
+    RowBox[{"p_", ",", 
+     RowBox[{"which", ":", "_", ":", "First"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"locs", "=", 
+       RowBox[{"pacletLookup", "[", 
+        RowBox[{"p", ",", "\"\<Location\>\""}], "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"files", "=", "\[IndentingNewLine]", 
+          RowBox[{"Flatten", "@", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"which", "@", 
+               RowBox[{"Flatten", "@", 
+                RowBox[{"{", "locs", "}"}]}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"HoldPattern", "[", 
+                RowBox[{"which", "[", "f_", "]"}], "]"}], "\[RuleDelayed]", 
+               "f"}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+            "}"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Map", "[", 
+          RowBox[{"SystemOpen", ",", "files"}], "]"}], ";", 
+         "\[IndentingNewLine]", "files"}]}], "\[IndentingNewLine]", "]"}], "/;",
+       "\[IndentingNewLine]", 
+      RowBox[{"AllTrue", "[", 
+       RowBox[{
+        RowBox[{"Flatten", "@", 
+         RowBox[{"{", "locs", "}"}]}], ",", "StringQ"}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.703955997716713*^9, 3.703956031842956*^9}, {
+   3.703956122381256*^9, 3.7039561289715233`*^9}, {3.703956183905292*^9, 
+   3.7039562468149014`*^9}, {3.7039563214829893`*^9, 3.703956391740719*^9}, {
+   3.7039564297843647`*^9, 3.703956460509791*^9}, 3.705594288394129*^9, {
+   3.705594489132063*^9, 
+   3.7055944897011766`*^9}},ExpressionUUID->"5db9b429-d25c-4836-b7ca-\
+53cc8155e79c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["pacletBundle", "Subsubsubsection",
+ CellChangeTimes->{{3.70267262355492*^9, 3.7026726255120993`*^9}, 
+   3.705595728162962*^9},ExpressionUUID->"4f88ad89-d61f-4254-b521-\
+ab585653ac5e"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "pacletBundle", "]"}], "=", 
+   RowBox[{"{", "\n", "\t", 
+    RowBox[{
+     RowBox[{"\"\<RemovePaths\>\"", "\[Rule]", 
+      RowBox[{"{", "}"}]}], ",", "\n", "\t", 
+     RowBox[{"\"\<RemovePatterns\>\"", "\[Rule]", "\"\<.DS_Store\>\""}], ",", 
+     "\n", "\t", 
+     RowBox[{"\"\<BuildRoot\>\"", "\[RuleDelayed]", "$TemporaryDirectory"}], 
+     ","}], "\n", "\t", "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pacletBundle", "[", 
+    RowBox[{
+     RowBox[{"dir", ":", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"_String", "|", "_File"}], ")"}], "?", "DirectoryQ"}]}], ",", 
+     
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"pacletDir", "=", "\n", "\t\t\t", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<BuildRoot\>\"", "]"}], ",", "\n", 
+          "\t\t\t\t", "\"\<_paclets\>\"", ",", "\n", "\t\t\t\t", 
+          RowBox[{"FileBaseName", "@", "dir"}]}], "\n", "\t\t\t\t", "}"}]}]}],
+       "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"!", 
+         RowBox[{"FileExistsQ", "@", 
+          RowBox[{"DirectoryName", "[", "pacletDir", "]"}]}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"CreateDirectory", "@", 
+         RowBox[{"DirectoryName", "[", "pacletDir", "]"}]}]}], "\n", "\t\t\t",
+        "]"}], ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"FileExistsQ", "@", "pacletDir"}], ",", "\n", "\t\t\t", 
+        RowBox[{"DeleteDirectory", "[", 
+         RowBox[{"pacletDir", ",", 
+          RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], "\n", 
+       "\t\t\t", "]"}], ";", "\n", "\t\t", 
+      RowBox[{"CopyDirectory", "[", 
+       RowBox[{"dir", ",", "pacletDir"}], "]"}], ";", "\n", "\t\t", 
+      RowBox[{"Do", "[", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"p", "=", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"Not", "@", 
+               RowBox[{"FileExistsQ", "@", "path"}]}], ",", 
+              RowBox[{"FileNameJoin", "@", 
+               RowBox[{"{", 
+                RowBox[{"pacletDir", ",", "path"}], "}"}]}], ",", "path"}], 
+             "]"}]}], "}"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"DirectoryQ", "@", "p"}], ",", "\n", "\t\t\t\t\t", 
+            RowBox[{"DeleteDirectory", "[", 
+             RowBox[{"p", ",", "\n", "\t\t\t\t\t\t", 
+              RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "\n", 
+             "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t\t", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"FileExistsQ", "@", "p"}], ",", 
+              RowBox[{"DeleteFile", "[", "p", "]"}]}], "]"}]}], "\n", 
+           "\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t", "]"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"{", 
+         RowBox[{"path", ",", "\n", "\t\t\t\t", 
+          RowBox[{"Join", "[", "\n", "\t\t\t\t\t", 
+           RowBox[{
+            RowBox[{"Flatten", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"OptionValue", "[", "\"\<RemovePaths\>\"", "]"}], 
+               "}"}], ",", "1"}], "]"}], ",", "\n", "\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"FileNameDrop", "[", 
+               RowBox[{"#", ",", 
+                RowBox[{"FileNameDepth", "@", "pacletDir"}]}], "]"}], "&"}], "/@",
+              "\n", "\t\t\t\t\t\t", 
+             RowBox[{"FileNames", "[", 
+              RowBox[{
+               RowBox[{"OptionValue", "[", "\"\<RemovePatterns\>\"", "]"}], 
+               ",", "pacletDir", ",", "\[Infinity]"}], "]"}]}]}], "\n", 
+           "\t\t\t\t\t", "]"}]}], "}"}]}], "\n", "\t\t\t", "]"}], ";", "\n", 
+      "\t\t", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"pacletFile", "=", 
+          RowBox[{"PacletManager`PackPaclet", "[", "pacletDir", "]"}]}], 
+         "}"}], ",", "\n", "\t\t\t", "pacletFile"}], "\n", "\t\t\t", 
+       "]"}]}]}], "\n", "\t\t", "]"}]}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.700343920134439*^9, 3.70034392013544*^9}, {
+   3.700346503511764*^9, 3.700346564301044*^9}, 3.700346607867813*^9, {
+   3.7003467162396193`*^9, 3.700346940786789*^9}, {3.7003470302401333`*^9, 
+   3.700347030726852*^9}, {3.700347136749069*^9, 3.70034717997465*^9}, {
+   3.7003473092721033`*^9, 3.700347438083044*^9}, {3.700347490608177*^9, 
+   3.700347504789124*^9}, {3.700347625402205*^9, 3.700347628201865*^9}, {
+   3.700349176895845*^9, 3.700349177820567*^9}, {3.700349821242158*^9, 
+   3.7003498421200743`*^9}, {3.700350622923695*^9, 3.700350622928952*^9}, {
+   3.700350709468611*^9, 3.700350756661366*^9}, {3.7003511691532183`*^9, 
+   3.700351191810205*^9}, {3.700351308979813*^9, 3.700351315374024*^9}, {
+   3.7003521924515142`*^9, 3.700352192944735*^9}, {3.700354225408046*^9, 
+   3.700354296041238*^9}, 3.700354977895813*^9, {3.70093005351534*^9, 
+   3.700930053523767*^9}, {3.700945718903007*^9, 3.7009457296976833`*^9}, {
+   3.7009458377936974`*^9, 3.700945859733008*^9}, {3.701120276828199*^9, 
+   3.701120298576109*^9}, {3.701120989232214*^9, 3.701120995753675*^9}, {
+   3.70112105244481*^9, 3.701121063246214*^9}, 3.70112146625625*^9, {
+   3.7011215714197397`*^9, 3.701121610357299*^9}, {3.701123735130911*^9, 
+   3.701123746927438*^9}, {3.701485806722618*^9, 3.7014858103268967`*^9}, {
+   3.702672568271213*^9, 3.702672762164009*^9}, {3.702672800115327*^9, 
+   3.7026728801354837`*^9}, {3.7026729114564953`*^9, 3.702672968091906*^9}, {
+   3.702674825785706*^9, 3.7026748257900877`*^9}, {3.702675435603157*^9, 
+   3.702675437119307*^9}, {3.7027288005402403`*^9, 3.7027288244713306`*^9}, 
+   3.703950099969379*^9, 3.704482264924344*^9, {3.7044840088642673`*^9, 
+   3.704484010607278*^9}, {3.704484046787312*^9, 3.704484056049549*^9}, {
+   3.704484435853209*^9, 3.7044844373398657`*^9}, 3.70517742297222*^9, {
+   3.7055956622617064`*^9, 3.705595694162424*^9}, {3.705595728176223*^9, 
+   3.705595728181074*^9}},ExpressionUUID->"55e9b95d-a0c1-4826-bdbd-\
+f8257a25ec66"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]installPacletGenerate\[RightFloor]", "Subsubsubsection",
+ CellChangeTimes->{
+  3.7055904028112698`*^9},ExpressionUUID->"bf534770-6c9a-439f-a5c4-\
+eb1cd8c4f61b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "installPacletGenerate", "]"}], "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{"\"\<Verbose\>\"", "\[Rule]", "False"}], "\[IndentingNewLine]", 
+    "}"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.703596882451902*^9, 3.703596909310603*^9}, 
+   3.703596963629928*^9, {3.703596994206448*^9, 3.70359705828927*^9}, {
+   3.703597199232031*^9, 3.7035973214615498`*^9}, {3.703597358388389*^9, 
+   3.703597363425683*^9}, {3.703597408818859*^9, 3.703597536252705*^9}, {
+   3.703597582467514*^9, 3.7035976933652153`*^9}, {3.703597729799712*^9, 
+   3.703597883708735*^9}, {3.7036012003231287`*^9, 3.703601250853359*^9}, {
+   3.703601286088584*^9, 3.70360137370816*^9}, 3.7036019760029173`*^9, {
+   3.703602074739292*^9, 3.703602082164765*^9}, {3.7036057162743473`*^9, 
+   3.703605717681321*^9}, {3.703605755103426*^9, 3.703605775056489*^9}, {
+   3.7036094169313393`*^9, 3.7036094250224047`*^9}, {3.7036095179463367`*^9, 
+   3.703609518263874*^9}, {3.703761511923973*^9, 3.7037615577086887`*^9}, {
+   3.703762138591441*^9, 3.703762139885727*^9}, {3.7037648079831543`*^9, 
+   3.7037648318290863`*^9}, {3.703765994785977*^9, 3.703766116005128*^9}, 
+   3.704053666030692*^9, 3.704451039015747*^9, 
+   3.705592290644772*^9},ExpressionUUID->"fdd94bdd-db74-41b2-a58a-\
+99b96197369f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"installPacletGenerate", "[", 
+    RowBox[{
+     RowBox[{"dir", ":", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"_String", "|", "_File"}], ")"}], "?", "DirectoryQ"}]}], ",", 
+     
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Block", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"bundleDir", "=", "dir"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "@", "\"\<Verbose\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"DisplayTemporary", "@", "\[IndentingNewLine]", 
+         RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+          RowBox[{"TemplateApply", "[", 
+           RowBox[{"\"\<Bundling paclet for ``\>\"", ",", "dir"}], "]"}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"--", 
+             RowBox[{"--", 
+              RowBox[{"--", " ", "Extract"}]}]}]}]}]}], " ", "Archive", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"Files", " ", "--"}], "--"}], "--"}], "--"}], "--"}], 
+           "--"}], "--"}]}], "-"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"FileExistsQ", "@", "#"}], ",", 
+          RowBox[{"Quiet", "@", 
+           RowBox[{"ExtractArchive", "[", 
+            RowBox[{"#", ",", "dir"}], "]"}]}]}], "]"}], "&"}], "/@", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Map", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", 
+             RowBox[{
+              RowBox[{"FileBaseName", "@", "dir"}], "<>", "#"}]}], "}"}]}], 
+          "&"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<.zip\>\"", ",", "\"\<.gz\>\""}], "}"}]}], 
+        "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"--", 
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"--", 
+             RowBox[{"--", " ", "Detect"}]}]}]}]}]}], " ", "Paclet", " ", 
+        RowBox[{"Layout", " ", "--"}], 
+        RowBox[{"--", 
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"--", 
+             RowBox[{"--", "-"}]}]}]}]}]}]}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{"Which", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"FileExistsQ", "@", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", "\"\<PacletInfo.m\>\""}], "}"}]}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"bundleDir", "=", "dir"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"FileExistsQ", "@", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", 
+             RowBox[{
+              RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
+              "\"\<.m\>\""}]}], "}"}]}]}], "||", "\[IndentingNewLine]", 
+         RowBox[{"FileExistsQ", "@", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", 
+             RowBox[{
+              RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
+              "\"\<.wl\>\""}]}], "}"}]}]}], "||", "\[IndentingNewLine]", 
+         RowBox[{"FileExistsQ", "@", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", "\"\<Kernel\>\"", ",", 
+             RowBox[{"\"\<init\>\"", "<>", "\"\<.m\>\""}]}], "}"}]}]}], "||", 
+         "\[IndentingNewLine]", 
+         RowBox[{"FileExistsQ", "@", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", "\"\<Kernel\>\"", ",", 
+             RowBox[{"\"\<init\>\"", "<>", "\"\<.wl\>\""}]}], "}"}]}]}]}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"bundleDir", "=", "dir"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"FileExistsQ", "@", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", 
+            RowBox[{"FileBaseName", "@", "dir"}], ",", 
+            "\"\<PacletInfo.m\>\""}], "}"}]}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"bundleDir", "=", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", 
+            RowBox[{"FileBaseName", "@", "dir"}]}], "}"}]}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"FileExistsQ", "@", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", 
+            RowBox[{"FileBaseName", "@", "dir"}], ",", 
+            RowBox[{
+             RowBox[{"FileBaseName", "@", "dir"}], "<>", "\"\<.m\>\""}]}], 
+           "}"}]}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"bundleDir", "=", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", 
+             RowBox[{"FileBaseName", "@", "dir"}]}], "}"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"FileExistsQ", "@", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", 
+            RowBox[{
+             RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
+             "\"\<.nb\>\""}]}], "}"}]}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Export", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", 
+              RowBox[{"dir", ",", 
+               RowBox[{
+                RowBox[{"FileBaseName", "[", "dir", "]"}], "<>", 
+                "\"\<.m\>\""}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+            "\"\<(*Open package notebook*)\nCreateDocument[\n\tImport@\n\t\t\
+StringReplace[$InputFileName,\\\".m\\\"->\\\".nb\\\"]\n\t]\>\""}], ",", 
+           "\[IndentingNewLine]", "\"\<Text\>\""}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"bundleDir", "=", "dir"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PacletExpressionBundle", "[", "bundleDir", "]"}]}], ",", 
+        "\[IndentingNewLine]", "_", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Message", "[", 
+          RowBox[{"PDInstallPaclet", "::", "laywha"}], "]"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Throw", "[", "$Failed", "]"}]}]}], "\[IndentingNewLine]", 
+       "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"pacletBundle", "[", "bundleDir", "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.703596882451902*^9, 3.703596909310603*^9}, 
+   3.703596963629928*^9, {3.703596994206448*^9, 3.70359705828927*^9}, {
+   3.703597199232031*^9, 3.7035973214615498`*^9}, {3.703597358388389*^9, 
+   3.703597363425683*^9}, {3.703597408818859*^9, 3.703597536252705*^9}, {
+   3.703597582467514*^9, 3.7035976933652153`*^9}, {3.703597729799712*^9, 
+   3.703597883708735*^9}, {3.7036012003231287`*^9, 3.703601250853359*^9}, {
+   3.703601286088584*^9, 3.70360137370816*^9}, 3.7036019760029173`*^9, {
+   3.703602074739292*^9, 3.703602082164765*^9}, {3.7036057162743473`*^9, 
+   3.703605717681321*^9}, {3.703605755103426*^9, 3.703605775056489*^9}, {
+   3.7036094169313393`*^9, 3.7036094250224047`*^9}, {3.7036095179463367`*^9, 
+   3.703609518263874*^9}, {3.703761511923973*^9, 3.7037615577086887`*^9}, {
+   3.703762138591441*^9, 3.703762139885727*^9}, {3.7037648079831543`*^9, 
+   3.7037648318290863`*^9}, {3.703765994785977*^9, 3.703766116005128*^9}, 
+   3.704053666030692*^9, {3.704451039015747*^9, 3.7044510500368977`*^9}, {
+   3.705590450117289*^9, 3.705590504978628*^9}, {3.7055905394968433`*^9, 
+   3.705590552119382*^9}, {3.705590587489524*^9, 3.70559085153755*^9}, {
+   3.7055908932857943`*^9, 3.705590974912464*^9}, {3.7055910442194643`*^9, 
+   3.705591130356502*^9}, {3.705591359965331*^9, 3.705591409555851*^9}, 
+   3.705592011347321*^9, 3.705592368411703*^9, 
+   3.7055955861753807`*^9},ExpressionUUID->"ec7c95fa-73c5-4ce8-b8c6-\
+23f69c389ef1"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"installPacletGenerate", "[", 
+    RowBox[{
+     RowBox[{"file", ":", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"_String", "|", "_File"}], ")"}], "?", "FileExistsQ"}]}], ",", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Switch", "[", 
+    RowBox[{
+     RowBox[{"FileExtension", "[", "file", "]"}], ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"\"\<m\>\"", "|", "\"\<wl\>\""}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "@", "\"\<Verbose\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"DisplayTemporary", "@", "\[IndentingNewLine]", 
+         RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+          RowBox[{"TemplateApply", "[", 
+           RowBox[{"\"\<Bundling paclet for ``\>\"", ",", "file"}], "]"}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"dir", "=", "\[IndentingNewLine]", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{"$TemporaryDirectory", ",", "\[IndentingNewLine]", 
+             RowBox[{"FileBaseName", "@", "file"}]}], "\[IndentingNewLine]", 
+            "}"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Quiet", "@", 
+          RowBox[{"CreateDirectory", "[", "dir", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"FileExistsQ", "@", "\[IndentingNewLine]", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"DirectoryName", "@", "file"}], ",", 
+               "\[IndentingNewLine]", "\"\<DependencyInfo.m\>\""}], 
+              "\[IndentingNewLine]", "}"}]}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"CopyFile", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"FileNameJoin", "@", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"DirectoryName", "@", "file"}], ",", 
+                "\[IndentingNewLine]", "\"\<DependencyInfo.m\>\""}], 
+               "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+             RowBox[{"FileNameJoin", "@", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+               "dir", ",", "\[IndentingNewLine]", 
+                "\"\<DependencyInfo.m\>\""}], "\[IndentingNewLine]", 
+               "}"}]}]}], "\t", "\[IndentingNewLine]", "]"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"FileExistsQ", "@", "\[IndentingNewLine]", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"DirectoryName", "@", "file"}], ",", 
+               "\[IndentingNewLine]", "\"\<PacletInfo.m\>\""}], 
+              "\[IndentingNewLine]", "}"}]}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"CopyFile", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"FileNameJoin", "@", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"DirectoryName", "@", "file"}], ",", 
+                "\[IndentingNewLine]", "\"\<PacletInfo.m\>\""}], 
+               "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+             RowBox[{"FileNameJoin", "@", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+               "dir", ",", "\[IndentingNewLine]", "\"\<PacletInfo.m\>\""}], 
+               "\[IndentingNewLine]", "}"}]}]}], "\t", "\[IndentingNewLine]", 
+            "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"CopyFile", "[", 
+          RowBox[{"file", ",", "\[IndentingNewLine]", 
+           RowBox[{"FileNameJoin", "@", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{"dir", ",", "\[IndentingNewLine]", 
+              RowBox[{"FileNameTake", "@", "file"}]}], "\[IndentingNewLine]", 
+             "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"OverwriteTarget", "\[Rule]", "True"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PacletExpressionBundle", "[", 
+          RowBox[{"dir", ",", "\[IndentingNewLine]", 
+           RowBox[{"\"\<Name\>\"", "\[Rule]", "\[IndentingNewLine]", 
+            RowBox[{"StringReplace", "[", 
+             RowBox[{
+              RowBox[{"FileBaseName", "[", "dir", "]"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Except", "[", 
+                RowBox[{"WordCharacter", "|", "\"\<$\>\""}], "]"}], 
+               "\[Rule]", "\"\<\>\""}]}], "]"}]}]}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"pacletBundle", "[", 
+          RowBox[{"dir", ",", "\[IndentingNewLine]", 
+           RowBox[{"\"\<BuildRoot\>\"", "\[Rule]", "$TemporaryDirectory"}]}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+     ",", "\[IndentingNewLine]", "\"\<nb\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"dir", "=", "\[IndentingNewLine]", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"$TemporaryDirectory", ",", "\[IndentingNewLine]", 
+            RowBox[{"StringJoin", "@", 
+             RowBox[{"RandomSample", "[", 
+              RowBox[{
+               RowBox[{"Alphabet", "[", "]"}], ",", "10"}], "]"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"FileBaseName", "@", "file"}]}], "\[IndentingNewLine]", 
+           "}"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Quiet", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"DeleteDirectory", "[", 
+           RowBox[{"dir", ",", 
+            RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"CreateDirectory", "[", 
+           RowBox[{"dir", ",", 
+            RowBox[{"CreateIntermediateDirectories", "\[Rule]", "True"}]}], 
+           "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"CopyFile", "[", 
+         RowBox[{"file", ",", 
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"dir", ",", 
+             RowBox[{"FileNameTake", "@", "file"}]}], "}"}]}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"installPacletGenerate", "[", "dir", "]"}]}]}], 
+      "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+     "\"\<paclet\>\"", ",", "\[IndentingNewLine]", "file", ",", 
+     "\[IndentingNewLine]", "_", ",", "\[IndentingNewLine]", 
+     RowBox[{"Message", "[", 
+      RowBox[{
+       RowBox[{"PDInstallPaclet", "::", "howdo"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"FileExtension", "@", "file"}]}], "\[IndentingNewLine]", 
+      "]"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "CodeInput",
+ CellChangeTimes->{{3.703596882451902*^9, 3.703596909310603*^9}, 
+   3.703596963629928*^9, {3.703596994206448*^9, 3.70359705828927*^9}, {
+   3.703597199232031*^9, 3.7035973214615498`*^9}, {3.703597358388389*^9, 
+   3.703597363425683*^9}, {3.703597408818859*^9, 3.703597536252705*^9}, {
+   3.703597582467514*^9, 3.7035976933652153`*^9}, {3.703597729799712*^9, 
+   3.703597883708735*^9}, {3.7036012003231287`*^9, 3.703601250853359*^9}, {
+   3.703601286088584*^9, 3.70360137370816*^9}, 3.7036019760029173`*^9, {
+   3.703602074739292*^9, 3.703602082164765*^9}, {3.7036057162743473`*^9, 
+   3.703605717681321*^9}, {3.703605755103426*^9, 3.703605775056489*^9}, {
+   3.7036094169313393`*^9, 3.7036094250224047`*^9}, {3.7036095179463367`*^9, 
+   3.703609518263874*^9}, {3.703761511923973*^9, 3.7037615577086887`*^9}, {
+   3.703762138591441*^9, 3.703762139885727*^9}, {3.7037648079831543`*^9, 
+   3.7037648318290863`*^9}, {3.703765994785977*^9, 3.703766116005128*^9}, 
+   3.704053666030692*^9, {3.704451039015747*^9, 3.70445107106711*^9}, 
+   3.7055899984374647`*^9, 3.7055901395111923`*^9, {3.7055911640589027`*^9, 
+   3.705591300361092*^9}, 3.7055913322257633`*^9, {3.705591424162081*^9, 
+   3.7055914797616043`*^9}, 3.705592011357726*^9, 3.705592296013603*^9, 
+   3.7055923601861963`*^9, {3.7055924068225937`*^9, 3.705592406832511*^9}, 
+   3.705595586188922*^9},ExpressionUUID->"43e59949-d708-4c4e-a740-\
+49ce4154cac0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]gitPacletPull\[RightFloor]", "Subsubsubsection",
+ CellChangeTimes->{{3.7035961456249523`*^9, 3.703596153527396*^9}, 
+   3.7035996135640783`*^9, 3.703599681187086*^9, {3.703754773337569*^9, 
+   3.703754774078949*^9}},ExpressionUUID->"1b7d24bf-082b-440b-bba5-\
+1eab0e7be215"],
+
+Cell[BoxData[
+ RowBox[{"gitPacletPull", "//", "Clear"}]], "CodeInput",
+ CellChangeTimes->{{3.70376200433486*^9, 3.703762005460475*^9}, {
+  3.7055923108023653`*^9, 
+  3.705592311826536*^9}},ExpressionUUID->"ec984b5c-9dd8-4c8c-bea4-\
+4b55c0ef12d7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"gitPacletPull", "[", 
+    RowBox[{"loc", ":", 
+     RowBox[{"(", 
+      RowBox[{"_String", "|", "_URL", "|", "_File"}], ")"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"StringContainsQ", "[", 
+      RowBox[{
+       RowBox[{"URLParse", "[", 
+        RowBox[{"loc", ",", "\"\<PathString\>\""}], "]"}], ",", 
+       "\"\<releases\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Block", "[", 
+      RowBox[{
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{"release", "=", "\[IndentingNewLine]", 
+         RowBox[{"SelectFirst", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Flatten", "@", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{"Import", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"ReplacePart", "[", 
+                  RowBox[{"#", ",", 
+                   RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "\"\<Domain\>\"", "\[Rule]", "\"\<api.github.com\>\""}], 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<Path\>\"", "\[Rule]", "\[IndentingNewLine]", 
+                    RowBox[{"With", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"cleanpath", "=", 
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{
+                    RowBox[{"#", "[", "\"\<Path\>\"", "]"}], ",", 
+                    "\"\<\>\""}], "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"cleanpath", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "===", "\"\<repos\>\""}], 
+                    ",", "\[IndentingNewLine]", "cleanpath", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Prepend", "[", 
+                    RowBox[{"cleanpath", ",", "\"\<repos\>\""}], "]"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}], "&"}], 
+                "@", 
+                RowBox[{"URLParse", "[", "loc", "]"}]}], ",", 
+               "\[IndentingNewLine]", "\"\<RawJSON\>\""}], "]"}], "}"}]}], 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"KeyMemberQ", "[", "\"\<assets\>\"", "]"}], "||", 
+            RowBox[{"KeyMemberQ", "[", "\"\<zipball_url\>\"", "]"}]}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"AssociationQ", "@", "release"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"KeyMemberQ", "[", 
+             RowBox[{"release", ",", "\"\<assets\>\""}], "]"}], "&&", 
+            RowBox[{
+             RowBox[{"Length", "@", 
+              RowBox[{"release", "[", "\"\<assets\>\"", "]"}]}], ">", "0"}]}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"url", "=", "\[IndentingNewLine]", 
+               RowBox[{"release", "[", 
+                RowBox[{"[", 
+                 RowBox[{"\"\<assets\>\"", ",", 
+                  RowBox[{"-", "1"}], ",", "\"\<browser_download_url\>\""}], 
+                 "]"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"URLDownload", "[", 
+              RowBox[{"url", ",", "\[IndentingNewLine]", 
+               RowBox[{"FileNameJoin", "@", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"$TemporaryDirectory", ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"URLParse", "[", 
+                    RowBox[{"url", ",", "\"\<Path\>\""}], "]"}], "[", 
+                   RowBox[{"[", 
+                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]",
+                  "}"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+            "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"ExtractArchive", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"URLDownload", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"release", "[", "\"\<zipball_url\>\"", "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"FileNameJoin", "@", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"$TemporaryDirectory", ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"URLParse", "[", 
+                    RowBox[{
+                    RowBox[{"release", "[", "\"\<zipball_url\>\"", "]"}], 
+                    ",", "\"\<Path\>\""}], "]"}], "[", 
+                   RowBox[{"[", 
+                    RowBox[{"-", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]",
+                  "}"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+             "\[IndentingNewLine]", "$TemporaryDirectory"}], 
+            "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ",",
+          "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]", "]"}]}], 
+      "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{"dir", "=", "\[IndentingNewLine]", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"$TemporaryDirectory", ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"DeleteCases", "[", 
+              RowBox[{
+               RowBox[{"URLParse", "[", 
+                RowBox[{"loc", ",", "\"\<Path\>\""}], "]"}], ",", 
+               "\"\<\>\""}], "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", 
+           "}"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Quiet", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"DeleteDirectory", "[", 
+           RowBox[{"dir", ",", 
+            RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"CreateDirectory", "[", "dir", "]"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"RunProcess", "[", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<git\>\"", ",", "\"\<clone\>\"", ",", "loc", ",", "dir"}], 
+          "}"}], "]"}], ";", "\[IndentingNewLine]", "dir"}]}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "CodeInput",
+ CellChangeTimes->{{3.703596155944116*^9, 3.7035961610907917`*^9}, {
+   3.703598238943207*^9, 3.703598243413394*^9}, {3.703598329461245*^9, 
+   3.703598340547501*^9}, {3.703598426349544*^9, 3.703598427210268*^9}, {
+   3.703598482520464*^9, 3.7035985368633413`*^9}, {3.7035995973089743`*^9, 
+   3.703599604915311*^9}, {3.7035996454347343`*^9, 3.70359968410455*^9}, {
+   3.703723611526217*^9, 3.703723709607532*^9}, {3.703761700150741*^9, 
+   3.703761701244952*^9}, {3.703761804552857*^9, 3.703761833591098*^9}, 
+   3.705592309270794*^9, {3.705592453696089*^9, 3.705592667848733*^9}, {
+   3.705592747326363*^9, 3.7055929696470747`*^9}, {3.7055930016452*^9, 
+   3.705593154543199*^9}, {3.7055932336446257`*^9, 3.705593362216304*^9}, {
+   3.7055934695736027`*^9, 3.705593470310925*^9}, {3.7055958904153833`*^9, 
+   3.70559589137283*^9}, 
+   3.7055969531599197`*^9},ExpressionUUID->"a2d6fced-2f8e-4624-961d-\
+b16b2950b111"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]wolframLibraryPull\[RightFloor]", "Subsubsubsection",
+ CellChangeTimes->{{3.70376451939939*^9, 
+  3.7037645297433167`*^9}},ExpressionUUID->"379a4b25-484f-4f0e-8d6b-\
+68aeed0dd1e8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"wolframLibraryPull", "[", 
+   RowBox[{"loc", ":", 
+    RowBox[{"_String", "|", "_URL"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"fileURLs", "=", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"URLBuild", "@", "\[IndentingNewLine]", 
+         RowBox[{"Merge", "[", 
+          RowBox[{
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"URLParse", "[", "loc", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"URLParse", "[", "#", "]"}]}], "\[IndentingNewLine]", 
+            "}"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Replace", "[", 
+             RowBox[{
+              RowBox[{"DeleteCases", "[", 
+               RowBox[{"#", ",", "None"}], "]"}], ",", 
+              RowBox[{"{", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"{", "s_", "}"}], "\[RuleDelayed]", "s"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"___", ",", "l_"}], "}"}], "\[RuleDelayed]", "l"}], 
+                ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"{", "}"}], "\[Rule]", "None"}]}], 
+               "\[IndentingNewLine]", "}"}]}], "]"}], "&"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "&"}], "/@", "\[IndentingNewLine]", 
+       
+       RowBox[{"Cases", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Import", "[", 
+          RowBox[{"loc", ",", 
+           RowBox[{"{", 
+            RowBox[{"\"\<HTML\>\"", ",", "\"\<XMLObject\>\""}], "}"}]}], 
+          "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"XMLElement", "[", 
+           RowBox[{"\"\<a\>\"", ",", "\[IndentingNewLine]", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{"___", ",", "\[IndentingNewLine]", 
+              RowBox[{"\"\<href\>\"", "\[Rule]", "link_"}], ",", 
+              "\[IndentingNewLine]", "___"}], "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{"___", ",", "\[IndentingNewLine]", 
+              RowBox[{"XMLElement", "[", 
+               RowBox[{"\"\<img\>\"", ",", "\[IndentingNewLine]", 
+                RowBox[{"{", 
+                 RowBox[{"___", ",", 
+                  RowBox[{
+                  "\"\<src\>\"", "\[Rule]", 
+                   "\"\</images/database/download-icon.gif\>\""}], ",", 
+                  "___"}], "}"}], ",", "\[IndentingNewLine]", "_"}], "]"}], 
+              ",", "\[IndentingNewLine]", "___"}], "}"}]}], 
+           "\[IndentingNewLine]", "]"}], "\[RuleDelayed]", "link"}], ",", 
+         "\[IndentingNewLine]", "\[Infinity]"}], "\[IndentingNewLine]", 
+        "]"}]}]}], "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"With", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"name", "=", "\[IndentingNewLine]", 
+        RowBox[{"FileBaseName", "@", "\[IndentingNewLine]", 
+         RowBox[{"First", "@", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"SortBy", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Switch", "[", 
+              RowBox[{
+               RowBox[{"FileExtension", "[", "#", "]"}], ",", 
+               "\[IndentingNewLine]", "\"\<paclet\>\"", ",", 
+               "\[IndentingNewLine]", "0", ",", "\[IndentingNewLine]", 
+               RowBox[{"\"\<zip\>\"", "|", "\"\<gz\>\""}], ",", 
+               "\[IndentingNewLine]", "1", ",", "\[IndentingNewLine]", 
+               RowBox[{"\"\<wl\>\"", "|", "\"\<m\>\""}], ",", 
+               "\[IndentingNewLine]", "2", ",", "\[IndentingNewLine]", "_", 
+               ",", "\[IndentingNewLine]", "3"}], "\[IndentingNewLine]", 
+              "]"}], "&"}], "\[IndentingNewLine]", "]"}], "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"URLParse", "[", 
+               RowBox[{"#", ",", "\"\<Path\>\""}], "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"-", "1"}], "]"}], "]"}], "&"}], "/@", "fileURLs"}], 
+           "]"}]}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Quiet", "@", "\[IndentingNewLine]", 
+        RowBox[{"DeleteDirectory", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"FileNameJoin", "@", 
+           RowBox[{"{", 
+            RowBox[{"$TemporaryDirectory", ",", "name"}], "}"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
+         "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"CreateDirectory", "@", 
+        RowBox[{"FileNameJoin", "@", 
+         RowBox[{"{", 
+          RowBox[{"$TemporaryDirectory", ",", "name"}], "}"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"MapThread", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"RenameFile", "[", "\[IndentingNewLine]", 
+           RowBox[{"#", ",", "\[IndentingNewLine]", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", 
+              RowBox[{"$TemporaryDirectory", ",", "name", ",", 
+               RowBox[{
+                RowBox[{"URLParse", "[", 
+                 RowBox[{"#2", ",", "\"\<Path\>\""}], "]"}], "[", 
+                RowBox[{"[", 
+                 RowBox[{"-", "1"}], "]"}], "]"}]}], "}"}]}]}], 
+           "\[IndentingNewLine]", "]"}], "&"}], ",", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"URLDownload", "[", 
+            RowBox[{"fileURLs", ",", "\[IndentingNewLine]", 
+             RowBox[{"FileNameJoin", "@", 
+              RowBox[{"{", 
+               RowBox[{"$TemporaryDirectory", ",", "name"}], "}"}]}]}], "]"}],
+            ",", "\[IndentingNewLine]", "fileURLs"}], "\[IndentingNewLine]", 
+          "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{"$TemporaryDirectory", ",", "name"}], "}"}]}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "CodeInput",
+ CellChangeTimes->{{3.703764531655398*^9, 3.703764535752149*^9}, {
+   3.703764603502018*^9, 3.703764618673449*^9}, {3.703765344935837*^9, 
+   3.7037656330831003`*^9}, {3.703765698979162*^9, 3.703765764531156*^9}, {
+   3.703765804278425*^9, 3.703765881593234*^9}, {3.703765930100587*^9, 
+   3.703765948953369*^9}, {3.703766430827086*^9, 3.7037664459621153`*^9}, 
+   3.7037664816764708`*^9, {3.7037665201374063`*^9, 3.703766523272334*^9}, 
+   3.7037665696119556`*^9, {3.703766699598633*^9, 3.703766709741173*^9}, {
+   3.7037667442328176`*^9, 3.703766780324774*^9}, {3.7037669636283693`*^9, 
+   3.703767034427094*^9}, {3.703767072850956*^9, 3.703767082584444*^9}, 
+   3.705592091687153*^9, 
+   3.705592326611661*^9},ExpressionUUID->"3d35b2b4-491c-414c-8f6b-\
+27a3005c1755"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]downloadURLIfExists\[RightFloor]", "Subsubsubsection",
+ CellChangeTimes->{{3.703604404614912*^9, 3.703604407485958*^9}, 
+   3.7036052489502363`*^9},ExpressionUUID->"4d9aa81c-9020-49a6-a457-\
+56788653d885"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"downloadURLIfExists", "[", 
+   RowBox[{"urlBase_", ",", 
+    RowBox[{"{", "files__", "}"}], ",", "dir_"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"If", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"MatchQ", "[", 
+        RowBox[{"0", "|", "200"}], "]"}], "@", "\[IndentingNewLine]", 
+       RowBox[{"URLSave", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"URLBuild", "@", 
+          RowBox[{"{", 
+           RowBox[{"urlBase", ",", "#"}], "}"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"dir", ",", "\[IndentingNewLine]", "#"}], 
+           "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+         "\"\<StatusCode\>\""}], "\[IndentingNewLine]", "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"FileNameJoin", "@", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{"dir", ",", "\[IndentingNewLine]", "#"}], 
+        "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Quiet", "@", "\[IndentingNewLine]", 
+        RowBox[{"DeleteFile", "@", "\[IndentingNewLine]", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"dir", ",", "\[IndentingNewLine]", "#"}], 
+           "\[IndentingNewLine]", "}"}]}]}]}], ";", "\[IndentingNewLine]", 
+       "Nothing"}]}], "\[IndentingNewLine]", "]"}], "&"}], "/@", 
+   RowBox[{"{", "files", "}"}]}]}]], "CodeInput",
+ CellChangeTimes->{{3.703604474512422*^9, 3.703604533541312*^9}, {
+   3.703604590595153*^9, 3.703604623579116*^9}, {3.703604716113121*^9, 
+   3.703604906079907*^9}, {3.7036050306407557`*^9, 3.703605084180829*^9}, {
+   3.703605125991049*^9, 3.703605250636724*^9}, 3.7037666379439697`*^9, 
+   3.70559206245434*^9},ExpressionUUID->"a86891d9-12a6-4811-999d-7e4d3234ac5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["PDInstallPaclet", "Subsubsubsection",
+ CellChangeTimes->{{3.705592073060073*^9, 
+  3.705592074201292*^9}},ExpressionUUID->"b9b7cb3e-9ba1-4216-9253-\
+0d21125fc8f7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "PDInstallPaclet", "]"}], "=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\"\<Verbose\>\"", "\[Rule]", "True"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<InstallSite\>\"", "\[Rule]", "True"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+     "\"\<InstallDependencies\>\"", "->", "\[IndentingNewLine]", 
+      "Automatic"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\"\<Log\>\"", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+    "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDInstallPaclet", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"loc", ":", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"_String", "|", "_File"}], ")"}], "?", "FileExistsQ"}]}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+   ":=", "\[IndentingNewLine]", 
+   RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"installPacletGenerate", "[", 
+      RowBox[{"loc", ",", "ops"}], "]"}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"File", "[", "f_", "]"}], "|", 
+        RowBox[{"(", 
+         RowBox[{"f_String", "?", "FileExistsQ"}], ")"}]}], ":>", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"PacletManager`PacletInstall", "@", "f"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+         "p_PacletManager`Paclet", "\[RuleDelayed]", "\[IndentingNewLine]", 
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"deps", "=", "\[IndentingNewLine]", 
+              RowBox[{"Replace", "[", 
+               RowBox[{
+                RowBox[{
+                "OptionValue", "[", "\"\<InstallDependencies\>\"", "]"}], ",", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Automatic", "\[Rule]", 
+                   RowBox[{"{", "\"\<Standard\>\"", "}"}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"True", "\[Rule]", "All"}]}], "\[IndentingNewLine]",
+                  "}"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"MatchQ", "[", 
+               RowBox[{"deps", ",", 
+                RowBox[{"_List", "|", "All"}]}], "]"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"Flatten", "@", 
+               RowBox[{"{", "\[IndentingNewLine]", 
+                RowBox[{"p", ",", "\[IndentingNewLine]", 
+                 RowBox[{"With", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"l", "=", 
+                    RowBox[{"PacletLookup", "[", 
+                    RowBox[{"p", ",", "\"\<Location\>\""}], "]"}]}], "}"}], 
+                   ",", "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"FileExistsQ", "@", 
+                    RowBox[{"FileNameJoin", "@", 
+                    RowBox[{"{", 
+                    RowBox[{"l", ",", "\"\<DependencyInfo.m\>\""}], "}"}]}]}],
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"Import", "[", "\"\<DependencyInfo.m\>\"", "]"}], 
+                    ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"a_Association", ":>", "\[IndentingNewLine]", 
+                    RowBox[{"Switch", "[", 
+                    RowBox[{
+                    "deps", ",", "\[IndentingNewLine]", "All", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Flatten", "@", "\[IndentingNewLine]", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Map", "[", 
+                    RowBox[{"PDInstallPaclet", ",", "#"}], "]"}], "&"}], ",", 
+                    "a"}], "]"}]}], ",", "\[IndentingNewLine]", "_", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Flatten", "@", "\[IndentingNewLine]", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"PDInstallPaclet", ",", "\[IndentingNewLine]", 
+                    RowBox[{"Flatten", "@", 
+                    RowBox[{"Lookup", "[", 
+                    RowBox[{"a", ",", "deps", ",", 
+                    RowBox[{"{", "}"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"l_List", ":>", "\[IndentingNewLine]", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"PDInstallPaclet", ",", "l"}], "]"}]}]}], 
+                    "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+                  "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                "}"}]}], ",", "\[IndentingNewLine]", "p"}], 
+             "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}]}],
+         "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PDInstallPaclet", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"loc", ":", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"_String", "?", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"URLParse", "[", 
+             RowBox[{"#", ",", "\"\<Scheme\>\""}], "]"}], "=!=", "None"}], 
+           "&"}], ")"}]}], "|", "_URL"}], ")"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+   ":=", "\[IndentingNewLine]", 
+   RowBox[{"Which", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"URLParse", "[", 
+       RowBox[{"loc", ",", "\"\<Domain\>\""}], "]"}], "===", 
+      "\"\<github.com\>\""}], ",", "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"dir", "=", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"OptionValue", "@", "\"\<Verbose\>\""}], "//", "TrueQ"}], 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{"Monitor", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"gitPacletPull", "[", "loc", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Which", "[", 
+              RowBox[{
+               RowBox[{"GitHubRepoQ", "@", "loc"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+                RowBox[{"TemplateApply", "[", 
+                 RowBox[{"\"\<Cloning repository at ``\>\"", ",", "loc"}], 
+                 "]"}], "\[IndentingNewLine]", "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"GitHubReleaseQ", "@", "loc"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+                RowBox[{"TemplateApply", "[", 
+                 RowBox[{"\"\<Pulling release at ``\>\"", ",", "loc"}], "]"}],
+                 "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+               "True", ",", "\[IndentingNewLine]", 
+               RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+                RowBox[{"TemplateApply", "[", 
+                 RowBox[{"\"\<Downloading from ``\>\"", ",", "loc"}], "]"}], 
+                "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+              "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"gitPacletPull", "[", "loc", "]"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PDInstallPaclet", "@", "dir"}]}], "\[IndentingNewLine]", 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"URLParse", "[", 
+       RowBox[{"loc", ",", "\"\<Domain\>\""}], "]"}], "===", 
+      "\"\<library.wolfram.com\>\""}], ",", "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"dir", "=", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"OptionValue", "@", "\"\<Verbose\>\""}], "//", "TrueQ"}], 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{"Monitor", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"wolframLibraryPull", "[", "loc", "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Internal`LoadingPanel", "[", "\[IndentingNewLine]", 
+              RowBox[{"TemplateApply", "[", 
+               RowBox[{
+               "\"\<Downloading from library.wolfram.com ``\>\"", ",", 
+                "loc"}], "]"}], "\[IndentingNewLine]", "]"}]}], 
+            "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"gitPacletPull", "[", "loc", "]"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PDInstallPaclet", "@", "dir"}]}], "\[IndentingNewLine]", 
+      "]"}], ",", "\[IndentingNewLine]", "True", ",", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"And", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<InstallSite\>\"", "]"}], "//", 
+          "TrueQ"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"MatchQ", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Quiet", "@", 
+            RowBox[{"PacletSiteInfo", "[", "loc", "]"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+           "PacletManager`PacletSite", "[", "__PacletManager`Paclet", "]"}]}],
+           "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PacletSiteInstall", "[", "loc", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Switch", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"URLParse", "[", 
+           RowBox[{"loc", ",", "\"\<Path\>\""}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"-", "1"}], "]"}], "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"_", "?", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"FileExtension", "[", "#", "]"}], "\[Equal]", 
+             "\"\<paclet\>\""}], "&"}], ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"PDInstallPaclet", "@", 
+          RowBox[{"URLDownload", "[", "loc", "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"_", "?", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"MatchQ", "[", 
+             RowBox[{
+              RowBox[{"FileExtension", "[", "#", "]"}], ",", 
+              RowBox[{"\"\<m\>\"", "|", "\"\<wl\>\""}]}], "]"}], "&"}], 
+           ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"PDInstallPaclet", "@", "\[IndentingNewLine]", 
+          RowBox[{"downloadURLIfExists", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"URLBuild", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"ReplacePart", "[", 
+                RowBox[{"#", ",", "\[IndentingNewLine]", 
+                 RowBox[{"\"\<Path\>\"", "->", "\[IndentingNewLine]", 
+                  RowBox[{"Drop", "[", 
+                   RowBox[{"#Path", ",", 
+                    RowBox[{"-", "1"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+                "]"}], "&"}], "@", 
+              RowBox[{"URLParse", "[", "loc", "]"}]}], "\[IndentingNewLine]", 
+             "]"}], ",", 
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"URLParse", "[", 
+                RowBox[{"loc", ",", "\"\<Path\>\""}], "]"}], "[", 
+               RowBox[{"[", 
+                RowBox[{"-", "1"}], "]"}], "]"}], ",", "\[IndentingNewLine]", 
+              "\"\<DependencyInfo.m\>\"", ",", "\[IndentingNewLine]", 
+              "\"\<PacletInfo.m\>\""}], "\[IndentingNewLine]", "}"}]}], 
+           "]"}]}], ",", "\[IndentingNewLine]", "_", ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Quiet", "@", 
+            RowBox[{"Normal", "@", 
+             RowBox[{"PacletSiteInfoDataset", "[", "loc", "]"}]}]}], ",", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Except", "[", 
+               RowBox[{"{", "__Association", "}"}], "]"}], ":>", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"Message", "[", 
+                 RowBox[{
+                  RowBox[{"PDInstallPaclet", "::", "nopac"}], ",", "loc"}], 
+                 "]"}], ";", "\[IndentingNewLine]", "$Failed"}], 
+               "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"a", ":", 
+               RowBox[{"{", "__Association", "}"}]}], ":>", 
+              "\[IndentingNewLine]", 
+              RowBox[{"PDInstallPaclet", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"URLBuild", "@", "\[IndentingNewLine]", 
+                 RowBox[{"Flatten", "@", 
+                  RowBox[{"{", "\[IndentingNewLine]", 
+                   RowBox[{"loc", ",", "\[IndentingNewLine]", 
+                    RowBox[{"StringJoin", "@", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Lookup", "[", 
+                    RowBox[{
+                    RowBox[{"Last", "@", 
+                    RowBox[{"SortBy", "[", 
+                    RowBox[{"a", ",", 
+                    RowBox[{"#Version", "&"}]}], "]"}]}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<Name\>\"", ",", "\[IndentingNewLine]", 
+                    "\"\<Version\>\""}], "\[IndentingNewLine]", "}"}]}], 
+                    "]"}], ",", "\[IndentingNewLine]", "\"\<.paclet\>\""}], 
+                    "\[IndentingNewLine]", "}"}]}]}], "\[IndentingNewLine]", 
+                   "}"}]}]}], ",", "\[IndentingNewLine]", "ops"}], 
+               "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+            "}"}]}], "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.703610257864366*^9, 3.703610284762755*^9}, {
+   3.70361031697764*^9, 3.7036106094299097`*^9}, {3.703610758195181*^9, 
+   3.703610784894918*^9}, {3.703610832973905*^9, 3.703610869579638*^9}, {
+   3.703610903650784*^9, 3.703610935519359*^9}, {3.7036109820639267`*^9, 
+   3.703610983168962*^9}, {3.703754779423195*^9, 3.7037547803418303`*^9}, {
+   3.703761710264723*^9, 3.703761730644144*^9}, {3.703762039181884*^9, 
+   3.703762095574305*^9}, {3.703762179649733*^9, 3.703762221899228*^9}, {
+   3.703766155517048*^9, 3.703766219486938*^9}, {3.703766275898677*^9, 
+   3.7037663177375383`*^9}, {3.703768412948471*^9, 3.703768413162756*^9}, {
+   3.704037503588153*^9, 3.7040375452276907`*^9}, {3.704052671723774*^9, 
+   3.70405268796906*^9}, {3.7040532364966087`*^9, 3.704053245730219*^9}, {
+   3.704053276250386*^9, 3.704053300774206*^9}, {3.704053331484006*^9, 
+   3.7040533609392014`*^9}, 3.7040535836354*^9, {3.7040536658691597`*^9, 
+   3.7040536659364862`*^9}, {3.704053717173848*^9, 3.7040537189405403`*^9}, {
+   3.704053819969377*^9, 3.704053913284136*^9}, {3.704053944552709*^9, 
+   3.7040539816179543`*^9}, 3.704054854793292*^9, {3.704055143934661*^9, 
+   3.704055149735464*^9}, 3.704055228623261*^9, {3.704055357993849*^9, 
+   3.7040553594487123`*^9}, {3.705590024238639*^9, 3.7055900243081913`*^9}, {
+   3.705590139525435*^9, 3.705590139597629*^9}, {3.705591557267638*^9, 
+   3.705591562869088*^9}, 3.7055916019940977`*^9, {3.705591997846665*^9, 
+   3.705592011322154*^9}, {3.7055924068408012`*^9, 
+   3.705592406852414*^9}},ExpressionUUID->"aff049ef-e787-4cc8-aa25-\
+d7d4f2aa64d1"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"a630a26d-8d8e-4b74-a6f1-\
+93461856e42a"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"887d5134-c53a-45f2-bba4-\
+49877ba3adea"]
+},
+WindowSize->{808, 755},
+WindowMargins->{{28, Automatic}, {36, Automatic}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+
