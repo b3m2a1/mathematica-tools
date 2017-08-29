@@ -13,7 +13,7 @@ NotebookToPackage::usage=
 NotebookToPackage[file] silently opens file and builds a package from it";
 
 
-Begin["Private`"];
+Begin["`Private`"];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -323,7 +323,7 @@ NotebookToPackage[nb_NotebookObject] :=
          {}
          ],
         Cell[
-         BoxData@RowBox[{RowBox[{"Begin", "[", "\"Private`\"", "]"}],
+         BoxData@RowBox[{RowBox[{"Begin", "[", "\"`Private`\"", "]"}],
             ";"}],
          "Code"
          ],
