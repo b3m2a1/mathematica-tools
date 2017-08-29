@@ -9,22 +9,20 @@ BeginPackage["NotebookToPackage`"];
 
 (*Package Declarations*)
 NotebookToPackage::usage=
-	"NotebookToPackage[nb] turns NotebookObject nb builds a package from it
+"NotebookToPackage[nb] turns NotebookObject nb into a package
 NotebookToPackage[file] silently opens file and builds a package from it";
-
-
-(* ::Subsection:: *)
-(*Implementation*)
 
 
 Begin["Private`"];
 
 
 (* ::Subsubsection::Closed:: *)
-(*usages*)
+(*Private Declarations*)
 
 
-$codeExportStyles::usage="$codeExportStyles are the styles exported to Code cells";
+(*Package Declarations*)
+$codeExportStyles::usage=
+	"$codeExportStyles are the styles exported to Code cells";
 $hiddenPackageExportContext::usage=
 	"$hiddenPackageExportContext is the context in which the notebook-to-package operation is performed";
 makeUsageRule::usage=
@@ -60,6 +58,10 @@ notebookExtractPackageName::usage=
 	"notebookExtractPackageName[nb] gets the package name from nb";
 
 
+(* ::Subsection:: *)
+(*Implementation*)
+
+
 (*Package Implementation*)
 
 
@@ -75,7 +77,7 @@ $hiddenPackageExportContext = "Dooooop`Doop`Doop`Doop`";
 
 Clear[makeUsageRule, patternSanitize];
 makeUsageRule[sym_Symbol, usage_] :=
-  
+
   SymbolName[Unevaluated[sym]] ->
    Replace[patternSanitize[usage],
     HoldComplete[s_] :>
@@ -95,9 +97,9 @@ patternSanitize[usage_] :=
          Verbatim[Condition]
         )[p_, _] :> p
      }],
-   (s_Symbol?(Function[Null, Quiet[Context[#]] =!= "System`", 
+   (s_Symbol?(Function[Null, Quiet[Context[#]] =!= "System`",
         HoldAllComplete]) :> RuleCondition[
-      ToExpression[$hiddenPackageExportContext <> 
+      ToExpression[$hiddenPackageExportContext <>
         SymbolName[Unevaluated@s]],
       True
       ])
@@ -109,13 +111,13 @@ patternSanitize~SetAttributes~HoldAllComplete
 (*exprDefinitionToUsage*)
 
 
-Clear[ownPatternToUsage, downPatternToUsage, subPatternToUsage, 
+Clear[ownPatternToUsage, downPatternToUsage, subPatternToUsage,
   upPatternToUsage];
 ownPatternToUsage[sym_Symbol :> u_] :=
   makeUsageRule[sym, sym];
 ownPatternToUsage~SetAttributes~HoldAllComplete;
 downPatternToUsage[(sym_Symbol)[args___] :> u_] :=
-  
+
   makeUsageRule[sym, sym[args]];
 downPatternToUsage~SetAttributes~HoldAllComplete;
 subPatternPullHead[pat_] :=
@@ -126,7 +128,7 @@ subPatternPullHead[pat_] :=
    ];
 subPatternPullHead~SetAttributes~HoldAllComplete;
 subPatternToUsage[subPat_ :> u_] :=
-  
+
   With[{sym = Extract[subPatternPullHead[subPat], 1, Unevaluated]},
    makeUsageRule[sym, subPat]
    ];
@@ -211,31 +213,40 @@ makeUsageBoxes[name_, strings : {__}] :=
     ";"
     }];
 defsUsagesCell[defList_] :=
-  Cell[
-   BoxData@
-    RowBox@
-     Riffle[
-      Prepend[
-        RowBox@{"(*", RowBox@{"Package", " ", "Declarations"}, 
-          "*)"}]@
-       KeyValueMap[
-        makeUsageBoxes,
-        GroupBy[
-         exprDefinitionToUsage /@ defList,
-         First -> Last
-         ]
-        ],
-      "\n"
+ With[{chunks =
+    GroupBy[
+     exprDefinitionToUsage /@ defList,
+     First -> Last
+     ]
+   },
+  If[Length[#] > 0,
+     Cell[
+      BoxData@
+       RowBox@
+        Riffle[
+         Prepend[
+           RowBox@{"(*", RowBox@{"Package", " ", "Declarations"},
+             "*)"}]@
+          KeyValueMap[makeUsageBoxes, #],
+         "\n"
+         ],
+      "Code"
       ],
-   "Code"
-   ];
+     {}
+     ] & /@ {
+    KeySelect[chunks,
+     And @@ Through[{Not@*LowerCaseQ, LetterQ}@StringTake[#, 1]] &],
+    KeySelect[chunks,
+     Or @@ Through[{LowerCaseQ, Not@*LetterQ}@StringTake[#, 1]] &]
+    }
+  ]
 
 
 (* ::Subsubsection::Closed:: *)
 (*cellsBuildPackageCore*)
 
 
-cellsBuildPackageCore[c : {__Cell}] :=
+cellsBuildPackageCore[c : {___Cell}] :=
   (
    Begin[$hiddenPackageExportContext];
    (End[]; #) &@Replace[c,
@@ -254,7 +265,7 @@ cellsBuildPackageCore[c : {__Cell}] :=
          ]
         ),
       Cell[CellGroupData[cells_, state1___], state2___] :>
-       Cell[CellGroupData[cellsBuildPackageCore[cells], state1], 
+       Cell[CellGroupData[cellsBuildPackageCore[cells], state1],
         state2]
       },
      1
@@ -263,7 +274,7 @@ cellsBuildPackageCore[c : {__Cell}] :=
 
 
 (* ::Subsubsection::Closed:: *)
-(*NotebookToPackage*)
+(*notebookExtractPackageName*)
 
 
 notebookExtractPackageName[nb_NotebookObject] :=
@@ -281,62 +292,88 @@ notebookExtractPackageName[nb_NotebookObject] :=
    ];
 
 
+(* ::Subsubsection::Closed:: *)
+(*NotebookToPackage*)
+
+
 NotebookToPackage[nb_NotebookObject] :=
-  
-  With[{notebook = NotebookGet[nb]},
-   With[{data = Reap[cellsBuildPackageCore@First@notebook]},
-    Notebook[
-     Flatten@{
-       Cell[notebookExtractPackageName[nb], "Section"],
-       Cell[
-        BoxData@
-         RowBox[{
-           RowBox[{"BeginPackage", "[",
-             "\"" <> notebookExtractPackageName[nb] <> "`\"",
-             "]"}],
-           ";"}],
-        "Code"
-        ],
-       defsUsagesCell[Flatten@Last@data],
-       Cell[
-        CellGroupData[Flatten@{
-           Cell["Implementation", "Subsection"],
-           
-           Cell[BoxData@
-             RowBox[{RowBox[{"Begin", "[", "\"Private`\"", "]"}], 
-               ";"}],
-            "Code"
-            ],
-           
-           Cell[BoxData@
-             RowBox@{"(*", RowBox@{"Package", " ", "Implementation"}, 
-               "*)"},
-            "Code"
-            ],
-           First@data
-           }
-         ]
-        ],
-       Cell[
-        CellGroupData[{
-          Cell["End", "Subsection"],
-          Cell[BoxData@RowBox[{RowBox[{"End", "[", "]"}], ";"}],
-           "Code"
-           ],
-          Cell[BoxData@RowBox[{RowBox[{"EndPackage", "[", "]"}], ";"}],
-           "Code"
+  With[{cells =
+     Replace[NotebookRead[nb], {
+       c_Cell :> {c},
+       {} :> First@NotebookGet[nb]
+       }]},
+   With[{data = Reap[cellsBuildPackageCore@cells]},
+    With[{usagecells = defsUsagesCell[Flatten@Last@data]},
+     Notebook[
+      Flatten@{
+        Cell[notebookExtractPackageName[nb], "Section"],
+        Cell[
+         BoxData@
+          RowBox[{
+            RowBox[{"BeginPackage", "[",
+              "\"" <> notebookExtractPackageName[nb] <> "`\"",
+              "]"}],
+            ";"}],
+         "Code"
+         ],
+        If[Length@usagecells[[1]] > 0,
+         usagecells[[1]],
+         {}
+         ],
+        Cell[
+         BoxData@RowBox[{RowBox[{"Begin", "[", "\"Private`\"", "]"}],
+            ";"}],
+         "Code"
+         ],
+        If[Length@usagecells[[2]] > 0,
+         Cell[
+          CellGroupData[
+           Flatten@{
+             Cell["Private Declarations", "Subsubsection"],
+             usagecells[[2]]
+             },
+           Closed
            ]
-          }]
-        ]
-       },
-     StyleDefinitions -> "Package.nb"
+          ],
+         Nothing
+         ],
+        Cell[
+         CellGroupData[
+          Flatten@{
+            Cell["Implementation", "Subsection"],
+            Cell[BoxData@
+              RowBox@{"(*",
+                RowBox@{"Package", " ", "Implementation"},
+                "*)"},
+             "Code"
+             ],
+            First@data
+            }
+          ]
+         ],
+        Cell[
+         CellGroupData[{
+           Cell["End", "Subsection"],
+           Cell[BoxData@RowBox[{RowBox[{"End", "[", "]"}], ";"}],
+            "Code"
+            ],
+
+           Cell[BoxData@
+             RowBox[{RowBox[{"EndPackage", "[", "]"}], ";"}],
+            "Code"
+            ]
+           }]
+         ]
+        },
+      StyleDefinitions -> "Package.nb"
+      ]
      ]
     ]
    ];
 
 
 NotebookToPackage[file_String?FileExistsQ] :=
- 
+
  With[{nb = NotebookOpen[file, Visible -> False]},
   (NotebookClose[nb]; #) &@NotebookToPackage[nb]
   ]
