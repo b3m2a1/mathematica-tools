@@ -77,8 +77,10 @@ $hiddenPackageExportContext = "Dooooop`Doop`Doop`Doop`";
 
 Clear[makeUsageRule, patternSanitize];
 makeUsageRule[sym_Symbol, usage_] :=
-
-  ToString[Unevaluated[sym],InputForm]->
+  StringReplace[
+   ToString[Unevaluated[sym],InputForm],
+   $hiddenPackageExportContext->""
+   ]->
    Replace[patternSanitize[usage],
     HoldComplete[s_] :>
      StringReplace[
