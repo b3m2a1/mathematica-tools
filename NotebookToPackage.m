@@ -210,7 +210,11 @@ makeUsageBoxes[name_, strings : {__}] :=
     RowBox[{
       RowBox[{name, "::", "usage"}],
       "=",
-      "\"" <> StringRiffle[strings, "\n"] <> "\""
+      "\"" <>
+				StringReplace[
+					StringRiffle[strings, "\n"],
+					"\""->"\\\""
+					] <> "\""
       }],
     ";"
     }];
@@ -322,16 +326,25 @@ NotebookToPackage[nb_NotebookObject] :=
          usagecells[[1]],
          {}
          ],
-        Cell[
-         BoxData@RowBox[{RowBox[{"Begin", "[", "\"`Private`\"", "]"}],
-            ";"}],
-         "Code"
-         ],
         If[Length@usagecells[[2]] > 0,
          Cell[
           CellGroupData[
            Flatten@{
              Cell["Private Declarations", "Subsubsection"],
+						 Cell[
+		          BoxData@
+								RowBox[{RowBox[{"AppendTo", "[",
+									RowBox[{"$ContextPath", ",",
+										RowBox[{"$Context", "<>", "\"Package`\""}]
+										}], "]"
+									}], ";"}],
+		          "Code"
+		          ],
+						 Cell[
+		          BoxData@RowBox[{RowBox[{"Begin", "[", "\"`Package`\"", "]"}],
+		             ";"}],
+		          "Code"
+		          ],
              usagecells[[2]]
              },
            Closed
@@ -339,6 +352,11 @@ NotebookToPackage[nb_NotebookObject] :=
           ],
          Nothing
          ],
+				Cell[
+          BoxData@RowBox[{RowBox[{"Begin", "[", "\"`Private`\"", "]"}],
+             ";"}],
+          "Code"
+          ],
         Cell[
          CellGroupData[
           Flatten@{

@@ -52,10 +52,10 @@ anchorLocatorModuleSpec[{pt, ops}]
 anchorLocatorModuleSpec[{pt, ops}]
 anchorLocatorModuleSpec[{pt, expr, ops}]";
 $defaultAnchorLocatorModuleControls::usage="$defaultAnchorLocatorModuleControls";
-buildAnchorLocatorModuleControl::usage="buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, "Top "]
-buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, "Bottom "]
-buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, "Left "]
-buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, "Right "]";
+buildAnchorLocatorModuleControl::usage="buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, \"Top \"]
+buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, \"Bottom \"]
+buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, \"Left \"]
+buildAnchorLocatorModuleControl[manager, locators, graphics, controls, imgSize, \"Right \"]";
 buildAnchorLocatorModuleElement::usage="buildAnchorLocatorModuleElement[manager, spec, imSize]";
 updateLocatorGraphics::usage="updateLocatorGraphics[manager, locators, graphics]";
 getLocatorsByPoint::usage="getLocatorsByPoint[locatorManager, point]";
