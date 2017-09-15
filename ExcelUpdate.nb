@@ -1,0 +1,839 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     34131,        831]
+NotebookOptionsPosition[     31615,        778]
+NotebookOutlinePosition[     31974,        794]
+CellTagsIndexPosition[     31931,        791]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ExcelUpdate", "Section",
+ CellChangeTimes->{{3.7144879330109043`*^9, 
+  3.714487937545429*^9}},ExpressionUUID->"9534e9a6-a223-4502-b959-\
+d65e1e30e1ae"],
+
+Cell[CellGroupData[{
+
+Cell["excelExtract", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.714428927035068*^9}},ExpressionUUID->"52361e1e-db46-4f28-8abc-\
+4063de08577b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelExtract", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"excelExtract", "[", "file_", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"eDir", "=", 
+      RowBox[{"FileNameJoin", "@", 
+       RowBox[{"{", 
+        RowBox[{"$TemporaryDirectory", ",", "\"\<_excel_extractor\>\"", ",", 
+         RowBox[{"FileBaseName", "[", "file", "]"}]}], "}"}]}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Quiet", "@", "\[IndentingNewLine]", 
+      RowBox[{"DeleteDirectory", "[", "\[IndentingNewLine]", 
+       RowBox[{"eDir", ",", "\[IndentingNewLine]", 
+        RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"CreateDirectory", "[", 
+      RowBox[{"eDir", ",", "\[IndentingNewLine]", 
+       RowBox[{"CreateIntermediateDirectories", "\[Rule]", "True"}]}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"CopyFile", "[", 
+      RowBox[{"file", ",", "\[IndentingNewLine]", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"DirectoryName", "@", "eDir"}], ",", 
+          RowBox[{
+           RowBox[{"FileBaseName", "[", "file", "]"}], "<>", 
+           "\"\<.zip\>\""}]}], "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"OverwriteTarget", "\[Rule]", "True"}]}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"ExtractArchive", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"DirectoryName", "@", "eDir"}], ",", 
+          RowBox[{
+           RowBox[{"FileBaseName", "[", "file", "]"}], "<>", 
+           "\"\<.zip\>\""}]}], "}"}]}], ",", "\[IndentingNewLine]", "eDir"}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"DeleteFile", "[", 
+      RowBox[{"FileNameJoin", "@", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"DirectoryName", "@", "eDir"}], ",", 
+         RowBox[{
+          RowBox[{"FileBaseName", "[", "file", "]"}], "<>", 
+          "\"\<.zip\>\""}]}], "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+     "eDir"}]}], "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.714422959195438*^9, 3.714423160230448*^9}, {
+  3.714423329707478*^9, 3.714423336708783*^9}, {3.714425859761495*^9, 
+  3.714425863281365*^9}},ExpressionUUID->"cf94b01c-1bb6-411b-a6d0-\
+0c6157e16850"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelExtractedWorksheets", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.714428930994681*^9}},ExpressionUUID->"882d6b0d-cfe8-448c-8b0f-\
+4c53cbab8c63"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelExtractedWorksheets", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelExtractedWorksheets", "[", 
+    RowBox[{"dir_String", "?", "DirectoryQ"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.xml\>\"", ",", 
+     RowBox[{"FileNameJoin", "@", 
+      RowBox[{"{", 
+       RowBox[{"dir", ",", "\"\<xl\>\"", ",", "\"\<worksheets\>\""}], 
+       "}"}]}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelExtractedWorksheets", "[", "file_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"eDir", "=", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{
+         "$TemporaryDirectory", ",", "\"\<_excel_extractor\>\"", ",", 
+          RowBox[{"FileBaseName", "[", "file", "]"}]}], "}"}]}]}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"!", 
+         RowBox[{"DirectoryQ", "[", "eDir", "]"}]}], ",", 
+        RowBox[{"excelExtract", "[", "file", "]"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"excelExtractedWorksheets", "[", "eDir", "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.71442321082211*^9, 3.714423253052231*^9}, {
+   3.714423300042716*^9, 3.7144233230670347`*^9}, {3.7144233668953953`*^9, 
+   3.714423387685583*^9}, {3.7144234221990423`*^9, 3.714423423524963*^9}, 
+   3.7144235345833263`*^9, {3.714425827881193*^9, 3.714425828585299*^9}, {
+   3.714425865985148*^9, 3.714425868051734*^9}, {3.7144301134418297`*^9, 
+   3.714430113982256*^9}, 
+   3.71448189358681*^9},ExpressionUUID->"55c10b76-26b0-4e79-ba1a-\
+9857610d1438"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelValuesExtract", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.7144289377149343`*^9}},ExpressionUUID->"c9f339f8-1808-4c96-af2d-\
+eb5c5db420d3"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelValuesExtract", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesExtract", "[", "xml_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Cases", "[", 
+    RowBox[{"xml", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"XMLElement", "[", 
+       RowBox[{"\"\<c\>\"", ",", 
+        RowBox[{"{", 
+         RowBox[{"a___", ",", 
+          RowBox[{"\"\<r\>\"", "\[Rule]", "id_"}], ",", "b___"}], "}"}], ",", 
+        "v_"}], "]"}], "\[RuleDelayed]", "\[IndentingNewLine]", 
+      RowBox[{"(", 
+       RowBox[{"id", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"<|", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\"\<CellValue\>\"", "\[Rule]", "\[IndentingNewLine]", 
+           RowBox[{"Replace", "[", 
+            RowBox[{"v", ",", "\[IndentingNewLine]", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"XMLElement", "[", 
+                  RowBox[{"\"\<v\>\"", ",", "_", ",", 
+                   RowBox[{"{", "s_String", "}"}]}], "]"}], "}"}], ":>", 
+                RowBox[{"ToExpression", "@", "s"}]}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"_", "\[Rule]", "Nothing"}]}], "\[IndentingNewLine]", 
+              "}"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+          RowBox[{"\"\<CellMeta\>\"", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"a", ",", "b"}], "}"}]}]}], "\[IndentingNewLine]", 
+         "|>"}]}], ")"}]}], ",", "\[IndentingNewLine]", "\[Infinity]"}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.714423849366374*^9, 3.714423893665566*^9}, {
+  3.7144239946662703`*^9, 3.714423998400537*^9}, {3.714425871610607*^9, 
+  3.714425873635803*^9}, {3.7144270500802727`*^9, 3.714427050750618*^9}, {
+  3.714427088030095*^9, 3.714427090125642*^9}, {3.714482398935031*^9, 
+  3.714482426655037*^9}, {3.714482625597323*^9, 3.714482629868691*^9}, {
+  3.714484340961584*^9, 3.714484379959413*^9}, {3.714484438554311*^9, 
+  3.714484464176355*^9}, {3.714485398030397*^9, 3.7144854448071957`*^9}, {
+  3.714485509068763*^9, 3.714485535401331*^9}, {3.714485582908423*^9, 
+  3.7144855869284554`*^9}},ExpressionUUID->"66a746a7-2cf5-4be4-8e6e-\
+79b4a51ef5c0"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelValuesFormat", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.714428941619122*^9}},ExpressionUUID->"c2d79aaf-a056-4879-8d28-\
+08723897d787"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelValuesFormat", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesFormat", "[", "rules_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"coreData", "=", "\[IndentingNewLine]", 
+       RowBox[{"GroupBy", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"v", "=", 
+                RowBox[{"Lookup", "[", 
+                 RowBox[{
+                  RowBox[{"#", "[", 
+                   RowBox[{"[", "2", "]"}], "]"}], ",", "\"\<CellValue\>\"", 
+                  ",", "Null"}], "]"}]}], ",", "\[IndentingNewLine]", 
+               RowBox[{"m", "=", 
+                RowBox[{"Lookup", "[", 
+                 RowBox[{
+                  RowBox[{"#", "[", 
+                   RowBox[{"[", "2", "]"}], "]"}], ",", "\"\<CellMeta\>\"", 
+                  ",", 
+                  RowBox[{"{", "}"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+              "}"}], ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"#", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "\[Rule]", 
+              "\[IndentingNewLine]", 
+              RowBox[{"XMLElement", "[", 
+               RowBox[{"\"\<c\>\"", ",", "\[IndentingNewLine]", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"\"\<r\>\"", "\[Rule]", 
+                   RowBox[{"#", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+                  RowBox[{"Sequence", "@@", "m"}]}], "}"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{"Replace", "[", 
+                  RowBox[{"v", ",", 
+                   RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Null", "\[Rule]", "Nothing"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"_", "\[RuleDelayed]", "\[IndentingNewLine]", 
+                    RowBox[{"XMLElement", "[", 
+                    RowBox[{"\"\<v\>\"", ",", 
+                    RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"ToString", "[", 
+                    RowBox[{"v", ",", "InputForm"}], "]"}], "}"}]}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "}"}]}], "]"}], "}"}]}], "\[IndentingNewLine]", "]"}]}]}],
+             "\[IndentingNewLine]", "]"}], "&"}], "/@", "rules"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"StringTrim", "[", 
+             RowBox[{
+              RowBox[{"#", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"LetterCharacter", ".."}]}], "]"}], "&"}], ")"}], 
+          "\[Rule]", "Last"}]}], "\[IndentingNewLine]", "]"}]}], 
+      "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"XMLElement", "[", 
+      RowBox[{"\"\<sheetData\>\"", ",", 
+       RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"KeyValueMap", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", "\[IndentingNewLine]", 
+             RowBox[{"keys", "=", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"FromDigits", "[", 
+                 RowBox[{
+                  RowBox[{"Flatten", "[", 
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"LetterNumber", "[", "#", "]"}], "}"}], ",", 
+                    "1"}], "]"}], ",", "26"}], "]"}], "&"}], "/@", 
+               "\[IndentingNewLine]", 
+               RowBox[{"StringTrim", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"Lookup", "[", 
+                  RowBox[{
+                   RowBox[{"List", "@@", 
+                    RowBox[{"#2", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", "2"}], "]"}], "]"}]}], ",", 
+                   "\[IndentingNewLine]", "\"\<r\>\""}], 
+                  "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"DigitCharacter", ".."}]}], "\[IndentingNewLine]", 
+                "]"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"XMLElement", "[", 
+             RowBox[{"\"\<row\>\"", ",", "\[IndentingNewLine]", 
+              RowBox[{"Flatten", "@", "\[IndentingNewLine]", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"\"\<r\>\"", "\[Rule]", 
+                  RowBox[{"ToString", "@", "#"}]}], ",", 
+                 RowBox[{"\"\<spans\>\"", "\[Rule]", "\[IndentingNewLine]", 
+                  RowBox[{"StringRiffle", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"ToString", "/@", "\[IndentingNewLine]", 
+                    RowBox[{"MinMax", "[", "keys", "]"}]}], ",", 
+                    "\[IndentingNewLine]", "\"\<:\>\""}], 
+                   "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                "}"}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{"#2", "[", 
+               RowBox[{"[", 
+                RowBox[{"Ordering", "[", "keys", "]"}], "]"}], "]"}]}], 
+             "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], 
+          "&"}], ",", "\[IndentingNewLine]", "coreData"}], 
+        "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQB2IQLabUNXnzmteOHc2bZ4PohKo/C8F8+V2LQPT+YwU7
+QPQb372HQXRDSM0pEF0S8PI0iF5TPPcCiOZWt7gNolfsmdu0BUifTudtBtHz
+7O61g+jpfNc7QfQLgw0SW4G0i8shMO0mHq9yAUivP+ijAaJ3LPY3B9GRm6+B
+aVauvgoQfW5zaj2InrCYtx1E96QYdILoDXJa8heBtImboTGI/nzqoTuIvhbY
+HAgWt5oaBqIdJjCmguj67+sLQfRl4V2lIPqUYcosEK1k8mw2iA69e3cViA5q
+Tl8Hor/Pv7gLRHfe49oPos8kbn8AomdeF3sMom81SP4F0ffs/zJfAtLvLRg5
+QfSDEkdZEK3UvksbRDfIvTMD0QC5XtVu
+  
+  "],ExpressionUUID->"524a84ce-4144-4cb2-8034-3c0edd3fc681"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelValuesMerge", "Subsubsection",
+ CellChangeTimes->{{3.714482454316184*^9, 
+  3.714482456841666*^9}},ExpressionUUID->"0bcc5203-45ed-42e6-aef9-\
+f18585768ce0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValueAssociationFormat", "[", "v_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"AssociationQ", "[", "v", "]"}], "&&", 
+      RowBox[{"AnyTrue", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<CellValue\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{"KeyMemberQ", "[", 
+          RowBox[{"v", ",", "#"}], "]"}], "&"}]}], "]"}]}], ",", 
+     "\[IndentingNewLine]", "v", ",", "\[IndentingNewLine]", 
+     RowBox[{"<|", "\[IndentingNewLine]", 
+      RowBox[{"\"\<CellValue\>\"", "\[Rule]", "v"}], "\[IndentingNewLine]", 
+      "|>"}]}], "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.71448266866336*^9, 3.7144826974913807`*^9}, {
+  3.714484649739812*^9, 3.714484665321723*^9}, {3.714485806242976*^9, 
+  3.7144858064173317`*^9}},ExpressionUUID->"2893bb5d-14f5-4519-b7b6-\
+a28499feba97"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelValuesMerge", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"excelValuesMerge", "[", "rules_", "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Merge", "[", 
+   RowBox[{"rules", ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"<|", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"\"\<CellValue\>\"", "\[Rule]", 
+         RowBox[{"Replace", "[", 
+          RowBox[{
+           RowBox[{"Lookup", "[", 
+            RowBox[{"#", ",", "\"\<CellValue\>\"", ",", "Nothing"}], "]"}], 
+           ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"___", ",", "l_"}], "}"}], "\[RuleDelayed]", "l"}], 
+             ",", 
+             RowBox[{
+              RowBox[{"{", "}"}], "\[Rule]", "Null"}]}], "}"}]}], "]"}]}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<CellMeta\>\"", "\[Rule]", 
+         RowBox[{"DeleteDuplicates", "@", 
+          RowBox[{"Apply", "[", 
+           RowBox[{"Join", ",", 
+            RowBox[{"Lookup", "[", 
+             RowBox[{"#", ",", "\"\<CellMeta\>\"", ",", 
+              RowBox[{"{", "}"}]}], "]"}]}], "]"}]}]}]}], 
+       "\[IndentingNewLine]", "|>"}], "&"}], "@*", 
+     RowBox[{"Map", "[", "excelValueAssociationFormat", "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.714482518965919*^9, 3.714482609412841*^9}, {
+  3.714482640948181*^9, 3.714482755748227*^9}, {3.714482907663862*^9, 
+  3.714482908752956*^9}, {3.7144830635785418`*^9, 3.714483064358007*^9}, {
+  3.714483105299247*^9, 3.7144831074492683`*^9}, {3.714483333066194*^9, 
+  3.714483333504414*^9}, {3.714483373107121*^9, 3.714483373663828*^9}, {
+  3.7144846747541943`*^9, 3.714484792730459*^9}, {3.714484891686356*^9, 
+  3.71448490891936*^9}, {3.714485637197414*^9, 
+  3.714485637329295*^9}},ExpressionUUID->"998e7fbd-ca57-44f1-8c99-\
+cd4d7aa2357e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelValuesUpdate", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.714428950857587*^9}},ExpressionUUID->"612e0977-9335-44b8-b65e-\
+2237bc1f4a51"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelValuesUpdate", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesUpdate", "[", 
+    RowBox[{
+     RowBox[{"file_String", "?", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"FileExistsQ", "[", "#", "]"}], "&&", 
+         RowBox[{
+          RowBox[{"FileExtension", "[", "#", "]"}], "===", "\"\<xml\>\""}]}], 
+        "&"}], ")"}]}], ",", 
+     RowBox[{"vals", ":", 
+      RowBox[{"_List", "|", "_Rule"}]}], ",", 
+     RowBox[{"overwrite", ":", 
+      RowBox[{"True", "|", "False"}], ":", "False"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"xml", "=", 
+       RowBox[{"Import", "[", "file", "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Export", "[", 
+      RowBox[{"file", ",", "\[IndentingNewLine]", 
+       RowBox[{"excelValuesUpdate", "[", 
+        RowBox[{"xml", ",", "vals", ",", "overwrite"}], "]"}], ",", 
+       "\[IndentingNewLine]", "\"\<XML\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<ElementFormatting\>\"", "\[Rule]", "False"}]}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesUpdate", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"xml", ":", 
+      RowBox[{
+       RowBox[{"XMLObject", "[", "dec___", "]"}], "[", 
+       RowBox[{"spec_", ",", "els_", ",", "r___"}], "]"}]}], ",", 
+     "\[IndentingNewLine]", "vals_", ",", "\[IndentingNewLine]", 
+     RowBox[{"overwrite", ":", 
+      RowBox[{"True", "|", "False"}], ":", "False"}]}], "\[IndentingNewLine]",
+     "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"vs", "=", "\[IndentingNewLine]", 
+       RowBox[{"excelValuesFormat", "@", "\[IndentingNewLine]", 
+        RowBox[{"Normal", "@", "\[IndentingNewLine]", 
+         RowBox[{"excelValuesMerge", "[", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+           "overwrite", ",", "\[IndentingNewLine]", "vals", ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"excelValuesExtract", "[", "els", "]"}], ",", "vals"}], 
+             "}"}]}], "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+          "]"}]}]}]}], "\[IndentingNewLine]", "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"XMLObject", "[", "dec", "]"}], "[", 
+      RowBox[{"spec", ",", "\[IndentingNewLine]", 
+       RowBox[{"els", "/.", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"XMLElement", "[", 
+          RowBox[{"\"\<sheetData\>\"", ",", "__"}], "]"}], "\[RuleDelayed]", 
+         "\[IndentingNewLine]", "vs"}]}], ",", "\[IndentingNewLine]", "r"}], 
+      "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesUpdate", "[", 
+    RowBox[{
+     RowBox[{"dir_String", "?", "DirectoryQ"}], ",", "ws_String", ",", 
+     "\[IndentingNewLine]", "vals_", ",", "\[IndentingNewLine]", 
+     RowBox[{"overwrite", ":", 
+      RowBox[{"True", "|", "False"}], ":", "False"}]}], "\[IndentingNewLine]",
+     "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", "=", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{"dir", ",", "\"\<xl\>\"", ",", "\"\<worksheets\>\"", ",", 
+          RowBox[{
+           RowBox[{"StringTrim", "[", 
+            RowBox[{"ws", ",", "\"\<.xml\>\""}], "]"}], "<>", 
+           "\"\<.xml\>\""}]}], "}"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"FileExistsQ", "[", "f", "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"excelValuesUpdate", "[", 
+        RowBox[{"f", ",", "vals", ",", "overwrite"}], "]"}], ",", 
+       "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]", "]"}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelValuesUpdate", "[", 
+    RowBox[{
+     RowBox[{"dir_String", "?", "DirectoryQ"}], ",", 
+     RowBox[{"ws", ":", "_Integer", ":", "1"}], ",", "\[IndentingNewLine]", 
+     "vals_", ",", "\[IndentingNewLine]", 
+     RowBox[{"overwrite", ":", 
+      RowBox[{"True", "|", "False"}], ":", "False"}]}], "\[IndentingNewLine]",
+     "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"f", "=", 
+       RowBox[{"FileNames", "[", 
+        RowBox[{"\"\<*.xml\>\"", ",", 
+         RowBox[{"FileNameJoin", "@", 
+          RowBox[{"{", 
+           RowBox[{"dir", ",", "\"\<xl\>\"", ",", "\"\<worksheets\>\""}], 
+           "}"}]}]}], "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "[", "f", "]"}], "\[GreaterEqual]", "ws"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"excelValuesUpdate", "[", 
+        RowBox[{
+         RowBox[{"f", "[", 
+          RowBox[{"[", "ws", "]"}], "]"}], ",", "\[IndentingNewLine]", "vals",
+          ",", "\[IndentingNewLine]", "overwrite"}], "\[IndentingNewLine]", 
+        "]"}], ",", "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]",
+       "]"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"excelValuesUpdate", "[", 
+   RowBox[{"file_", ",", 
+    RowBox[{"ws", ":", 
+     RowBox[{"_String", "|", "_Integer"}], ":", "1"}], ",", 
+    "\[IndentingNewLine]", "vals_", ",", "\[IndentingNewLine]", 
+    RowBox[{"overwrite", ":", 
+     RowBox[{"True", "|", "False"}], ":", "False"}]}], "\[IndentingNewLine]", 
+   "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"With", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"eDir", "=", 
+      RowBox[{"FileNameJoin", "@", 
+       RowBox[{"{", 
+        RowBox[{"$TemporaryDirectory", ",", "\"\<_excel_extractor\>\"", ",", 
+         RowBox[{"FileBaseName", "[", "file", "]"}]}], "}"}]}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"!", 
+        RowBox[{"DirectoryQ", "[", "eDir", "]"}]}], ",", 
+       RowBox[{"excelExtract", "[", "file", "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"excelValuesUpdate", "[", 
+      RowBox[{"eDir", ",", "ws", ",", "vals", ",", "overwrite"}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.714423535713222*^9, 3.714423843042362*^9}, {
+  3.714423903501405*^9, 3.714423905179496*^9}, {3.7144239454353733`*^9, 
+  3.7144239624972982`*^9}, {3.7144240490313787`*^9, 3.714424065894979*^9}, {
+  3.714424100792341*^9, 3.714424101176003*^9}, {3.714424190922307*^9, 
+  3.714424216130135*^9}, {3.7144243883488493`*^9, 3.714424397691469*^9}, {
+  3.71442457316317*^9, 3.714424784441183*^9}, {3.714425563202331*^9, 
+  3.714425674196122*^9}, {3.714425883490787*^9, 3.714425885402604*^9}, {
+  3.714426997339717*^9, 3.714427030550619*^9}, {3.71442720614226*^9, 
+  3.714427233353435*^9}, {3.714428947370515*^9, 3.71442894854517*^9}, {
+  3.714429768177813*^9, 3.714429821631671*^9}, {3.7144299224211187`*^9, 
+  3.714429942980245*^9}, {3.714482015344694*^9, 3.7144820290881853`*^9}, {
+  3.714482768525776*^9, 
+  3.714482780348428*^9}},ExpressionUUID->"7a93a1fa-db8c-4e95-ab86-\
+2a05d892e206"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelCompress", "Subsubsection",
+ CellChangeTimes->{{3.71442892275881*^9, 
+  3.7144289587466383`*^9}},ExpressionUUID->"b9fde9a0-a833-409c-a6e3-\
+10cb74e0d0b6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Clear", "[", "excelCompress", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"excelCompress", "[", 
+    RowBox[{"file_", ",", "path_"}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"eDir", "=", 
+       RowBox[{"FileNameJoin", "@", 
+        RowBox[{"{", 
+         RowBox[{
+         "$TemporaryDirectory", ",", "\"\<_excel_extractor\>\"", ",", 
+          RowBox[{"FileBaseName", "[", "path", "]"}]}], "}"}]}]}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"DirectoryQ", "[", "eDir", "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Quiet", "@", 
+         RowBox[{"DeleteFile", "[", "file", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Switch", "[", 
+         RowBox[{
+         "$OperatingSystem", ",", "\[IndentingNewLine]", "\"\<MacOSX\>\"", 
+          ",", "\[IndentingNewLine]", 
+          RowBox[{"RunProcess", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"\"\<zip\>\"", ",", "\"\<-r\>\"", ",", 
+              RowBox[{"ExpandFileName", "@", "file"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"Sequence", "@@", "\[IndentingNewLine]", 
+               RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"FileNameDrop", "[", 
+                   RowBox[{"#", ",", 
+                    RowBox[{"FileNameDepth", "[", "eDir", "]"}]}], "]"}], 
+                  "&"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"FileNames", "[", 
+                  RowBox[{"\"\<*\>\"", ",", "eDir", ",", "\[Infinity]"}], 
+                  "]"}]}], "\[IndentingNewLine]", "]"}]}]}], "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"ProcessDirectory", "\[Rule]", "eDir"}]}], 
+           "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", "_", ",",
+           "\[IndentingNewLine]", 
+          RowBox[{"RunProcess", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"\"\<zip\>\"", ",", "\"\<-r\>\"", ",", 
+              RowBox[{"ExpandFileName", "@", "file"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"Sequence", "@@", "\[IndentingNewLine]", 
+               RowBox[{"Map", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"FileNameDrop", "[", 
+                   RowBox[{"#", ",", 
+                    RowBox[{"FileNameDepth", "[", "eDir", "]"}]}], "]"}], 
+                  "&"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"FileNames", "[", 
+                  RowBox[{"\"\<*\>\"", ",", "eDir", ",", "\[Infinity]"}], 
+                  "]"}]}], "\[IndentingNewLine]", "]"}]}]}], "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"ProcessDirectory", "\[Rule]", "eDir"}]}], 
+           "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"DeleteDirectory", "[", 
+         RowBox[{"eDir", ",", 
+          RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "file"}], ",", "\[IndentingNewLine]", 
+       "$Failed"}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"excelCompress", "[", "file_", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"excelCompress", "[", 
+   RowBox[{"file", ",", "file"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.714430282354347*^9, 3.7144303242238283`*^9}, {
+  3.7144305644537897`*^9, 3.714430588191791*^9}, {3.714430634182288*^9, 
+  3.714430642533906*^9}, {3.714430738475522*^9, 3.714430744811921*^9}, {
+  3.7144309312029552`*^9, 3.7144309314072847`*^9}, {3.714431018752017*^9, 
+  3.7144310219177523`*^9}, {3.714431404760663*^9, 3.714431533005002*^9}, {
+  3.714481987320978*^9, 
+  3.714482001958084*^9}},ExpressionUUID->"06ee41f3-8df6-4527-a2f0-\
+51982a2706b3"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["excelUpdate", "Subsubsection",
+ CellChangeTimes->{{3.714486959867635*^9, 
+  3.714486961995549*^9}},ExpressionUUID->"a8099aa4-6725-445f-9e46-\
+1eba4628ac98"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"excelUpdate", "[", 
+   RowBox[{"file_", ",", 
+    RowBox[{"worksheet", ":", 
+     RowBox[{"_String", "|", "_Integer"}], ":", "1"}], ",", 
+    "\[IndentingNewLine]", "vals_", ",", 
+    RowBox[{"overwrite", ":", 
+     RowBox[{"True", "|", "False"}], ":", "False"}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"excelExtract", "[", "file", "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"excelValuesUpdate", "[", 
+     RowBox[{
+     "file", ",", "\[IndentingNewLine]", "worksheet", ",", 
+      "\[IndentingNewLine]", "vals", ",", "\[IndentingNewLine]", 
+      "overwrite"}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"excelCompress", "[", "file", "]"}]}], "\[IndentingNewLine]", 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.71448696374846*^9, 
+  3.7144870269152613`*^9}},ExpressionUUID->"f146df21-b7f4-413b-a1f7-\
+2be94dabb776"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["ExcelUpdate", "Subsubsection",
+ CellChangeTimes->{{3.714487945598652*^9, 
+  3.714487947425112*^9}},ExpressionUUID->"cc96fee2-3dbe-4ef8-a2d2-\
+7004ec7ad159"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ExcelUpdate", "[", 
+   RowBox[{"file_", ",", 
+    RowBox[{"worksheet", ":", 
+     RowBox[{"_String", "|", "_Integer"}], ":", "1"}], ",", 
+    "\[IndentingNewLine]", "vals_", ",", 
+    RowBox[{"overwrite", ":", 
+     RowBox[{"True", "|", "False"}], ":", "False"}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"excelUpdate", "[", 
+   RowBox[{"file", ",", "worksheet", ",", "vals", ",", "overwrite"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.7144879484745293`*^9, 
+  3.714487969937348*^9}},ExpressionUUID->"323bfcfa-5657-441f-8e82-\
+106c90df29e5"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{20, Automatic}, {Automatic, 44}},
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 158, 3, 67, "Section",ExpressionUUID->"9534e9a6-a223-4502-b959-d65e1e30e1ae"],
+Cell[CellGroupData[{
+Cell[763, 29, 162, 3, 45, "Subsubsection",ExpressionUUID->"52361e1e-db46-4f28-8abc-4063de08577b"],
+Cell[928, 34, 2560, 57, 493, "Input",ExpressionUUID->"cf94b01c-1bb6-411b-a6d0-0c6157e16850"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[3525, 96, 174, 3, 37, "Subsubsection",ExpressionUUID->"882d6b0d-cfe8-448c-8b0f-4c53cbab8c63"],
+Cell[3702, 101, 1807, 45, 220, "Input",ExpressionUUID->"55c10b76-26b0-4e79-ba1a-9857610d1438"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5546, 151, 170, 3, 37, "Subsubsection",ExpressionUUID->"c9f339f8-1808-4c96-af2d-eb5c5db420d3"],
+Cell[5719, 156, 2351, 49, 346, "Input",ExpressionUUID->"66a746a7-2cf5-4be4-8e6e-79b4a51ef5c0"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[8107, 210, 167, 3, 37, "Subsubsection",ExpressionUUID->"c2d79aaf-a056-4879-8d28-08723897d787"],
+Cell[8277, 215, 6350, 139, 1102, "Input",ExpressionUUID->"524a84ce-4144-4cb2-8034-3c0edd3fc681"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[14664, 359, 167, 3, 37, "Subsubsection",ExpressionUUID->"0bcc5203-45ed-42e6-aef9-f18585768ce0"],
+Cell[14834, 364, 925, 22, 157, "Input",ExpressionUUID->"2893bb5d-14f5-4519-b7b6-a28499feba97"],
+Cell[15762, 388, 1960, 46, 178, "Input",ExpressionUUID->"998e7fbd-ca57-44f1-8c99-cd4d7aa2357e"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[17759, 439, 167, 3, 37, "Subsubsection",ExpressionUUID->"612e0977-9335-44b8-b65e-2237bc1f4a51"],
+Cell[17929, 444, 7449, 175, 1354, "Input",ExpressionUUID->"7a93a1fa-db8c-4e95-ab86-2a05d892e206"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[25415, 624, 165, 3, 37, "Subsubsection",ExpressionUUID->"b9fde9a0-a833-409c-a6e3-10cb74e0d0b6"],
+Cell[25583, 629, 4057, 88, 724, "Input",ExpressionUUID->"06ee41f3-8df6-4527-a2f0-51982a2706b3"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[29677, 722, 162, 3, 37, "Subsubsection",ExpressionUUID->"a8099aa4-6725-445f-9e46-1eba4628ac98"],
+Cell[29842, 727, 951, 22, 241, "Input",ExpressionUUID->"f146df21-b7f4-413b-a1f7-2be94dabb776"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[30830, 754, 162, 3, 37, "Subsubsection",ExpressionUUID->"cc96fee2-3dbe-4ef8-a2d2-7004ec7ad159"],
+Cell[30995, 759, 592, 15, 73, "Input",ExpressionUUID->"323bfcfa-5657-441f-8e82-106c90df29e5"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
