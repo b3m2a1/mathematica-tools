@@ -9,12 +9,12 @@ BeginPackage["OldHelpBrowser`"];
 
 (*Package Declarations*)
 OpenHelpBrowser::usage="
-OpenHelpBrowser[] opens a help browser
-OpenHelpBrowser[path] opens a help browser initialized with path
+OpenHelpBrowser[] opens an old-style help browser
+OpenHelpBrowser[path] opens an old-style help browser intialized with path
 ";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Private Declarations*)
 
 
@@ -184,7 +184,8 @@ helpBrowserDockedCell[path : _List : {}] :=
     panePicker,
     coreDS,
     setNB,
-    showBrowser = True
+    showBrowser = True,
+    currentLoadedPath
     },
    coreDS = 
     Normal@helpBrowserDS["paclet:" <> Lookup[#, {"uri"}, ""] &, 
@@ -214,44 +215,48 @@ helpBrowserDockedCell[path : _List : {}] :=
       ];
    setNB =
     Function[
-     CheckAll[
-      FrontEndExecute@
-       FrontEnd`NotebookSuspendScreenUpdates[EvaluationNotebook[]];
-      SelectionMove[EvaluationNotebook[], All, Notebook];
-      SetOptions[NotebookSelection[EvaluationNotebook[]], 
-       Deletable -> True];
-      NotebookDelete[EvaluationNotebook[]];
-      With[{
-        nb =
-         DeleteCases[
-           WindowSize | WindowMargins | DockedCells | 
-             StyleDefinitions -> _]@
-          Replace[Documentation`ResolveLink[#], {
-            f_String?FileExistsQ :> Import[f],
-            _ -> Notebook[{}]
-            }]
-        },
-       NotebookWrite[
-        EvaluationNotebook[],
-        First@nb
-        ];
-       SetOptions[EvaluationNotebook[],
-        Join[
-         {
-          StyleDefinitions ->
-           
-           FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
-            CharacterEncoding -> "UTF-8"]
-          },
-         List @@ Rest@nb
+     If[currentLoadedPath =!= panePath,
+      CheckAll[
+       FrontEndExecute@
+        FrontEnd`NotebookSuspendScreenUpdates[EvaluationNotebook[]];
+       SelectionMove[EvaluationNotebook[], All, Notebook];
+       SetOptions[NotebookSelection[EvaluationNotebook[]], 
+        Deletable -> True];
+       NotebookDelete[EvaluationNotebook[]];
+       With[{
+         nb =
+          
+          DeleteCases[
+            WindowSize | WindowMargins | DockedCells | 
+              StyleDefinitions -> _]@
+           Replace[Documentation`ResolveLink[#], {
+             f_String?FileExistsQ :> Import[f],
+             _ -> Notebook[{}]
+             }]
+         },
+        NotebookWrite[
+         EvaluationNotebook[],
+         First@nb
+         ];
+        SetOptions[EvaluationNotebook[],
+         Join[
+          {
+           StyleDefinitions ->
+            
+            FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+             CharacterEncoding -> "UTF-8"]
+           },
+          List @@ Rest@nb
+          ]
          ]
-        ]
+        ];
+       SelectionMove[EvaluationNotebook[], Before, Notebook];
+       FrontEndExecute@
+        FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]],
+       FrontEndExecute@
+        FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]]
        ];
-      SelectionMove[EvaluationNotebook[], Before, Notebook];
-      FrontEndExecute@
-       FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]],
-      FrontEndExecute@
-       FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]]
+      currentLoadedPath = panePath
       ];
      Nothing
      ];
