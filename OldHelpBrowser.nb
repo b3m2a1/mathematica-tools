@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     30758,        719]
-NotebookOptionsPosition[     28683,        677]
-NotebookOutlinePosition[     29042,        693]
-CellTagsIndexPosition[     28999,        690]
+NotebookDataLength[     31291,        726]
+NotebookOptionsPosition[     29216,        684]
+NotebookOutlinePosition[     29575,        700]
+CellTagsIndexPosition[     29532,        697]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -353,8 +353,9 @@ Cell[BoxData[
        RowBox[{"panePath", "=", "path"}], ",", "\[IndentingNewLine]", 
        "panePicker", ",", "\[IndentingNewLine]", "coreDS", ",", 
        "\[IndentingNewLine]", "setNB", ",", "\[IndentingNewLine]", 
-       RowBox[{"showBrowser", "=", "True"}]}], "\[IndentingNewLine]", "}"}], 
-     ",", "\[IndentingNewLine]", 
+       RowBox[{"showBrowser", "=", "True"}], ",", "\[IndentingNewLine]", 
+       "currentLoadedPath"}], "\[IndentingNewLine]", "}"}], ",", 
+     "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"coreDS", "=", 
        RowBox[{"Normal", "@", 
@@ -423,42 +424,46 @@ Cell[BoxData[
       RowBox[{"setNB", "=", "\[IndentingNewLine]", 
        RowBox[{"Function", "[", "\[IndentingNewLine]", 
         RowBox[{
-         RowBox[{"CheckAll", "[", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
           RowBox[{
+           RowBox[{"currentLoadedPath", "=!=", "panePath"}], ",", 
+           "\[IndentingNewLine]", 
            RowBox[{
-            RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
-             RowBox[{"FrontEnd`NotebookSuspendScreenUpdates", "[", 
-              RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}], ";", 
-            "\[IndentingNewLine]", 
-            RowBox[{"SelectionMove", "[", 
+            RowBox[{"CheckAll", "[", "\[IndentingNewLine]", 
              RowBox[{
-              RowBox[{"EvaluationNotebook", "[", "]"}], ",", "All", ",", 
-              "Notebook"}], "]"}], ";", "\[IndentingNewLine]", 
-            RowBox[{"SetOptions", "[", 
-             RowBox[{
-              RowBox[{"NotebookSelection", "[", 
-               RowBox[{"EvaluationNotebook", "[", "]"}], "]"}], ",", 
-              RowBox[{"Deletable", "\[Rule]", "True"}]}], "]"}], ";", 
-            "\[IndentingNewLine]", 
-            RowBox[{"NotebookDelete", "[", 
-             RowBox[{"EvaluationNotebook", "[", "]"}], "]"}], ";", 
-            "\[IndentingNewLine]", 
-            RowBox[{"With", "[", 
-             RowBox[{
-              RowBox[{"{", "\[IndentingNewLine]", 
-               RowBox[{"nb", "=", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                RowBox[{"FrontEnd`NotebookSuspendScreenUpdates", "[", 
+                 RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"SelectionMove", "[", 
                 RowBox[{
-                 RowBox[{"DeleteCases", "[", 
-                  RowBox[{
+                 RowBox[{"EvaluationNotebook", "[", "]"}], ",", "All", ",", 
+                 "Notebook"}], "]"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"SetOptions", "[", 
+                RowBox[{
+                 RowBox[{"NotebookSelection", "[", 
+                  RowBox[{"EvaluationNotebook", "[", "]"}], "]"}], ",", 
+                 RowBox[{"Deletable", "\[Rule]", "True"}]}], "]"}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"NotebookDelete", "[", 
+                RowBox[{"EvaluationNotebook", "[", "]"}], "]"}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"With", "[", 
+                RowBox[{
+                 RowBox[{"{", "\[IndentingNewLine]", 
+                  RowBox[{"nb", "=", "\[IndentingNewLine]", 
                    RowBox[{
-                   "WindowSize", "|", "WindowMargins", "|", "DockedCells", 
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{
+                    RowBox[{
+                    "WindowSize", "|", "WindowMargins", "|", "DockedCells", 
                     "|", "StyleDefinitions"}], "\[Rule]", "_"}], "]"}], "@", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{"Replace", "[", 
-                  RowBox[{
-                   RowBox[{"Documentation`ResolveLink", "[", "#", "]"}], ",", 
-                   
-                   RowBox[{"{", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"Documentation`ResolveLink", "[", "#", "]"}], ",", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{
                     RowBox[{"f_String", "?", "FileExistsQ"}], ":>", 
@@ -468,21 +473,21 @@ Cell[BoxData[
                     RowBox[{"Notebook", "[", 
                     RowBox[{"{", "}"}], "]"}]}]}], "\[IndentingNewLine]", 
                     "}"}]}], "]"}]}]}], "\[IndentingNewLine]", "}"}], ",", 
-              "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
-                RowBox[{
-                 RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
                  "\[IndentingNewLine]", 
-                 RowBox[{"First", "@", "nb"}]}], "\[IndentingNewLine]", "]"}],
-                ";", "\[IndentingNewLine]", 
-               RowBox[{"SetOptions", "[", 
-                RowBox[{
-                 RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{"Join", "[", "\[IndentingNewLine]", 
-                  RowBox[{
-                   RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"First", "@", "nb"}]}], "\[IndentingNewLine]", 
+                   "]"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"SetOptions", "[", 
+                   RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Join", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
                     "StyleDefinitions", "\[Rule]", "\[IndentingNewLine]", 
                     RowBox[{"FrontEnd`FileName", "[", 
@@ -492,22 +497,24 @@ Cell[BoxData[
                     RowBox[{
                     "CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
                     "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
-                   "\[IndentingNewLine]", 
-                   RowBox[{"List", "@@", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"List", "@@", 
                     RowBox[{"Rest", "@", "nb"}]}]}], "\[IndentingNewLine]", 
-                  "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+                    "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+                "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"SelectionMove", "[", 
+                RowBox[{
+                 RowBox[{"EvaluationNotebook", "[", "]"}], ",", "Before", ",",
+                  "Notebook"}], "]"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                RowBox[{"FrontEnd`NotebookResumeScreenUpdates", "[", 
+                 RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}]}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+               RowBox[{"FrontEnd`NotebookResumeScreenUpdates", "[", 
+                RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}]}], 
              "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-            RowBox[{"SelectionMove", "[", 
-             RowBox[{
-              RowBox[{"EvaluationNotebook", "[", "]"}], ",", "Before", ",", 
-              "Notebook"}], "]"}], ";", "\[IndentingNewLine]", 
-            RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
-             RowBox[{"FrontEnd`NotebookResumeScreenUpdates", "[", 
-              RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}]}], ",", 
-           "\[IndentingNewLine]", 
-           RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
-            RowBox[{"FrontEnd`NotebookResumeScreenUpdates", "[", 
-             RowBox[{"EvaluationNotebook", "[", "]"}], "]"}]}]}], 
+            RowBox[{"currentLoadedPath", "=", "panePath"}]}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
          "Nothing"}], "\[IndentingNewLine]", "]"}]}], ";", 
       "\[IndentingNewLine]", 
@@ -567,15 +574,15 @@ Cell[BoxData[
           "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}]}]}], 
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
  CellChangeTimes->CompressedData["
-1:eJwdx1soQ3EAx/HTtlqWRHtaLWwrrZWSiUg0yV6QmLZySdgUuUTNSMmmWOlo
-JC/LdTZMWkiyJ+3B1hozXsXZXEKW5NSaS/b7P3z79JV0DjbqORRFZaeCPO5a
-0Oh5Uxmc98/wMy5jYUFkk0gH3r9h8sRIjaaU+t550FRiSINi4XkGnN9eqIV7
-2osG2CT9IKa767XQbjUSkxGmFdKLog7YLmS64OHlST/M0fGHYVGpxQz399RW
-6G5h1mCC/nNBHed0Bzr7QoewLMgeQ/XDSgBmFsaCcGrzJgzDA/EreP8SfYQs
-63+CGtqRaUopMuuFUHEkEEFulZM48WWTwJm7Mxlctncr4OzHXD7UD9WVQ7nS
-Q/SpLSo4ku+qgdXO1Wa4bmvTwh/5QTu0RYvH4UalYxJOexM0FGsES+R/84hj
-WaZV2MtjiAJlrhdGdBXEjWulH75u8W/hVGiXgaelPTH4D44zCX0=
-  
+1:eJwdx1sog3EAhvEvVrIk2tVqNbZCaiUTkYhkN0gObeWQMIocomakNIdY9Gkk
+N7LZZsPEMrS2K7mwtcaMW9nnGNpaslpzyN7/xdOvJ7NzqEGeQFEUPx5kJeo8
+CutHRY8p8Ao/Q8IIzPMbiLQ7+A1jdgU1FldwHmRBZVFPMuRxLlLh8s5KDdyX
+XtbDRkGYmGKpk8INtYIY8zOtkF7ldsB2DtMFbVf2AciXJY3AguKZaXiwL1FD
+Swujg1H6zwxlCY5daOr32mCJJ3IKJU+bbpiW/+iBKsOtD/oGQ9cw8PbwDCMR
+1wtsoo1pyrjcaTkH5h6zuTCx0kSc/NJkwvn7MyFc3+jOhQvhJRGUD9eWwhyx
+lXgumamAoyJzNawyaZvhlqZNCn9yjtqh5qFwAurLjVNw1hmlIa+JvUb+N4s4
+nq7Uwj4WQ2SLM5zQLysj6m/ELvi+nXQHVd49BjqKex/h4fri3Hjck+ygGv4D
+d+AS0A==
   "],ExpressionUUID->"3f4b6cf6-c9c1-49ec-aaae-03387f5c8bc8"],
 
 Cell[BoxData[
@@ -714,12 +721,12 @@ Cell[10063, 262, 3088, 70, 535, "Input",ExpressionUUID->"29ae41b0-780d-4704-a68c
 }, Closed]],
 Cell[CellGroupData[{
 Cell[13188, 337, 161, 3, 37, "Subsubsection",ExpressionUUID->"17c5a831-d21a-4a50-9eb3-c0ba5a006053"],
-Cell[13352, 342, 11562, 236, 2089, "Input",ExpressionUUID->"3f4b6cf6-c9c1-49ec-aaae-03387f5c8bc8"],
-Cell[24917, 580, 1695, 38, 262, "Input",ExpressionUUID->"f2d0d894-eea2-4f98-8407-8944b29d5416"]
+Cell[13352, 342, 12095, 243, 2173, "Input",ExpressionUUID->"3f4b6cf6-c9c1-49ec-aaae-03387f5c8bc8"],
+Cell[25450, 587, 1695, 38, 262, "Input",ExpressionUUID->"f2d0d894-eea2-4f98-8407-8944b29d5416"]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[26649, 623, 166, 3, 37, "Subsubsection",ExpressionUUID->"0a96f03b-3d9e-4590-bd98-053ca5374250"],
-Cell[26818, 628, 1849, 46, 325, "Input",ExpressionUUID->"77a942eb-e165-4f23-bda0-b562d29aa9f1"]
+Cell[27182, 630, 166, 3, 37, "Subsubsection",ExpressionUUID->"0a96f03b-3d9e-4590-bd98-053ca5374250"],
+Cell[27351, 635, 1849, 46, 325, "Input",ExpressionUUID->"77a942eb-e165-4f23-bda0-b562d29aa9f1"]
 }, Open  ]]
 }
 ]
