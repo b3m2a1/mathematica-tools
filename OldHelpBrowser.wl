@@ -112,11 +112,15 @@ preLoadDocumentationMetadata[] :=
 (*Cache Data*)
 
 
+loadCachedDocumentationData::corrupt="Cache has been corrupted. It will be ignored.";
 loadCachedDocumentationData[] :=
-  $helpSearcherDocData = 
+  Catch[
+   $helpSearcherDocData = 
     Replace[Get[LocalObject["docsDataCache"]],
-     a_Association?(#["Metadata"]===<||>&):>Throw[$Failed]
-     ];
+     a_Association?(#["Metadata"]===<||>&):>
+       (Message[loadCachedDocumentationData::corrupt];Throw@$Failed)
+     ]
+   ];
 cacheDocumentationData[] :=
   
   Put[$helpSearcherDocData, LocalObject["docsDataCache"]];
