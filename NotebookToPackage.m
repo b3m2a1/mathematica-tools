@@ -345,7 +345,12 @@ NotebookToPackage[nb_NotebookObject] :=
 		             ";"}],
 		          "Code"
 		          ],
-             usagecells[[2]]
+             usagecells[[2]],
+						 Cell[
+		          BoxData@RowBox[{RowBox[{"End", "[", "]"}],
+		             ";"}],
+		          "Code"
+		          ]
              },
            Closed
            ]
