@@ -31,6 +31,8 @@ ensureLoadedDocumentationMetadata::usage="ensureLoadedDocumentationMetadata[]";
 preLoadDocumentationMetadata::usage="preLoadDocumentationMetadata[]";
 loadCachedDocumentationData::usage="loadCachedDocumentationData[]";
 cacheDocumentationData::usage="cacheDocumentationData[]";
+clearCachedDocumentationData::usage="clearCachedDocumentationData[]";
+$helpSearcherDocData::usage="The core doc data Association";
 $helpSearcherDocMetadataDS::usage="$helpSearcherDocMetadataDS";
 helpBrowserCoreDS::usage="helpBrowserCoreDS";
 helpBrowserDSButton::usage="helpBrowserDSButton[entry, onClick]";
@@ -65,12 +67,15 @@ loadDocumentationData[] :=
      ] &@
    <|
     "Directories" ->
-     DeleteDuplicatesBy[#[[1]]["Name"] &]@
-      Select[DirectoryQ@*Last]@
-       Map[
-        # -> FileNameJoin[{#["Location"], "Documentation"}] &,
-        PacletManager`PacletFind["*"]
-        ]
+     Join[
+      DeleteDuplicatesBy[#[[1]]["Name"] &]@
+       Select[DirectoryQ@*Last]@
+        Map[
+         # -> FileNameJoin[{#["Location"], "Documentation"}] &,
+         PacletManager`PacletFind["*"]
+         ],
+       {"System"->FileNameJoin[{$InstallationDirectory, "Documentation"}]}
+      ]
     |>
 
 
@@ -85,7 +90,7 @@ loadDocumentationMetadata[] :=
         $helpSearcherDocData["Metadata", #],
         Append[
          Fold[Association@Lookup[#, #2, {}] &, 
-          Options[Import[#]], {TaggingRules, "Metadata"}],
+          Options[Get[#]], {TaggingRules, "Metadata"}],
          "File" -> #
          ]
         ] &,
@@ -103,12 +108,11 @@ ensureLoadedDocumentationMetadata[] :=
 
 
 preLoadDocumentationMetadata[] :=
- \
 (ensureLoadedDocumentationMetadata[]; 
   Scan[Identity, $helpSearcherDocData["Metadata"]])
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Cache Data*)
 
 
@@ -116,14 +120,17 @@ loadCachedDocumentationData::corrupt="Cache has been corrupted. It will be ignor
 loadCachedDocumentationData[] :=
   Catch[
    $helpSearcherDocData = 
-    Replace[Get[LocalObject["docsDataCache"]],
-     a_Association?(#["Metadata"]===<||>&):>
+     Replace[Get[LocalObject["docsDataCache"]],
+      a_Association?(
+       !AssociationQ[#["Metadata"]]||Length[#["Metadata"]]===0
+       &):>
        (Message[loadCachedDocumentationData::corrupt];Throw@$Failed)
-     ]
+      ]
    ];
 cacheDocumentationData[] :=
-  
   Put[$helpSearcherDocData, LocalObject["docsDataCache"]];
+clearCachedDocumentationData[] :=
+  Quiet@DeleteFile@LocalObject["docsDataCache"];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -188,6 +195,7 @@ helpBrowserDockedCell[path : _List : {}] :=
    {
     panePath = path,
     panePicker,
+    panePickerHeight = 150,
     coreDS,
     setNB,
     showBrowser = True,
@@ -215,8 +223,9 @@ helpBrowserDockedCell[path : _List : {}] :=
           ]
         ],
        choices,
-       ImageSize -> {150, 150},
-       Background -> {{GrayLevel[.95], White}}
+       ImageSize -> {If[idx>1,250,150], Dynamic[panePickerHeight]},
+       Background -> {{GrayLevel[.95], White}},
+       AppearanceElements -> {"ResizeArea"}
        ]
       ];
    setNB =
@@ -279,7 +288,9 @@ helpBrowserDockedCell[path : _List : {}] :=
          MapIndexed[
           Replace[
             coreDS @@ Take[panePath, #2[[1]]], {
-             a_Association :> panePicker[a // Keys, #2[[1]] + 1],
+             a_Association :> 
+              panePicker[
+               SortBy[a // Keys // Sort, #=!="System`"&], #2[[1]] + 1],
              e_ :> setNB[e]
              }] &,
           panePath
