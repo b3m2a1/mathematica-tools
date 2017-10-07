@@ -69,7 +69,7 @@ loadDocumentationData[] :=
       Select[DirectoryQ@*Last]@
        Map[
         # -> FileNameJoin[{#["Location"], "Documentation"}] &,
-        PacletFind["*"]
+        PacletManager`PacletFind["*"]
         ]
     |>
 
@@ -108,13 +108,15 @@ preLoadDocumentationMetadata[] :=
   Scan[Identity, $helpSearcherDocData["Metadata"]])
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Cache Data*)
 
 
 loadCachedDocumentationData[] :=
   $helpSearcherDocData = 
-   Get[LocalObject["docsDataCache"]];
+    Replace[Get[LocalObject["docsDataCache"]],
+     a_Association?(#["Metadata"]===<||>&):>Throw[$Failed]
+     ];
 cacheDocumentationData[] :=
   
   Put[$helpSearcherDocData, LocalObject["docsDataCache"]];
