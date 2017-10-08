@@ -297,10 +297,14 @@ helpBrowserDockedCell[path : _List : {}] :=
     searchString,
     panePicker,
     panePickerHeight = 150,
+    panePickerHeightBase,
     coreDS,
     setNB,
     showBrowser = True,
-    currentLoadedPath
+    currentLoadedPath,
+    listPickerLineHeight = 20,
+    resizeDragBase,
+    inDrag=False
     },
    With[{p=$helpBrowserTaggingRulesPath},
     CurrentValue[EvaluationNotebook[], p] = path
@@ -330,17 +334,25 @@ helpBrowserDockedCell[path : _List : {}] :=
            ]
           ]
         ],
-       choices,
+       Map[#->Pane[#,{Full,listPickerLineHeight}]&,choices],
        With[{wlpp=If[Length@pp===3, 2, Length@pp]},
         ImageSize -> {
-         If[idx===1,
-          150, 
-          Scaled[1 / (wlpp + 1) ]
-          ], 
-         Full}
+         Scaled[1 / (wlpp + 1) ], 
+         Full
+         }
         ],
-       Background -> {{GrayLevel[.95], White}},
-       Appearance->"Frameless"
+       Background -> {{GrayLevel[.98], White}},
+       Appearance->"Frameless",
+       If[Length@pp >= idx&&MemberQ[choices, pp[[idx]]],
+        ScrollPosition->{
+         0, 
+         With[{p1=FirstPosition[choices, pp[[idx]] ][[1]]},
+          If[p1>6,(1+p1)*listPickerLineHeight-100,0]
+          ]
+         },
+        Sequence@@{}
+        ],
+       Spacings->0
        ]
       ];
    setNB =
@@ -410,15 +422,24 @@ helpBrowserDockedCell[path : _List : {}] :=
        ]
       },
      panePathCached = pp;
-     Column[{
-       Button["Hide Browser",
+     Grid[{
+       List@Item[#,Alignment->Right]&@Button[
+        Row[
+         {
+          "",
+          ToExpression@FrontEndResource["FEBitmaps","SquareMinusIconMedium"],
+          "Hide Browser"
+          },
+         Spacer[2]
+         ],
         showBrowser = False,
         Appearance -> None,
-        BaseStyle -> "Hyperlink"
+        BaseStyle -> "Message"
         ],
+       List@Item[#,Alignment->Scaled[.5]]&@
        Row[{
         EventHandler[
-         InputField[Dynamic[searchString],String],
+         InputField[Dynamic[searchString],String, FieldSize->35],
          "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
          ],
         Button["",
@@ -439,40 +460,104 @@ helpBrowserDockedCell[path : _List : {}] :=
              }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"]
            ]
         },
-        Spacer[15]
+        Spacer[8]
         ],
-        Pane[
+        With[{paneCore=
          Framed[
-         Row@
-          Prepend[
-           MapIndexed[
-            Replace[
-              coreDS @@ Take[pp, #2[[1]]], {
-               a_Association :> 
-                panePicker[
-                 SortBy[a // Keys // Sort, #=!="System`"&], 
-                 #2[[1]
-                 ] + 1],
-               e_ :> setNB[e]
-               }] &,
-            pp
+          Row@
+           Prepend[
+            MapIndexed[
+             Replace[
+               coreDS @@ Take[pp, #2[[1]]], {
+                a_Association :> 
+                 panePicker[
+                  SortBy[a // Keys // Sort, #=!="System`"&], 
+                  #2[[1]
+                  ] + 1],
+                e_ :> setNB[e]
+                }] &,
+             pp
+             ],
+            panePicker[Keys[coreDS], 1]
             ],
-           panePicker[Keys[coreDS], 1]
-           ],
-         ImageSize->Full,
-         Background->GrayLevel[.95],
-         FrameStyle->Gray,
-         FrameMargins->None
-         ],
-         {Full, panePickerHeight},
-         AppearanceElements -> {"ResizeArea"}
-         ]
+          ImageSize->Full,
+          Background->White,
+          FrameStyle->Gray,
+          FrameMargins->None
+          ]},
+         List@
+           Column[{
+            Dynamic[
+             Pane[
+              paneCore,
+              ImageSize->{Full, panePickerHeight},
+              AppearanceElements -> None
+              ],
+             TrackedSymbols:>{panePickerHeight}
+             ],
+           EventHandler[
+           MouseAppearance[#,"FrameTBResize"]&@
+             Graphics[
+              {},
+              Background->GrayLevel[.7],
+              ImageSize->{Full,2},
+              AspectRatio->Full,
+              ImagePadding->None,
+              Method->{"ShrinkWrap"->True},
+              ImageMargins->0
+              ],{
+            "MouseDown":>
+              (
+               If[!NumericQ@resizeDragBase,
+                Replace[MousePosition["ScreenAbsolute"],
+                 {_,y_}:>Set[resizeDragBase,y]
+                 ]
+                ];
+               If[!NumericQ@panePickerHeightBase,
+                panePickerHeightBase=panePickerHeight
+                ]
+               ),
+            "MouseUp":>
+             Clear[resizeDragBase,panePickerHeightBase],
+            "MouseDragged":>
+             (
+              Replace[MousePosition["ScreenAbsolute"],
+               {_,m_}:>
+                If[!NumericQ@resizeDragBase,
+                 Set[resizeDragBase,m];
+                 panePickerHeightBase=panePickerHeight,
+                 With[{
+                  new = panePickerHeightBase +  m - resizeDragBase,
+                  old = panePickerHeight
+                  },
+                  panePickerHeight = new
+                  ]
+                 ]
+               ]
+              ),
+            PassEventsDown->True
+            }]
+           },
+           Spacings->0
+           ]
+        ]
        }]
       ],
-     Button["Show Browser",
+     Button[
+      Column[{Row[{
+       "",
+       ToExpression@FrontEndResource["FEBitmaps","SquarePlusIconMedium"],
+       "Show Browser"
+       },
+       Spacer[2]
+       ],
+       Spacer[5]
+       },
+       Spacings->0
+       ],
       showBrowser = True,
       Appearance -> None,
-      BaseStyle -> "Hyperlink"
+      BaseStyle -> "Message"
       ]
      ]
    ];
@@ -484,7 +569,8 @@ helpBrowserNotebook[path : _List : {}] :=
     Cell[BoxData@ToBoxes@helpBrowserDockedCell[path],
      CellFrame -> {{0, 0}, {1, 0}},
      CellMargins -> None,
-     CellFrameMargins -> None
+     CellFrameMargins -> {{0,0},{-6,0}},
+     TextAlignment->Right
      ],
    System`ClosingSaveDialog -> False,
    Saveable -> False,
