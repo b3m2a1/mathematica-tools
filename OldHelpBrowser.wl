@@ -253,7 +253,7 @@ helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
     ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*PacletLookup*)
 
 
@@ -337,7 +337,7 @@ Notebook[{
  }];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Docked Cell*)
 
 
@@ -357,14 +357,18 @@ helpBrowserDockedCell[path : _List : {}] :=
     panePickerHeightBase,
     setNB,
     showBrowser = True,
+    advancedSearch = False,
+    advancedSearchValues = 
+     AssociationMap[Null&, {"type","title","context","status","uri"} ],
+    advancedSearchResults,
     currentLoadedPath,
     listPickerLineHeight = 20,
-    resizeDragBase,
-    inDrag=False
+    resizeDragBase
     },
    With[{p=$helpBrowserTaggingRulesPath},
     CurrentValue[EvaluationNotebook[], p] = path
     ];
+   (* Click pane generator *)
    panePicker =
     Function@
      With[{
@@ -408,6 +412,7 @@ helpBrowserDockedCell[path : _List : {}] :=
        Spacings->0
        ]
       ];
+    (* Load notebook function *)
    setNB =
     Function[
      If[currentLoadedPath =!= panePathCached,
@@ -464,6 +469,8 @@ helpBrowserDockedCell[path : _List : {}] :=
       ];
      Nothing
      ];
+   
+    (* Total display *)
    Dynamic@
     If[showBrowser,
      With[{pp=
@@ -476,11 +483,11 @@ helpBrowserDockedCell[path : _List : {}] :=
       },
      panePathCached = pp;
      Grid[{
+      (* Hide browser button *)
        List@Item[#,Alignment->Right]&@Button[
         Row[
          {
           "",
-          ToExpression@FrontEndResource["FEBitmaps","SquareMinusIconMedium"],
           "Hide Browser"
           },
          Spacer[2]
@@ -489,32 +496,180 @@ helpBrowserDockedCell[path : _List : {}] :=
         Appearance -> None,
         BaseStyle -> "Message"
         ],
-       List@Item[#,Alignment->Scaled[.5]]&@
-       Row[{
-        EventHandler[
-         InputField[Dynamic[searchString],String, FieldSize->35],
-         "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
+       (* Search bar *)
+       List@Item[Dynamic[#, TrackedSymbols:>{advancedSearch}]]&@
+        If[!advancedSearch,
+         (* Standard search interface *)
+         Grid[{
+          {
+           EventHandler[
+            InputField[Dynamic[searchString],String, FieldSize->35],
+            "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
+            ],
+           Button["",
+            helpBrowserSearch[EvaluationNotebook[], searchString],
+            Appearance->
+             Function[{
+               "Default"->#,
+               "Hover"->
+                 Image[Darker[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True],
+               "Pressed"->
+                Image[Lighter[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True]
+               }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"],
+             ImageSize->{15,14}
+             ]
+           },
+          {
+           Item[#, Alignment->Right]&@
+           Button["Advanced search",
+            advancedSearch = True,
+            Appearance -> None,
+            BaseStyle -> "Message"
+             ]
+           }
+          },
+         Alignment->Right
          ],
-        Button["",
-         helpBrowserSearch[EvaluationNotebook[], searchString],
-         Appearance->
-          Function[{
-            "Default"->#,
-            "Hover"->
-              Image[Darker[#,.5],
-               "Byte",
-               "ColorSpace"->"RGB",
-               Interleaving->True],
-             "Pressed"->
-              Image[Lighter[#,.5],
-               "Byte",
-               "ColorSpace"->"RGB",
-               Interleaving->True]
-             }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"]
-           ]
-        },
-        Spacer[8]
+        (* Advanced search system *)
+        Grid[
+         Join[
+          Insert[
+           Map[
+            {#, 
+             EventHandler[
+              InputField[ 
+               Dynamic[advancedSearchValues[[#]]],
+               Hold[Expression],
+               FieldSize->30
+               ],
+              "ReturnKeyDown":>
+               Set[advancedSearchResults, 
+                HelpPagesSearch[
+                 Normal@DeleteCases[Null]@
+                  Map[
+                   Replace[{
+                    Verbatim[RawBoxes][s_String]:>s,
+                    Hold[a_Symbol]:>ToString[Unevaluated[a]],
+                    Hold[e_]:>e
+                    }],
+                   advancedSearchValues
+                   ],
+                 True
+                 ]
+                ]
+              ]
+             }&,
+            Keys@advancedSearchValues
+            ],
+          Button["",
+            Set[advancedSearchResults, 
+              HelpPagesSearch[
+                Normal@DeleteCases[Null]@
+                 Map[
+                  Replace[{
+                   Verbatim[RawBoxes][s_String]:>s,
+                   Hold[a_Symbol]:>ToString[Unevaluated[a]],
+                   Hold[e_]:>e
+                   }],
+                  advancedSearchValues
+                  ],
+                True
+                ]
+               ],
+            Appearance->
+             Function[{
+               "Default"->#,
+               "Hover"->
+                 Image[Darker[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True],
+               "Pressed"->
+                Image[Lighter[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True]
+               }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"],
+             ImageSize->{15,14}
+             ],
+          {-1,-1}
+          ],
+          {
+           {
+           "",
+           Item[#,Alignment->Right]&@
+           Button["Standard search",
+            advancedSearch = False,
+            Appearance -> None,
+            BaseStyle -> "Message"
+            ]
+           },
+          {
+           Item[#,Alignment->Center]&@
+           Dynamic@
+             Replace[advancedSearchResults,{
+              _Dataset?(Length[#]===0&)->"No results...",
+              Except[_Dataset]->"",
+              e_:>
+               Row[{
+                Framed[
+                 Pane[
+                  With[{grid=Partition[Normal@e,UpTo[5]]},
+                   TextGrid[
+                    grid,
+                    Alignment->Left,
+                    ItemSize->Full,
+                    Dividers->
+                     {
+                      Table[
+                       j->GrayLevel[.8],
+                       {j, 2, Length[grid[[1]]]}
+                       ],
+                      Table[
+                       i->GrayLevel[.8],
+                       {i, 2, Length[grid]}
+                       ]
+                      }
+                    ]
+                   ],
+                  {475, 100}, 
+                  ImageSizeAction->"Scrollable",
+                  Scrollbars->Automatic
+                  ],
+                 Background->White,
+                 FrameStyle->Gray,
+                 FrameMargins->None
+                 ],
+                Button["",
+                 advancedSearchResults = Null,
+                 Appearance->{
+                  "Default"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIcon"],
+                  "Hover"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconHighlight"],
+                  "Pressed"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconPressed"]
+                  },
+                 ImageSize->{14,14}
+                 ]
+               },
+               Spacer[2]
+               ]
+             }],
+            SpanFromLeft
+            }
+          }
+          ],
+         Alignment->Left
+         ]
         ],
+        (* Click pane *)
         With[{paneCore=
          Framed[
           Row@
@@ -600,7 +755,6 @@ helpBrowserDockedCell[path : _List : {}] :=
      Button[
       Column[{Row[{
        "",
-       ToExpression@FrontEndResource["FEBitmaps","SquarePlusIconMedium"],
        "Show Browser"
        },
        Spacer[2]
@@ -654,7 +808,7 @@ OpenHelpBrowser[path : _List : {}] :=
   ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*HelpPagesSearch*)
 
 
@@ -696,13 +850,12 @@ HelpPagesSearch[
    Map[
     With[{
      prop=#[[1]],
-     test=
-      If[StringPattern`StringPatternQ@#[[2]],
-       StringMatchQ[#[[2]]],
-       #[[2]]
-       ]
+     val=#[[2]]
      },
-     test@#[prop]&
+     If[StringPattern`StringPatternQ@val,
+       StringMatchQ[#[prop],val,IgnoreCase->True]&,
+       val@#[prop]&
+       ]
      ]&,
     Flatten@{ops}
     ]
