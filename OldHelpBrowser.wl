@@ -39,6 +39,7 @@ helpBrowserDSButton::usage="helpBrowserDSButton[entry, onClick]";
 helpBrowserDS::usage="helpBrowserDS[formatFunction, onClick]";
 helpSearcherDSNameSearch::usage="helpSearcherDSNameSearch[name, type]";
 helpBrowserNameSearch::usage="helpBrowserNameSearch[browser, name, type]";
+helpBrowserSearch::usage="helpBrowserSearch[browser, name, type]";
 helpBrowserDockedCell::usage="helpBrowserDockedCell[path]";
 helpBrowserNotebook::usage="helpBrowserNotebook[path]";
 
@@ -237,6 +238,23 @@ helpBrowserPacletLookup[browser_ ,pacletURI_]:=
 
 
 (* ::Subsubsection::Closed:: *)
+(*HelpBrowserSearch*)
+
+
+helpBrowserSearch[browser_, name_, type_:"Symbol"]:=
+ With[{pl=Documentation`ResolveLink[name]},
+  Print@pl;
+  If[pl=!=Null&&!
+   StringStartsQ[pl,
+    FileNameJoin@{PacletManager`$UserBasePacletsDirectory,"Temporary"}
+    ],
+   helpBrowserPacletLookup[browser,name],
+   helpBrowserNameSearch[browser,name,type]
+   ]
+  ]
+
+
+(* ::Subsubsection::Closed:: *)
 (*Styles*)
 
 
@@ -345,6 +363,14 @@ helpBrowserDockedCell[path : _List : {}] :=
              _ -> Notebook[{}]
              }]
          },
+        Replace[
+         Fold[
+          Lookup[#,#2,<||>]&,
+          Options[nb],
+          {TaggingRules,"Metadata","uri"}
+          ],
+          s_String:>Set[searchString,s]
+          ];
         NotebookWrite[
          EvaluationNotebook[],
          First@nb
@@ -393,10 +419,10 @@ helpBrowserDockedCell[path : _List : {}] :=
        Row[{
         EventHandler[
          InputField[Dynamic[searchString],String],
-         "ReturnKeyDown":>helpBrowserNameSearch[EvaluationNotebook[], searchString]
+         "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
          ],
         Button["",
-         helpBrowserNameSearch[EvaluationNotebook[], searchString],
+         helpBrowserSearch[EvaluationNotebook[], searchString],
          Appearance->
           Function[{
             "Default"->#,
