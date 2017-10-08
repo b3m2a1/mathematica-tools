@@ -236,7 +236,7 @@ helpBrowserPacletLookup[browser_ ,pacletURI_]:=
    ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Styles*)
 
 
@@ -266,10 +266,15 @@ Notebook[{
 (*Docked Cell*)
 
 
+Off[General::shdw];
+System`WholeCellGroupOpener;
+On[General::shdw];
+
+
 helpBrowserDockedCell[path : _List : {}] :=
   DynamicModule[
    {
-    panePath,
+    panePathCached,
     paneCorePath,
     searchString,
     panePicker,
@@ -289,13 +294,7 @@ helpBrowserDockedCell[path : _List : {}] :=
     Function@
      With[{
        choices = #, idx = #2,
-       pp =
-        Replace[
-          CurrentValue[EvaluationNotebook[], 
-           $helpBrowserTaggingRulesPath
-           ],
-          Except[_List]->path
-         ]
+       pp = panePathCached
        },
       ListPicker[
        Dynamic[
@@ -318,7 +317,7 @@ helpBrowserDockedCell[path : _List : {}] :=
         ImageSize -> {
          If[idx===1,
           150, 
-          Scaled[1 / (wlpp + If[OddQ@wlpp,1,0])]
+          Scaled[1 / (wlpp + 1) ]
           ], 
          Full}
         ],
@@ -328,13 +327,7 @@ helpBrowserDockedCell[path : _List : {}] :=
       ];
    setNB =
     Function[
-     If[currentLoadedPath =!= 
-       Replace[
-        CurrentValue[EvaluationNotebook[], 
-         $helpBrowserTaggingRulesPath
-         ],
-        Except[_List]->path
-        ],
+     If[currentLoadedPath =!= panePathCached,
       CheckAll[
        FrontEndExecute@
         FrontEnd`NotebookSuspendScreenUpdates[EvaluationNotebook[]];
@@ -376,13 +369,7 @@ helpBrowserDockedCell[path : _List : {}] :=
        FrontEndExecute@
         FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]]
        ];
-      currentLoadedPath = 
-       Replace[
-        CurrentValue[EvaluationNotebook[], 
-         $helpBrowserTaggingRulesPath
-         ],
-        Except[_List]->path
-        ]
+      currentLoadedPath = panePathCached
       ];
      Nothing
      ];
@@ -396,6 +383,7 @@ helpBrowserDockedCell[path : _List : {}] :=
        Except[_List]->path
        ]
       },
+     panePathCached = pp;
      Column[{
        Button["Hide Browser",
         showBrowser = False,
@@ -446,7 +434,7 @@ helpBrowserDockedCell[path : _List : {}] :=
            panePicker[Keys[coreDS], 1]
            ],
          ImageSize->Full,
-         Background->White,
+         Background->GrayLevel[.95],
          FrameStyle->Gray,
          FrameMargins->None
          ],
