@@ -37,6 +37,8 @@ $helpSearcherDocMetadataDS::usage="$helpSearcherDocMetadataDS";
 helpBrowserCoreDS::usage="helpBrowserCoreDS";
 helpBrowserDSButton::usage="helpBrowserDSButton[entry, onClick]";
 helpBrowserDS::usage="helpBrowserDS[formatFunction, onClick]";
+helpSearcherDSNameSearch::usage="helpSearcherDSNameSearch[name, type]";
+helpBrowserNameSearch::usage="helpBrowserNameSearch[browser, name, type]";
 helpBrowserDockedCell::usage="helpBrowserDockedCell[path]";
 helpBrowserNotebook::usage="helpBrowserNotebook[path]";
 
@@ -133,7 +135,7 @@ clearCachedDocumentationData[] :=
   Quiet@DeleteFile@LocalObject["docsDataCache"];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Docs Metadata Dataset*)
 
 
@@ -187,13 +189,89 @@ helpBrowserDS[
 
 
 (* ::Subsubsection::Closed:: *)
+(*Constants*)
+
+
+$helpBrowserTaggingRulesPath={TaggingRules,"OldHelpBrowser","Path"};
+
+
+(* ::Subsubsection::Closed:: *)
+(*Search*)
+
+
+helpSearcherDSNameSearch[name_, type_:"Symbol"]:=
+ SortBy[
+  Normal@Select[$helpSearcherDocMetadataDS,
+   #type===type&&StringContainsQ[#title, name]&
+   ],
+  StringLength[#["title"]]&
+  ]
+
+
+helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
+  With[{
+    result=Replace[helpSearcherDSNameSearch[name,type], {a_,___}:>a],
+    path=$helpBrowserTaggingRulesPath
+    },
+    If[AssociationQ@result,
+      CurrentValue[browser, path] =
+        Lookup[result, {"type", "context", "title"}]
+      ]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*PacletLookup*)
+
+
+helpBrowserPacletLookup[browser_ ,pacletURI_]:=
+ CurrentValue[browser, $helpBrowserTaggingRulesPath]=
+  With[{baseFile=Documentation`ResolveLink[pacletURI]},
+   Lookup[
+    Lookup[$helpSearcherDocData["Metadata"],baseFile,
+     <|"type"->Nothing,"context"->Nothing,"title"->Nothing|>
+     ],
+    {"type","context","title"}
+    ]
+   ]
+
+
+(* ::Subsubsection:: *)
+(*Styles*)
+
+
+$helpBrowserStyleDefinitions=
+Notebook[{
+ Cell[
+  StyleData[
+   StyleDefinitions->
+    FrontEnd`FileName[{"Wolfram"}, "Reference.nb",
+     CharacterEncoding -> "UTF-8"
+     ]
+   ]
+  ],
+ Cell[StyleData["Link"],
+  ButtonBoxOptions->{
+   ButtonFunction:>
+    Function[
+     KernelExecute[helpBrowserPacletLookup[EvaluationNotebook[],#]]
+     ],
+   Evaluator->"Local"
+   }
+  ]
+ }];
+
+
+(* ::Subsubsection:: *)
 (*Docked Cell*)
 
 
 helpBrowserDockedCell[path : _List : {}] :=
   DynamicModule[
    {
-    panePath = path,
+    panePath,
+    paneCorePath,
+    searchString,
     panePicker,
     panePickerHeight = 150,
     coreDS,
@@ -201,36 +279,62 @@ helpBrowserDockedCell[path : _List : {}] :=
     showBrowser = True,
     currentLoadedPath
     },
+   With[{p=$helpBrowserTaggingRulesPath},
+    CurrentValue[EvaluationNotebook[], p] = path
+    ];
    coreDS = 
     Normal@helpBrowserDS["paclet:" <> Lookup[#, {"uri"}, ""] &, 
       Null];
    panePicker =
     Function@
      With[{
-       choices = #, idx = #2
+       choices = #, idx = #2,
+       pp =
+        Replace[
+          CurrentValue[EvaluationNotebook[], 
+           $helpBrowserTaggingRulesPath
+           ],
+          Except[_List]->path
+         ]
        },
       ListPicker[
        Dynamic[
-        If[Length@panePath >= idx, panePath[[{idx}]]],
+        If[Length@pp >= idx, pp[[{idx}]]],
         Function@
-         Set[
-          panePath,
-          ReplacePart[
-           If[Length@panePath >= idx,
-            Take[panePath, idx],
-            PadRight[panePath, idx, ""]
-            ], idx -> First@#]
+         With[{p=$helpBrowserTaggingRulesPath},
+          Set[
+           CurrentValue[EvaluationNotebook[], p ],
+           ReplacePart[
+            If[Length@pp >= idx,
+             Take[pp, idx],
+             PadRight[pp, idx, ""]
+             ], 
+            idx -> First@#]
+           ]
           ]
         ],
        choices,
-       ImageSize -> {If[idx>1,250,150], Dynamic[panePickerHeight]},
+       With[{wlpp=If[Length@pp===3, 2, Length@pp]},
+        ImageSize -> {
+         If[idx===1,
+          150, 
+          Scaled[1 / (wlpp + If[OddQ@wlpp,1,0])]
+          ], 
+         Full}
+        ],
        Background -> {{GrayLevel[.95], White}},
-       AppearanceElements -> {"ResizeArea"}
+       Appearance->"Frameless"
        ]
       ];
    setNB =
     Function[
-     If[currentLoadedPath =!= panePath,
+     If[currentLoadedPath =!= 
+       Replace[
+        CurrentValue[EvaluationNotebook[], 
+         $helpBrowserTaggingRulesPath
+         ],
+        Except[_List]->path
+        ],
       CheckAll[
        FrontEndExecute@
         FrontEnd`NotebookSuspendScreenUpdates[EvaluationNotebook[]];
@@ -240,7 +344,6 @@ helpBrowserDockedCell[path : _List : {}] :=
        NotebookDelete[EvaluationNotebook[]];
        With[{
          nb =
-          
           DeleteCases[
             WindowSize | WindowMargins | DockedCells | 
               StyleDefinitions -> _]@
@@ -256,12 +359,14 @@ helpBrowserDockedCell[path : _List : {}] :=
         SetOptions[EvaluationNotebook[],
          Join[
           {
-           StyleDefinitions ->
-            
-            FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
-             CharacterEncoding -> "UTF-8"]
+           StyleDefinitions -> $helpBrowserStyleDefinitions,
+           TaggingRules -> 
+             Join[
+              Lookup[Options[nb],TaggingRules],
+              CurrentValue[EvaluationNotebook[], TaggingRules]
+              ]
            },
-          List @@ Rest@nb
+          List @@ DeleteCases[TaggingRules->_]@Rest@nb
           ]
          ]
         ];
@@ -271,33 +376,85 @@ helpBrowserDockedCell[path : _List : {}] :=
        FrontEndExecute@
         FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]]
        ];
-      currentLoadedPath = panePath
+      currentLoadedPath = 
+       Replace[
+        CurrentValue[EvaluationNotebook[], 
+         $helpBrowserTaggingRulesPath
+         ],
+        Except[_List]->path
+        ]
       ];
      Nothing
      ];
    Dynamic@
     If[showBrowser,
+     With[{pp=
+      Replace[
+       CurrentValue[EvaluationNotebook[], 
+        $helpBrowserTaggingRulesPath
+        ],
+       Except[_List]->path
+       ]
+      },
      Column[{
        Button["Hide Browser",
         showBrowser = False,
         Appearance -> None,
         BaseStyle -> "Hyperlink"
         ],
-       Row@
-        Prepend[
-         MapIndexed[
-          Replace[
-            coreDS @@ Take[panePath, #2[[1]]], {
-             a_Association :> 
-              panePicker[
-               SortBy[a // Keys // Sort, #=!="System`"&], #2[[1]] + 1],
-             e_ :> setNB[e]
-             }] &,
-          panePath
-          ],
-         panePicker[Keys[coreDS], 1]
+       Row[{
+        EventHandler[
+         InputField[Dynamic[searchString],String],
+         "ReturnKeyDown":>helpBrowserNameSearch[EvaluationNotebook[], searchString]
+         ],
+        Button["",
+         helpBrowserNameSearch[EvaluationNotebook[], searchString],
+         Appearance->
+          Function[{
+            "Default"->#,
+            "Hover"->
+              Image[Darker[#,.5],
+               "Byte",
+               "ColorSpace"->"RGB",
+               Interleaving->True],
+             "Pressed"->
+              Image[Lighter[#,.5],
+               "Byte",
+               "ColorSpace"->"RGB",
+               Interleaving->True]
+             }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"]
+           ]
+        },
+        Spacer[15]
+        ],
+        Pane[
+         Framed[
+         Row@
+          Prepend[
+           MapIndexed[
+            Replace[
+              coreDS @@ Take[pp, #2[[1]]], {
+               a_Association :> 
+                panePicker[
+                 SortBy[a // Keys // Sort, #=!="System`"&], 
+                 #2[[1]
+                 ] + 1],
+               e_ :> setNB[e]
+               }] &,
+            pp
+            ],
+           panePicker[Keys[coreDS], 1]
+           ],
+         ImageSize->Full,
+         Background->White,
+         FrameStyle->Gray,
+         FrameMargins->None
+         ],
+         {Full, panePickerHeight},
+         AppearanceElements -> {"ResizeArea"}
          ]
-       }],
+       }]
+      ],
      Button["Show Browser",
       showBrowser = True,
       Appearance -> None,
