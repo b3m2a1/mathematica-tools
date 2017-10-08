@@ -12,6 +12,10 @@ OpenHelpBrowser::usage="
 OpenHelpBrowser[] opens an old-style help browser
 OpenHelpBrowser[path] opens an old-style help browser intialized with path
 ";
+HelpPagesSearch::usage="
+HelpPagesSearch[test] implements a search over documentation pages
+HelpPagesSearch[test, True] has the pages open in the HelpBrowser
+"
 
 
 (* ::Subsubsection::Closed:: *)
@@ -37,6 +41,8 @@ $helpSearcherDocMetadataDS::usage="$helpSearcherDocMetadataDS";
 helpBrowserCoreDS::usage="helpBrowserCoreDS";
 helpBrowserDSButton::usage="helpBrowserDSButton[entry, onClick]";
 helpBrowserDS::usage="helpBrowserDS[formatFunction, onClick]";
+helpBrowserPacletGetPath::usage="helpBrowserPacletGetPath[uri]";
+helpBrowserPacletLookup::usage="helpBrowserPacletGetPath[browser, uri]";
 helpSearcherDSNameSearch::usage="helpSearcherDSNameSearch[name, type]";
 helpBrowserNameSearch::usage="helpBrowserNameSearch[browser, name, type]";
 helpBrowserSearch::usage="helpBrowserSearch[browser, name, type]";
@@ -140,6 +146,7 @@ clearCachedDocumentationData[] :=
 (*Docs Metadata Dataset*)
 
 
+If[!AssociationQ@$helpSearcherDocMetadataDS,
 $helpSearcherDocMetadataDS :=
    (
     If[
@@ -150,12 +157,14 @@ $helpSearcherDocMetadataDS :=
     Dataset@
      Select[Values@$helpSearcherDocData["Metadata"], KeyMemberQ["uri"]]
     );
+];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Help Browser Tree*)
 
 
+If[!AssociationQ@helpBrowserCoreDS,
 helpBrowserCoreDS :=
  helpBrowserCoreDS=
   Map[
@@ -170,6 +179,7 @@ helpBrowserCoreDS :=
     Key["type"] -> KeyDrop["type"],
     GroupBy[Key["context"] -> KeyDrop["context"]]
     ];
+];
 
 
 helpBrowserDSButton[entry_, onClick_] :=
@@ -212,6 +222,14 @@ $helpBrowserTaggingRulesPath={TaggingRules,"OldHelpBrowser","Path"};
 
 
 (* ::Subsubsection::Closed:: *)
+(*SetBrowserPath*)
+
+
+helpBrowserSetPath[browser_, path_List]:=
+ CurrentValue[browser, $helpBrowserTaggingRulesPath] = path;
+
+
+(* ::Subsubsection::Closed:: *)
 (*Search*)
 
 
@@ -226,33 +244,36 @@ helpSearcherDSNameSearch[name_, type_:"Symbol"]:=
 
 helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
   With[{
-    result=Replace[helpSearcherDSNameSearch[name,type], {a_,___}:>a],
-    path=$helpBrowserTaggingRulesPath
+    result=Replace[helpSearcherDSNameSearch[name,type], {a_,___}:>a]
     },
     If[AssociationQ@result,
-      CurrentValue[browser, path] =
-        Lookup[result, {"type", "context", "title"}]
+      helpBrowserSetPath[browser, 
+       Lookup[result, {"type", "context", "title"}]]
       ]
     ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PacletLookup*)
 
 
-helpBrowserPacletLookup[browser_ ,pacletURI_]:=
-  With[{
-    baseFile=Documentation`ResolveLink[pacletURI],
-    current=CurrentValue[browser, $helpBrowserTaggingRulesPath]
-    },
-   With[{
-    new=
-     Lookup[
+helpBrowserPacletGetPath[pacletURI_]:=
+ With[{
+   baseFile=Documentation`ResolveLink[pacletURI]
+   },
+   Lookup[
       Lookup[$helpSearcherDocData["Metadata"],baseFile,
        <|"type"->Nothing,"context"->Nothing,"title"->Nothing|>
        ],
       {"type","context","title"}
       ]
+   ]
+
+
+helpBrowserPacletLookup[browser_ ,pacletURI_]:=
+  With[{
+    new=helpBrowserPacletGetPath[pacletURI],
+    current=CurrentValue[browser, $helpBrowserTaggingRulesPath]
     },
     If[current===new,
      NotebookFind[
@@ -269,10 +290,9 @@ helpBrowserPacletLookup[browser_ ,pacletURI_]:=
       {c_,___}:>
        SelectionMove[c,All,CellContents]
       ],
-     CurrentValue[browser, $helpBrowserTaggingRulesPath]=new
+     helpBrowserSetPath[browser, new]
      ]
-    ]
-   ]
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -281,7 +301,6 @@ helpBrowserPacletLookup[browser_ ,pacletURI_]:=
 
 helpBrowserSearch[browser_, name_, type_:"Symbol"]:=
  With[{pl=Documentation`ResolveLink[name]},
-  Print@pl;
   If[pl=!=Null&&!
    StringStartsQ[pl,
     FileNameJoin@{PacletManager`$UserBasePacletsDirectory,"Temporary"}
@@ -318,7 +337,7 @@ Notebook[{
  }];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Docked Cell*)
 
 
@@ -613,26 +632,86 @@ helpBrowserNotebook[path : _List : {}] :=
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*OpenHelpBrowser*)
 
 
 OpenHelpBrowser[path : _List : {}] :=
- 
- If[MatchQ[$helpBrowser, _NotebookObject?(NotebookRead[#] =!= $Failed \
-&)],
+ If[MatchQ[$helpBrowser, _NotebookObject?(NotebookRead[#] =!= $Failed &)],
   SetOptions[$helpBrowser, {
     WindowFloating -> True,
     Visible -> True
     }];
-  SetOptions[$helpBrowser, WindowFloating -> False],
+  SetOptions[$helpBrowser, WindowFloating -> False];
+  If[Length@path>0, helpBrowserSetPath[$helpBrowser, path]],
   Quiet@
    Check[
     loadCachedDocumentationData[],
     preLoadDocumentationMetadata[];
     cacheDocumentationData[]
     ];
-  $helpBrowser = CreateDocument@helpBrowserNotebook[]
+  $helpBrowser = CreateDocument@helpBrowserNotebook[path]
+  ]
+
+
+(* ::Subsubsection:: *)
+(*HelpPagesSearch*)
+
+
+HelpPagesSearch[
+ selectionFunction:Except[_?OptionQ|_?StringPattern`StringPatternQ], 
+ openInBrowser:True|False:False
+ ] :=
+ If[openInBrowser,
+   Hyperlink[#, "paclet:" <> #2,
+    ButtonFunction->
+     Function@OpenHelpBrowser[helpBrowserPacletGetPath[#]],
+    Evaluator->"Local"
+    ]&,
+   Hyperlink[#, "paclet:" <> #2] &
+   ] @@@
+  $helpSearcherDocMetadataDS[
+   Select[selectionFunction],
+   {"title", "uri"}
+   ]
+
+
+HelpPagesSearch[
+ p_?StringPattern`StringPatternQ, 
+ openInBrowser:True|False:False
+ ]:=
+ HelpPagesSearch[
+  StringMatchQ[#["title"], p]&,
+  openInBrowser
+  ]
+
+
+HelpPagesSearch[
+ ops_?OptionQ, 
+ openInBrowser:True|False:False
+ ]:=
+ HelpPagesSearch[
+  With[{
+  coreTest=
+   Map[
+    With[{
+     prop=#[[1]],
+     test=
+      If[StringPattern`StringPatternQ@#[[2]],
+       StringMatchQ[#[[2]]],
+       #[[2]]
+       ]
+     },
+     test@#[prop]&
+     ]&,
+    Flatten@{ops}
+    ]
+   },
+   Replace[Thread[coreTest, Function],
+    Function[{t__}]:>Function[And[t]]
+    ]
+   ],
+  openInBrowser
   ]
 
 
