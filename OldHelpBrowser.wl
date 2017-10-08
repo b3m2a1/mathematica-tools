@@ -136,27 +136,37 @@ clearCachedDocumentationData[] :=
   Quiet@DeleteFile@LocalObject["docsDataCache"];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Docs Metadata Dataset*)
 
 
 $helpSearcherDocMetadataDS :=
-  $helpSearcherDocMetadataDS =
    (
-    preLoadDocumentationMetadata[];
+    If[
+     !AssociationQ@$helpSearcherDocData["Metadata"]||
+      MatchQ[Normal@Take[$helpSearcherDocData["Metadata"],3],{___RuleDelayed}],
+     preLoadDocumentationMetadata[]
+     ];
     Dataset@
      Select[Values@$helpSearcherDocData["Metadata"], KeyMemberQ["uri"]]
     );
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Help Browser Tree*)
 
 
 helpBrowserCoreDS :=
-  helpBrowserCoreDS =
+ helpBrowserCoreDS=
+  Map[
+   Association@*
+    Map[
+     Lookup[#, "title"] -> #
+      &
+     ]
+   ] /@  
    GroupBy[
-    $helpSearcherDocMetadataDS,
+    Normal@$helpSearcherDocMetadataDS,
     Key["type"] -> KeyDrop["type"],
     GroupBy[Key["context"] -> KeyDrop["context"]]
     ];
@@ -186,7 +196,12 @@ helpBrowserDS[
        formatFunction[#, onClick]
       &
      ]
-   ] /@ helpBrowserCoreDS
+   ] /@ 
+   GroupBy[
+    $helpSearcherDocMetadataDS,
+    Key["type"] -> KeyDrop["type"],
+    GroupBy[Key["context"] -> KeyDrop["context"]]
+    ]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -226,13 +241,36 @@ helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
 
 
 helpBrowserPacletLookup[browser_ ,pacletURI_]:=
- CurrentValue[browser, $helpBrowserTaggingRulesPath]=
-  With[{baseFile=Documentation`ResolveLink[pacletURI]},
-   Lookup[
-    Lookup[$helpSearcherDocData["Metadata"],baseFile,
-     <|"type"->Nothing,"context"->Nothing,"title"->Nothing|>
-     ],
-    {"type","context","title"}
+  With[{
+    baseFile=Documentation`ResolveLink[pacletURI],
+    current=CurrentValue[browser, $helpBrowserTaggingRulesPath]
+    },
+   With[{
+    new=
+     Lookup[
+      Lookup[$helpSearcherDocData["Metadata"],baseFile,
+       <|"type"->Nothing,"context"->Nothing,"title"->Nothing|>
+       ],
+      {"type","context","title"}
+      ]
+    },
+    If[current===new,
+     NotebookFind[
+      browser,
+      Replace[StringSplit[pacletURI,"#",2]//Last,
+       s_String?(StringMatchQ[NumberString]):>
+        ToExpression[s]
+       ],
+      All,
+      CellID,
+      AutoScroll->False
+      ];
+     Replace[SelectedCells@browser,
+      {c_,___}:>
+       SelectionMove[c,All,CellContents]
+      ],
+     CurrentValue[browser, $helpBrowserTaggingRulesPath]=new
+     ]
     ]
    ]
 
@@ -298,7 +336,6 @@ helpBrowserDockedCell[path : _List : {}] :=
     panePicker,
     panePickerHeight = 150,
     panePickerHeightBase,
-    coreDS,
     setNB,
     showBrowser = True,
     currentLoadedPath,
@@ -309,9 +346,6 @@ helpBrowserDockedCell[path : _List : {}] :=
    With[{p=$helpBrowserTaggingRulesPath},
     CurrentValue[EvaluationNotebook[], p] = path
     ];
-   coreDS = 
-    Normal@helpBrowserDS["paclet:" <> Lookup[#, {"uri"}, ""] &, 
-      Null];
    panePicker =
     Function@
      With[{
@@ -468,17 +502,18 @@ helpBrowserDockedCell[path : _List : {}] :=
            Prepend[
             MapIndexed[
              Replace[
-               coreDS @@ Take[pp, #2[[1]]], {
+               helpBrowserCoreDS @@ Take[pp, #2[[1]]], {
+                a_Association?(KeyMemberQ["uri"]):>
+                 setNB[a["uri"]],
                 a_Association :> 
                  panePicker[
                   SortBy[a // Keys // Sort, #=!="System`"&], 
-                  #2[[1]
-                  ] + 1],
-                e_ :> setNB[e]
+                  #2[[1]] + 1
+                  ]
                 }] &,
              pp
              ],
-            panePicker[Keys[coreDS], 1]
+            panePicker[Keys[helpBrowserCoreDS], 1]
             ],
           ImageSize->Full,
           Background->White,
