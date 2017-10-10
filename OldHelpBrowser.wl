@@ -40,13 +40,14 @@ cacheDocumentationData::usage="cacheDocumentationData[]";
 clearCachedDocumentationData::usage="clearCachedDocumentationData[]";
 $helpSearcherDocData::usage="The core doc data Association";
 $helpSearcherDocMetadataDS::usage="$helpSearcherDocMetadataDS";
-helpBrowserCoreDS::usage="helpBrowserCoreDS";
+$helpBrowserCoreDS::usage="$helpBrowserCoreDS";
 helpBrowserDSButton::usage="helpBrowserDSButton[entry, onClick]";
 helpBrowserDS::usage="helpBrowserDS[formatFunction, onClick]";
 helpBrowserPacletGetPath::usage="helpBrowserPacletGetPath[uri]";
 helpBrowserPacletLookup::usage="helpBrowserPacletGetPath[browser, uri]";
 helpSearcherDSNameSearch::usage="helpSearcherDSNameSearch[name, type]";
 helpBrowserNameSearch::usage="helpBrowserNameSearch[browser, name, type]";
+helpBrowserAutocomplete::usage="helpBrowserAutocomplete[s]";
 helpBrowserSearch::usage="helpBrowserSearch[browser, name, type]";
 helpBrowserDockedCell::usage="helpBrowserDockedCell[path]";
 helpBrowserSetNotebook::usage="helpBrowserSetNotebook[browser, ...]";
@@ -66,7 +67,7 @@ Begin["`Private`"];
 (*Package Implementation*)
 
 
-$versionNumber="1.1.5";
+$versionNumber="1.1.6";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -170,9 +171,9 @@ $helpSearcherDocMetadataDS :=
 (*Help Browser Tree*)
 
 
-If[!MatchQ[OwnValues@helpBrowserCoreDS,{_:>_Association?AssociationQ}],
-helpBrowserCoreDS :=
- helpBrowserCoreDS=
+If[!MatchQ[OwnValues@$helpBrowserCoreDS,{_:>_Association?AssociationQ}],
+$helpBrowserCoreDS :=
+ $helpBrowserCoreDS=
   Map[
    Association@*
     Map[
@@ -229,7 +230,7 @@ $helpBrowserAutocomplete:=
  $helpBrowserAutocomplete = 
   Autocomplete[
    Keys@
-    helpBrowserCoreDS[
+    $helpBrowserCoreDS[
      "Symbol",
      "System`"
      ]
@@ -286,7 +287,7 @@ helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
 
 helpBrowserPathGetURI[path_]:=
  Replace[
-  helpBrowserCoreDS @@ path, {
+  $helpBrowserCoreDS @@ path, {
    a_Association?(KeyMemberQ["uri"]):>
     (a["uri"])
    }]
@@ -436,7 +437,7 @@ helpBrowserPickerPane[
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*SetNotebook*)
 
 
@@ -836,7 +837,7 @@ helpBrowserDockedCell[path : _List : {}] :=
            autoCompleteFilling=.;
            EventHandler[
             InputField[
-             Dynamic[searchString](*,
+             Dynamic[searchString],(*,
               (
               If[
                (
@@ -845,7 +846,7 @@ helpBrowserDockedCell[path : _List : {}] :=
                  ]>1
                  )&&
                KeyMemberQ[
-                helpBrowserCoreDS["Symbol", "System`"],
+                $helpBrowserCoreDS["Symbol", "System`"],
                 #],
                searchString=#;
                autoCompleteLastFill=Now;
@@ -854,9 +855,11 @@ helpBrowserDockedCell[path : _List : {}] :=
                searchString=#
                ];
               )&
-              ]*),
+              ]*)
              String, 
-             FieldSize->35(*,
+             FieldSize->35,
+             MenuList->
+              Sort@Keys@$helpBrowserCoreDS["Symbol","System`"](*,
              FieldCompletionFunction\[Rule]helpBrowserAutocomplete*)
              ],{
             "ReturnKeyDown":>
@@ -1055,7 +1058,7 @@ helpBrowserDockedCell[path : _List : {}] :=
               Prepend[
                MapIndexed[
                 Replace[
-                 helpBrowserCoreDS @@ Take[panePathCached, #2[[1]]], {
+                 $helpBrowserCoreDS @@ Take[panePathCached, #2[[1]]], {
                   a_Association?(KeyMemberQ["uri"]):>
                    (setNB[a["uri"]]),
                   a_Association :> 
@@ -1068,7 +1071,7 @@ helpBrowserDockedCell[path : _List : {}] :=
                 ],
               panePicker[ 
                SortBy[
-                Sort@Keys[helpBrowserCoreDS],
+                Sort@Keys[$helpBrowserCoreDS],
                 Switch[#,
                  "Root Guide", 0,
                  "Symbol",1,
@@ -1113,7 +1116,7 @@ helpBrowserDockedCell[path : _List : {}] :=
         currentLoadedPath =!= panePathCached && 
         !browserLocked[],
         Replace[
-         helpBrowserCoreDS @@ panePathCached, {
+         $helpBrowserCoreDS @@ panePathCached, {
           a_Association?(KeyMemberQ["uri"]):>
            (setNB[a["uri"]])
          }]
