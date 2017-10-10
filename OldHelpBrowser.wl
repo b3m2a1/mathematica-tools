@@ -805,7 +805,16 @@ helpBrowserDockedCell[path : _List : {}] :=
             Spacer[2]
             ],
            EventHandler[
-            InputField[Dynamic[searchString], String, FieldSize->35],
+            InputField[Dynamic[searchString], String, FieldSize->35,
+             FieldCompletionFunction->
+              Autocomplete[
+               Keys@
+                 helpBrowserCoreDS[
+                  "Symbol",
+                  "System`"
+                  ]
+               ]
+             ],
             "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
             ],
            Button["",
