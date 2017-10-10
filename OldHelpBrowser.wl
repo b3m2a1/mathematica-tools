@@ -19,7 +19,7 @@ HelpPagesSearch[test, True] has the pages open in the HelpBrowser
 "
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Private Declarations*)
 
 
@@ -30,6 +30,7 @@ Begin["`Package`"];
 
 
 (*Package Declarations*)
+$versionNumber::usage="$versionNumber";
 loadDocumentationData::usage="loadDocumentationData[]";
 loadDocumentationMetadata::usage="loadDocumentationMetadata[]";
 ensureLoadedDocumentationMetadata::usage="ensureLoadedDocumentationMetadata[]";
@@ -63,6 +64,9 @@ Begin["`Private`"];
 
 
 (*Package Implementation*)
+
+
+$versionNumber="1.1.5";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -233,7 +237,6 @@ $helpBrowserAutocomplete:=
  ];
 helpBrowserAutocomplete[e___]:=
  (
-  $helpBrowserTMPAutocompleted=True;
   $helpBrowserAutocomplete[e]
   )
 
@@ -433,7 +436,7 @@ helpBrowserPickerPane[
    ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SetNotebook*)
 
 
@@ -522,7 +525,9 @@ helpBrowserSetNotebook[
         ],
        FrontEnd`NotebookResumeScreenUpdates[enb]
        };
-      SetOptions[enb,Options[enb,Background]];
+      SetOptions[enb,
+       Selectable->True
+       ];
       nb
      ]
      ],
@@ -743,11 +748,13 @@ helpBrowserDockedCell[path : _List : {}] :=
     advancedSearchResults,
     listPickerLineHeight = 20,
     panePickerHeightBase,
-    resizeDragBase
+    resizeDragBase,
+    autoCompleteFilling,
+    autoCompleteLastFill
     },
    (* Total display *)
    Dynamic[
-    If[!browserLocked[],
+    If[!browserLocked[]//TrueQ,
      Replace[
       CurrentValue[ EvaluationNotebook[], 
        {TaggingRules, "OldHelpBrowser", "Path"}],{
@@ -826,29 +833,35 @@ helpBrowserDockedCell[path : _List : {}] :=
             },
             Spacer[2]
             ],
+           autoCompleteFilling=.;
            EventHandler[
             InputField[
-             Dynamic[searchString,
+             Dynamic[searchString](*,
               (
               If[
-               TrueQ[$helpBrowserTMPAutocompleted]&&
+               (
+                QuantityMagnitude[
+                 UnitConvert[Now-autoCompleteLastFill, "Seconds"]
+                 ]>1
+                 )&&
                KeyMemberQ[
                 helpBrowserCoreDS["Symbol", "System`"],
                 #],
-               $helpBrowserTMPAutocompleted=.;
-               helpBrowserSearch[EvaluationNotebook[], #],
-               $helpBrowserTMPAutocompleted=.;
+               searchString=#;
+               autoCompleteLastFill=Now;
+               setDMVars[];
+               helpBrowserSearch[EvaluationNotebook[], #];,
                searchString=#
                ];
               )&
-              ],
+              ]*),
              String, 
-             FieldSize->35,
-             FieldCompletionFunction->helpBrowserAutocomplete
+             FieldSize->35(*,
+             FieldCompletionFunction\[Rule]helpBrowserAutocomplete*)
              ],{
             "ReturnKeyDown":>
-              helpBrowserSearch[EvaluationNotebook[], searchString],
-            PassEventsDown->True
+              helpBrowserSearch[EvaluationNotebook[], searchString](*,
+            PassEventsDown\[Rule]True*)
             }],
            Button["",
             helpBrowserSearch[EvaluationNotebook[], searchString],
@@ -1118,7 +1131,18 @@ helpBrowserDockedCell[path : _List : {}] :=
       Appearance -> None,
       BaseStyle -> "Message"
       ]
-     ]
+     ],
+    Row@{
+     "Couldn't display browser.",
+     Button["Retry?",
+      CurrentValue[
+        EvaluationNotebook[],
+        {TaggingRules, "OldHelpBrowser", ".lock"}
+        ] = False,
+      Appearance -> None,
+      BaseStyle -> "Message"
+      ]
+     }
     ]
    ],
   (* INITIALIZATION PROCEDURES *)
