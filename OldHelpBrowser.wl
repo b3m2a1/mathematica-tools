@@ -217,6 +217,28 @@ helpBrowserDS[
 
 
 (* ::Subsubsection::Closed:: *)
+(*Autocomplete*)
+
+
+If[!MatchQ[OwnValues@$helpBrowserAutocomplete,{_:>_AutocompletionFunction}],
+$helpBrowserAutocomplete:=
+ $helpBrowserAutocomplete = 
+  Autocomplete[
+   Keys@
+    helpBrowserCoreDS[
+     "Symbol",
+     "System`"
+     ]
+   ]
+ ];
+helpBrowserAutocomplete[e___]:=
+ (
+  $helpBrowserTMPAutocompleted=True;
+  $helpBrowserAutocomplete[e]
+  )
+
+
+(* ::Subsubsection::Closed:: *)
 (*Constants*)
 
 
@@ -805,18 +827,29 @@ helpBrowserDockedCell[path : _List : {}] :=
             Spacer[2]
             ],
            EventHandler[
-            InputField[Dynamic[searchString], String, FieldSize->35,
-             FieldCompletionFunction->
-              Autocomplete[
-               Keys@
-                 helpBrowserCoreDS[
-                  "Symbol",
-                  "System`"
-                  ]
-               ]
-             ],
-            "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
-            ],
+            InputField[
+             Dynamic[searchString,
+              (
+              If[
+               TrueQ[$helpBrowserTMPAutocompleted]&&
+               KeyMemberQ[
+                helpBrowserCoreDS["Symbol", "System`"],
+                #],
+               $helpBrowserTMPAutocompleted=.;
+               helpBrowserSearch[EvaluationNotebook[], #],
+               $helpBrowserTMPAutocompleted=.;
+               searchString=#
+               ];
+              )&
+              ],
+             String, 
+             FieldSize->35,
+             FieldCompletionFunction->helpBrowserAutocomplete
+             ],{
+            "ReturnKeyDown":>
+              helpBrowserSearch[EvaluationNotebook[], searchString],
+            PassEventsDown->True
+            }],
            Button["",
             helpBrowserSearch[EvaluationNotebook[], searchString],
             Appearance->$helpBrowserSearchIcon,
