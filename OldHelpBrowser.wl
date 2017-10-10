@@ -11,6 +11,7 @@ BeginPackage["OldHelpBrowser`"];
 OpenHelpBrowser::usage="
 OpenHelpBrowser[] opens an old-style help browser
 OpenHelpBrowser[path] opens an old-style help browser intialized with path
+OpenHelpBrowser[crit] opens for the first hit for search criterion crit
 ";
 HelpPagesSearch::usage="
 HelpPagesSearch[test] implements a search over documentation pages
@@ -47,6 +48,7 @@ helpSearcherDSNameSearch::usage="helpSearcherDSNameSearch[name, type]";
 helpBrowserNameSearch::usage="helpBrowserNameSearch[browser, name, type]";
 helpBrowserSearch::usage="helpBrowserSearch[browser, name, type]";
 helpBrowserDockedCell::usage="helpBrowserDockedCell[path]";
+helpBrowserSetNotebook::usage="helpBrowserSetNotebook[browser, ...]";
 helpBrowserNotebook::usage="helpBrowserNotebook[path]";
 
 
@@ -146,7 +148,7 @@ clearCachedDocumentationData[] :=
 (*Docs Metadata Dataset*)
 
 
-If[!AssociationQ@$helpSearcherDocMetadataDS,
+If[!MatchQ[OwnValues@$helpSearcherDocMetadataDS,{_:>_Association?AssociationQ}],
 $helpSearcherDocMetadataDS :=
    (
     If[
@@ -164,7 +166,7 @@ $helpSearcherDocMetadataDS :=
 (*Help Browser Tree*)
 
 
-If[!AssociationQ@helpBrowserCoreDS,
+If[!MatchQ[OwnValues@helpBrowserCoreDS,{_:>_Association?AssociationQ}],
 helpBrowserCoreDS :=
  helpBrowserCoreDS=
   Map[
@@ -257,6 +259,14 @@ helpBrowserNameSearch[browser_, name_, type_:"Symbol"]:=
 (*PacletLookup*)
 
 
+helpBrowserPathGetURI[path_]:=
+ Replace[
+  helpBrowserCoreDS @@ path, {
+   a_Association?(KeyMemberQ["uri"]):>
+    (a["uri"])
+   }]
+
+
 helpBrowserPacletGetPath[pacletURI_]:=
  With[{
    baseFile=Documentation`ResolveLink[pacletURI]
@@ -276,19 +286,9 @@ helpBrowserPacletLookup[browser_ ,pacletURI_]:=
     current=CurrentValue[browser, $helpBrowserTaggingRulesPath]
     },
     If[current===new,
-     NotebookFind[
-      browser,
-      Replace[StringSplit[pacletURI,"#",2]//Last,
-       s_String?(StringMatchQ[NumberString]):>
-        ToExpression[s]
-       ],
-      All,
-      CellID,
-      AutoScroll->False
-      ];
-     Replace[SelectedCells@browser,
-      {c_,___}:>
-       SelectionMove[c,All,CellContents]
+     If[StringContainsQ[pacletURI,"#"],
+      NotebookFind[$helpBrowserTaggingRulesPath, 
+       StringSplit[pacletURI,"#"][[-1]], Next, CellID, AutoScroll -> Top]
       ],
      helpBrowserSetPath[browser, new]
      ]
@@ -325,16 +325,364 @@ Notebook[{
      ]
    ]
   ],
+ Cell[StyleData["Notebook"],
+  NotebookEventActions->
+   {
+    {"MenuCommand","OpenHelpLink"}:>
+     Apply[helpBrowserPacletLookup,
+      Reverse@Last@CurrentValue["EventData"]
+      ]
+    }
+  ],
  Cell[StyleData["Link"],
   ButtonBoxOptions->{
    ButtonFunction:>
     Function[
-     KernelExecute[helpBrowserPacletLookup[EvaluationNotebook[],#]]
+     KernelExecute[
+      helpBrowserPacletLookup[EvaluationNotebook[],#]
+      ]
      ],
    Evaluator->"Local"
    }
   ]
- }];
+ },
+ StyleDefinitions->"PrivateStylesheetFormatting.nb"
+ ];
+
+
+(* ::Subsubsection::Closed:: *)
+(*PanePicker*)
+
+
+helpBrowserPickerPane[
+ nb_,
+ choices_,
+ idx_,
+ pp_,
+ lineHeight_
+ ]:=
+  ListPicker[
+    Dynamic[
+     If[Length@pp >= idx, pp[[{idx}]]],
+     Function@
+      With[{
+       p=$helpBrowserTaggingRulesPath,
+       newPath=
+        ReplacePart[
+         If[Length@pp >= idx,
+          Take[pp, idx],
+          PadRight[pp, idx, ""]
+          ], 
+         idx -> First@#
+         ]
+       },
+       If[newPath=!=pp,
+        Set[ CurrentValue[nb, p], newPath];
+        ]
+       ]
+     ],
+    Map[#->
+     Pane[#,{Full,lineHeight}]&, 
+     choices
+     ],
+    With[{wlpp=If[Length@pp===3, 2, Length@pp]},
+     ImageSize -> 
+      {
+       Scaled[1 / (wlpp + 1)], 
+       Full
+       }
+     ],
+    Background -> {{GrayLevel[.98], White}},
+    Appearance -> "Frameless",
+    If[Length@pp >= idx&&MemberQ[choices, pp[[idx]]],
+     ScrollPosition ->
+      {
+       0, 
+       With[
+        {
+         p1=FirstPosition[choices, pp[[idx]]][[1]]
+         },
+        Max@{(1+p1)*lineHeight-100,0}
+        ]
+       },
+     Sequence@@{}
+     ],
+   Spacings->0
+   ];
+
+
+(* ::Subsubsection::Closed:: *)
+(*SetNotebook*)
+
+
+helpBrowserSetNotebook[
+ nb_,
+ uri_,
+ currentLoadedPath_,
+ panePathCached_,
+ searchString_,
+ preserveHistory_:False
+ ]:=
+ If[currentLoadedPath =!= panePathCached,
+  If[currentLoadedPath=!=None,
+   currentLoadedPath = panePathCached
+   ];
+  With[{
+   tr= 
+    Join[
+     {
+      "Path" -> panePathCached,
+      "LoadedPath" -> panePathCached,
+      "SearchString" -> uri,
+      "LinkHistory" -> 
+       If[preserveHistory || 
+         Length[Lookup[#, "LoadedPath"]]<3,
+        Lookup[#, "LinkHistory", {}],
+        Append[Lookup[#, "LinkHistory", {}], 
+         {
+          Lookup[#, "LoadedPath", {}],
+          helpBrowserPathGetURI@Lookup[#, "LoadedPath", {}]
+          }
+         ]
+        ],
+      "LinkFuture" -> 
+       If[preserveHistory, 
+        Lookup[#, "LinkFuture", {}], 
+        {}
+        ]
+      },
+     DeleteCases[#,
+      "LoadedPath" | "Path" | "SearchString" |
+       "LinkHistory" | "LinkFuture" ->_
+      ]
+     ]&@CurrentValue[EvaluationNotebook[], {TaggingRules, "OldHelpBrowser"}],
+   sd=$helpBrowserStyleDefinitions,
+   cleanURI="paclet:"<>StringTrim[uri,"paclet:"],
+   enb=nb
+   },
+   Replace[Documentation`ResolveLink[cleanURI],{
+    f_String:>
+     With[{put=Get[f]},
+     With[{
+       mcells=
+        Sequence@@Flatten@
+         Map[
+          {
+           FrontEnd`SetOptions[#, Deletable->True],
+           FrontEnd`NotebookDelete[#]
+           }&,
+          Cells[enb]
+          ],
+       ops=
+        Join[
+         DeleteCases[Options[put],
+          StyleDefinitions|TaggingRules|
+           WindowSize|WindowMargins->_
+          ],
+         {
+          Background->Inherited,
+          StyleDefinitions->sd,
+          TaggingRules->
+           Append[
+            Lookup[Options[put],TaggingRules, {}], 
+            "OldHelpBrowser"->tr
+            ]
+          }
+         ]
+      },
+      MathLink`CallFrontEnd@{
+       FrontEnd`SetOptions[enb, ops],
+       FrontEnd`NotebookSuspendScreenUpdates[enb],
+       mcells,
+       FrontEnd`SelectionMove[enb, Before, Notebook],
+       FrontEnd`NotebookWrite[enb, put, None,
+        AutoScroll->False
+        ],
+       FrontEnd`NotebookResumeScreenUpdates[enb]
+       };
+      SetOptions[enb,Options[enb,Background]];
+      nb
+     ]
+     ],
+   _:>$Failed
+   }]
+  ]
+ ];
+helpBrowserSetNotebook~SetAttributes~HoldRest
+
+
+(* ::Subsubsection::Closed:: *)
+(*Old Set*)
+
+
+helpBrowserSetNotebookOld[
+ nb_,
+ nbPath_,
+ currentLoadedPath_,
+ panePathCached_,
+ searchString_
+ ]:=
+ If[currentLoadedPath =!= panePathCached,
+  CheckAll[
+   FrontEndExecute@
+    FrontEnd`NotebookSuspendScreenUpdates[nb];
+   With[{
+    c=Cells[nb],
+    nbExpr =
+     DeleteCases[
+      WindowSize | WindowMargins | DockedCells | 
+      StyleDefinitions -> _]@
+     Replace[Documentation`ResolveLink[nbPath], {
+      f_String?FileExistsQ :> 
+        ReplaceAll[Get[f],{
+          HoldPattern[Documentation`HelpLookup[e_]]:>
+           (helpBrowserPacletLookup[nb, e]),
+          HoldPattern[Documentation`HelpLookup[e_,n_]]:>
+           (helpBrowserPacletLookup[n, e])
+          }],
+      _ -> Notebook[{}]
+      }]
+    },
+    Replace[
+     Fold[
+      Lookup[#,#2,<||>]&,
+      Options[nbExpr],
+      {TaggingRules,"Metadata","uri"}
+      ],
+     s_String:>Set[searchString,s]
+     ];
+    FrontEndExecute@
+    Join[
+     Map[
+      FrontEnd`SetOptions[#,{
+       Deletable -> True,
+       Editable->True
+       }]&,
+      c
+      ],
+     {
+      FrontEnd`NotebookDelete[c],
+      FrontEnd`SetOptions[nb,{
+       Selectable->True,
+       Editable->True,
+       Deployed->False
+       }],
+      FrontEnd`NotebookWrite[
+       nb,
+       First@nbExpr
+       ],
+      FrontEnd`SetOptions[nb,
+       Join[
+        {
+         StyleDefinitions -> $helpBrowserStyleDefinitions,
+         TaggingRules -> 
+          Join[
+           Lookup[Options[nbExpr],TaggingRules,{}],
+           CurrentValue[nb, TaggingRules]
+           ]
+         },
+        Cases[ DeleteCases[TaggingRules->_]@Rest@nb, _?OptionQ]
+        ]
+       ],
+     FrontEnd`SelectionMove[nb, Before, Notebook],
+     FrontEnd`NotebookResumeScreenUpdates[nb]
+     }
+    ]
+   ],
+   FrontEndExecute@
+    FrontEnd`NotebookResumeScreenUpdates[nb]
+   ];
+   currentLoadedPath = panePathCached
+   ];
+helpBrowserSetNotebookOld~SetAttributes~HoldRest
+
+
+(* ::Subsubsection::Closed:: *)
+(*ResizeBar*)
+
+
+helpBrowserResizeBar[
+ panePickerHeight_,
+ resizeDragBase_,
+ panePickerHeightBase_
+ ]:=
+ EventHandler[
+           MouseAppearance[#,"FrameTBResize"]&@
+             Graphics[
+              {},
+              Background->GrayLevel[.7],
+              ImageSize->{Full,2},
+              AspectRatio->Full,
+              ImagePadding->None,
+              Method->{"ShrinkWrap"->True},
+              ImageMargins->0
+              ],{
+            "MouseDown":>
+              (
+               If[!NumericQ@resizeDragBase,
+                Replace[MousePosition["ScreenAbsolute"],
+                 {_,y_}:>Set[resizeDragBase,y]
+                 ]
+                ];
+               If[!NumericQ@panePickerHeightBase,
+                panePickerHeightBase=panePickerHeight
+                ]
+               ),
+            "MouseUp":>
+              Clear[resizeDragBase,panePickerHeightBase],
+            "MouseDragged":>
+             (
+              Replace[MousePosition["ScreenAbsolute"],
+               {_,m_}:>
+                If[!NumericQ@resizeDragBase,
+                 Set[resizeDragBase,m];
+                 panePickerHeightBase=panePickerHeight,
+                 With[{
+                  new = panePickerHeightBase +  m - resizeDragBase,
+                  old = panePickerHeight
+                  },
+                  panePickerHeight = new
+                  ]
+                 ]
+               ]
+              ),
+            PassEventsDown->True
+            }];
+helpBrowserResizeBar~SetAttributes~HoldAll;
+
+
+(* ::Subsubsection::Closed:: *)
+(*SearchIcon*)
+
+
+$helpBrowserSearchIcon=
+ Function[{
+               "Default"->#,
+               "Hover"->
+                 Image[Darker[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True],
+               "Pressed"->
+                Image[Lighter[#,.5],
+                 "Byte",
+                 "ColorSpace"->"RGB",
+                 Interleaving->True]
+               }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"];
+
+
+(* ::Subsubsection::Closed:: *)
+(*XIcon*)
+
+
+$helpBrowserXIcon={
+                  "Default"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIcon"],
+                  "Hover"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconHighlight"],
+                  "Pressed"->
+                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconPressed"]
+                  }
 
 
 (* ::Subsubsection:: *)
@@ -349,192 +697,135 @@ On[General::shdw];
 helpBrowserDockedCell[path : _List : {}] :=
   DynamicModule[
    {
+    serialNo,
+    browserLocked,
+    loadPath,
+    loadDMVars,
+    setDMVars,
     panePathCached,
-    paneCorePath,
+    currentLoadedPath,
+    linkHistory,
+    linkFuture,
+    paneCoreCached,
     searchString,
     panePicker,
-    panePickerHeight = 150,
-    panePickerHeightBase,
+    panePickerHeight,
     setNB,
-    showBrowser = True,
+    setNBPrevious,
+    setNBFuture,
+    nbSetFlag,
+    showBrowser,
+    showBrowserToggled = False,
     advancedSearch = False,
-    advancedSearchValues = 
-     AssociationMap[Null&, {"type","title","context","status","uri"} ],
+    advancedSearchValues,
     advancedSearchResults,
-    currentLoadedPath,
     listPickerLineHeight = 20,
+    panePickerHeightBase,
     resizeDragBase
     },
-   With[{p=$helpBrowserTaggingRulesPath},
-    CurrentValue[EvaluationNotebook[], p] = path
-    ];
-   (* Click pane generator *)
-   panePicker =
-    Function@
-     With[{
-       choices = #, idx = #2,
-       pp = panePathCached
-       },
-      ListPicker[
-       Dynamic[
-        If[Length@pp >= idx, pp[[{idx}]]],
-        Function@
-         With[{p=$helpBrowserTaggingRulesPath},
-          Set[
-           CurrentValue[EvaluationNotebook[], p ],
-           ReplacePart[
-            If[Length@pp >= idx,
-             Take[pp, idx],
-             PadRight[pp, idx, ""]
-             ], 
-            idx -> First@#]
-           ]
-          ]
-        ],
-       Map[#->Pane[#,{Full,listPickerLineHeight}]&,choices],
-       With[{wlpp=If[Length@pp===3, 2, Length@pp]},
-        ImageSize -> {
-         Scaled[1 / (wlpp + 1) ], 
-         Full
-         }
-        ],
-       Background -> {{GrayLevel[.98], White}},
-       Appearance->"Frameless",
-       If[Length@pp >= idx&&MemberQ[choices, pp[[idx]]],
-        ScrollPosition->{
-         0, 
-         With[{p1=FirstPosition[choices, pp[[idx]] ][[1]]},
-          If[p1>6,(1+p1)*listPickerLineHeight-100,0]
-          ]
-         },
-        Sequence@@{}
-        ],
-       Spacings->0
-       ]
-      ];
-    (* Load notebook function *)
-   setNB =
-    Function[
-     If[currentLoadedPath =!= panePathCached,
-      CheckAll[
-       FrontEndExecute@
-        FrontEnd`NotebookSuspendScreenUpdates[EvaluationNotebook[]];
-       SelectionMove[EvaluationNotebook[], All, Notebook];
-       SetOptions[NotebookSelection[EvaluationNotebook[]], 
-        Deletable -> True];
-       NotebookDelete[EvaluationNotebook[]];
-       With[{
-         nb =
-          DeleteCases[
-            WindowSize | WindowMargins | DockedCells | 
-              StyleDefinitions -> _]@
-           Replace[Documentation`ResolveLink[#], {
-             f_String?FileExistsQ :> Import[f],
-             _ -> Notebook[{}]
-             }]
-         },
-        Replace[
-         Fold[
-          Lookup[#,#2,<||>]&,
-          Options[nb],
-          {TaggingRules,"Metadata","uri"}
-          ],
-          s_String:>Set[searchString,s]
-          ];
-        NotebookWrite[
-         EvaluationNotebook[],
-         First@nb
-         ];
-        SetOptions[EvaluationNotebook[],
-         Join[
-          {
-           StyleDefinitions -> $helpBrowserStyleDefinitions,
-           TaggingRules -> 
-             Join[
-              Lookup[Options[nb],TaggingRules],
-              CurrentValue[EvaluationNotebook[], TaggingRules]
-              ]
-           },
-          List @@ DeleteCases[TaggingRules->_]@Rest@nb
-          ]
-         ]
-        ];
-       SelectionMove[EvaluationNotebook[], Before, Notebook];
-       FrontEndExecute@
-        FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]],
-       FrontEndExecute@
-        FrontEnd`NotebookResumeScreenUpdates[EvaluationNotebook[]]
-       ];
-      currentLoadedPath = panePathCached
-      ];
-     Nothing
-     ];
-   
-    (* Total display *)
-   Dynamic@
-    If[showBrowser,
-     With[{pp=
-      Replace[
-       CurrentValue[EvaluationNotebook[], 
-        $helpBrowserTaggingRulesPath
-        ],
-       Except[_List]->path
-       ]
-      },
-     panePathCached = pp;
+   (* Total display *)
+   Dynamic[
+    If[!browserLocked[],
+     Replace[
+      CurrentValue[ EvaluationNotebook[], 
+       {TaggingRules, "OldHelpBrowser", "Path"}],{
+      p_List:>Set[panePathCached, p],
+      e_:>Set[panePathCached, path]
+      }];
+    loadDMVars[];
+    If[showBrowser//TrueQ,
      Grid[{
-      (* Hide browser button *)
-       List@Item[#,Alignment->Right]&@Button[
-        Row[
-         {
-          "",
-          "Hide Browser"
-          },
-         Spacer[2]
-         ],
-        showBrowser = False,
-        Appearance -> None,
-        BaseStyle -> "Message"
-        ],
        (* Search bar *)
-       List@Item[Dynamic[#, TrackedSymbols:>{advancedSearch}]]&@
+       List@
+        Dynamic[
+         Panel[
+          Grid[{
+           {"",
+            Item[#,Alignment->{Right,Top}]&@
+            Button[
+             Row[
+              {
+               "",
+               "Hide Browser"
+               },
+               Spacer[2]
+              ],
+              showBrowser = False;
+              setDMVars[],
+              Appearance -> None,
+              BaseStyle -> "Message"
+              ]},
+           {
+            #,
+            SpanFromLeft
+            }
+           },
+           ItemSize->{{0,Scaled[1]},Automatic}
+           ],
+          ImageSize->{Scaled[1], Automatic},
+          Appearance->
+           Image[CompressedData["1:eJztyDkKAkEUhOFGE0OvIHgIU0PTEQ8ww7SDSQs9gnhXl3HBfbmC7Q0qeWDwf1CPqtcr5tm05ZyrO+lk+XIYY74ad9OYhHpWBV+OwsJXPg6Kdnr2U8qUX/8AAAAA+HtvyF6AgSdg4AHZHbIbYOAKGLhAdobsBBg4QnaAbA9ZAxjYAQa2gIENZGvIvp8pRMU="], 
+            "Byte", ColorSpace -> "RGB", Interleaving -> True],
+          Alignment->Center
+          ], 
+         TrackedSymbols:>{advancedSearch}
+         ]&@
         If[!advancedSearch,
          (* Standard search interface *)
          Grid[{
           {
+           Row[{
+            Button["",
+             setNBPrevious[],
+             Appearance->
+             {
+              "Default"->
+               ToExpression@FrontEndResource["FEBitmaps","BackIcon"],
+              "Hover" -> 
+               ToExpression@FrontEndResource["FEBitmaps","BackIconHot"],
+              "Disabled" -> 
+               ToExpression@FrontEndResource["FEBitmaps","DisabledBackIcon"]
+              },
+             ImageSize->{21,25},
+             Enabled -> Dynamic[Length[linkHistory] > 0]
+             ],
+            Button["",
+             setNBFuture[],
+             Appearance->
+             {
+              "Default"->ToExpression@FrontEndResource["FEBitmaps","ForwardIcon"],
+              "Hover" -> ToExpression@FrontEndResource["FEBitmaps","ForwardIconHot"],
+              "Disabled" ->
+               ToExpression@FrontEndResource["FEBitmaps","DisabledForwardIcon"]
+              },
+             ImageSize -> {21,25},
+             Enabled -> Dynamic[Length[linkFuture] > 0]
+             ]
+            },
+            Spacer[2]
+            ],
            EventHandler[
-            InputField[Dynamic[searchString],String, FieldSize->35],
+            InputField[Dynamic[searchString], String, FieldSize->35],
             "ReturnKeyDown":>helpBrowserSearch[EvaluationNotebook[], searchString]
             ],
            Button["",
             helpBrowserSearch[EvaluationNotebook[], searchString],
-            Appearance->
-             Function[{
-               "Default"->#,
-               "Hover"->
-                 Image[Darker[#,.5],
-                 "Byte",
-                 "ColorSpace"->"RGB",
-                 Interleaving->True],
-               "Pressed"->
-                Image[Lighter[#,.5],
-                 "Byte",
-                 "ColorSpace"->"RGB",
-                 Interleaving->True]
-               }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"],
-             ImageSize->{15,14}
-             ]
+            Appearance->$helpBrowserSearchIcon,
+            ImageSize->{15,14}
+            ]
            },
           {
+           "",
            Item[#, Alignment->Right]&@
            Button["Advanced search",
-            advancedSearch = True,
+            advancedSearch = True;
+            setDMVars[],
             Appearance -> None,
             BaseStyle -> "Message"
-             ]
+            ]
            }
           },
-         Alignment->Right
+         Alignment->Scaled[.8]
          ],
         (* Advanced search system *)
         Grid[
@@ -543,16 +834,28 @@ helpBrowserDockedCell[path : _List : {}] :=
            Map[
             {#, 
              EventHandler[
-              InputField[ 
-               Dynamic[advancedSearchValues[[#]]],
+              With[{f=#},
+              InputField[
+               Dynamic[
+                advancedSearchValues[[f]],
+                Function[
+                 advancedSearchValues[[f]] = #;
+                 setDMVars[]
+                 ]
+                ],
                Hold[Expression],
                FieldSize->30
+               ]
                ],
               "ReturnKeyDown":>
                Set[advancedSearchResults, 
                 HelpPagesSearch[
                  Normal@DeleteCases[Null]@
                   Map[
+                   Replace[
+                    s_String:>
+                     Function[StringContainsQ[#,s,IgnoreCase->True]]
+                    ]@*
                    Replace[{
                     Verbatim[RawBoxes][s_String]:>s,
                     Hold[a_Symbol]:>ToString[Unevaluated[a]],
@@ -572,6 +875,10 @@ helpBrowserDockedCell[path : _List : {}] :=
               HelpPagesSearch[
                 Normal@DeleteCases[Null]@
                  Map[
+                  Replace[
+                   s_String:>
+                    Function[StringContainsQ[#,s,IgnoreCase->True]]
+                   ]@*
                   Replace[{
                    Verbatim[RawBoxes][s_String]:>s,
                    Hold[a_Symbol]:>ToString[Unevaluated[a]],
@@ -582,34 +889,49 @@ helpBrowserDockedCell[path : _List : {}] :=
                 True
                 ]
                ],
-            Appearance->
-             Function[{
-               "Default"->#,
-               "Hover"->
-                 Image[Darker[#,.5],
-                 "Byte",
-                 "ColorSpace"->"RGB",
-                 Interleaving->True],
-               "Pressed"->
-                Image[Lighter[#,.5],
-                 "Byte",
-                 "ColorSpace"->"RGB",
-                 Interleaving->True]
-               }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"],
-             ImageSize->{15,14}
-             ],
+            Appearance->$helpBrowserSearchIcon,
+            ImageSize->{15,14}
+            ],
           {-1,-1}
           ],
           {
            {
-           "",
-           Item[#,Alignment->Right]&@
-           Button["Standard search",
-            advancedSearch = False,
-            Appearance -> None,
-            BaseStyle -> "Message"
-            ]
-           },
+            Item[#, Alignment->Left]&@
+            Row[{
+            Button["",
+             setNBPrevious[],
+             Appearance->
+             {
+              "Default"->ToExpression@FrontEndResource["FEBitmaps","BackIcon"],
+              "Hover" -> ToExpression@FrontEndResource["FEBitmaps","BackIconHot"],
+              "Disabled" -> ToExpression@FrontEndResource["FEBitmaps","DisabledBackIcon"]
+              },
+             ImageSize->{21,25},
+             Enabled -> Dynamic[Length[linkHistory] > 0]
+             ],
+            Button["",
+             setNBFuture[],
+             Appearance->
+             {
+              "Default"->ToExpression@FrontEndResource["FEBitmaps","ForwardIcon"],
+              "Hover" -> ToExpression@FrontEndResource["FEBitmaps","ForwardIconHot"],
+              "Disabled" ->
+               ToExpression@FrontEndResource["FEBitmaps","DisabledForwardIcon"]
+              },
+             ImageSize -> {21,25},
+             Enabled -> Dynamic[Length[linkFuture] > 0]
+             ]
+            },
+            Spacer[2]
+            ],
+            Item[#,Alignment->Right]&@
+            Button["Standard search",
+             advancedSearch = False;
+             setDMVars[],
+             Appearance -> None,
+             BaseStyle -> "Message"
+             ]
+            },
           {
            Item[#,Alignment->Center]&@
            Dynamic@
@@ -648,14 +970,7 @@ helpBrowserDockedCell[path : _List : {}] :=
                  ],
                 Button["",
                  advancedSearchResults = Null,
-                 Appearance->{
-                  "Default"->
-                   ToExpression@FrontEndResource["FEBitmaps","CircleXIcon"],
-                  "Hover"->
-                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconHighlight"],
-                  "Pressed"->
-                   ToExpression@FrontEndResource["FEBitmaps","CircleXIconPressed"]
-                  },
+                 Appearance->$helpBrowserXIcon,
                  ImageSize->{14,14}
                  ]
                },
@@ -670,31 +985,54 @@ helpBrowserDockedCell[path : _List : {}] :=
          ]
         ],
         (* Click pane *)
+        List@
         With[{paneCore=
-         Framed[
-          Row@
-           Prepend[
-            MapIndexed[
-             Replace[
-               helpBrowserCoreDS @@ Take[pp, #2[[1]]], {
-                a_Association?(KeyMemberQ["uri"]):>
-                 setNB[a["uri"]],
-                a_Association :> 
-                 panePicker[
-                  SortBy[a // Keys // Sort, #=!="System`"&], 
-                  #2[[1]] + 1
-                  ]
-                }] &,
-             pp
-             ],
-            panePicker[Keys[helpBrowserCoreDS], 1]
+         If[
+           !MatchQ[paneCoreCached, _Framed]||
+           (
+            (showBrowserToggled || (currentLoadedPath =!= panePathCached )) &&
+            !TrueQ[browserLocked[]]
+            ),
+           showBrowserToggled = False;
+           paneCoreCached = 
+            Framed[
+             Row@
+              Prepend[
+               MapIndexed[
+                Replace[
+                 helpBrowserCoreDS @@ Take[panePathCached, #2[[1]]], {
+                  a_Association?(KeyMemberQ["uri"]):>
+                   (setNB[a["uri"]]),
+                  a_Association :> 
+                   panePicker[
+                    SortBy[a // Keys // Sort, #=!="System`"&], 
+                    #2[[1]] + 1
+                    ]
+                 }] &,
+                panePathCached
+                ],
+              panePicker[ 
+               SortBy[
+                Sort@Keys[helpBrowserCoreDS],
+                Switch[#,
+                 "Root Guide", 0,
+                 "Symbol",1,
+                 "Guide", 2,
+                 "Tutorial",3,
+                 _,4
+                 ]&
+                ],
+               1
+               ]
+              ],
+            ImageSize->Full,
+            Background->White,
+            FrameStyle->Gray,
+            FrameMargins->None
             ],
-          ImageSize->Full,
-          Background->White,
-          FrameStyle->Gray,
-          FrameMargins->None
-          ]},
-         List@
+           paneCoreCached
+           ]
+          },
            Column[{
             Dynamic[
              Pane[
@@ -704,74 +1042,277 @@ helpBrowserDockedCell[path : _List : {}] :=
               ],
              TrackedSymbols:>{panePickerHeight}
              ],
-           EventHandler[
-           MouseAppearance[#,"FrameTBResize"]&@
-             Graphics[
-              {},
-              Background->GrayLevel[.7],
-              ImageSize->{Full,2},
-              AspectRatio->Full,
-              ImagePadding->None,
-              Method->{"ShrinkWrap"->True},
-              ImageMargins->0
-              ],{
-            "MouseDown":>
-              (
-               If[!NumericQ@resizeDragBase,
-                Replace[MousePosition["ScreenAbsolute"],
-                 {_,y_}:>Set[resizeDragBase,y]
-                 ]
-                ];
-               If[!NumericQ@panePickerHeightBase,
-                panePickerHeightBase=panePickerHeight
-                ]
-               ),
-            "MouseUp":>
-             Clear[resizeDragBase,panePickerHeightBase],
-            "MouseDragged":>
-             (
-              Replace[MousePosition["ScreenAbsolute"],
-               {_,m_}:>
-                If[!NumericQ@resizeDragBase,
-                 Set[resizeDragBase,m];
-                 panePickerHeightBase=panePickerHeight,
-                 With[{
-                  new = panePickerHeightBase +  m - resizeDragBase,
-                  old = panePickerHeight
-                  },
-                  panePickerHeight = new
-                  ]
-                 ]
-               ]
-              ),
-            PassEventsDown->True
-            }]
-           },
+            helpBrowserResizeBar[
+             panePickerHeight,
+             resizeDragBase,
+             panePickerHeightBase
+             ]
+            },
            Spacings->0
            ]
         ]
-       }]
-      ],
-     Button[
-      Column[{Row[{
-       "",
-       "Show Browser"
        },
-       Spacer[2]
+       Spacings->{Automatic,0}
        ],
+     If[
+        currentLoadedPath =!= panePathCached && 
+        !browserLocked[],
+        Replace[
+         helpBrowserCoreDS @@ panePathCached, {
+          a_Association?(KeyMemberQ["uri"]):>
+           (setNB[a["uri"]])
+         }]
+        ];
+     Button[
+      Column[{
+       Row[{"","Show Browser"}, Spacer[2]],
        Spacer[5]
        },
        Spacings->0
        ],
-      showBrowser = True,
+      showBrowser = True;
+      showBrowserToggled = True;
+      setDMVars[],
       Appearance -> None,
       BaseStyle -> "Message"
       ]
      ]
+    ]
+   ],
+  (* INITIALIZATION PROCEDURES *)
+   Initialization:>
+    (
+     browserLocked = 
+      Function[
+       TrueQ@
+       CurrentValue[
+        EvaluationNotebook[],
+        {TaggingRules, "OldHelpBrowser", ".lock"}
+        ]
+       ];
+     serialNo=
+      MaximalBy[
+      DeleteCases[""]@
+       StringTrim[Names["FE`*Variable*"],
+        "FE`DynamicModuleVariableList$"],
+       ToExpression
+      ][[1]];
+     (* Initialize front-end variables *)
+     loadPath=
+      Function@
+       Replace[
+        CurrentValue[ EvaluationNotebook[], 
+         {TaggingRules, "OldHelpBrowser", "Path"}],{
+         p_List:>Set[panePathCached, p],
+         _:>Set[panePathCached, path]
+         }];
+     loadDMVars=
+     Function@
+     With[{
+      core=
+      CurrentValue[ EvaluationNotebook[], {TaggingRules, "OldHelpBrowser"}]
+      },
+      Replace[Lookup[core, "Path"],{
+       p_List:>Set[panePathCached, p],
+       _:>(Set[panePathCached, path])
+       }];
+      Replace[Lookup[core, "LoadedPath"],{
+       p_List:>Set[currentLoadedPath, p],
+       _:>Set[currentLoadedPath,{}]
+       }];
+      Replace[Lookup[core, "LinkHistory"],{
+       p_List:>Set[linkHistory, p],
+       _:>Set[linkHistory,{}]
+       }];
+      Replace[Lookup[core, "LinkFuture"],{
+       p_List:>Set[linkFuture, p],
+       _:>Set[linkFuture,{}]
+       }];
+      Replace[Lookup[core, "SearchString"],{
+       p_String:> Set[searchString, p],
+       _:> Set[searchString, ""]
+       }];
+      Replace[
+       Lookup[core, "BrowserVisible"],{
+       b:True|False:>Set[showBrowser, b],
+       _:>Set[showBrowser, True]
+       }
+       ];
+      Replace[
+       Lookup[core, "AdvancedSearchOn"],{
+       b:True|False:>Set[advancedSearch, b],
+       _:>Set[advancedSearch, False]
+       }];
+      Replace[
+       Lookup[core, "AdvancedSearchValues"],{
+       p_Association:>Set[advancedSearchValues, p],
+       _:> 
+        Set[advancedSearchValues, 
+         AssociationMap[Null&, {"type","title","context","status","uri"} ]]
+       }];
+      Replace[
+       Lookup[core, "BrowserHeight"],{
+       p_?NumberQ:>Set[panePickerHeight, p],
+       _:> 
+        Set[panePickerHeight, 150]
+       }];
+      ];
+     loadDMVars[];
+     setDMVars=
+      Function@
+       With[{
+        varMap=
+         AssociationThread[
+          {
+           "Path",
+           "LoadedPath",
+           "SearchString", 
+           "BrowserVisible", 
+           "AdvancedSearchOn",
+           "AdvancedSearchValues",
+           "BrowserHeight",
+           "LinkHistory",
+           "LinkFuture",
+           "DynamicModuleInfo"
+           },
+           {
+            panePathCached,
+            currentLoadedPath,
+            searchString,
+            showBrowser,
+            advancedSearch,
+            advancedSearchValues,
+            panePickerHeight,
+            linkHistory,
+            linkFuture,
+            <|
+             "$ModuleNumber"->serialNo,
+             "Context"->Context[serialNo]
+             |>
+            }
+          ]
+        },
+        MathLink`CallFrontEndHeld@@
+        Thread[
+        KeyValueMap[
+         Hold@
+          FrontEnd`SetValue[
+           FEPrivate`Set[
+            CurrentValue[EvaluationNotebook[], 
+             {TaggingRules, "OldHelpBrowser", #}
+             ],
+            #2
+            ]
+           ]&,
+         varMap
+         ],
+        Hold
+        ]
+       ];
+     setDMVars[];
+     (* Initialize notebook setting procedure *)
+     setNB = 
+      Function[
+       If[ currentLoadedPath =!= panePathCached,
+        CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = True;
+       setDMVars[];
+       helpBrowserSetNotebook[
+        EvaluationNotebook[],
+        #,
+        currentLoadedPath,
+        panePathCached,
+        searchString
+        ];
+        CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = False;
+       ];
+       Nothing
+       ];
+     setNBPrevious = 
+      Function[
+       With[{p=linkHistory[[-1]]},
+       CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = True;
+       linkHistory = Drop[ linkHistory, -1];
+       If[p[[1]]=!=currentLoadedPath&&p[[2]]=!=searchString,
+       linkFuture = 
+        Prepend[linkFuture, 
+         {currentLoadedPath, helpBrowserPathGetURI[currentLoadedPath]}
+         ];
+       searchString = p[[2]];
+       setDMVars[];
+       helpBrowserSetNotebook[
+        EvaluationNotebook[],
+        searchString,
+        currentLoadedPath,
+        p[[1]],
+        searchString,
+        True
+        ];
+        CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = False;
+       ]
+       ];
+       Nothing
+       ];
+     setNBFuture = 
+      Function[
+       With[{p=linkFuture[[1]]},
+       CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = True;
+       linkFuture = Drop[ linkFuture, 1];
+       If[p[[1]]=!=currentLoadedPath&&p[[2]]=!=searchString,
+       linkHistory = 
+        Append[linkHistory, 
+         {currentLoadedPath, helpBrowserPathGetURI[currentLoadedPath]}
+         ];
+       searchString = p[[2]];
+       setDMVars[];
+       helpBrowserSetNotebook[
+        EvaluationNotebook[],
+        searchString,
+        currentLoadedPath,
+        p[[1]],
+        searchString,
+        True
+        ];
+        CurrentValue[ 
+         EvaluationNotebook[],
+         {TaggingRules, "OldHelpBrowser", ".lock"}
+         ] = False;
+       ]
+       ];
+       Nothing
+       ];
+     panePicker =
+      Function[
+       helpBrowserPickerPane[
+        EvaluationNotebook[],
+        #,
+        #2,
+        panePathCached,
+        listPickerLineHeight
+        ]
+       ]
+     )
    ];
 
 
-helpBrowserNotebook[path : _List : {}] :=
+helpBrowserNotebook[
+ path : {___String} : {},
+ ops:OptionsPattern[]
+ ] :=
   Notebook[{},
    DockedCells ->
     Cell[BoxData@ToBoxes@helpBrowserDockedCell[path],
@@ -780,31 +1321,120 @@ helpBrowserNotebook[path : _List : {}] :=
      CellFrameMargins -> {{0,0},{-6,0}},
      TextAlignment->Right
      ],
+   ops,
+   StyleDefinitions->$helpBrowserStyleDefinitions,
    System`ClosingSaveDialog -> False,
    Saveable -> False,
-   WindowTitle -> "Help Browser"
+   WindowTitle -> "Help Browser",
+   WindowSize->{808,755},
+   WindowMargins->
+    MapThread[
+     {Floor[Abs[Subtract@@#]/2.-#2],Automatic}&,
+     {
+      AbsoluteCurrentValue[$FrontEndSession, "ScreenRectangle"],
+      {404,377}
+      }
+     ]
    ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*OpenHelpBrowser*)
 
 
-OpenHelpBrowser[path : _List : {}] :=
+helpBrowserOverrideDocumentationHelpLookup[]:=
  If[MatchQ[$helpBrowser, _NotebookObject?(NotebookRead[#] =!= $Failed &)],
+  SelectedNotebook[]===$helpBrowser,
+  Unprotect[Documentation`HelpLookup];
+  (Documentation`HelpLookup[s_String]/;helpBrowserOverrideDocumentationHelpLookup[])=.;
+  Protect[Documentation`HelpLookup];
+  ]
+
+
+OpenHelpBrowser[path : {___String} | Automatic : Automatic] :=
+ If[
+  MatchQ[$helpBrowser, _NotebookObject?(NotebookRead[#] =!= $Failed &)],
   SetOptions[$helpBrowser, {
     WindowFloating -> True,
     Visible -> True
     }];
   SetOptions[$helpBrowser, WindowFloating -> False];
-  If[Length@path>0, helpBrowserSetPath[$helpBrowser, path]],
+  SetSelectedNotebook@$helpBrowser;
+  If[ListQ@path, helpBrowserSetPath[$helpBrowser, path]];
+  $helpBrowser,
   Quiet@
    Check[
     loadCachedDocumentationData[],
     preLoadDocumentationMetadata[];
     cacheDocumentationData[]
     ];
-  $helpBrowser = CreateDocument@helpBrowserNotebook[path]
+   Unprotect[Documentation`HelpLookup];
+  (Documentation`HelpLookup[s_String]/;helpBrowserOverrideDocumentationHelpLookup[]):=
+   helpBrowserPacletLookup[$helpBrowser, s];
+  Protect[Documentation`HelpLookup];
+  $helpBrowser = 
+   CreateDocument@
+    helpBrowserNotebook[
+     Replace[path, 
+      Automatic:>
+       Replace[CurrentValue[$FrontEndSession,HomePage],{
+        "paclet:guide/WolframRoot"->{"Symbol","System`"},
+        e_:>helpBrowserPacletGetPath[e]
+        }]
+       ]
+      ]
+  ];
+
+
+OpenHelpBrowser[selectionFunction:Except[_?OptionQ|_?StringPattern`StringPatternQ]]:=
+ OpenHelpBrowser[helpBrowserPacletGetPath[#[[1]]]]&@
+ MinimalBy[StringLength[#["title"]]&]@
+  $helpSearcherDocMetadataDS[
+   Select[selectionFunction],
+   {"title", "uri"}
+   ]
+
+
+OpenHelpBrowser[selectionFunction:_?StringPattern`StringPatternQ]:=
+ OpenHelpBrowser[helpBrowserPacletGetPath[#[[1]]]]&@
+ MinimalBy[StringLength[#["title"]]&]@
+  $helpSearcherDocMetadataDS[
+   Select[selectionFunction],
+   {"title", "uri"}
+   ]
+
+
+OpenHelpBrowser[
+ p_?StringPattern`StringPatternQ
+ ]:=
+ OpenHelpBrowser[
+  StringMatchQ[#["title"], p]&
+  ]
+
+
+OpenHelpBrowser[
+ ops_?OptionQ
+ ]:=
+ HelpPagesSearch[
+  With[{
+  coreTest=
+   Map[
+    With[{
+     prop=#[[1]],
+     val=#[[2]]
+     },
+     If[StringPattern`StringPatternQ@val,
+       StringMatchQ[#[prop],val,IgnoreCase->True]&,
+       val@#[prop]&
+       ]
+     ]&,
+    Flatten@{ops}
+    ]
+   },
+   Replace[Thread[coreTest, Function],
+    Function[{t__}]:>Function[And[t]]
+    ]
+   ]
   ]
 
 
@@ -824,6 +1454,7 @@ HelpPagesSearch[
     ]&,
    Hyperlink[#, "paclet:" <> #2] &
    ] @@@
+  SortBy[StringLength[#["title"]]&]@
   $helpSearcherDocMetadataDS[
    Select[selectionFunction],
    {"title", "uri"}
