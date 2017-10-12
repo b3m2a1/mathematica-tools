@@ -1,0 +1,385 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     15885,        377]
+NotebookOptionsPosition[     14067,        340]
+NotebookOutlinePosition[     14500,        357]
+CellTagsIndexPosition[     14457,        354]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Mathematica Tools", "Section",
+ CellChangeTimes->{{3.716756708895467*^9, 
+  3.716756714334375*^9}},ExpressionUUID->"33a3d3e0-6bd9-4d63-9374-\
+97ba267a6b83"],
+
+Cell["\<\
+This is a collection of basic Mathematica tools, generally implemented as \
+one-off packages.\
+\>", "Text",
+ CellChangeTimes->{{3.716756795483638*^9, 
+  3.7167568124388638`*^9}},ExpressionUUID->"f18fc7d3-4dad-4116-a63d-\
+64ff141d4abf"],
+
+Cell[CellGroupData[{
+
+Cell["NotebookTabbing", "Subsection",
+ CellChangeTimes->{
+  3.716756997860669*^9},ExpressionUUID->"bc821cb4-5408-400a-9507-\
+328eb43d4a2d"],
+
+Cell["\<\
+This is a package that provides a tabbed notebook interface. Load it like so:\
+\
+\>", "Text",
+ CellChangeTimes->{{3.71675700031313*^9, 3.7167570061854143`*^9}, {
+  3.716757162570592*^9, 3.7167571690024548`*^9}, {3.716757214657997*^9, 
+  3.716757215017891*^9}},ExpressionUUID->"48b91caf-60b5-4963-bc3d-\
+675e365486a2"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  "\"\<https://raw.githubusercontent.com/b3m2a1/mathematica-tools/master/\
+NotebookTabbing.wl\>\"", "]"}]], "Code",
+ CellChangeTimes->{{3.7167571707715263`*^9, 
+  3.71675720725809*^9}},ExpressionUUID->"8a218cb4-25c0-4f87-9e62-\
+42e6aebabd1a"],
+
+Cell["Here\[CloseCurlyQuote]s a sample usage:", "Text",
+ CellChangeTimes->{{3.716757210192225*^9, 
+  3.7167572224014893`*^9}},ExpressionUUID->"bde01509-4c18-451d-8dd6-\
+cacba5af1cb1"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"test1", "=", "\[IndentingNewLine]", 
+   RowBox[{"CreateDocument", "[", "\n", "\t\t", 
+    RowBox[{"Cell", "[", 
+     RowBox[{
+      RowBox[{"BoxData", "@", 
+       RowBox[{"ToBoxes", "@", 
+        RowBox[{"Unevaluated", "[", 
+         RowBox[{"TabNotebookCachePages", "@", 
+          RowBox[{"EvaluationNotebook", "[", "]"}]}], "]"}]}]}], ",", 
+      "\"\<Input\>\""}], "]"}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"SetDockedTabs", "[", 
+   RowBox[{"test1", ",", "\[IndentingNewLine]", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"i", "\[Rule]", "i"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "3"}], "}"}]}], "\[IndentingNewLine]", "]"}]}], 
+   "]"}], ";"}]}], "Code",
+ CellChangeTimes->{{3.689026618333572*^9, 3.68902669645115*^9}, {
+   3.689030924445793*^9, 3.689030927995075*^9}, {3.689031053056436*^9, 
+   3.689031075229229*^9}, {3.689037517412668*^9, 3.6890375230388117`*^9}, 
+   3.689040144360825*^9, 3.689040666964189*^9, {3.68904500653959*^9, 
+   3.689045041776277*^9}, {3.7069118624606943`*^9, 3.706911873724103*^9}, {
+   3.7069142718306713`*^9, 3.706914280452272*^9}, {3.7167572557874203`*^9, 
+   3.716757259306406*^9}},ExpressionUUID->"af154bec-9823-427a-b2e5-\
+a399c82c5cf4"],
+
+Cell[TextData[{
+ "An example can be found in ",
+ ButtonBox["Tabbing Example.nb",
+  BaseStyle->"Hyperlink",
+  ButtonData->{"Tabbing Example.nb", None}]
+}], "Text",
+ CellChangeTimes->{{3.716757261424965*^9, 
+  3.716757303048223*^9}},ExpressionUUID->"68d1557b-b707-403e-a283-\
+f603d8a26511"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Paclet Installation", "Subsection",
+ CellChangeTimes->{{3.7167573093613462`*^9, 
+  3.716757313783863*^9}},ExpressionUUID->"5bafbc22-47bb-4d94-a972-\
+665cd23236d7"],
+
+Cell[TextData[{
+ "This is functionality developed to put in my ",
+ ButtonBox["PackageData.net Service Connection",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer/\
+serviceconnectionpackagedata.html"], None},
+  ButtonNote->
+   "https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer/\
+serviceconnectionpackagedata.html"],
+ ". It provides auto-installation of packages, especially from GitHub or the \
+Wolfram Library Archive."
+}], "Text",
+ CellChangeTimes->{{3.716757315327977*^9, 
+  3.716757393148446*^9}},ExpressionUUID->"acea612f-2f03-449a-99e6-\
+951502549dbe"],
+
+Cell["Load it like so:", "Text",
+ CellChangeTimes->{{3.716757394610688*^9, 
+  3.716757407300151*^9}},ExpressionUUID->"ceb5fecd-852c-47cc-bc90-\
+4f99a7eb29ef"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  "\"\<https://raw.githubusercontent.com/b3m2a1/mathematica-tools/master/\
+PackageDataPacletInstall.m\>\"", "]"}]], "Code",
+ CellChangeTimes->{{3.716757412814834*^9, 
+  3.7167574318759537`*^9}},ExpressionUUID->"af43020d-20bc-4884-979d-\
+e04697b15c07"],
+
+Cell["Then use it like so:", "Text",
+ CellChangeTimes->{{3.716757437210848*^9, 
+  3.7167574427794657`*^9}},ExpressionUUID->"20f5b23b-c3fe-4c16-b170-\
+387e2e1d8c77"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"PDInstallPaclet", "[", "\"\<https://github.com/szhorvat/MaTeX\>\"", 
+  "]"}]], "Code",
+ CellChangeTimes->{{3.7167574447692327`*^9, 
+  3.716757514306347*^9}},ExpressionUUID->"2430489b-c71d-435f-b8b1-\
+f2ed0c564b0c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  InterpretationBox[
+   RowBox[{
+    TagBox["Paclet",
+     "SummaryHead"], "[", 
+    DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+     TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+             PaneBox[
+              ButtonBox[
+               DynamicBox[
+                FEPrivate`FrontEndResource[
+                "FEBitmaps", "SquarePlusIconMedium"]], 
+               ButtonFunction :> (Typeset`open$$ = True), Appearance -> None, 
+               Evaluator -> Automatic, Method -> "Preemptive"], 
+              Alignment -> {Center, Center}, ImageSize -> 
+              Dynamic[{
+                Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                 AbsoluteCurrentValue[Magnification]}]], 
+             PaneBox[
+              StyleBox["\"MaTeX\"", "Input", StripOnInput -> False], 
+              Alignment -> Center, ImageSize -> {Automatic, 28}], 
+             GridBox[{{
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Name\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox["\"MaTeX\"", "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Version\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox["\"1.7.2\"", "SummaryItem"]}]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}], True -> GridBox[{{
+             PaneBox[
+              ButtonBox[
+               DynamicBox[
+                FEPrivate`FrontEndResource[
+                "FEBitmaps", "SquareMinusIconMedium"]], 
+               ButtonFunction :> (Typeset`open$$ = False), Appearance -> None,
+                Evaluator -> Automatic, Method -> "Preemptive"], 
+              Alignment -> {Center, Center}, ImageSize -> 
+              Dynamic[{
+                Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                 AbsoluteCurrentValue[Magnification]}]], 
+             PaneBox[
+              StyleBox["\"MaTeX\"", "Input", StripOnInput -> False], 
+              Alignment -> Center, ImageSize -> {Automatic, 28}], 
+             GridBox[{{
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Name\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox["\"MaTeX\"", "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Version\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox["\"1.7.2\"", "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Location\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox[
+                   ButtonBox[
+                    
+                    TemplateBox[{
+                    "\"/Users/Mark/Library/Mathematica/Paclets/Repository/\
+MaTeX-1.7.2\"", {
+                    "/Users/Mark/Library/Mathematica/Paclets/Repository/MaTeX-\
+1.7.2", None}, 
+                    "/Users/Mark/Library/Mathematica/Paclets/Repository/MaTeX-\
+1.7.2"}, "HyperlinkDefault"], ButtonFunction :> 
+                    SystemOpen[
+                    "/Users/Mark/Library/Mathematica/Paclets/Repository/MaTeX-\
+1.7.2"], Appearance -> None, BaseStyle -> "Hyperlink", Evaluator -> Automatic,
+                     Method -> "Preemptive"], "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Creator\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox[
+                  "\"Szabolcs Horv\[AAcute]t <szhorvat@gmail.com>\"", 
+                   "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Description\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox[
+                  "\"Create LaTeX-typeset labels within Mathematica.\"", 
+                   "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   
+                   TemplateBox[{"\"MathematicaVersion\"", "\": \""}, 
+                    "RowDefault"], "SummaryItemAnnotation"], 
+                  "\[InvisibleSpace]", 
+                  TagBox["\"10.0+\"", "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Extensions\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox[
+                   RowBox[{"\[LeftAssociation]", 
+                    RowBox[{
+                    RowBox[{"\"Documentation\"", "\[Rule]", 
+                    RowBox[{"\[LeftAssociation]", 
+                    RowBox[{
+                    RowBox[{"\"Language\"", "\[Rule]", "All"}], ",", 
+                    RowBox[{"\"MainPage\"", "\[Rule]", "\"Guides/MaTeX\""}]}],
+                     "\[RightAssociation]"}]}], ",", 
+                    RowBox[{"\"Kernel\"", "\[Rule]", 
+                    RowBox[{"\[LeftAssociation]", 
+                    RowBox[{
+                    RowBox[{"\"Root\"", "\[Rule]", "\".\""}], ",", 
+                    RowBox[{"\"Context\"", "\[Rule]", "\"MaTeX`\""}]}], 
+                    "\[RightAssociation]"}]}]}], "\[RightAssociation]"}], 
+                   "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"Thumbnail\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox["\"Logo.png\"", "SummaryItem"]}]}, {
+                RowBox[{
+                  TagBox[
+                   TemplateBox[{"\"URL\"", "\": \""}, "RowDefault"], 
+                   "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+                  TagBox[
+                  "\"https://github.com/szhorvat/MaTeX\"", "SummaryItem"]}]}},
+               GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]}, 
+        Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+      "SummaryPanel",
+      DisplayFunction->(
+       ButtonBox[#, Active -> False, Alignment -> Left, 
+        Appearance -> {
+         "Default" -> 
+          FrontEnd`FileName[{"Typeset", "SummaryBox"}, "Panel.9.png"]}, 
+        FrameMargins -> 7, BaseStyle -> {}, 
+        DefaultBaseStyle -> {"Panel", Background -> None}, BaselinePosition -> 
+        Baseline]& )],
+     DynamicModuleValues:>{}], "]"}],
+   PacletManager`Paclet[
+   "Name" -> "MaTeX", "Version" -> "1.7.2", "MathematicaVersion" -> "10.0+", 
+    "Description" -> "Create LaTeX-typeset labels within Mathematica.", 
+    "Creator" -> "Szabolcs Horv\[AAcute]t <szhorvat@gmail.com>", "URL" -> 
+    "https://github.com/szhorvat/MaTeX", "Thumbnail" -> "Logo.png", 
+    "Extensions" -> {{
+      "Documentation", "Language" -> All, "MainPage" -> "Guides/MaTeX"}, {
+      "Kernel", "Root" -> ".", "Context" -> "MaTeX`"}}, "Location" -> 
+    "/Users/Mark/Library/Mathematica/Paclets/Repository/MaTeX-1.7.2"],
+   Editable->False,
+   SelectWithContents->True,
+   Selectable->False], "}"}]], "Output",
+ CellChangeTimes->{
+  3.7167575304271507`*^9},ExpressionUUID->"f6299763-5af0-4a49-956a-\
+afc5746cb6ce"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{Automatic, 240}, {36, Automatic}},
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "MarkdownNotebook.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 162, 3, 67, "Section",ExpressionUUID->"33a3d3e0-6bd9-4d63-9374-97ba267a6b83"],
+Cell[745, 27, 245, 6, 35, "Text",ExpressionUUID->"f18fc7d3-4dad-4116-a63d-64ff141d4abf"],
+Cell[CellGroupData[{
+Cell[1015, 37, 139, 3, 54, "Subsection",ExpressionUUID->"bc821cb4-5408-400a-9507-328eb43d4a2d"],
+Cell[1157, 42, 327, 7, 35, "Text",ExpressionUUID->"48b91caf-60b5-4963-bc3d-675e365486a2"],
+Cell[1487, 51, 278, 6, 52, "Code",ExpressionUUID->"8a218cb4-25c0-4f87-9e62-42e6aebabd1a"],
+Cell[1768, 59, 183, 3, 35, "Text",ExpressionUUID->"bde01509-4c18-451d-8dd6-cacba5af1cb1"],
+Cell[1954, 64, 1311, 28, 205, "Code",ExpressionUUID->"af154bec-9823-427a-b2e5-a399c82c5cf4"],
+Cell[3268, 94, 288, 8, 35, "Text",ExpressionUUID->"68d1557b-b707-403e-a283-f603d8a26511"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3593, 107, 169, 3, 54, "Subsection",ExpressionUUID->"5bafbc22-47bb-4d94-a972-665cd23236d7"],
+Cell[3765, 112, 642, 15, 58, "Text",ExpressionUUID->"acea612f-2f03-449a-99e6-951502549dbe"],
+Cell[4410, 129, 158, 3, 35, "Text",ExpressionUUID->"ceb5fecd-852c-47cc-bc90-4f99a7eb29ef"],
+Cell[4571, 134, 287, 6, 52, "Code",ExpressionUUID->"af43020d-20bc-4884-979d-e04697b15c07"],
+Cell[4861, 142, 164, 3, 35, "Text",ExpressionUUID->"20f5b23b-c3fe-4c16-b170-387e2e1d8c77"],
+Cell[CellGroupData[{
+Cell[5050, 149, 238, 5, 52, "Code",ExpressionUUID->"2430489b-c71d-435f-b8b1-f2ed0c564b0c"],
+Cell[5291, 156, 8736, 179, 65, "Output",ExpressionUUID->"f6299763-5af0-4a49-956a-afc5746cb6ce"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
