@@ -67,7 +67,7 @@ Begin["`Private`"];
 (*Package Implementation*)
 
 
-$versionNumber="1.1.6";
+$versionNumber="1.1.7";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -857,9 +857,9 @@ helpBrowserDockedCell[path : _List : {}] :=
               )&
               ]*)
              String, 
-             FieldSize->35,
+             FieldSize->35(*,
              MenuList->
-              Sort@Keys@$helpBrowserCoreDS["Symbol","System`"](*,
+              Sort@Keys@$helpBrowserCoreDS["Symbol","System`"]*)(*,
              FieldCompletionFunction\[Rule]helpBrowserAutocomplete*)
              ],{
             "ReturnKeyDown":>
