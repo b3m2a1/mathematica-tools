@@ -10,23 +10,20 @@ This is a collection of basic Mathematica tools, generally implemented as one-of
 
 This is a package that provides a tabbed notebook interface. Load it like so:
 
-```mathematica
+```(*mathematica*)
 Get["https://raw.githubusercontent.com/b3m2a1/mathematica-tools/master/NotebookTabbing.wl"]
 ```
 
 Here’s a sample usage:
 
-```mathematica
-test1=
-CreateDocument[
-  Cell[BoxData@ToBoxes@Unevaluated[TabNotebookCachePages@EvaluationNotebook[]],"Input"]
-  ];
+```(*mathematica*)
+test1=CreateDocument["Input"];
 SetDockedTabs[test1,
-Table[
-i->i,
-{i,3}
-]];
+ Table[i->i,{i,3}]
+ ];
 ```
+
+![title-8919251785266428182](project/img/title-8919251785266428182.png)
 
 An example can be found in  [Tabbing Example.nb](Tabbing Example.nb)
 
@@ -137,6 +134,6 @@ HelpPagesSearch[
 	
  ![title-731980004634513015](project/img/title-731980004634513015.png)
 
-Clicking on one of those links will open the standard browser
+Clicking on one of those links will open the browser
 
 ![title-6203410312044118217](project/img/title-6203410312044118217.png)
