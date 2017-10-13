@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+(*MakeIndentable["TabCharacter"\[Rule]"  "]*)
+
+
 (* ::Section:: *)
 (*OldHelpBrowser*)
 
@@ -16,10 +19,10 @@ OpenHelpBrowser[crit] opens for the first hit for search criterion crit
 HelpPagesSearch::usage="
 HelpPagesSearch[test] implements a search over documentation pages
 HelpPagesSearch[test, True] has the pages open in the HelpBrowser
-"
+";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Private Declarations*)
 
 
@@ -38,6 +41,7 @@ preLoadDocumentationMetadata::usage="preLoadDocumentationMetadata[]";
 loadCachedDocumentationData::usage="loadCachedDocumentationData[]";
 cacheDocumentationData::usage="cacheDocumentationData[]";
 clearCachedDocumentationData::usage="clearCachedDocumentationData[]";
+reindexDocumentationData::usage="reindexDocumentationData[]";
 $helpSearcherDocData::usage="The core doc data Association";
 $helpSearcherDocMetadataDS::usage="$helpSearcherDocMetadataDS";
 $helpBrowserCoreDS::usage="$helpBrowserCoreDS";
@@ -67,7 +71,7 @@ Begin["`Private`"];
 (*Package Implementation*)
 
 
-$versionNumber="1.1.7";
+$versionNumber="1.1.8";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -76,47 +80,75 @@ $versionNumber="1.1.7";
 
 loadDocumentationData[] :=
  $helpSearcherDocData =
-  Append[#,
+  Merge[{
+    Replace[$helpSearcherDocData,Except[_Association?AssociationQ]-><||>],
+    Append[#,
      "Pages" ->
       Apply[Join]@
-       Map[FileNames["*.nb", Last[#], \[Infinity]] &, #["Directories"]]
-     ] &@
-   <|
-    "Directories" ->
-     Join[
-      DeleteDuplicatesBy[#[[1]]["Name"] &]@
-       Select[DirectoryQ@*Last]@
-        Map[
-         # -> FileNameJoin[{#["Location"], "Documentation"}] &,
-         PacletManager`PacletFind["*"]
-         ],
-       {"System"->FileNameJoin[{$InstallationDirectory, "Documentation"}]}
-      ]
-    |>
+        Map[FileNames["*.nb", Last[#], \[Infinity]] &, #["Directories"]]
+      ] &@
+       <|
+        "Directories" ->
+         Join[
+           DeleteDuplicatesBy[#[[1]]["Name"] &]@
+           Select[DirectoryQ@*Last]@
+           Map[
+             # -> FileNameJoin[{#["Location"], "Documentation"}] &,
+             PacletManager`PacletFind["*"]
+             ],
+           {"System"->FileNameJoin[{$InstallationDirectory, "Documentation"}]}
+          ]
+        |>
+  },
+  Last
+  ]
+
+
+mergeTag//Clear;
+mergeTag[e:Except[_Function]]:=e
 
 
 loadDocumentationMetadata[] :=
  (
   If[! AssociationQ@$helpSearcherDocData, loadDocumentationData[]];
+  (* Merge old metadata so index can quickly be updated *)
   $helpSearcherDocData["Metadata"] =
-   Association@
-    Map[
-     # :>
-       Set[
-        $helpSearcherDocData["Metadata", #],
-        Append[
-         Fold[Association@Lookup[#, #2, {}] &, 
-          Options[Get[#]], {TaggingRules, "Metadata"}],
-         "File" -> #
-         ]
-        ] &,
-     $helpSearcherDocData["Pages"]
+    ReplaceAll[
+      HoldPattern[mergeTag[f_][a_]]:>
+        RuleCondition[f[a], True]
+      ]@
+    Merge[
+       {
+         Lookup[$helpSearcherDocData,"Metadata", <||>],
+         Association@
+          Map[
+           # :>
+             Set[
+              $helpSearcherDocData["Metadata", #],
+              Append[
+               Fold[Association@Lookup[#, #2, {}] &, 
+                Options[Get[#]], {TaggingRules, "Metadata"}],
+               "File" -> #
+               ]
+              ] &,
+           $helpSearcherDocData["Pages"]
+           ]
+         },
+     mergeTag@Function[Null,
+       Replace[
+         Hold[#],
+         {
+           Hold[{___, a_Association, Except[_Association]}]:>a,
+           Hold[{___,e_}]:>Unevaluated[e]
+           }
+         ],
+       HoldAllComplete
+       ]
      ]
   )
 
 
 ensureLoadedDocumentationMetadata[] :=
- 
  If[! AssociationQ@$helpSearcherDocData || ! 
     KeyMemberQ[$helpSearcherDocData, "Metadata"],
   loadDocumentationMetadata[]
@@ -147,6 +179,9 @@ cacheDocumentationData[] :=
   Put[$helpSearcherDocData, LocalObject["docsDataCache"]];
 clearCachedDocumentationData[] :=
   Quiet@DeleteFile@LocalObject["docsDataCache"];
+
+
+reindexDocumentationData
 
 
 (* ::Subsubsection::Closed:: *)
@@ -713,7 +748,7 @@ $helpBrowserXIcon={
                   }
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Docked Cell*)
 
 
@@ -1420,7 +1455,12 @@ helpBrowserOverrideDocumentationHelpLookup[]:=
   ]
 
 
-OpenHelpBrowser[path : {___String} | Automatic : Automatic] :=
+OpenHelpBrowser//Clear
+
+
+OpenHelpBrowser[
+  path : (_String?(StringStartsQ["paclet:"]) | {___String} | Automatic) : Automatic
+  ]:=
  If[
   MatchQ[$helpBrowser, _NotebookObject?(NotebookRead[#] =!= $Failed &)],
   SetOptions[$helpBrowser, {
@@ -1444,14 +1484,16 @@ OpenHelpBrowser[path : {___String} | Automatic : Automatic] :=
   $helpBrowser = 
    CreateDocument@
     helpBrowserNotebook[
-     Replace[path, 
+     Replace[path,{
+       s_String:>
+         helpBrowserPacletGetPath[s],
       Automatic:>
        Replace[CurrentValue[$FrontEndSession,HomePage],{
         "paclet:guide/WolframRoot"->{"Symbol","System`"},
         e_:>helpBrowserPacletGetPath[e]
         }]
-       ]
-      ]
+      }]
+     ]
   ];
 
 
