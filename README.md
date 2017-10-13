@@ -135,6 +135,8 @@ HelpPagesSearch[
 
 	(*Out:*)
 	
-	Dataset[ <> ]
+ ![title-731980004634513015](project/img/title-731980004634513015.png)
+
+Clicking on one of those links will open the standard browser
 
 ![title-6203410312044118217](project/img/title-6203410312044118217.png)
