@@ -428,9 +428,6 @@ Format[JSONStream[
   ]
 
 
-NotebookToPackage@EvaluationNotebook[] // CreateDocument
-
-
 (* ::Subsection:: *)
 (*End*)
 
