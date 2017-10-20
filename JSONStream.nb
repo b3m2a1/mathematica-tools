@@ -1,0 +1,1779 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     78339,       1771]
+NotebookOptionsPosition[     75895,       1725]
+NotebookOutlinePosition[     76255,       1741]
+CellTagsIndexPosition[     76212,       1738]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"jStreamReader", "[", 
+   RowBox[{"stream", ":", 
+    RowBox[{"_String", "|", "_File", "|", "_InputStream"}]}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", ",", "\[IndentingNewLine]", "jStreamData"}], 
+     "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"jStreamReader", "~", "ClearAttributes", "~", "Temporary"}], ";",
+      "\[IndentingNewLine]", 
+     RowBox[{"jStreamData", "~", "ClearAttributes", "~", "Temporary"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"jStreamData", "=", "\[IndentingNewLine]", 
+      RowBox[{"<|", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"\"\<InString\>\"", "\[Rule]", "False"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<BlockDepth\>\"", "\[Rule]", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"Association", "\[Rule]", "0"}], ",", 
+           RowBox[{"List", "\[Rule]", "0"}], ",", 
+           RowBox[{"CompoundExpression", "\[Rule]", "0"}]}], "|>"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<BlockStack\>\"", "\[Rule]", 
+         RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<Cache\>\"", "\[Rule]", 
+         RowBox[{"Internal`Bag", "[", "]"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<CacheStack\>\"", "\[Rule]", 
+         RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<CachePush\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{"Internal`StuffBag", "[", 
+           RowBox[{
+            RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], ",", "#"}], 
+           "]"}], "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+        
+        RowBox[{"\"\<CacheRecurse\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"jStreamData", "[", "\"\<CacheStack\>\"", "]"}], "=", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"jStreamData", "[", "\"\<CacheStack\>\"", "]"}], ",", 
+              RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}]}], "}"}]}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], "=", 
+            RowBox[{"Internal`Bag", "[", "]"}]}], ";"}], 
+          "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<CacheReset\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"c", "=", 
+              RowBox[{"jStreamData", "[", "\"\<CacheStack\>\"", "]"}]}], 
+             "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"jStreamData", "[", "\"\<CacheStack\>\"", "]"}], "=", 
+              RowBox[{"c", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], "=", 
+              RowBox[{"c", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], ";"}]}], 
+           "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "]"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<CachePart\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{"Internal`BagPart", "[", 
+           RowBox[{
+            RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], ",", "#"}], 
+           "]"}], "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+        
+        RowBox[{"\"\<CacheClear\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], "=", 
+            RowBox[{"Internal`Bag", "[", "]"}]}], ";"}], 
+          "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<CacheDump\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Function", "[", "\[IndentingNewLine]", 
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"data", "=", 
+              RowBox[{"Internal`BagPart", "[", 
+               RowBox[{
+                RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], ",", 
+                "All"}], "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"jStreamData", "[", "\"\<Cache\>\"", "]"}], "=", 
+              RowBox[{"Internal`Bag", "[", "]"}]}], ";", 
+             "\[IndentingNewLine]", "data"}]}], "\[IndentingNewLine]", "]"}], 
+          "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<Stream\>\"", "\[Rule]", "\[IndentingNewLine]", 
+         RowBox[{"Replace", "[", 
+          RowBox[{"stream", ",", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"_File", "|", 
+               RowBox[{"_String", "?", "FileExistsQ"}]}], "\[RuleDelayed]", 
+              RowBox[{"OpenRead", "[", "stream", "]"}]}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"_String", "\[RuleDelayed]", 
+              RowBox[{"StringToStream", "[", "stream", "]"}]}]}], 
+            "\[IndentingNewLine]", "}"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+       "|>"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamReader", "[", "\"\<HeldSymbol\>\"", "]"}], "=", 
+      RowBox[{"Hold", "[", "jStreamData", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamReader", "[", "\"\<Symbol\>\"", "]"}], ":=", 
+      RowBox[{"Unevaluated", "[", "jStreamData", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamReader", "[", "\"\<Data\>\"", "]"}], ":=", 
+      "jStreamData"}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamReader", "[", "\"\<Next\>\"", "]"}], ":=", 
+      RowBox[{"jStreamReadToken", "[", "jStreamReader", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamReader", "[", "s__", "]"}], ":=", 
+      RowBox[{"jStreamData", "[", "s", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"Set", "[", 
+       RowBox[{
+        RowBox[{"jStreamReader", "[", "p___", "]"}], ",", "v_"}], "]"}], ":=",
+       "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"jStreamData", "[", "p", "]"}], "=", "v"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"ReadString", "[", 
+       RowBox[{"jStreamReader", ",", "a___"}], "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ReadString", "[", 
+       RowBox[{
+        RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}], ",", "a"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"Read", "[", 
+       RowBox[{"jStreamReader", ",", "a___"}], "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Read", "[", 
+       RowBox[{
+        RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}], ",", "a"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"ReadList", "[", 
+       RowBox[{"jStreamReader", ",", "a___"}], "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ReadList", "[", 
+       RowBox[{
+        RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}], ",", "a"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"StreamPosition", "[", "jStreamReader", "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"StreamPosition", "@", 
+       RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"SetStreamPosition", "[", 
+       RowBox[{"jStreamReader", ",", "p_"}], "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"SetStreamPosition", "[", 
+       RowBox[{
+        RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}], ",", "p"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"jStreamReader", "/:", 
+      RowBox[{"Close", "[", "jStreamReader", "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"(", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Close", "@", 
+         RowBox[{"jStreamData", "[", "\"\<Stream\>\"", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"jStreamData", "//", "Remove"}]}], "\[IndentingNewLine]", 
+       ")"}]}], ";", "\[IndentingNewLine]", "jStreamReader"}]}], 
+   "\[IndentingNewLine]", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"$jStreamBracketTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<{\>\"", ",", "\"\<}\>\"", ",", "\"\<[\>\"", ",", "\"\<]\>\"", ",", 
+     "\"\<(\>\"", ",", "\"\<)\>\""}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamChunkTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"\"\<,\>\"", ",", "\"\<:\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamStringTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"{", "\"\<\\\"\>\"", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamInStringTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"\"\<\\\\\\\"\>\"", ",", "\"\<\\\"\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamPossibleTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"Alternatives", "@@", 
+    RowBox[{"Join", "[", "\[IndentingNewLine]", 
+     RowBox[{
+     "$jStreamStringTokenIndicators", ",", "\[IndentingNewLine]", 
+      "$jStreamBracketTokenIndicators", ",", "\[IndentingNewLine]", 
+      "$jStreamChunkTokenIndicators"}], "\[IndentingNewLine]", "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamInStringTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"Alternatives", "@@", "$jStreamInStringTokenIndicators"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamBracketTokenIndicators", "=", "\[IndentingNewLine]", 
+   RowBox[{"Alternatives", "@@", "$jStreamBracketTokenIndicators"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$jStreamBracketMap", "=", 
+   RowBox[{"<|", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"\"\<{\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Opening", ",", "Association"}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<}\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Closing", ",", "Association"}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<[\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Opening", ",", "List"}], "}"}]}], ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"\"\<]\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Closing", ",", "List"}], "}"}]}], ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"\"\<(\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Opening", ",", "CompoundExpression"}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<)\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Closing", ",", "CompoundExpression"}], "}"}]}]}], 
+    "\[IndentingNewLine]", "|>"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"jStreamReadToSep", "[", "reader_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"sp", "=", 
+        RowBox[{"StreamPosition", "@", "reader"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"strm", "=", 
+        RowBox[{"reader", "[", "\"\<Stream\>\"", "]"}]}], ",", 
+       "\[IndentingNewLine]", "ret", ",", "\[IndentingNewLine]", "sep"}], 
+      "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ret", "=", "\[IndentingNewLine]", 
+       RowBox[{"With", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"test", "=", 
+           RowBox[{"Read", "[", 
+            RowBox[{"strm", ",", "Character"}], "]"}]}], "}"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"test", "===", "EndOfFile"}], ",", 
+            RowBox[{"Throw", "[", "EndOfFile", "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"SetStreamPosition", "[", 
+           RowBox[{"strm", ",", "sp"}], "]"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"reader", "[", "\"\<InString\>\"", "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"StringMatchQ", "[", 
+                RowBox[{"test", ",", "$jStreamInStringTokenIndicators"}], 
+                "]"}], "||", "\[IndentingNewLine]", 
+               RowBox[{"StringMatchQ", "[", 
+                RowBox[{
+                 RowBox[{"test", "<>", "\"\<\\\"\>\""}], ",", 
+                 "$jStreamInStringTokenIndicators"}], "]"}]}], ",", 
+              "\[IndentingNewLine]", "\"\<\>\"", ",", "\[IndentingNewLine]", 
+              RowBox[{"ReadString", "[", 
+               RowBox[{"strm", ",", "$jStreamInStringTokenIndicators"}], 
+               "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"StringMatchQ", "[", 
+               RowBox[{"test", ",", "$jStreamPossibleTokenIndicators"}], 
+               "]"}], ",", "\[IndentingNewLine]", "\"\<\>\"", ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"ReadString", "[", 
+               RowBox[{"strm", ",", "$jStreamPossibleTokenIndicators"}], 
+               "]"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]",
+            "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"sep", "=", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"reader", "[", "\"\<InString\>\"", "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"With", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"ec", "=", 
+             RowBox[{"Read", "[", 
+              RowBox[{"reader", ",", "Character"}], "]"}]}], "}"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"ec", "===", "\"\<\\\\\>\""}], ",", 
+             RowBox[{"ec", "<>", 
+              RowBox[{"Read", "[", 
+               RowBox[{"reader", ",", "Character"}], "]"}]}], ",", "ec"}], 
+            "]"}]}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Read", "[", 
+          RowBox[{"reader", ",", "Character"}], "]"}]}], 
+        "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"StringMatchQ", "[", 
+          RowBox[{"sep", ",", "$jStreamBracketTokenIndicators"}], "]"}], "&&", 
+         RowBox[{
+          RowBox[{"StringLength", "@", 
+           RowBox[{"StringTrim", "[", "ret", "]"}]}], ">", "0"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"SetStreamPosition", "[", 
+          RowBox[{"reader", ",", 
+           RowBox[{
+            RowBox[{"StreamPosition", "[", "reader", "]"}], "-", "1"}]}], 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"sep", "=", "\"\<\>\""}]}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"ret", ",", "sep", ",", "sp"}], "}"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"jStreamHandleSepData", "[", 
+    RowBox[{"reader_", ",", 
+     RowBox[{"{", 
+      RowBox[{"ret_", ",", "sep_", ",", "sp_"}], "}"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"sepData", "=", 
+       RowBox[{"$jStreamBracketMap", "[", "sep", "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Which", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"sep", "===", "\"\<\>\""}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"ret", ",", "sep", ",", "Value", ",", "Expression"}], "}"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"sep", "===", "\"\<:\>\""}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"ret", ",", "sep", ",", "Key", ",", "None"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"sep", "===", "\"\<,\>\""}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"ret", ",", "sep", ",", "Value", ",", "Expression"}], "}"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"sep", "===", "\"\<\\\"\>\""}], "&&", 
+        RowBox[{"reader", "[", "\"\<InString\>\"", "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"reader", "[", "\"\<InString\>\"", "]"}], "=", "False"}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ret", ",", "sep", ",", "None", ",", "String"}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"sep", "===", "\"\<\\\"\>\""}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"reader", "[", "\"\<InString\>\"", "]"}], "=", "True"}], ";",
+         "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ret", ",", "sep", ",", "None", ",", "Continue"}], "}"}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"sep", "===", "\"\<\\\\\\\"\>\""}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"ret", ",", "sep", ",", "None", ",", "Continue"}], "}"}], ",",
+        "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"sepData", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "===", "Closing"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"reader", "[", "\"\<BlockStack\>\"", "]"}], "[", 
+            RowBox[{"[", 
+             RowBox[{"-", "1"}], "]"}], "]"}], "\[Equal]", 
+           RowBox[{"sepData", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"reader", "[", 
+             RowBox[{"\"\<BlockDepth\>\"", ",", 
+              RowBox[{"sepData", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "=", 
+            "\[IndentingNewLine]", 
+            RowBox[{"Max", "@", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"reader", "[", 
+                 RowBox[{"\"\<BlockDepth\>\"", ",", 
+                  RowBox[{"sepData", "[", 
+                   RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "-", "1"}], ",", 
+               "0"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"reader", "[", "\"\<BlockStack\>\"", "]"}], "=", 
+            RowBox[{"Drop", "[", 
+             RowBox[{
+              RowBox[{"reader", "[", "\"\<BlockStack\>\"", "]"}], ",", 
+              RowBox[{"-", "1"}]}], "]"}]}]}]}], "\[IndentingNewLine]", "]"}],
+         ";", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ret", ",", "sep", ",", "sepData", ",", "Expression"}], 
+         "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"sepData", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "===", "Opening"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"reader", "[", 
+          RowBox[{"\"\<BlockDepth\>\"", ",", 
+           RowBox[{"sepData", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "=", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Max", "@", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", 
+              RowBox[{"\"\<BlockDepth\>\"", ",", 
+               RowBox[{"sepData", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "-", "1"}], ",", 
+            "0"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"reader", "[", "\"\<BlockStack\>\"", "]"}], "=", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Append", "[", 
+          RowBox[{
+           RowBox[{"reader", "[", "\"\<BlockStack\>\"", "]"}], ",", 
+           RowBox[{"sepData", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ret", ",", "sep", ",", "sepData", ",", "None"}], "}"}]}], 
+       ",", "\[IndentingNewLine]", "True", ",", "\[IndentingNewLine]", 
+       RowBox[{"{", 
+        RowBox[{"ret", ",", "sep", ",", "sepData", ",", "Expression"}], 
+        "}"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"jStreamReadTokenSegments", "[", "reader_", "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", "segs", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"segs", "=", 
+      RowBox[{"{", 
+       RowBox[{"None", ",", 
+        RowBox[{"jStreamHandleSepData", "[", 
+         RowBox[{"reader", ",", 
+          RowBox[{"jStreamReadToSep", "[", "reader", "]"}]}], "]"}]}], 
+       "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"While", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"segs", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", 
+           RowBox[{"-", "1"}]}], "]"}], "]"}], "===", "Continue"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"segs", "=", 
+        RowBox[{"{", 
+         RowBox[{"segs", ",", 
+          RowBox[{"jStreamHandleSepData", "[", 
+           RowBox[{"reader", ",", 
+            RowBox[{"jStreamReadToSep", "[", "reader", "]"}]}], "]"}]}], 
+         "}"}]}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"Cases", "[", 
+      RowBox[{"segs", ",", 
+       RowBox[{"{", 
+        RowBox[{"_String", ",", "_String", ",", "__"}], "}"}], ",", 
+       "\[Infinity]"}], "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"jStreamBuildToken", "[", "segs_", "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Switch", "[", 
+     RowBox[{
+      RowBox[{"segs", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", 
+         RowBox[{"-", "1"}]}], "]"}], "]"}], ",", "\[IndentingNewLine]", 
+      "None", ",", "Null", ",", "\[IndentingNewLine]", "String", ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"ToExpression", "@", 
+         RowBox[{"StringJoin", "@", 
+          RowBox[{"segs", "[", 
+           RowBox[{"[", 
+            RowBox[{"All", ",", 
+             RowBox[{";;", "2"}]}], "]"}], "]"}]}]}], ",", 
+        "\[IndentingNewLine]", "String"}], "\[IndentingNewLine]", "}"}], ",", 
+      "\[IndentingNewLine]", "_", ",", "\[IndentingNewLine]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"StringTrim", "@", 
+           RowBox[{"StringJoin", "@", 
+            RowBox[{"segs", "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}]}]}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"\"\<null\>\"", "\[Rule]", "Null"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"e_", ":>", 
+             RowBox[{"ToExpression", "@", "e"}]}]}], "\[IndentingNewLine]", 
+           "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"segs", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", 
+           RowBox[{"-", "1"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+       "}"}]}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Replace", "[", 
+     RowBox[{
+      RowBox[{"segs", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"-", "1"}], ",", 
+         RowBox[{"-", "2"}]}], "]"}], "]"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"o_", ",", "\"\<{}\>\""}], "}"}], "\[RuleDelayed]", 
+         RowBox[{"{", 
+          RowBox[{"o", ",", "Association"}], "}"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"o_", ",", "\"\<[]\>\""}], "}"}], "\[RuleDelayed]", 
+         RowBox[{"{", 
+          RowBox[{"o", ",", "List"}], "}"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"o_", ",", "\"\<()\>\""}], "}"}], ":>", 
+         "CompoundExpression"}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+   "\[IndentingNewLine]", "}"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"jStreamReadToken", "[", "reader_", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Catch", "@", 
+    RowBox[{"jStreamBuildToken", "@", 
+     RowBox[{"jStreamReadTokenSegments", "[", "reader", "]"}]}]}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.717465993543144*^9, 3.717466293403365*^9}, {
+   3.717466332897068*^9, 3.7174663564713306`*^9}, {3.7174664042568502`*^9, 
+   3.717466406797722*^9}, 3.717466503989354*^9, {3.7174670769161797`*^9, 
+   3.7174671299958563`*^9}, {3.717467231685122*^9, 3.717467277464883*^9}, {
+   3.717467386058717*^9, 3.717467394585607*^9}, {3.717467425699099*^9, 
+   3.717467447056377*^9}, {3.7174679998124723`*^9, 3.717468025624072*^9}, {
+   3.7174680814538803`*^9, 3.7174680954990587`*^9}, {3.717468146398508*^9, 
+   3.717468167777375*^9}, {3.7174685889828672`*^9, 3.71746861066995*^9}, {
+   3.717468893311818*^9, 3.71746890690285*^9}, {3.7174690541767*^9, 
+   3.717469060680805*^9}, {3.717469326072138*^9, 3.717469327134695*^9}, {
+   3.717470627502028*^9, 3.717470638732997*^9}, {3.717470669214819*^9, 
+   3.717470670174967*^9}, {3.717470713546466*^9, 3.717470722213373*^9}, 
+   3.717472890318034*^9, 3.7174735763489943`*^9, {3.717509429516891*^9, 
+   3.717509437757904*^9}, {3.7175095845074873`*^9, 3.717509595266961*^9}, {
+   3.717509808828513*^9, 3.717509927046464*^9}, {3.717510029070794*^9, 
+   3.717510064499481*^9}, {3.717510104271883*^9, 3.717510303541067*^9}, {
+   3.717510335848914*^9, 3.717510367832486*^9}, {3.717510428840619*^9, 
+   3.717510452825485*^9}, {3.717510483822329*^9, 3.717510682542403*^9}, {
+   3.717510716244707*^9, 3.717511046719537*^9}, {3.717511134248604*^9, 
+   3.717511147470201*^9}, {3.717511270199164*^9, 3.71751130054076*^9}, {
+   3.717511338219398*^9, 3.717511423629026*^9}, {3.717511542399766*^9, 
+   3.7175115718427277`*^9}, {3.717511639784857*^9, 3.717511641443058*^9}, 
+   3.717511672087469*^9, {3.717511720187005*^9, 3.717511720827909*^9}, {
+   3.717511923108762*^9, 3.717511992996544*^9}, {3.7175120241525517`*^9, 
+   3.717512070335939*^9}, {3.717512104328723*^9, 3.717512118214205*^9}, {
+   3.717512203407742*^9, 3.7175122036365967`*^9}, {3.717512233795225*^9, 
+   3.717512285683571*^9}, 3.717512348693474*^9, {3.7175145011511307`*^9, 
+   3.717514533852418*^9}, {3.717514819872631*^9, 3.717514819945128*^9}, {
+   3.717514942603928*^9, 3.717515140172451*^9}, {3.717515358662541*^9, 
+   3.717515406296129*^9}, 3.7175154582315617`*^9, 3.717515616724677*^9, {
+   3.717515781967905*^9, 3.717515904182638*^9}, {3.71751596558709*^9, 
+   3.717515965888372*^9}, {3.717516049973145*^9, 3.717516054097115*^9}, {
+   3.717516152662938*^9, 3.717516154054981*^9}, 3.717516201992071*^9, {
+   3.717516235492539*^9, 
+   3.71751624966367*^9}},ExpressionUUID->"37048b5a-845c-4806-ad1d-\
+3c2f5772bb9e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Different", " ", "types", " ", "of", " ", "read", " ", "processors"}], 
+   " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "Key"}], "]"}], ":=", "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", "Key"}], "}"}], ":>", "\[IndentingNewLine]", 
+          RowBox[{"Replace", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"reader", "[", "\"\<CacheDump\>\"", "]"}], "[", "]"}], 
+             "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"a_", ",", 
+               RowBox[{"String", "|", "Expression"}]}], "}"}], 
+             "\[RuleDelayed]", "a"}]}], "\[IndentingNewLine]", "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"EndOfFile", "\[RuleDelayed]", "EndOfFile"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"e_", "\[RuleDelayed]", "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", "e", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "Key"}], "]"}]}], "\[IndentingNewLine]", 
+           ")"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "Association"}], "]"}], ":=", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"_", ",", 
+            RowBox[{"{", 
+             RowBox[{"Closing", ",", "Association"}], "}"}]}], "}"}], ":>", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Association", "@", 
+           RowBox[{"Cases", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"reader", "[", "\"\<CacheDump\>\"", "]"}], "[", "]"}], 
+             ",", "_Rule"}], "]"}]}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", "Key"}], "}"}], "\[RuleDelayed]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", 
+             "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"reader", "[", "\"\<CachePart\>\"", "]"}], "[", 
+                RowBox[{"-", "1"}], "]"}], "[", 
+               RowBox[{"[", 
+                RowBox[{"1", ",", "1"}], "]"}], "]"}], "\[Rule]", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"reader", "[", "\"\<CacheRecurse\>\"", "]"}], "[", 
+                 "]"}], ";", "\[IndentingNewLine]", 
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"reader", "[", "\"\<CacheReset\>\"", "]"}], "[", 
+                    "]"}], ";", "#"}], ")"}], "&"}], "@", 
+                  RowBox[{"jStreamRead", "[", 
+                   RowBox[{"reader", ",", "Value"}], "]"}]}], ")"}]}], 
+               "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", "]"}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "Association"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"EndOfFile", "\[RuleDelayed]", "EndOfFile"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"e_", "\[RuleDelayed]", "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", "e", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "Association"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}]}], "\[IndentingNewLine]", "}"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "List"}], "]"}], ":=", "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"_", ",", 
+            RowBox[{"{", 
+             RowBox[{"Closing", ",", "List"}], "}"}]}], "}"}], ":>", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"reader", "[", "\"\<CacheDump\>\"", "]"}], "[", "]"}]}], 
+         ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"v_", ",", "_"}], "}"}], ",", 
+            RowBox[{"None", "|", "Value"}]}], "}"}], "\[RuleDelayed]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", "v", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "CompoundExpression"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", 
+            RowBox[{"{", 
+             RowBox[{"Opening", ",", "t_"}], "}"}]}], "}"}], "\[RuleDelayed]",
+           "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", 
+             "\[IndentingNewLine]", 
+             RowBox[{"jStreamRead", "[", 
+              RowBox[{"reader", ",", "t"}], "]"}], "\[IndentingNewLine]", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "CompoundExpression"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"EndOfFile", "\[RuleDelayed]", "EndOfFile"}]}], 
+        "\[IndentingNewLine]", "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "CompoundExpression"}], "]"}], ":=", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"_", ",", 
+            RowBox[{"{", 
+             RowBox[{"Closing", ",", "CompoundExpression"}], "}"}]}], "}"}], ":>",
+           "\[IndentingNewLine]", 
+          RowBox[{"$wrapper", "@@", 
+           RowBox[{"reader", "[", "\"\<CacheDump\>\"", "]"}]}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", 
+            RowBox[{"{", 
+             RowBox[{"Opening", ",", "t_"}], "}"}]}], "}"}], ":>", 
+          RowBox[{"jStreamRead", "[", 
+           RowBox[{"reader", ",", "t"}], "]"}]}], ",", "\[IndentingNewLine]", 
+         
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"v_", ",", "_"}], "}"}], ",", 
+            RowBox[{"None", "|", "Value"}]}], "}"}], "\[RuleDelayed]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", "v", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "CompoundExpression"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", 
+            RowBox[{"{", 
+             RowBox[{"Opening", ",", "t_"}], "}"}]}], "}"}], "\[RuleDelayed]",
+           "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CachePush\>\"", "]"}], "[", 
+             "\[IndentingNewLine]", 
+             RowBox[{"jStreamRead", "[", 
+              RowBox[{"reader", ",", "t"}], "]"}], "\[IndentingNewLine]", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "CompoundExpression"}], "]"}]}], 
+           "\[IndentingNewLine]", ")"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"EndOfFile", "\[RuleDelayed]", "EndOfFile"}]}], 
+        "\[IndentingNewLine]", "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "Value"}], "]"}], ":=", "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"a_", ",", "_"}], "}"}], ",", 
+            RowBox[{"None", "|", "Value"}]}], "}"}], ":>", 
+          "\[IndentingNewLine]", "a"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", 
+            RowBox[{"{", 
+             RowBox[{"Opening", ",", "t_"}], "}"}]}], "}"}], ":>", 
+          RowBox[{"jStreamRead", "[", 
+           RowBox[{"reader", ",", "t"}], "]"}]}], ",", "\[IndentingNewLine]", 
+         
+         RowBox[{"EndOfFile", "\[RuleDelayed]", "EndOfFile"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"e_", "\[RuleDelayed]", "\[IndentingNewLine]", 
+          RowBox[{"(", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"reader", "[", "\"\<CacheAdd\>\"", "]"}], "[", "e", 
+             "]"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"jStreamRead", "[", 
+             RowBox[{"reader", ",", "Value"}], "]"}]}], "\[IndentingNewLine]",
+            ")"}]}]}], "\[IndentingNewLine]", "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "KeyValuePattern"}], "]"}], ":=", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"jStreamRead", "[", 
+       RowBox[{"reader", ",", "Key"}], "]"}], "\[Rule]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"jStreamRead", "[", 
+       RowBox[{"reader", ",", "Value"}], "]"}]}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "Automatic"}], "]"}], ":=", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"jStreamReadToken", "[", "reader", "]"}], ",", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Null", ",", 
+            RowBox[{"{", 
+             RowBox[{"Opening", ",", "t_"}], "}"}]}], "}"}], "\[RuleDelayed]", 
+          RowBox[{"jStreamRead", "[", 
+           RowBox[{"reader", ",", "t"}], "]"}]}], ",", "\[IndentingNewLine]", 
+         
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"a_", ",", "_"}], "}"}], ",", 
+            RowBox[{"None", "|", "Value"}]}], "}"}], ":>", 
+          "\[IndentingNewLine]", "a"}]}], "\[IndentingNewLine]", "}"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"reader_", ",", "\"\<Token\>\""}], "]"}], ":=", 
+     "\[IndentingNewLine]", 
+     RowBox[{"jStreamReadToken", "[", "reader", "]"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.717465993543144*^9, 3.717466293403365*^9}, {
+   3.717466332897068*^9, 3.7174663564713306`*^9}, {3.7174664042568502`*^9, 
+   3.717466406797722*^9}, 3.717466503989354*^9, {3.7174670769161797`*^9, 
+   3.7174671299958563`*^9}, {3.717467231685122*^9, 3.717467277464883*^9}, {
+   3.717467386058717*^9, 3.717467394585607*^9}, {3.717467425699099*^9, 
+   3.717467447056377*^9}, {3.7174679998124723`*^9, 3.717468025624072*^9}, {
+   3.7174680814538803`*^9, 3.7174680954990587`*^9}, {3.717468146398508*^9, 
+   3.717468167777375*^9}, {3.7174685889828672`*^9, 3.71746861066995*^9}, {
+   3.717468893311818*^9, 3.71746890690285*^9}, {3.7174690541767*^9, 
+   3.717469060680805*^9}, {3.717469326072138*^9, 3.717469327134695*^9}, {
+   3.717470627502028*^9, 3.717470638732997*^9}, {3.717470669214819*^9, 
+   3.717470670174967*^9}, {3.717470713546466*^9, 3.717470722213373*^9}, 
+   3.717472890318034*^9, 3.7174735763489943`*^9, {3.717509429516891*^9, 
+   3.717509437757904*^9}, {3.7175095845074873`*^9, 3.717509595266961*^9}, {
+   3.717509808828513*^9, 3.717509927046464*^9}, {3.717510029070794*^9, 
+   3.717510064499481*^9}, {3.717510104271883*^9, 3.717510303541067*^9}, {
+   3.717510335848914*^9, 3.717510367832486*^9}, {3.717510428840619*^9, 
+   3.717510452825485*^9}, {3.717510483822329*^9, 3.717510682542403*^9}, {
+   3.717510716244707*^9, 3.717511046719537*^9}, {3.717511134248604*^9, 
+   3.717511147470201*^9}, {3.717511270199164*^9, 3.71751130054076*^9}, {
+   3.717511338219398*^9, 3.717511423629026*^9}, {3.717511542399766*^9, 
+   3.7175115718427277`*^9}, {3.717511639784857*^9, 3.717511641443058*^9}, 
+   3.717511672087469*^9, {3.717511720187005*^9, 3.717511720827909*^9}, {
+   3.717511923108762*^9, 3.717511992996544*^9}, {3.7175120241525517`*^9, 
+   3.717512070335939*^9}, {3.717512104328723*^9, 3.717512118214205*^9}, {
+   3.717512203407742*^9, 3.7175122036365967`*^9}, {3.717512233795225*^9, 
+   3.717512285683571*^9}, {3.717512348693474*^9, 3.717512385830714*^9}, {
+   3.717512430007633*^9, 3.7175124849683037`*^9}, {3.717512536363222*^9, 
+   3.7175125757675333`*^9}, {3.71751262341642*^9, 3.7175126809739923`*^9}, {
+   3.717512727545779*^9, 3.717512731268652*^9}, {3.7175127658058662`*^9, 
+   3.717512783677334*^9}, {3.717513849559952*^9, 3.717513851461714*^9}, {
+   3.717513883809458*^9, 3.717513895195442*^9}, 3.717513927981226*^9, {
+   3.717514067977281*^9, 3.7175140987077208`*^9}, {3.71751417722326*^9, 
+   3.7175141924017687`*^9}, {3.717514251284233*^9, 3.717514443959046*^9}, {
+   3.7175146437668743`*^9, 3.717514645273244*^9}, {3.717514692842754*^9, 
+   3.717514693544571*^9}, {3.7175148323498173`*^9, 3.717514879629725*^9}, {
+   3.717515180452675*^9, 3.717515215604239*^9}, {3.7175152612658663`*^9, 
+   3.7175153033722563`*^9}, {3.717515348030909*^9, 
+   3.717515349404726*^9}},ExpressionUUID->"6ef61cc5-0f3f-40c4-b85b-\
+b97602eace33"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"JSONStream", "[", 
+    RowBox[{"strm", ":", 
+     RowBox[{"_String", "|", "_File", "|", "_InputStream"}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"JSONStream", "[", 
+    RowBox[{"jStreamReader", "[", "strm", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"JSONStreamRead", "[", 
+    RowBox[{
+     RowBox[{"JSONStream", "[", "s_Symbol", "]"}], ",", 
+     RowBox[{"type_:", "\"\<Token\>\""}]}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"jStreamRead", "[", 
+      RowBox[{"s", ",", "type"}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"EndOfFile", "|", 
+       RowBox[{"(", 
+        RowBox[{"_", "\[Rule]", "EndOfFile"}], ")"}]}], "\[RuleDelayed]", 
+      RowBox[{"JSONStreamClose", "[", 
+       RowBox[{"JSONStream", "[", "s", "]"}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"JSONStreamClose", "[", 
+    RowBox[{"JSONStream", "[", "s_Symbol", "]"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Close", "@", "s"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Remove", "[", "s", "]"}], ";", "\[IndentingNewLine]", 
+     "EndOfFile"}], "\[IndentingNewLine]", ")"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"JSONStream", "/:", 
+   RowBox[{"Read", "[", 
+    RowBox[{
+     RowBox[{"JSONStream", "[", "s_Symbol", "]"}], ",", "type___"}], "]"}], ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"JSONStreamRead", "[", 
+    RowBox[{
+     RowBox[{"JSONStream", "[", "s", "]"}], ",", "type"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"JSONStream", "/:", 
+   RowBox[{"Close", "[", 
+    RowBox[{"JSONStream", "[", "s_Symbol", "]"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"JSONStreamClose", "[", 
+    RowBox[{"JSONStream", "[", "s", "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Format", "[", 
+   RowBox[{"JSONStream", "[", 
+    RowBox[{"s_Symbol", "?", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"MatchQ", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"#", "[", "\"\<Data\>\"", "]"}], "[", "\"\<Stream\>\"", 
+          "]"}], ",", "_InputStream"}], "]"}], "&"}], ")"}]}], "]"}], "]"}], ":=",
+   "\[IndentingNewLine]", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"is", "=", 
+      RowBox[{
+       RowBox[{"s", "[", "\"\<Data\>\"", "]"}], "[", "\"\<Stream\>\"", 
+       "]"}]}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"RawBoxes", "@", "\[IndentingNewLine]", 
+     RowBox[{"BoxForm`ArrangeSummaryBox", "[", "\[IndentingNewLine]", 
+      RowBox[{"\"\<JSONStream\>\"", ",", "\[IndentingNewLine]", 
+       RowBox[{"JSONStream", "[", "s", "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"BoxForm`GenericIcon", "[", "InputStream", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"BoxForm`SummaryItem", "[", 
+          RowBox[{"{", 
+           RowBox[{"\"\<Name: \>\"", ",", 
+            RowBox[{"Replace", "[", 
+             RowBox[{
+              RowBox[{"is", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"f_String", ":>", 
+               RowBox[{"FileNameTake", "@", "f"}]}]}], "]"}]}], "}"}], "]"}], 
+         ",", "\[IndentingNewLine]", 
+         RowBox[{"BoxForm`SummaryItem", "[", 
+          RowBox[{"{", 
+           RowBox[{"\"\<Unique ID: \>\"", ",", 
+            RowBox[{"is", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "}"}], "]"}]}], 
+        "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{"BoxForm`SummaryItem", "[", 
+         RowBox[{"{", 
+          RowBox[{"\"\<Open: \>\"", ",", "\[IndentingNewLine]", " ", 
+           RowBox[{"Dynamic", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Options", "[", "is", "]"}], " ", "=!=", " ", 
+              RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+             RowBox[{"UpdateInterval", "\[Rule]", "1"}]}], 
+            "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "}"}], 
+         "]"}], "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+       "StandardForm"}], "\[IndentingNewLine]", "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.717473206851204*^9, 3.7174732342662907`*^9}, {
+  3.717473300672587*^9, 3.7174733966341667`*^9}, {3.717473453194819*^9, 
+  3.717473503477254*^9}, {3.717473748415867*^9, 3.717473766252797*^9}, {
+  3.717473840586508*^9, 3.7174738605313597`*^9}, {3.717473892161581*^9, 
+  3.7174739135284843`*^9}, {3.7174739437929697`*^9, 3.717473949039381*^9}, {
+  3.717474014975985*^9, 3.717474103537084*^9}, {3.717474154833247*^9, 
+  3.717474183997651*^9}, {3.717474214720367*^9, 3.717474289641089*^9}, {
+  3.717511012023725*^9, 3.717511026121235*^9}, {3.7175110707353277`*^9, 
+  3.717511097748596*^9}, {3.717511194756935*^9, 3.717511225331912*^9}, {
+  3.7175116130954227`*^9, 3.7175116220707483`*^9}, {3.717512751699355*^9, 
+  3.717512755417276*^9}, {3.717512800841516*^9, 3.717512847769348*^9}, {
+  3.717513128427107*^9, 3.7175131296218452`*^9}, {3.717516356040822*^9, 
+  3.717516357834146*^9}},ExpressionUUID->"a91824a8-4c0d-41fa-9744-\
+3274f09409c7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"NotebookToPackage", "@", 
+   RowBox[{"EvaluationNotebook", "[", "]"}]}], "//", 
+  "CreateDocument"}]], "Input",
+ CellChangeTimes->{{3.7175169566935587`*^9, 
+  3.71751696586613*^9}},ExpressionUUID->"6b154206-1e17-4322-80a8-\
+c729b0476b04"],
+
+Cell[BoxData[
+ TemplateBox[{FrontEndObject[
+    LinkObject["5d6ru_shm", 3, 1]],1241,
+   "FrontEndObject[LinkObject[\"5d6ru_shm\", 3, 1]]","1241","\"Untitled-38\""},
+  "NotebookObjectUnsaved"]], "Output",
+ CellChangeTimes->{
+  3.71751696973188*^9},ExpressionUUID->"13121690-5eba-4f5d-b2bf-21f44d84dac9"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$jsSample", "=", "\[IndentingNewLine]", 
+   RowBox[{"\"\<\\n\>\"", "<>", "\[IndentingNewLine]", 
+    RowBox[{"ExportString", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Prepend", "[", 
+       RowBox[{
+        RowBox[{"ExampleData", "[", 
+         RowBox[{"{", 
+          RowBox[{"\"\<Dataset\>\"", ",", "\"\<Planets\>\""}], "}"}], "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<\\\"EscapedName\\\"\>\"", "->", 
+         RowBox[{"<|", 
+          RowBox[{
+           RowBox[{"\"\<asd\>\"", "\[Rule]", "\"\<whee\>\""}], ",", 
+           RowBox[{"\"\<number\>\"", "\[Rule]", "10"}]}], "|>"}]}]}], 
+       "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+      "\"\<JSON\>\""}], "\[IndentingNewLine]", "]"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.717465936989868*^9, 3.717465952983122*^9}, {
+  3.7174659870907707`*^9, 3.717465987358889*^9}, {3.717469882333385*^9, 
+  3.71746989406583*^9}, {3.717509340771223*^9, 3.7175093605139236`*^9}, {
+  3.7175154341942*^9, 
+  3.7175154472033167`*^9}},ExpressionUUID->"93a1c5a0-570c-4bf0-b4ce-\
+b729a485d590"],
+
+Cell[BoxData[
+ RowBox[{"<<", "NotebookToPackage`"}]], "Input",
+ CellChangeTimes->{{3.717516915920141*^9, 
+  3.717516923077763*^9}},ExpressionUUID->"f84689c0-454e-49b8-b6cd-\
+154d820ef27c"],
+
+Cell[BoxData[
+ RowBox[{"NotebookToPackage", "@", 
+  RowBox[{"EvaluationNotebook", "[", "]"}]}]], "Input",
+ CellChangeTimes->{{3.717516924154447*^9, 
+  3.7175169285137587`*^9}},ExpressionUUID->"81f7ec79-e9b8-4de8-9ab9-\
+362ee9744cb5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"json", "//", "Close"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"json", "=", 
+  RowBox[{"JSONStream", "[", "$jsSample", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.717473399190744*^9, 3.717473417652985*^9}, 
+   3.717474340408304*^9, {3.717509449708767*^9, 3.7175094546225567`*^9}, 
+   3.717509486750743*^9},ExpressionUUID->"ec59ddc5-376e-40be-86b2-\
+162bc872dddb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["JSONStream",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEBitmaps", "SquarePlusIconMedium"]], 
+              ButtonFunction :> (Typeset`open$$ = True), Appearance -> None, 
+              Evaluator -> Automatic, Method -> "Preemptive"], 
+             Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                AbsoluteCurrentValue[Magnification]}]], 
+            GraphicsBox[{
+              Thickness[0.0016806722689075631`], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
+                 1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
+                 25.499999999999996`, 2.5}, {25.499999999999996`, 
+                 1.3953100000000003`}, {24.604699999999998`, 
+                 0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
+                 0.49999999999999994`}, {1.3953100000000003`, 
+                 0.49999999999999994`}, {0.49999999999999994`, 
+                 1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
+                 0.49999999999999994`, 23.5}, {0.49999999999999994`, 
+                 24.604699999999998`}, {1.3953100000000003`, 
+                 25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
+                 25.499999999999996`}, {24.604699999999998`, 
+                 25.499999999999996`}, {25.499999999999996`, 
+                 24.604699999999998`}, {25.499999999999996`, 23.5}, {
+                 25.499999999999996`, 2.5}}}]}, 
+               FaceForm[{
+                 GrayLevel[0.93], 
+                 Opacity[1.]}], StripOnInput -> False], 
+              StyleBox[{
+                
+                JoinedCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
+                 1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
+                 25.499999999999996`, 2.5}, {25.499999999999996`, 
+                 1.3953100000000003`}, {24.604699999999998`, 
+                 0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
+                 0.49999999999999994`}, {1.3953100000000003`, 
+                 0.49999999999999994`}, {0.49999999999999994`, 
+                 1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
+                 0.49999999999999994`, 23.5}, {0.49999999999999994`, 
+                 24.604699999999998`}, {1.3953100000000003`, 
+                 25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
+                 25.499999999999996`}, {24.604699999999998`, 
+                 25.499999999999996`}, {25.499999999999996`, 
+                 24.604699999999998`}, {25.499999999999996`, 23.5}, {
+                 25.499999999999996`, 2.5}}}, CurveClosed -> {1}]}, 
+               JoinForm[{"Miter", 10.}], 
+               RGBColor[0.699951, 0.699951, 0.699951, 1.], StripOnInput -> 
+               False], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{0, 2, 0}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {
+                 0, 1, 0}, {1, 3, 3}, {1, 3, 3}}}, {{{22.478099999999998`, 
+                 1.0035199999999997`}, {23.478899999999996`, 
+                 1.0035199999999997`}, {24.321099999999998`, 
+                 1.0035199999999997`}, {25.003899999999998`, 
+                 1.6863299999999997`}, {25.003899999999998`, 
+                 2.5285199999999994`}, {25.003899999999998`, 
+                 23.474999999999998`}, {25.003899999999998`, 
+                 24.317199999999996`}, {24.321099999999998`, 
+                 24.999999999999996`}, {23.478899999999996`, 
+                 24.999999999999996`}, {22.478099999999998`, 
+                 24.999999999999996`}, {22.478099999999998`, 
+                 24.999999999999993`}, {20.4805, 22.421099999999996`}, {
+                 20.4805, 13.0039}, {20.4805, 3.5867199999999992`}, {
+                 22.478099999999998`, 1.0035199999999997`}, {
+                 22.478099999999998`, 1.0035199999999997`}}}], 
+                
+                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
+                 0, 1, 0}, {0, 1, 0}}}, {{{3.50586, 12.9016}, {8.26328, 
+                 16.8398}, {8.26328, 14.856599999999998`}, {
+                 6.0230500000000005`, 12.947299999999997`}, {8.26328, 
+                 10.946100000000001`}, {8.26328, 8.96289}, {3.50586, 
+                 12.9016}}}]}, 
+               FaceForm[
+                RGBColor[0.5, 0.5, 0.5, 1.]], StripOnInput -> False], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}}},
+                  {{{16.801199999999998`, 12.8969}, {16.801199999999998`, 
+                 12.335499999999998`}, {17.256200000000003`, 
+                 11.880899999999999`}, {17.817599999999995`, 
+                 11.880899999999999`}, {18.378899999999998`, 
+                 11.880899999999999`}, {18.834, 12.335499999999998`}, {18.834,
+                  12.8969}, {18.834, 13.458200000000003`}, {
+                 18.378899999999998`, 13.9133}, {17.817599999999995`, 
+                 13.9133}, {17.256200000000003`, 13.9133}, {
+                 16.801199999999998`, 13.458200000000003`}, {
+                 16.801199999999998`, 12.8969}}}], 
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                 3}}}, {{{13.3812, 12.8969}, {13.3812, 12.335499999999998`}, {
+                 13.836300000000001`, 11.880899999999999`}, {
+                 14.397699999999999`, 11.880899999999999`}, {
+                 14.958999999999998`, 11.880899999999999`}, {
+                 15.413699999999999`, 12.335499999999998`}, {
+                 15.413699999999999`, 12.8969}, {15.413699999999999`, 
+                 13.458200000000003`}, {14.958999999999998`, 13.9133}, {
+                 14.397699999999999`, 13.9133}, {13.836300000000001`, 
+                 13.9133}, {13.3812, 13.458200000000003`}, {13.3812, 
+                 12.8969}}}], 
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                 3}}}, {{{9.961329999999998, 12.8969}, {9.961329999999998, 
+                 12.335499999999998`}, {10.4164, 11.880899999999999`}, {
+                 10.977699999999999`, 11.880899999999999`}, {
+                 11.538699999999999`, 11.880899999999999`}, {11.9938, 
+                 12.335499999999998`}, {11.9938, 12.8969}, {11.9938, 
+                 13.458200000000003`}, {11.538699999999999`, 13.9133}, {
+                 10.977699999999999`, 13.9133}, {10.4164, 13.9133}, {
+                 9.961329999999998, 13.458200000000003`}, {9.961329999999998, 
+                 12.8969}}}]}, 
+               FaceForm[
+                RGBColor[
+                0.46093800000000007`, 0.46093800000000007`, 
+                 0.46093800000000007`, 1.]], StripOnInput -> False]}, 
+             Background -> GrayLevel[0.5], Axes -> False, AspectRatio -> 1, 
+             ImageSize -> {Automatic, 
+               Dynamic[
+               3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])]}, Frame -> True, FrameTicks -> None, 
+             FrameStyle -> Directive[
+               Thickness[Tiny], 
+               GrayLevel[0.7]]], 
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Name: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["String", "SummaryItem"]}]}, {
+               RowBox[{
+                 TagBox["\"Unique ID: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["3", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            PaneBox[
+             ButtonBox[
+              DynamicBox[
+               FEPrivate`FrontEndResource[
+               "FEBitmaps", "SquareMinusIconMedium"]], 
+              ButtonFunction :> (Typeset`open$$ = False), Appearance -> None, 
+              Evaluator -> Automatic, Method -> "Preemptive"], 
+             Alignment -> {Center, Center}, ImageSize -> 
+             Dynamic[{
+               Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                AbsoluteCurrentValue[Magnification]}]], 
+            GraphicsBox[{
+              Thickness[0.0016806722689075631`], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
+                 1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
+                 25.499999999999996`, 2.5}, {25.499999999999996`, 
+                 1.3953100000000003`}, {24.604699999999998`, 
+                 0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
+                 0.49999999999999994`}, {1.3953100000000003`, 
+                 0.49999999999999994`}, {0.49999999999999994`, 
+                 1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
+                 0.49999999999999994`, 23.5}, {0.49999999999999994`, 
+                 24.604699999999998`}, {1.3953100000000003`, 
+                 25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
+                 25.499999999999996`}, {24.604699999999998`, 
+                 25.499999999999996`}, {25.499999999999996`, 
+                 24.604699999999998`}, {25.499999999999996`, 23.5}, {
+                 25.499999999999996`, 2.5}}}]}, 
+               FaceForm[{
+                 GrayLevel[0.93], 
+                 Opacity[1.]}], StripOnInput -> False], 
+              StyleBox[{
+                
+                JoinedCurveBox[{{{1, 4, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}, {
+                 1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {0, 1, 0}}}, {{{
+                 25.499999999999996`, 2.5}, {25.499999999999996`, 
+                 1.3953100000000003`}, {24.604699999999998`, 
+                 0.49999999999999994`}, {23.5, 0.49999999999999994`}, {2.5, 
+                 0.49999999999999994`}, {1.3953100000000003`, 
+                 0.49999999999999994`}, {0.49999999999999994`, 
+                 1.3953100000000003`}, {0.49999999999999994`, 2.5}, {
+                 0.49999999999999994`, 23.5}, {0.49999999999999994`, 
+                 24.604699999999998`}, {1.3953100000000003`, 
+                 25.499999999999996`}, {2.5, 25.499999999999996`}, {23.5, 
+                 25.499999999999996`}, {24.604699999999998`, 
+                 25.499999999999996`}, {25.499999999999996`, 
+                 24.604699999999998`}, {25.499999999999996`, 23.5}, {
+                 25.499999999999996`, 2.5}}}, CurveClosed -> {1}]}, 
+               JoinForm[{"Miter", 10.}], 
+               RGBColor[0.699951, 0.699951, 0.699951, 1.], StripOnInput -> 
+               False], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{0, 2, 0}, {1, 3, 3}, {0, 1, 0}, {1, 3, 3}, {
+                 0, 1, 0}, {1, 3, 3}, {1, 3, 3}}}, {{{22.478099999999998`, 
+                 1.0035199999999997`}, {23.478899999999996`, 
+                 1.0035199999999997`}, {24.321099999999998`, 
+                 1.0035199999999997`}, {25.003899999999998`, 
+                 1.6863299999999997`}, {25.003899999999998`, 
+                 2.5285199999999994`}, {25.003899999999998`, 
+                 23.474999999999998`}, {25.003899999999998`, 
+                 24.317199999999996`}, {24.321099999999998`, 
+                 24.999999999999996`}, {23.478899999999996`, 
+                 24.999999999999996`}, {22.478099999999998`, 
+                 24.999999999999996`}, {22.478099999999998`, 
+                 24.999999999999993`}, {20.4805, 22.421099999999996`}, {
+                 20.4805, 13.0039}, {20.4805, 3.5867199999999992`}, {
+                 22.478099999999998`, 1.0035199999999997`}, {
+                 22.478099999999998`, 1.0035199999999997`}}}], 
+                
+                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {
+                 0, 1, 0}, {0, 1, 0}}}, {{{3.50586, 12.9016}, {8.26328, 
+                 16.8398}, {8.26328, 14.856599999999998`}, {
+                 6.0230500000000005`, 12.947299999999997`}, {8.26328, 
+                 10.946100000000001`}, {8.26328, 8.96289}, {3.50586, 
+                 12.9016}}}]}, 
+               FaceForm[
+                RGBColor[0.5, 0.5, 0.5, 1.]], StripOnInput -> False], 
+              StyleBox[{
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                 3}}}, {{{16.801199999999998`, 12.8969}, {16.801199999999998`,
+                  12.335499999999998`}, {17.256200000000003`, 
+                 11.880899999999999`}, {17.817599999999995`, 
+                 11.880899999999999`}, {18.378899999999998`, 
+                 11.880899999999999`}, {18.834, 12.335499999999998`}, {18.834,
+                  12.8969}, {18.834, 13.458200000000003`}, {
+                 18.378899999999998`, 13.9133}, {17.817599999999995`, 
+                 13.9133}, {17.256200000000003`, 13.9133}, {
+                 16.801199999999998`, 13.458200000000003`}, {
+                 16.801199999999998`, 12.8969}}}], 
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                 3}}}, {{{13.3812, 12.8969}, {13.3812, 12.335499999999998`}, {
+                 13.836300000000001`, 11.880899999999999`}, {
+                 14.397699999999999`, 11.880899999999999`}, {
+                 14.958999999999998`, 11.880899999999999`}, {
+                 15.413699999999999`, 12.335499999999998`}, {
+                 15.413699999999999`, 12.8969}, {15.413699999999999`, 
+                 13.458200000000003`}, {14.958999999999998`, 13.9133}, {
+                 14.397699999999999`, 13.9133}, {13.836300000000001`, 
+                 13.9133}, {13.3812, 13.458200000000003`}, {13.3812, 
+                 12.8969}}}], 
+                
+                FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 3}}},
+                  {{{9.961329999999998, 12.8969}, {9.961329999999998, 
+                 12.335499999999998`}, {10.4164, 11.880899999999999`}, {
+                 10.977699999999999`, 11.880899999999999`}, {
+                 11.538699999999999`, 11.880899999999999`}, {11.9938, 
+                 12.335499999999998`}, {11.9938, 12.8969}, {11.9938, 
+                 13.458200000000003`}, {11.538699999999999`, 13.9133}, {
+                 10.977699999999999`, 13.9133}, {10.4164, 13.9133}, {
+                 9.961329999999998, 13.458200000000003`}, {9.961329999999998, 
+                 12.8969}}}]}, 
+               FaceForm[
+                RGBColor[
+                0.46093800000000007`, 0.46093800000000007`, 
+                 0.46093800000000007`, 1.]], StripOnInput -> False]}, 
+             Background -> GrayLevel[0.5], Axes -> False, AspectRatio -> 1, 
+             ImageSize -> {Automatic, 
+               Dynamic[
+               3.5 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                 Magnification])]}, Frame -> True, FrameTicks -> None, 
+             FrameStyle -> Directive[
+               Thickness[Tiny], 
+               GrayLevel[0.7]]], 
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Name: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["String", "SummaryItem"]}]}, {
+               RowBox[{
+                 TagBox["\"Unique ID: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["3", "SummaryItem"]}]}, {
+               RowBox[{
+                 TagBox["\"Open: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox[
+                  DynamicBox[
+                   ToBoxes[Options[
+                    InputStream[String, 3]] =!= {}, StandardForm], 
+                   UpdateInterval -> 1], "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel",
+     DisplayFunction->(
+      ButtonBox[#, Active -> False, Alignment -> Left, 
+       Appearance -> {
+        "Default" -> 
+         FrontEnd`FileName[{"Typeset", "SummaryBox"}, "Panel.9.png"]}, 
+       FrameMargins -> 7, BaseStyle -> {}, 
+       DefaultBaseStyle -> {"Panel", Background -> None}, BaselinePosition -> 
+       Baseline]& )],
+    DynamicModuleValues:>{}], "]"}],
+  $CellContext`JSONStream[$CellContext`jStreamReader$125994],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellChangeTimes->{
+  3.7175165880460167`*^9, {3.7175167543349237`*^9, 
+   3.717516796042351*^9}},ExpressionUUID->"70c5aa1b-0535-46ce-b746-\
+1718eb75a963"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"r", "=", 
+  RowBox[{"Read", "[", "json", "]"}]}]], "Input",
+ CellChangeTimes->{{3.717513818341642*^9, 3.717513822711032*^9}, {
+  3.7175146532657213`*^9, 3.717514655169025*^9}, {3.717516333879776*^9, 
+  3.717516334063216*^9}},ExpressionUUID->"8103b9d1-b0f6-4ebc-be27-\
+d17bbff3f56f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"Read", "[", 
+     RowBox[{"json", ",", "KeyValuePattern"}], "]"}], ",", "3"}], "]"}], "//",
+   "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.7175165370455513`*^9, 3.717516596178967*^9}, {
+  3.7175168383700733`*^9, 
+  3.71751684098545*^9}},ExpressionUUID->"04770ad9-5000-4465-a7f6-\
+6316ddc17ac2"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.015792`", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\<\"Mercury\"\>", "\[Rule]", 
+      RowBox[{"\[LeftAssociation]", 
+       RowBox[{
+        RowBox[{"\<\"Mass\"\>", 
+         "\[Rule]", "\<\"330104000000000000000000. kg\"\>"}], ",", 
+        RowBox[{"\<\"Radius\"\>", "\[Rule]", "\<\"2439.7 km\"\>"}], ",", 
+        RowBox[{"\<\"Moons\"\>", "\[Rule]", 
+         RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}]}], 
+       "\[RightAssociation]"}]}], ",", 
+     RowBox[{"\<\"Venus\"\>", "\[Rule]", 
+      RowBox[{"\[LeftAssociation]", 
+       RowBox[{
+        RowBox[{"\<\"Mass\"\>", 
+         "\[Rule]", "\<\"4867320000000000000000000. kg\"\>"}], ",", 
+        RowBox[{"\<\"Radius\"\>", "\[Rule]", "\<\"6051.9 km\"\>"}], ",", 
+        RowBox[{"\<\"Moons\"\>", "\[Rule]", 
+         RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}]}], 
+       "\[RightAssociation]"}]}], ",", 
+     RowBox[{"\<\"Earth\"\>", "\[Rule]", 
+      RowBox[{"\[LeftAssociation]", 
+       RowBox[{
+        RowBox[{"\<\"Mass\"\>", 
+         "\[Rule]", "\<\"5972198600000000000000000. kg\"\>"}], ",", 
+        RowBox[{"\<\"Radius\"\>", "\[Rule]", "\<\"6367.44466 km\"\>"}], ",", 
+        RowBox[{"\<\"Moons\"\>", "\[Rule]", 
+         RowBox[{"\[LeftAssociation]", 
+          RowBox[{"\<\"Moon\"\>", "\[Rule]", 
+           RowBox[{"\[LeftAssociation]", 
+            RowBox[{
+             
+             RowBox[{"\<\"Mass\"\>", 
+              "\[Rule]", "\<\"73459000000000000000000. kg\"\>"}], ",", 
+             RowBox[{"\<\"Radius\"\>", "\[Rule]", "\<\"1737.5 km\"\>"}]}], 
+            "\[RightAssociation]"}]}], "\[RightAssociation]"}]}]}], 
+       "\[RightAssociation]"}]}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.717516841446156*^9},ExpressionUUID->"b823bf40-17d3-4bf7-8cec-\
+7f0d062a7103"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"Read", "[", 
+     RowBox[{"json", ",", "\"\<Token\>\""}], "]"}], ",", "15"}], "]"}], "//", 
+  "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.7175094929735413`*^9, 3.717509531743469*^9}, {
+  3.717515630175049*^9, 3.717515630452372*^9}, {3.717515925756997*^9, 
+  3.717515929274001*^9}},ExpressionUUID->"0dcf6eb9-ec7a-451a-ac78-\
+645824e37466"],
+
+Cell[BoxData["$jsSample"], "Input",
+ CellChangeTimes->{{3.7175155466988897`*^9, 
+  3.717515547592805*^9}},ExpressionUUID->"fb137895-3537-4aea-a15b-\
+e36252d36f77"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Read", "@", "json"}]], "Input",
+ CellChangeTimes->{{3.717516797234601*^9, 
+  3.717516797920619*^9}},ExpressionUUID->"3334f998-6a47-4744-89b1-\
+720775272cd3"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"Null", ",", 
+   RowBox[{"{", 
+    RowBox[{"Opening", ",", "Association"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.717516798303245*^9},ExpressionUUID->"78acb71f-675f-4166-8cb2-\
+9e37ee18e535"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"Read", "@", "json"}], ",", "10"}], "]"}]], "Input",ExpressionUUID-\
+>"6c6e056f-e79e-4a72-9506-83a4e7d569a1"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"\\\"EscapedName\\\"\"\>", ",", "String"}], "}"}], ",", 
+     "None"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"Null", ",", "Key"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"Null", ",", 
+     RowBox[{"{", 
+      RowBox[{"Opening", ",", "Association"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"asd\"\>", ",", "String"}], "}"}], ",", "None"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{"Null", ",", "Key"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"whee\"\>", ",", "String"}], "}"}], ",", "None"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"Null", ",", "Expression"}], "}"}], ",", "Value"}], "}"}], ",", 
+   
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"number\"\>", ",", "String"}], "}"}], ",", "None"}], "}"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{"Null", ",", "Key"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "Expression"}], "}"}], ",", "Value"}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.71751677613518*^9, 
+  3.71751681152314*^9},ExpressionUUID->"4a35ade8-fc74-4753-be3d-bc47557e5e82"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Read", "@", "json"}], ",", "10"}], "]"}], "//", 
+     "AbsoluteTiming"}], "//", "First"}], ")"}], "/", "50"}]], "Input",
+ CellChangeTimes->{{3.717474385194518*^9, 3.717474396870908*^9}, {
+  3.717474697784231*^9, 3.717474728549757*^9}, {3.7175167710347557`*^9, 
+  3.7175167715068083`*^9}},ExpressionUUID->"62d77c8c-6ac3-48ed-93a2-\
+c702c23ac116"],
+
+Cell[BoxData["0.00020690000000000001`"], "Output",
+ CellChangeTimes->{3.717474729077186*^9, 
+  3.717509443223922*^9},ExpressionUUID->"09b9af21-482c-4cb6-8b45-\
+a51af8bcbeb0"]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{Automatic, 112}, {43, Automatic}},
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 27935, 637, 4336, "Input",ExpressionUUID->"37048b5a-845c-4806-ad1d-3c2f5772bb9e"],
+Cell[28496, 659, 15450, 350, 2026, "Input",ExpressionUUID->"6ef61cc5-0f3f-40c4-b85b-b97602eace33"],
+Cell[43949, 1011, 5415, 127, 787, "Input",ExpressionUUID->"a91824a8-4c0d-41fa-9744-3274f09409c7"],
+Cell[CellGroupData[{
+Cell[49389, 1142, 273, 7, 30, "Input",ExpressionUUID->"6b154206-1e17-4322-80a8-c729b0476b04"],
+Cell[49665, 1151, 302, 6, 43, "Output",ExpressionUUID->"13121690-5eba-4f5d-b2bf-21f44d84dac9"]
+}, Open  ]],
+Cell[49982, 1160, 1124, 24, 178, "Input",ExpressionUUID->"93a1c5a0-570c-4bf0-b4ce-b729a485d590"],
+Cell[51109, 1186, 188, 4, 30, "Input",ExpressionUUID->"f84689c0-454e-49b8-b6cd-154d820ef27c"],
+Cell[51300, 1192, 233, 5, 30, "Input",ExpressionUUID->"81f7ec79-e9b8-4de8-9ab9-362ee9744cb5"],
+Cell[CellGroupData[{
+Cell[51558, 1201, 398, 8, 52, "Input",ExpressionUUID->"ec59ddc5-376e-40be-86b2-162bc872dddb"],
+Cell[51959, 1211, 18094, 332, 62, "Output",ExpressionUUID->"70c5aa1b-0535-46ce-b746-1718eb75a963"]
+}, Open  ]],
+Cell[70068, 1546, 306, 6, 30, "Input",ExpressionUUID->"8103b9d1-b0f6-4ebc-be27-d17bbff3f56f"],
+Cell[CellGroupData[{
+Cell[70399, 1556, 376, 10, 30, "Input",ExpressionUUID->"04770ad9-5000-4465-a7f6-6316ddc17ac2"],
+Cell[70778, 1568, 1841, 42, 129, "Output",ExpressionUUID->"b823bf40-17d3-4bf7-8cec-7f0d062a7103"]
+}, Open  ]],
+Cell[72634, 1613, 420, 10, 30, "Input",ExpressionUUID->"0dcf6eb9-ec7a-451a-ac78-645824e37466"],
+Cell[73057, 1625, 163, 3, 30, "Input",ExpressionUUID->"fb137895-3537-4aea-a15b-e36252d36f77"],
+Cell[CellGroupData[{
+Cell[73245, 1632, 181, 4, 30, "Input",ExpressionUUID->"3334f998-6a47-4744-89b1-720775272cd3"],
+Cell[73429, 1638, 243, 7, 34, "Output",ExpressionUUID->"78acb71f-675f-4166-8cb2-9e37ee18e535"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[73709, 1650, 169, 4, 30, "Input",ExpressionUUID->"6c6e056f-e79e-4a72-9506-83a4e7d569a1"],
+Cell[73881, 1656, 1315, 44, 77, "Output",ExpressionUUID->"4a35ade8-fc74-4753-be3d-bc47557e5e82"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[75233, 1705, 469, 12, 30, "Input",ExpressionUUID->"62d77c8c-6ac3-48ed-93a2-c702c23ac116"],
+Cell[75705, 1719, 174, 3, 34, "Output",ExpressionUUID->"09b9af21-482c-4cb6-8b45-a51af8bcbeb0"]
+}, Open  ]]
+}
+]
+*)
+
