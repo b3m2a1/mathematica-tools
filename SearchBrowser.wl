@@ -199,14 +199,15 @@ SearchBrowser[
        AppearanceElements -> None
        ]
       }],
+   SynchronousInitialization->True,
    Initialization :> (
-     If[Length@PacletFind["ServiceConnection_Qwant"] === 0,
-      PacletInstall["ServiceConnection_Qwant",
+     If[Length@PacletManager`PacletFind["ServiceConnection_Qwant"] === 0,
+     PacletManager`PacletInstall["ServiceConnection_Qwant",
        "Site" ->
         "https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer"
        ],
       If[! TrueQ@QwantWebBrowser`Private`$qwantUpdated,
-       PacletUpdate["ServiceConnection_Qwant",
+       PacletManager`PacletUpdate["ServiceConnection_Qwant",
         "Site" ->
          "https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer"
         ];
