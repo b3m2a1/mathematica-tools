@@ -241,8 +241,13 @@ PaneFileBrowser[
      Opener[
       Dynamic[TrueQ@dirState[d, "Open"],
        {
-        Null&,
+        If[!KeyMemberQ[dirState, d],
+          populateDirState[d]
+          ]&,
         Function[
+         If[!KeyMemberQ[dirState, d],
+          populateDirState[d]
+          ];
          dirState[d, "Open"] = #;
          If[#,
           populateDirState /@
