@@ -288,9 +288,9 @@ ResizePane[expr_,
     Set[#,
      Replace[OptionValue[ImageSize], {
        Automatic :>
-        Replace[imSize, {
-          i_?NumericQ :> {Max@{i, 1}, Max@{i, 1}},
-          {x_?NumericQ, y_?NumericQ} :> {Max@{x, 1}, Max@{y, 1}},
+        Replace[{imSize}, {
+          {i_?NumericQ} :> {Max@{i, 1}, Max@{i, 1}},
+          {{x_?NumericQ, y_?NumericQ}} :> {Max@{x, 1}, Max@{y, 1}},
           _ -> {100, 50}
           }],
        i : {_, _} :> i,
