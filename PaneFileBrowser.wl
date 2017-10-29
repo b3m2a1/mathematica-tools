@@ -220,7 +220,7 @@ PaneFileBrowser[
          True :>
           Dynamic@Column[{#, directorySubTree[d]}]
          },
-        Dynamic@TrueQ@dirState[d, "Open"],
+        Dynamic[TrueQ@dirState[d, "Open"], Null&],
         ImageSize -> Automatic
         ] &[
       Row[{
@@ -241,7 +241,7 @@ PaneFileBrowser[
      Opener[
       Dynamic[TrueQ@dirState[d, "Open"],
        {
-        Automatic,
+        Null&,
         Function[
          dirState[d, "Open"] = #;
          If[#,
