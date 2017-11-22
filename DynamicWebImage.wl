@@ -99,7 +99,7 @@ DynamicWebImage[
        "https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer"
       ];
      qwantPacletUpdated =
-      Length@PacletManager`PacletFind["ServiceConnection_Qwant"] > 0//Echo
+      Length@PacletManager`PacletFind["ServiceConnection_Qwant"] > 0
      ],
     qwantInstance = Quiet @ ServiceConnect["Qwant"]
     },
