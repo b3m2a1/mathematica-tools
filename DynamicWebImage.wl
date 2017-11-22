@@ -38,7 +38,7 @@ DynamicWebImage[
       Dynamic[
        img =
         Image[
-         DynamicWebImage`Private`qwantSingleSearch[var, caching]["Image"],
+         qwantSingleSearch[var, caching]["Image"],
          imops
          ],
        o],
@@ -47,9 +47,8 @@ DynamicWebImage[
        img =
         Image[
          Last@Through[
-           
            Flatten[List@f][
-            DynamicWebImage`Private`qwantSingleSearch[var, caching]]
+            qwantSingleSearch[var, caching]]
            ],
          imops
          ],
@@ -70,39 +69,39 @@ DynamicWebImage[
        _Integer
        ],
     OptionValue[Initialization],
-    If[! AssociationQ@DynamicWebImage`Private`$qwantCache, 
-     DynamicWebImage`Private`$qwantCache = <||>
+    If[! AssociationQ@$qwantCache, 
+     $qwantCache = <||>
      ],
-    DynamicWebImage`Private`qwantSingleSearch[ 
+    qwantSingleSearch[ 
       q_String?(StringLength[StringTrim[#]] > 0 &),
       cached:True|False:True] :=
      Replace[
-      DynamicWebImage`Private`$qwantCache[q],
+      $qwantCache[q],
       Except[_Association?(KeyMemberQ["Image"])]:>
        With[{
          r =
-          First@
-           DynamicWebImage`Private`qwantInstance["ImageSearch", 
+          First@Normal@
+           qwantInstance["ImageSearch", 
             "q" -> q, "count" -> "1"]
          },
-        If[cached, DynamicWebImage`Private`$qwantCache[q] = r, r]
+        If[cached, $qwantCache[q] = r, r]
         ]
       ],
-    DynamicWebImage`Private`qwantSingleSearch[__] :=
+    qwantSingleSearch[__] :=
      None,
-    If[! TrueQ[DynamicWebImage`Private`qwantPacletUpdated],
+    If[!TrueQ[qwantPacletUpdated],
      If[Length@PacletManager`PacletFind["ServiceConnection_Qwant"] > 0,
-       PacletInstall,
-       PacletUpdate
+       PacletManager`PacletInstall,
+       PacletManager`PacletUpdate
        ][
       "ServiceConnection_Qwant", 
       "Site" -> 
        "https://www.wolframcloud.com/objects/b3m2a1.paclets/PacletServer"
       ];
-     DynamicWebImage`Private`qwantPacletUpdated =
-      Length@PacletManager`PacletFind["ServiceConnection_Qwant"] > 0
+     qwantPacletUpdated =
+      Length@PacletManager`PacletFind["ServiceConnection_Qwant"] > 0//Echo
      ],
-    DynamicWebImage`Private`qwantInstance = ServiceConnect["Qwant"]
+    qwantInstance = Quiet @ ServiceConnect["Qwant"]
     },
   Evaluate[
    Sequence @@
@@ -116,8 +115,7 @@ DynamicWebImage[
        }
       ]
      ]
-   ],
-  SynchronousInitialization->True
+   ]
   ]
 
 
@@ -165,6 +163,7 @@ DynamicWebImageBrowser[img_Dynamic, list : {___String} : {}] :=
        img,
        ImageSize -> Dynamic[imsize],
        DynamicEvaluationTimeout -> Infinity,
+       SynchronousInitialization->True,
        BoxID -> webImageTag
        ]
       },
