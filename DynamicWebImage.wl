@@ -114,7 +114,8 @@ DynamicWebImage[
        }
       ]
      ]
-   ]
+   ],
+  SynchronousInitialization->True
   ]
 
 
