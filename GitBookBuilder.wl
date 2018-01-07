@@ -96,7 +96,7 @@ gitBookCopyContent[srcDir_, bookDir_] :=
          DeleteDirectory[f, DeleteContents -> True]
          ];
         CopyDirectory[#, f],
-        MatchQ[FileExtension[#], "png" | "jpeg" | "md" | "css" | "html" | "js" ],
+        True(*MatchQ[FileExtension[#], "png" | "jpeg" | "md" | "css" | "html" | "js" ]*),
         CopyFile[#, f, OverwriteTarget -> True]
         ]
        ]
@@ -106,7 +106,7 @@ gitBookCopyContent[srcDir_, bookDir_] :=
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*gitBookExportMD*)
 
 
@@ -154,7 +154,7 @@ gitBookExportMD[postDir_, bookDir_, content_] :=
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*gitBookMakeSummary*)
 
 
@@ -312,7 +312,7 @@ gitBookMakeSummary[postDir_,  bookDir_, metas_] :=
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*gitBookValidateDirectory*)
 
 
@@ -337,7 +337,7 @@ gitBookValidateDirectory[dir_] :=
    ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*GitBookBuild*)
 
 
@@ -389,14 +389,14 @@ GitBookBuild[srcDir:_String?DirectoryQ, bookDir_] :=
     ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*GitBookPush*)
 
 
 GitBookPush::noremote="No remote passed and no remote already set for book ``";
 Options[GitBookPush]=
   {
-    "CreateGitHubRepo"->True,
+    "CreateGitHubRepo"->False,
     "MessageTemplate"->Automatic,
     Quiet->True
     }
