@@ -10,8 +10,13 @@
 BeginPackage["GitBookBuilder`"];
 
 
+ClearAll["`*`", "`*`*"];
+
+
 (*Package Declarations*)
 GitBookBuild::usage="GitBookBuild[srcDir, bookDir]";
+GitBookPush::usage="GitBookPush[bookDir]
+GitBookPush[bookDir, remote]";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -91,7 +96,7 @@ gitBookCopyContent[srcDir_, bookDir_] :=
          DeleteDirectory[f, DeleteContents -> True]
          ];
         CopyDirectory[#, f],
-        MatchQ[FileExtension[#], "png" | "jpeg"],
+        MatchQ[FileExtension[#], "png" | "jpeg" | "md" | "css" | "html" | "js" ],
         CopyFile[#, f, OverwriteTarget -> True]
         ]
        ]
@@ -157,8 +162,63 @@ gitBookExportMD[postDir_, bookDir_, content_] :=
 (*Builds the summary index from the IDs*)
 
 
+gitBookHyperlink[assoc_]:=
+  ButtonBox[assoc["Title"],
+   BaseStyle -> "Hyperlink",
+   ButtonData ->
+    {
+     FrontEnd`FileName[
+       Evaluate@URLParse[assoc["Path"], "Path"]
+       ], 
+     None
+     }
+   ];
+
+
+gitBookSummaryLinkSection[title_, data_,
+  parentStyle_
+  ]:=
+  If[title=!="",
+    Cell@*CellGroupData,
+    Identity
+    ]@
+      With[{t=If[title=="", CreateUUID[], title]},
+        With[{headerPage=Select[data, #Title==t&]},
+          Flatten@{
+            If[title=="",
+              Nothing,
+              If[Length@headerPage>0,
+                Cell[
+                  TextData[gitBookHyperlink[headerPage[[1]]]], 
+                  If[parentStyle=="Subsection",
+                    "Item",
+                    "Subitem"
+                    ]
+                  ],
+                Cell[title, 
+                  If[parentStyle=="Subsection",
+                    "Item",
+                    "Subitem"
+                    ]
+                  ]
+                ]
+              ],
+          Map[
+           Cell[
+             TextData[gitBookHyperlink[#]],
+             If[parentStyle=="Subsection",
+               "Subsubitem", 
+               "Subitem"
+               ]
+             ] &,
+           If[title=!="", Select[data, #Title=!=title&], data]
+           ]
+         }
+       ]
+     ]
+
+
 gitBookMakeSummary[postDir_,  bookDir_, metas_] :=
-  
   Module[{data,  cells, nb, postCounter=1},
    data =
     GroupBy[First -> Last] /@
@@ -185,38 +245,31 @@ gitBookMakeSummary[postDir_,  bookDir_, metas_] :=
    cells =
     KeyValueMap[
      Cell[
-       CellGroupData[Flatten@{
-          Cell[#, "Section"],
-          KeyValueMap[
-           Cell[
-             CellGroupData[
-              Flatten@{
-                Cell[#, "Subsection"],
-                Map[
-                 Cell[
-                   TextData[
-                    ButtonBox[#Title,
-                     BaseStyle -> "Hyperlink",
-                     ButtonData ->
-                      {
-                       FrontEnd`FileName[
-                       Evaluate@URLParse[#Path, "Path"]], 
-                       None
-                       }
-                      ]
-                    ],
-                   "Item"
-                   ] &,
-                 #2
-                  ]
-                }
-              ]
-             ] &,
-           #2
+       CellGroupData[
+         With[{main=#, noPath=Lookup[#2, "", <||>]},
+           With[{titlePage=Select[noPath, #Title==main&]},
+             Flatten@{
+              If[Length@titlePage>0, 
+                Cell[
+                  TextData[gitBookHyperlink[titlePage[[1]]]],
+                  "Item"
+                  ],
+                Cell[main, "Subsection"]
+                ],
+              gitBookSummaryLinkSection["", Select[noPath, #Title!=main&],
+                If[Length@titlePage>0, "Item", "Subsection"]
+                ],
+              KeyValueMap[
+               gitBookSummaryLinkSection[##, 
+                 If[Length@titlePage>0, "Item", "Subsection"]
+                 ]&,
+               KeyDrop[#2, ""]
+               ]
+             }
            ]
-          }
+         ]
         ]
-       ] &,
+      ]&,
      data
      ];
    CheckAbort[
@@ -259,7 +312,7 @@ gitBookMakeSummary[postDir_,  bookDir_, metas_] :=
    ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*gitBookValidateDirectory*)
 
 
@@ -292,15 +345,13 @@ gitBookValidateDirectory[dir_] :=
 (*Builds a GitBook from srcDir in bookDir*)
 
 
-GitBookBuild[srcDir : (_String | _File )?DirectoryQ, bookDir_] :=
+GitBookBuild[srcDir:_String?DirectoryQ, bookDir_] :=
   Catch@
    Module[
     {postDir, content},
     gitBookValidateDirectory[srcDir];
     If[!DirectoryQ@bookDir,
       CreateDirectory[bookDir, CreateIntermediateDirectories->True];
-      ToExpression["BTools`Git"]["Init", bookDir];
-      ToExpression["BTools`Git"]["AddGitIgnore", bookDir];
       ];
     gitBookCopyContent[srcDir, bookDir];
     postDir =
@@ -336,6 +387,62 @@ GitBookBuild[srcDir : (_String | _File )?DirectoryQ, bookDir_] :=
      ];
     bookDir
     ];
+
+
+(* ::Subsubsection:: *)
+(*GitBookPush*)
+
+
+GitBookPush::noremote="No remote passed and no remote already set for book ``";
+Options[GitBookPush]=
+  {
+    "CreateGitHubRepo"->True,
+    "MessageTemplate"->Automatic,
+    Quiet->True
+    }
+GitBookPush[
+  bookDir:_String?DirectoryQ, 
+  remote:_String|Automatic:Automatic,
+  ops:OptionsPattern[]
+  ]:=
+  Catch@If[TrueQ@OptionValue[Quiet], Quiet, Identity]@Module[{
+    git=ToExpression["BTools`Git"], 
+    gitRepoQ=ToExpression["BTools`GitRepoQ"],
+    gitHub=ToExpression["BTools`GitHub"],
+    initted=False,
+    mTemp1=
+      Replace[OptionValue["MessageTemplate"], Automatic:>"First build for GitBook"],
+    mTemp=
+      Replace[OptionValue["MessageTemplate"], Automatic:>"Built GitBook @ `Time`"],
+    tempPars=
+      <|
+        "Time"->Now,
+        "Repo"->bookDir,
+        "RepoName"->FileBaseName[bookDir]
+        |>
+    },
+    If[!gitRepoQ@bookDir,
+      initted=True;
+      git["Init", bookDir];
+      git["AddGitIgnore", bookDir];
+      git["Add", bookDir,"-A"];
+      git["Commit", bookDir, 
+        Message->TemplateApply[mTemp1, tempPars]
+        ];,
+      git["Add", bookDir, "-A"];
+      git["Commit", bookDir, 
+        Message->TemplateApply[mTemp, tempPars]
+        ]
+      ];
+    If[!StringQ@git["ListRemotes", bookDir],
+      If[!StringQ@remote, Message[GitBookPush::noremote, bookDir];Throw[$Failed]];
+      git["AddRemote", bookDir, remote];
+      If[OptionValue["CreateGitHubRepo"],
+        gitHub["Create", URLParse[remote, "Path"][[-1]]]
+        ]
+      ];
+    git["PushOrigin", bookDir];
+    ]
 
 
 (* ::Subsection:: *)
