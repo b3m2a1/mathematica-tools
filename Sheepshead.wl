@@ -811,7 +811,7 @@ PlaySheepshead[redeal : True | False : False] :=
   If[! MatchQ[$currentSheepsheadGame, 
      sheepsheadGame[_?(KeyMemberQ[$sheepsheadGames, #] &)]],
    $currentSheepsheadGame = sheepsheadGame["New"];
-   redealFlag = False
+   redealFlag = True
    ];
   If[redealFlag, $currentSheepsheadGame["Deal"]];
   sheepsheadGameInterface@$currentSheepsheadGame
