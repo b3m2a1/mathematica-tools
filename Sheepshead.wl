@@ -7,7 +7,7 @@
 (*Sheepshead*)
 
 
-BeginPackage["Sheepshead`"];
+BeginPackage["Sheepshead`", {"PacletManager`"}];
 
 
 (*Package Declarations*)
@@ -38,7 +38,7 @@ $docConnection
 *)
 $docConnection :=
   (
-   If[MemberQ[$Services, "DeckOfCards"],
+   If[Length@PacletFind["ServiceConnection_DeckOfCards"]==0,
     PacletInstall[
      "ServiceConnection_DeckOfCards",
      "Site" ->
