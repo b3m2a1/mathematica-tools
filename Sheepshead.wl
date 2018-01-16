@@ -1,8 +1,5 @@
 (* ::Package:: *)
 
-(*MakeIndentable["IndentCharacter"\[Rule]"  "]*)
-
-
 (* ::Section:: *)
 (*Sheepshead*)
 
@@ -229,7 +226,6 @@ sheepsheadTrumpQ[card_]
 sheepsheadTrumpQ[card_] :=
   
   MemberQ[ {"Queen", "Jack"}, card["Value"]] ||
-   
    card["Suit"] == "Diamonds";
 (*
 sheepsheadValidateCard[leadCard_, hand_, card_]
@@ -237,14 +233,13 @@ sheepsheadValidateCard[leadCard_, hand_, card_]
 *)
 sheepsheadValidateCard[leadCard_, hand_, card_, calledCard_] :=
   
-  If[leadCard["Suit"] == calledCard["Suit"] &&
-    
+  If[!sheepsheadTrumpQ[leadCard]&&
+    leadCard["Suit"] == calledCard["Suit"] &&
     MemberQ[hand, calledCard],
    card == calledCard,
    If[sheepsheadTrumpQ[leadCard],
     sheepsheadTrumpQ[card] || Not[AnyTrue[hand, sheepsheadTrumpQ]],
-    leadCard["Suit"] == card["Suit"] ||
-     
+    (!sheepsheadTrumpQ[card] && leadCard["Suit"] == card["Suit"]) ||
      Not[AnyTrue[hand, leadCard["Suit"] == #["Suit"] &]]
     ]
    ];
