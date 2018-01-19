@@ -285,7 +285,7 @@ generateSymbolUsage[f_,
    Replace[
     DeleteDuplicates@usagePatternReplace[Keys@getCodeValues[f]],
     {
-     Verbatim[HoldPattern][s_[a___]] :>
+     Verbatim[HoldPattern][s_[a___]]:>
       With[
        {
         uu =
@@ -294,7 +294,7 @@ generateSymbolUsage[f_,
            
            Except[_String] :>
             
-            Replace[s::usage, Except[_String] -> ""]
+            Replace[Quiet@s::usage, Except[_String] -> ""]
            ],
         sn = ToString[Unevaluated@s],
         meuu = ToString[Unevaluated[s[a]], InputForm]
@@ -377,8 +377,7 @@ Attributes[autoCompletionsExtract] =
   {
    HoldFirst
    };
-autoCompletionsExtract[
-   Verbatim[HoldPattern][_[a___]]] :=
+autoCompletionsExtract[Verbatim[HoldPattern][_[a___]]] :=
   {ReleaseHold@
     MapIndexed[
      Function[Null, autoCompletionsExtractSeeder[#, #2[[1]]], 
@@ -390,8 +389,31 @@ autoCompletionsExtract[f_Symbol] :=
  Flatten@
   Reap[
     autoCompletionsExtract /@
-     
-     Keys@getCodeValues[f, {DownValues}]
+     Replace[
+      Keys@getCodeValues[f, {DownValues, SubValues, UpValues}],
+      {
+        Verbatim[HoldPattern][
+         HoldPattern[
+          f[a___][___]|
+          f[a___][___][___]|
+          f[a___][___][___][___]|
+          f[a___][___][___][___][___]|
+          f[a___][___][___][___][___][___]
+          ]
+         ]:>HoldPattern[f[a]],
+        Verbatim[HoldPattern][
+         HoldPattern[
+          _[___, f[a___], ___]|
+          _[___, f[a___][___], ___]|
+          _[___, f[a___][___][___], ___]|
+          _[___, f[a___][___][___][___], ___]|
+          _[___, f[a___][___][___][___][___], ___]|
+          _[___, f[a___][___][___][___][___][___],  ___]
+          ]
+         ]:>HoldPattern[f[a]]
+        },
+      {1}
+      ]
     ][[2]]
 
 
@@ -629,7 +651,7 @@ Verbatim[Alternatives][s_,___]:>s,
 (*Pattern Parsing*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*reducePatterns*)
 
 
@@ -774,12 +796,36 @@ mergeArgPats[pats_, returnNum : False | True : False] :=
 
 
 generateSIArgPat[f_] :=
-  With[{dvs = Keys@getCodeValues[f, {DownValues}]},
+  With[{dvs = Keys@getCodeValues[f, {DownValues, SubValues, UpValues}]},
    mergeArgPats@
     DeleteDuplicates[
      reconstructPatterns /@
       ReplaceAll[
-       reducePatterns /@ dvs,
+       reducePatterns /@ 
+         Replace[dvs,
+           {
+           Verbatim[HoldPattern][
+             HoldPattern[
+              f[a___][___]|
+              f[a___][___][___]|
+              f[a___][___][___][___]|
+              f[a___][___][___][___][___]|
+              f[a___][___][___][___][___][___]
+              ]
+             ]:>HoldPattern[f[a]],
+            Verbatim[HoldPattern][
+             HoldPattern[
+              _[___, f[a___], ___]|
+              _[___, f[a___][___], ___]|
+              _[___, f[a___][___][___], ___]|
+              _[___, f[a___][___][___][___], ___]|
+              _[___, f[a___][___][___][___][___], ___]|
+              _[___, f[a___][___][___][___][___][___],  ___]
+              ]
+             ]:>HoldPattern[f[a]]
+            },
+           1
+           ],
        {
         (f | HoldPattern) -> List
         }
@@ -884,13 +930,38 @@ generateSyntaxInformation[
 generateArgCount[f_] :=
   Module[
    {
-    dvs = Keys@getCodeValues[f, {DownValues}],
+    dvs = Keys@getCodeValues[f, {DownValues, SubValues, UpValues}],
     patsNums,
     patsMax,
     patsMin,
     patsTypes,
     doNonOp = False
     },
+   dvs=
+     Replace[dvs,
+       {
+         Verbatim[HoldPattern][
+           HoldPattern[
+            f[a___][___]|
+            f[a___][___][___]|
+            f[a___][___][___][___]|
+            f[a___][___][___][___][___]|
+            f[a___][___][___][___][___][___]
+            ]
+           ]:>HoldPattern[f[a]],
+          Verbatim[HoldPattern][
+           HoldPattern[
+            _[___, f[a___], ___]|
+            _[___, f[a___][___], ___]|
+            _[___, f[a___][___][___], ___]|
+            _[___, f[a___][___][___][___], ___]|
+            _[___, f[a___][___][___][___][___], ___]|
+            _[___, f[a___][___][___][___][___][___],  ___]
+            ]
+           ]:>HoldPattern[f[a]]
+          },
+       1
+       ];
    patsNums =
     mergeArgPats[
      DeleteDuplicates[
@@ -947,21 +1018,21 @@ generateArgCount[f_] :=
 generateArgCount~SetAttributes~HoldFirst
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*setArgCount*)
 
 
-setArgCount[f_Symbol, minA : _Integer, maxA : _Integer, 
+setArgCount[f_Symbol, minA : _Integer, maxA : _Integer|Infinity, 
    noo : True | False] :=
   f[argPatLongToNotDupe___] :=
    (
     1 /; (ArgumentCountQ[f,
         Length@If[noo,
           Replace[Hold[argPatLongToNotDupe], 
-          
-          Hold[argPatLongToNotDupe2___, (_Rule | _RuleDelayed | \
-{(_Rule | _RuleDelayed) ..}) ...] :> Hold[argPatLongToNotDupe2]
-          ], Hold[argPatLongToNotDupe]], minA, maxA]; False)
+            Hold[argPatLongToNotDupe2___, 
+              (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
+              ] :> Hold[argPatLongToNotDupe2]
+            ], Hold[argPatLongToNotDupe]], minA, maxA]; False)
     );
 setArgCount~SetAttributes~HoldFirst
 
