@@ -629,7 +629,7 @@ Verbatim[Alternatives][s_,___]:>s,
 (*Pattern Parsing*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*reducePatterns*)
 
 
@@ -640,11 +640,10 @@ reducePatterns[p_] :=
      Except[
        _Pattern | _Optional | _Blank | _BlankSequence | 
         _BlankNullSequence | _PatternSequence | _OptionsPattern |
-        _Repeated | _RepeatedNull | _Default | _PatternTest | \
-_Condition
+        _Repeated | _RepeatedNull | _Default | _PatternTest | _Condition
        ] -> _
      },
-    {2}
+    {2, Infinity}
     ] //. {
     _Blank -> "Blank",
     _BlankSequence -> "BlankSequence",
@@ -775,7 +774,6 @@ mergeArgPats[pats_, returnNum : False | True : False] :=
 
 
 generateSIArgPat[f_] :=
-  
   With[{dvs = Keys@getCodeValues[f, {DownValues}]},
    mergeArgPats@
     DeleteDuplicates[
