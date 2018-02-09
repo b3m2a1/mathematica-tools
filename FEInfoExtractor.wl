@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+(*MakeIndentable["IndentCharacter"\[Rule]"  "];*)
+
+
 (* ::Section:: *)
 (*FEInfoExtractor*)
 
@@ -8,7 +11,12 @@ BeginPackage["FEInfoExtractor`"];
 
 
 (*Package Declarations*)
-AutoFrontEndInfo::usage="AutoFrontEndInfo[f, o]";
+AutoFrontEndInfo::usage=
+  "AutoFrontEndInfo[function, ops] generates the front-end integration info
+AutoFrontEndInfo[{fns...}] generates a combined expression for all fns
+AutoFrontEndInfo[stringPat] generates for Names[stringPat]";
+AutoFrontEndInfoExport::usage=
+  "AutoFrontEndInfoExport[file, e] exports the auto-built integration info to file";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1018,7 +1026,7 @@ generateArgCount[f_] :=
 generateArgCount~SetAttributes~HoldFirst
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*setArgCount*)
 
 
@@ -1085,7 +1093,7 @@ generateAutoFrontEndInfo[
 generateAutoFrontEndInfo~SetAttributes~HoldFirst
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*AutoFrontEndInfo*)
 
 
@@ -1189,13 +1197,15 @@ AutoFrontEndInfo[f_Symbol, o : OptionsPattern[]] :=
        f[argPatLongToNotDupe___],
        (
         1 /; (ArgumentCountQ[f,
-            Length@If[noo,
-              Replace[Hold[argPatLongToNotDupe], 
-              
-              Hold[argPatLongToNotDupe2___, (_Rule | _RuleDelayed | \
-{(_Rule | _RuleDelayed) ..}) ...] :> Hold[argPatLongToNotDupe2]
-              ], Hold[argPatLongToNotDupe]
-             ], minA, maxA]; False)
+                Length@
+                  If[noo,
+                    Replace[Hold[argPatLongToNotDupe], 
+                      Hold[argPatLongToNotDupe2___, 
+                        (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
+                        ] :> Hold[argPatLongToNotDupe2]
+                      ], 
+                    Hold[argPatLongToNotDupe]
+                   ], minA, maxA]; False)
         )
        ]
       ]
@@ -1203,6 +1213,38 @@ AutoFrontEndInfo[f_Symbol, o : OptionsPattern[]] :=
     ]
    ]
   ]
+
+
+AutoFrontEndInfo[dymbshyt:{s__Symbol}]:=
+  Thread[AutoFrontEndInfo/@Hold[s], Hold];
+
+
+AutoFrontEndInfo[dymbshyt:{s__Symbol}]:=
+Thread[AutoFrontEndInfo/@Hold[s],Hold];
+AutoFrontEndInfo[conto:_?StringPattern`StringPatternQ]:=
+Thread[ToExpression[Names[conto], StandardForm, AutoFrontEndInfo],Hold];
+AutoFrontEndInfo[ughwhy:{conto__?StringPattern`StringPatternQ}]:=
+ToExpression[Names[conto], StandardForm, AutoFrontEndInfo];
+AutoFrontEndInfo[
+  e:Except[{__Symbol}|_String|{__String}|_Symbol|_Pattern]
+  ]/;!TrueQ@$recursionProtectMe:=
+Block[{$recursionProtectMe=True},
+AutoFrontEndInfo@Evaluate@e
+];
+
+
+AutoFrontEndInfo~SetAttributes~HoldFirst
+
+
+(* ::Subsubsection:: *)
+(*AutoFrontEndInfoExport*)
+
+
+AutoFrontEndInfoExport[fn:_String|_File, e_]:=
+  Replace[AutoFrontEndInfo[e],
+    Put[Unevaluated[e], fn]
+    ];
+AutoFrontEndInfoExport~SetAttributes~HoldRest
 
 
 (* ::Subsection:: *)
