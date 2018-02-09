@@ -37,7 +37,6 @@ BeginPackage["SymbolObjects`"];
 
 SObj::usage="SObj[name, templates, a] builds a new SObj
 SObj[s][props...] gets properties
-SObj[s][props..., \"AccessorFunction\"->mode] uses the specified mode
 ";
 
 
@@ -338,6 +337,9 @@ SObjGetDecorate[o_SObj, res_] :=
 		];
 
 
+$SObjGetWrap=True;
+
+
 (*
 	SObjAccess[___]:
 		Basic [___] wrapper for SObj
@@ -348,9 +350,6 @@ SObjAccess[
 	]:=
 	If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
 		s[k]
-
-
-$SObjGetWrap=True;
 
 
 (*
@@ -450,20 +449,16 @@ SObjAccessWrapper[o:SObj[s_Symbol],
 	SObjSet[___]:
 		Set wrapper for SObj
 *)
-
-
 SObjSet[SObj[s_], prop_, val_] :=
-s[prop] = val;
+	s[prop] = val;
 
 
 (*
 	SObjSetDelayed[___]:
 		SetDelayed wrapper for SObj
 *)
-
-
 SObjSetDelayed[SObj[s_], prop_, val_] :=
-s[prop] := val;
+		s[prop] := val;
 SObjSetDelayed~SetAttributes~HoldRest
 
 
@@ -471,20 +466,16 @@ SObjSetDelayed~SetAttributes~HoldRest
 	SObjSetPart[___]:
 		Set Part wrapper for SObj
 *)
-
-
 SObjSetPart[SObj[s_], part__, val_] :=
-s[[part]] = val;
+	s[[part]] = val;
 
 
 (*
 	SObjSetPartDelayed[___]:
 		SetDelayed Part wrapper for SObj
 *)
-
-
 SObjSetPartDelayed[SObj[s_], part__, val_] :=
-s[[part]] := val;
+	s[[part]] := val;
 SObjSetDelayed~SetAttributes~HoldRest
 
 
@@ -492,10 +483,8 @@ SObjSetDelayed~SetAttributes~HoldRest
 	SObjAssociateTo[___]:
 		AssociateTo wrapper for SObj
 *)
-
-
 SObjAssociateTo[SObj[s_], parts_] :=
-(AssociateTo[s, parts];);
+	(AssociateTo[s, parts];);
 
 
 (* ::Subsubsection::Closed:: *)
@@ -507,7 +496,7 @@ SObjAssociateTo[SObj[s_], parts_] :=
 		Unset wrapper for SObj
 *)
 SObjUnset[SObj[s_], prop_] :=
-	s[prop] =. val;
+	s[prop] =.;
 
 
 (*
@@ -588,8 +577,11 @@ SObj[
 	a : _Association : <||>
 	] :=
 	SObjNew[name, templates, a];
-o:SObj[s_Symbol]/;(System`Private`EntryQ[Unevaluated@o]):=
-	o/;SObjQ@Unevaluated@o
+o:SObj[s_Symbol]/;(
+	System`Private`EntryQ[Unevaluated@o]&&
+		SObjSymbolQ[s]
+	):=
+	(System`Private`SetNoEntry[Unevaluated@o];o)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -614,7 +606,6 @@ SObj/:Extract[o:SObj[s_], e___]:=
 	(SObjExtract[o, e]/;SObjQ@o);
 
 
-
 (* ::Subsubsection::Closed:: *)
 (*Property setting*)
 
@@ -632,6 +623,11 @@ SObjMutationHandler[
 SObj /: SetDelayed[o_SObj?SObjQ[prop_], newvalue_] :=
 	SObjSetDelayed[o, prop, newvalue];
 SObjMutationHandler[
+	Unset[(sym:(_SObj|_Symbol)?SObjQ), stuff_]
+	] := SObjUnset[sym, stuff];
+SObj /: Unset[o_SObj?SObjQ[prop_]] :=
+	SObjUnset[o, prop];
+SObjMutationHandler[
 	SetDelayed[(sym : (_SObj | _Symbol)?SObjQ)[prop_], newvalue_]
 	] := SObjSetDelayed[sym, prop, newvalue];
 SObjMutationHandler[
@@ -643,9 +639,6 @@ SObjMutationHandler[
 SObjMutationHandler[
 	AssociateTo[(sym:(_SObj|_Symbol)?SObjQ),stuff_]
 	] := SObjAssociateTo[sym, stuff];
-SObjMutationHandler[
-	Unset[(sym:(_SObj|_Symbol)?SObjQ), stuff_]
-	] := SObjUnset[sym, stuff];
 SObjMutationHandler[
 	KeyDropFrom[(sym:(_SObj|_Symbol)?SObjQ), stuff_]
 	] := SObjKeyDropFrom[sym, stuff];
@@ -691,8 +684,6 @@ Format[o_SObj?SObjQ, StandardForm] :=
 (* 
 	Handle the necessary HoldFirst
 *)
-
-
 SObj~SetAttributes~HoldFirst
 
 
