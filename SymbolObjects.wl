@@ -635,7 +635,7 @@ o:SObj[s_Symbol]/;(
 	(System`Private`SetNoEntry[Unevaluated@o];o)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Property access*)
 
 
@@ -643,8 +643,6 @@ o:SObj[s_Symbol]/;(
 	SObj[_][___]:
 		access properties
 *)
-(o : SObj[s_Symbol]?SObjQ)["Properties"] :=
-	SObjKeys@o;
 (o : SObj[s_Symbol]?SObjQ)[
 	i__
 	] :=
@@ -657,7 +655,7 @@ SObj/:Extract[o:SObj[s_], e___]:=
 	(SObjExtract[o, e]/;SObjQ@o);
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Property setting*)
 
 
