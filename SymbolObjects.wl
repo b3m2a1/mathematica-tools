@@ -308,7 +308,7 @@ SObjValues[SObj[s_Symbol]] :=
  Values@s
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Accessor decorators and methods*)
 
 
@@ -339,13 +339,12 @@ SObjProperty[f__][obj_SObj] :=
 		decorates Part, Extract, and Lookup calls
 *)
 $SObjGetDecorate = True;
-SObjGetDecorate[o_SObj, res_] :=
-	Replace[res,
-		{
-			m : _SObjMethod | _SObjProperty :> m[o],
-			l_List :> Map[SObjGetDecorate[o, #] &, l]
-			}
-		];
+SObjGetDecorate//Clear
+SObjGetDecorate[o_SObj, m : _SObjMethod | _SObjProperty] :=
+	m[o]
+SObjGetDecorate[o_SObj, l_List] :=
+	SObjGetDecorate/@l;
+SObjGetDecorate[o_SObj, r_]:=r
 
 
 $SObjGetWrap=True;
@@ -635,7 +634,7 @@ o:SObj[s_Symbol]/;(
 	(System`Private`SetNoEntry[Unevaluated@o];o)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Property access*)
 
 
