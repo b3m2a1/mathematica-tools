@@ -40,7 +40,7 @@ SObj[s][props...] gets properties
 ";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Private Declarations*)
 
 
@@ -87,6 +87,14 @@ SObjSetDelayed::usage="SObjSetDelayed[SObj[s], prop, val]";
 SObjSetPart::usage="SObjSetPart[SObj[s], part, val]";
 SObjSetPartDelayed::usage="SObjSetPartDelayed[SObj[s], part, val]";
 SObjAssociateTo::usage="SObjAssociateTo[SObj[s], parts]";
+SObjAddTo::usage="";
+SObjAddPartTo::usage="";
+SObjSubtractFrom::usage="";
+SObjSubtractPartFrom::usage="";
+SObjTimesBy::usage="";
+SObjTimesPartBy::usage="";
+SObjDivideBy::usage="";
+SObjDividePartBy::usage="";
 SObjUnset::usage="SObjUnset[o, key]";
 SObjKeyDropFrom::usage="SObjKeyDropFrom[o, keys]";
 SObjFormat::usage="SObjFormat[o]";
@@ -149,7 +157,7 @@ SObjQ[___] :=
  False
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Create new objects*)
 
 
@@ -285,16 +293,19 @@ SObjSymbol[SObj[s_Symbol], h_: Identity] := h@s;
 
 
 (*
-	SObjKeys[o, pat]:
-		extracts the Keys from Symbol matching pat
+	SObjKeys[o]:
+		extracts the Keys from o
 *)
-SObjKeys[SObj[s_Symbol], pat_: _String] :=
- With[{k = Keys@s},
-	If[pat === All,
-		k,
-		Cases[k, pat]
-		]
-	]
+SObjKeys[SObj[s_Symbol]] :=
+ Keys@s
+
+
+(*
+	SObjValues[o]:
+		extracts the Values from o
+*)
+SObjValues[SObj[s_Symbol]] :=
+ Values@s
 
 
 (* ::Subsubsection::Closed:: *)
@@ -435,7 +446,7 @@ If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
 *)
 SObjAccessWrapper[o:SObj[s_Symbol], 
 	fn_, 
-	k__
+	k___
 	]:=
 	If[$SObjGetWrap, SObj, Identity]@Evaluate@
 		fn[s, k];
@@ -485,6 +496,46 @@ SObjSetDelayed~SetAttributes~HoldRest
 *)
 SObjAssociateTo[SObj[s_], parts_] :=
 	(AssociateTo[s, parts];);
+
+
+(*
+	SObjAddTo[___]:
+		AddTo wrapper for SObj
+*)
+SObjAddTo[SObj[s_], prop__, val_] :=
+	(AddTo[s[prop], val];);
+SObjAddPartTo[SObj[s_], part__, val_] :=
+	(AddTo[s[[part]], val];);
+
+
+(*
+	SObjSubtractFrom[___]:
+		SubtractFrom wrapper for SObj
+*)
+SObjSubtractFrom[SObj[s_], prop__, val_] :=
+	(SubtractFrom[s[prop], val];);
+SObjSubtractPartFrom[SObj[s_], part__, val_] :=
+	(SubtractFrom[s[[part]], val];);
+
+
+(*
+	SObjTimesBy[___]:
+		TimesBy wrapper for SObj
+*)
+SObjTimesBy[SObj[s_], prop__, val_] :=
+	(TimesBy[s[prop], val];);
+SObjTimesPartBy[SObj[s_], part__, val_] :=
+	(TimesBy[s[[part]], val];);
+
+
+(*
+	SObjDivideBy[___]:
+		DivideBy wrapper for SObj
+*)
+SObjDivideBy[SObj[s_], prop__, val_] :=
+	(DivideBy[s[prop], val];);
+SObjDividePartBy[SObj[s_], part__, val_] :=
+	(DivideBy[s[[part]], val];);
 
 
 (* ::Subsubsection::Closed:: *)
@@ -606,7 +657,7 @@ SObj/:Extract[o:SObj[s_], e___]:=
 	(SObjExtract[o, e]/;SObjQ@o);
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Property setting*)
 
 
@@ -642,6 +693,30 @@ SObjMutationHandler[
 SObjMutationHandler[
 	KeyDropFrom[(sym:(_SObj|_Symbol)?SObjQ), stuff_]
 	] := SObjKeyDropFrom[sym, stuff];
+SObjMutationHandler[
+	AddTo[(sym:(_SObj|_Symbol)?SObjQ)[prop__], stuff_]
+	] := SObjAddTo[sym, prop, stuff];
+SObjMutationHandler[
+	AddTo[(sym:(_SObj|_Symbol)?SObjQ)[[part__]], stuff_]
+	] := SObjAddPartTo[sym, part, stuff];
+SObjMutationHandler[
+	SubtractFrom[(sym:(_SObj|_Symbol)?SObjQ)[prop__], stuff_]
+	] := SObjSubtractFrom[sym, prop, stuff];
+SObjMutationHandler[
+	SubtractFrom[(sym:(_SObj|_Symbol)?SObjQ)[[part__]], stuff_]
+	] := SObjSubtractPartFrom[sym, part, stuff];
+SObjMutationHandler[
+	TimesBy[(sym:(_SObj|_Symbol)?SObjQ)[prop__], stuff_]
+	] := SObjTimesBy[sym, prop, stuff];
+SObjMutationHandler[
+	TimesBy[(sym:(_SObj|_Symbol)?SObjQ)[[part__]], stuff_]
+	] := SObjTimesPartBy[sym, part, stuff];
+SObjMutationHandler[
+	DivideBy[(sym:(_SObj|_Symbol)?SObjQ)[prop__], stuff_]
+	] := SObjDivideBy[sym, prop, stuff];
+SObjMutationHandler[
+	DivideBy[(sym:(_SObj|_Symbol)?SObjQ)[[part__]], stuff_]
+	] := SObjDividePartBy[sym, part, stuff];
 Language`SetMutationHandler[SObj, SObjMutationHandler];
 
 
@@ -652,16 +727,41 @@ Language`SetMutationHandler[SObj, SObjMutationHandler];
 (*
 	Various UpValues
 *)
-
-
 SObj /: Keys[o_SObj?SObjQ] := SObjKeys@o;
+SObj /: Values[o_SObj?SObjQ] := SObjValues@o;
 SObj /: Normal[o_SObj?SObjQ] := SObjSymbol@o;
-SObj /: First[o_SObj?SObjQ] := o[1, "AccessorFunction" -> Part];
-SObj /: Last[o_SObj?SObjQ] := o[-1, "AccessorFunction" -> Part];
-SObj /: Most[o_SObj?SObjQ] :=
-	SObj@o[1 ;; -2, "AccessorFunction" -> Part];
-SObj /: Rest[o_SObj?SObjQ] :=
-	SObj@o[2 ;; -1, "AccessorFunction" -> Part];
+SObj /: Dataset[o_SObj?SObjQ] := SObjSymbol[o, Dataset];
+Map[
+	Function[
+		SObj /: #[o_SObj?SObjQ] :=
+			Block[{$SObjGetWrap=False}, SObjAccessWrapper[o, #]];
+		],
+	{
+		First, Last, Length
+		}
+	];
+Map[
+	Function[
+		SObj /: #[o_SObj?SObjQ, a__] :=
+			Block[{$SObjGetWrap=False}, SObjAccessWrapper[o, #, a]];
+		],
+	{
+		KeyExistsQ, KeyMemberQ
+		}
+	];
+Map[
+	Function[
+		SObj /: #[o_SObj?SObjQ, a__] :=
+			SObjAccessWrapper[o, #, a];
+		],
+	{
+		Most, Rest, Take, 
+		Select, Cases, Pick,
+		Drop, Delete, DeleteCases,
+		Insert, 
+		KeyTake, KeySelect, KeyDrop
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
