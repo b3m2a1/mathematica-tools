@@ -157,10 +157,16 @@ With[
 				ToBoxes@
 				Pane[
 					Tooltip[
-						Short[poster /. m],
-						DateString@Lookup[meta, "Timestamp"]
+						Column[{
+							Short[poster /. m],
+							Style[DateString[Lookup[meta, "Timestamp"], "Time"],
+								GrayLevel[.6]
+								]
+							}],
+						DateString@Lookup[meta, "Timestamp"],
+						TooltipDelay->0.6
 						],
-					ImageSize -> 100,
+					ImageSize -> {100, 25},
 					Alignment -> Right
 					],
 				"Text",
@@ -195,6 +201,7 @@ With[
 						o,
 						DynamicUpdating->OptionValue[DynamicUpdating],
 						{
+							CellDingbat->None,
 							CellMargins -> 
 								Replace[
 									Lookup[co, CellMargins,
@@ -254,12 +261,13 @@ With[
 										}
 									],
 							TaggingRules ->
-								Join[Lookup[co, TaggingRules, {}],
+								Join[
+									Lookup[co, TaggingRules, {}],
 									{
-										"ChatMessageData" ->
-										{
-											meta
-											}
+										"ChatSystem" ->
+											{
+											 "MessageData"-> meta
+												}
 										}
 									]
 							}
@@ -379,7 +387,7 @@ chatNotebookPut[
 						chat["ChatName"],
 					TaggingRules->
 						{
-							"ChatSettings"->
+							"ChatSystem"->
 								{
 									"ChatObject"->chat
 									}
@@ -488,7 +496,7 @@ chatNotebookNewCells[
 	nb_NotebookObject?(NotebookInformation[#] =!= $Failed &),
 	o : OptionsPattern[]
 	] :=
-With[{c = Cells[nb, o]},
+With[{c = Cells[nb, Sequence@@Flatten@{o}]},
 	With[{tags = CurrentValue[c, CellTags]},
 		Pick[c, ! MemberQ[#, "ChatCellWritten"] & /@ tags]
 		]
@@ -536,16 +544,21 @@ chatNotebookSendCells[
 	nb_NotebookObject?(NotebookInformation[#] =!= $Failed &),
 	o : OptionsPattern[]
 	] :=
-With[{c = chatNotebookNewCells[nb]},
+With[{c = chatNotebookNewCells[nb, o]},
 	If[Length@c > 0,
 		chatNotebookSendCells[channel, c],
 		$Failed
 		]
 	];
 chatNotebookSendCells[chat_SObj] :=
- Replace[chat["ChatNotebook"],
+ Replace[
+  chat["ChatNotebook"],
 	nb_NotebookObject?(NotebookInformation[#] =!= $Failed &) :> 
-	chatNotebookSendCells[chat["ChannelObject"], nb]
+	 chatNotebookSendCells[
+	  chat["ChannelObject"], 
+	  nb,
+	  chat["SendCellOptions"]
+	  ]
 	]
 
 
@@ -654,16 +667,21 @@ chatObjectNotebookDockedCell[chat : SObj[s_Symbol]] :=
 chatObjectNotebookEventActions[chat : SObj[s_Symbol]] :=
  {
 	{"MenuCommand", "HandleShiftReturn"} :>
-	Switch[
-		Lookup[
-			FrontEndExecute@
-			FrontEnd`UndocumentedGetSelectionPacket@
-			NotebookSelection[EvaluationNotebook[]],
-			"CellSelectionType"
+		Switch[
+			Lookup[
+				FrontEndExecute@
+				FrontEnd`UndocumentedGetSelectionPacket@
+				NotebookSelection[EvaluationNotebook[]],
+				"CellSelectionType"
+				],
+			"BelowCell" | "AboveCell",
+			chat["ChatSend"][]
 			],
-		"BelowCell" | "AboveCell",
-		chat["ChatSend"][]
-		],
+	{"MenuCommand", "SaveRename"} :>
+		CurrentValue[EvaluationNotebook[], 
+		 {TaggingRules, "ChatSystem", "Cache"}:>
+		 	Compress[s]
+		 ],
 	PassEventsDown -> True
 	}
 
@@ -772,6 +790,66 @@ ChatObject =
 					{
 						Permissions -> "Private"
 						},
+				"GetChannelOptions" -> 
+					SObjMethod@
+						Function[
+							Replace[#["ChannelObject"],
+								{
+									c_ChannelObject:>Set[#["ChannelOptions"], Options[c]],
+									_->$Failed
+									}
+								]
+							],
+				"SetChannelOptions" ->
+					SObjMethod@
+						Function[
+							Replace[#["ChannelObject"],
+								{
+									c_ChannelObject:>SetOptions[c, #2],
+									_->$Failed
+									}
+								]
+							],
+				"AddChannelMember" ->
+					SObjMethod@
+						Function[
+							With[
+								{
+									pp=
+										Replace[Flatten@{#2}, u_String:>(u->{"Read", "Write"}), 1]
+									},
+								Replace[#["ChannelObject"],
+									{
+										c_ChannelObject:>
+											SetOptions[c, 
+												Permissions->
+													Merge[
+														{
+															#["GetChannelOptions"][][Permissions],
+															pp
+															},
+														Last
+														]
+												],
+										_->$Failed
+										}
+									]
+							]
+						],
+				"RemoveChannelMember" ->
+					SObjMethod@
+						Function[
+								Replace[#["ChannelObject"],
+									{
+										c_ChannelObject:>
+											SetOptions[c, 
+												Permissions->
+													KeyDrop[#["GetChannelOptions"][][Permissions], #2]
+												],
+										_->$Failed
+										}
+									]
+							],
 				"ChannelListen" ->
 					SObjMethod[chatObjectChannelListen],
 				"ChannelMute" ->
@@ -834,11 +912,15 @@ ChatObject =
 					SObjMethod[chatNotebookSendCells],
 				"SendCellOptions" ->
 					{
-						CellStyle -> {
-							"Input", "Code", "Output", "Text",
-							"Item", "ItemParagraph", "Subitem", "SubitemParagraph",
-							"ItemNumbered", "SubitemNumbered"
-							}
+						CellStyle -> 
+							{
+							 "Title", "Subtitle",
+							 "Chapter", "Subchapter",
+							 "Section", "Subsection", "Subsubsection",
+								"Input", "Code", "Output", "Text",
+								"Item", "ItemParagraph", "Subitem", "SubitemParagraph",
+								"ItemNumbered", "SubitemNumbered"
+								}
 						},
 				
 				"ChatLog" -> {},
