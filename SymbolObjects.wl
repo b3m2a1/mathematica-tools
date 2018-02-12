@@ -220,7 +220,7 @@ SObjNew[
 		]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Instantiate object*)
 
 
@@ -245,8 +245,6 @@ SObjInstantiate[o_SObj, args___]:=
 				SObjLookup[o, "ObjectInstanceProperties", <||>]
 			},
 		If[!SObjQ@newO, Message[SObj::nonew];Throw[$Failed]];
-		newO=init[newO, args];
-		If[!SObjQ@newO, Message[SObj::nonint];Throw[$Failed]];
 		newO["ObjectTemplates"]=
 			DeleteCases[newO["ObjectTemplates"], 
 				"Class"
@@ -255,6 +253,7 @@ SObjInstantiate[o_SObj, args___]:=
 			newO,
 			instanceProps
 			];
+		newO=init[newO, args];
 		SObjKeyDropFrom[
 			newO,
 			Join[
@@ -265,6 +264,7 @@ SObjInstantiate[o_SObj, args___]:=
 				Keys@$SObjTemplates["Class"]
 				]
 			];
+		If[!SObjQ@newO, Message[SObj::nonint];Throw[$Failed]];
 		newO
 		];
 
@@ -306,7 +306,7 @@ SObjValues[SObj[s_Symbol]] :=
  Values@s
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Accessor decorators and methods*)
 
 

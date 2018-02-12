@@ -118,7 +118,7 @@ chatNotebookUncompressMessage[message_String]:=
 		]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*chatNotebookLine*)
 
 
@@ -131,7 +131,7 @@ Options[chatNotebookLine] =
 Join[
 	{
 		"NameMapping" -> {},
-		"NameColoring" -> {},
+		"NameStyling" -> {},
 		DynamicUpdating -> False
 		},
 	Options[Cell]
@@ -143,37 +143,42 @@ chatNotebookLine[
 	] :=
 With[
 	{
-		c = Replace[OptionValue["NameColoring"], 
+		c = Replace[OptionValue["NameStyling"], 
 			Except[_?OptionQ] -> {}],
 		m = Replace[OptionValue["NameMapping"], Except[_?OptionQ] -> {}],
 		co = Options[message],
 		poster = 
-		StringSplit[Lookup[meta, "RequesterWolframID"], "@"][[1]]
+			StringSplit[Lookup[meta, "RequesterWolframID"], "@"][[1]],
+		wid=Lookup[meta, "RequesterWolframID"]
 		}, 
 	With[{
 			labelCell =
 			Cell[
 				BoxData@
-				ToBoxes@
-				Pane[
-					Tooltip[
-						Column[{
-							Short[poster /. m],
-							Style[DateString[Lookup[meta, "Timestamp"], "Time"],
-								GrayLevel[.6]
-								]
-							}],
-						DateString@Lookup[meta, "Timestamp"],
-						TooltipDelay->0.6
-						],
-					ImageSize -> {100, 25},
-					Alignment -> Right
-					],
+					ToBoxes@
+						Pane[
+							Tooltip[
+								Column[{
+									Short[Lookup[m, wid, poster]],
+									Style[
+										DateString[Lookup[meta, "Timestamp"], "Time"],
+										GrayLevel[.6]
+										]
+									}],
+								Column[{
+									wid,
+									DateString@Lookup[meta, "Timestamp"]
+									}],
+								TooltipDelay->0.6
+								],
+							ImageSize -> {100, 25},
+							Alignment -> Right
+							],
 				"Text",
 				"Message",
 				Sequence @@
 				Flatten@{
-					(poster /. Append[c, _ :> Sequence @@ {}]),
+					Lookup[c, wid, {}],
 					FontWeight -> Plain,
 					FontSlant -> None,
 					Background -> None,
@@ -409,7 +414,7 @@ chatNotebookPut[
 	]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*chatNotebookWrite*)
 
 
@@ -462,21 +467,29 @@ chatNotebookWrite[
 	nb_NotebookObject?(NotebookInformation[#] =!= $Failed &),
 	o : OptionsPattern[]
 	] :=
-chatNotebookWrite[{message}, nb, o];
+	chatNotebookWrite[{message}, nb, o];
 chatNotebookWrite[chat_SObj, o : OptionsPattern[]] :=
- 
  With[{lm = chat["LastMessage"], lw = chat["LastWritten"]},
-	If[AssociationQ@lm && lw =!= lm(*&&lm[
-		"RequesterWolframUUID"]=!=$WolframUUID*),
-	chat["LastWritten"] = lm;
-	chatNotebookWrite[
-		lm,
-		SObjLookup[
-			chat, 
-			"ChatNotebook",
-			chatNotebookPut[chat]
+	If[AssociationQ@lm && lw =!= lm,
+		chat["LastWritten"] = lm;
+		chatNotebookWrite[
+			lm,
+			SObjLookup[
+				chat, 
+				"ChatNotebook",
+				chatNotebookPut[chat]
+				],
+			FilterRules[
+				Flatten@
+					{
+						Normal@
+							Replace[chat["ChatCellSettings"], 
+								Except[_?OptionQ]->{}
+								]
+						},
+				Options@chatNotebookWrite
+				]
 			]
-		]
 	]
 ]
 
@@ -858,10 +871,10 @@ ChatObject =
 					],
 				"ChannelListener" -> None,
 				"ChannelStatus" ->
-				SObjProperty[
-					Quiet@ChannelFramework`ChannelListenerStatus@
-					#["ChannelListener"] &
-					],
+					SObjProperty[
+						Quiet@ChannelFramework`ChannelListenerStatus@
+						#["ChannelListener"] &
+						],
 				"ChannelPath" -> 
 					"ChatRoom",
 				
@@ -899,7 +912,7 @@ ChatObject =
 				"ChatCellSettings" ->
 					{
 						"NameMapping" -> {},
-						"NameColoring" -> {}
+						"NameStyling" -> {}
 						},
 				
 				"ChatNewCells" ->
