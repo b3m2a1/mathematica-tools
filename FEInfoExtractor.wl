@@ -19,7 +19,7 @@ AutoFrontEndInfoExport::usage=
   "AutoFrontEndInfoExport[file, e] exports the auto-built integration info to file";
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Private Declarations*)
 
 
@@ -56,6 +56,8 @@ autocompletionPreCompile[l, v]";
 addAutocompletions::usage="addAutocompletions[pats]
 addAutocompletions[pat]";
 reducePatterns::usage="reducePatterns[p]";
+extractArgStructureHead::usage="extractArgStructureHead[f, defs]";
+generateArgPatList::usage="generateArgPatList[f, defs]";
 reconstructPatterns::usage="reconstructPatterns[p]";
 argPatPartLens::usage="argPatPartLens[patList]";
 mergeArgPats::usage="mergeArgPats[pats, returnNum]";
@@ -96,12 +98,14 @@ getCodeValues[f_Symbol,
       OwnValues | DownValues | SubValues | UpValues]} : {OwnValues, 
      DownValues, SubValues, UpValues}
    ] :=
-  
-  If[Intersection[Attributes@f, { ReadProtected, Locked}] === { 
-     Locked, ReadProtected},
-   {},
-   Join @@ Map[#[f] &, vs]
-   ];
+  Select[
+    If[Intersection[Attributes@f, { ReadProtected, Locked}] === { 
+       Locked, ReadProtected},
+     {},
+     Join @@ Map[#[f] &, vs]
+     ],
+    FreeQ[ArgumentCountQ]
+    ];
 getCodeValues~SetAttributes~HoldFirst
 
 
@@ -175,8 +179,11 @@ usagePatternReplace[
   With[{
     names = AssociationMap[Null &, {}(*Names[]*)],
     conts = 
-     Alternatives @@ {"System`", "FrontEnd`", "PacletManager`", 
-       "Internal`"}
+     Alternatives @@ {
+       "System`", "FrontEnd`", 
+       "PacletManager`", "Internal`"
+       },
+    repTypes=Alternatives@@Map[Blank, Keys@$usageTypeReplacements]
     },
    Replace[
       Replace[
@@ -197,10 +204,8 @@ usagePatternReplace[
          Verbatim[Pattern][_, e_] :>
           e,
          Verbatim[HoldPattern][Verbatim[Pattern][_, e_]] :>
-          
           HoldPattern[e],
          Verbatim[HoldPattern][Verbatim[HoldPattern][e_]] :>
-         
            HoldPattern[e]
          },
         1
@@ -223,6 +228,7 @@ usagePatternReplace[
         p,
        Verbatim[Condition][p_, _] :>
         p,
+       (* for dispatching functions by Alternatives *)
        Verbatim[Alternatives][a_, ___][___] |
          Verbatim[Alternatives][a_, ___][___][___] |
          Verbatim[Alternatives][a_, ___][___][___][___] |
@@ -232,13 +238,15 @@ usagePatternReplace[
        Verbatim[Alternatives][a_, ___] :>
         RuleCondition[
          Blank[
-          Replace[Hold@a,
-           {
-            Hold[p : Verbatim[HoldPattern][_]] :>
-             p,
-            Hold[e_[___]] :> e,
-            _ :> a
-            }
+          Replace[
+            Hold@a,
+            {
+              Hold[p : Verbatim[HoldPattern][_]] :>
+               p,
+              Hold[repTypes]:>Head[a],
+              Hold[e_[___]] :> e,
+              _ :> a
+             }
            ]
           ],
          True
@@ -274,6 +282,9 @@ usagePatternReplace[
 (*generateSymbolUsage*)
 
 
+$pkgCont = $Context;
+
+
 generateSymbolUsage[f_, 
    defaultMessages : {(_Rule | _RuleDelayed) ...} : {}] :=
   With[
@@ -290,40 +301,37 @@ generateSymbolUsage[f_,
       {1}
       ]
     },
+   DeleteDuplicates@Flatten@
    Replace[
     DeleteDuplicates@usagePatternReplace[Keys@getCodeValues[f]],
     {
      Verbatim[HoldPattern][s_[a___]]:>
       With[
        {
+        (* original usage message *)
         uu =
          StringTrim@
           Replace[HoldPattern[s[a]] /. uml,
-           
            Except[_String] :>
-            
             Replace[Quiet@s::usage, Except[_String] -> ""]
            ],
         sn = ToString[Unevaluated@s],
-        meuu = ToString[Unevaluated[s[a]], InputForm]
+        (* head for the usage message I'm going to add*)
+        meuu = StringReplace[ToString[Unevaluated[s[a]], InputForm], $pkgCont -> ""]
         },
-       StringReplace["FEInfoExtractor`Private`" -> ""]@
-        If[! StringContainsQ[uu, meuu],
-         meuu <> " " <>
+        If[!StringContainsQ[uu, meuu],
           Which[
            uu == "",
-           
-           "has no usage message", ! 
-            StringStartsQ[uu, 
-             sn | (Except[WordCharacter] .. ~~ "RowBox[{" ~~ 
-                Except[WordCharacter] ... ~~ sn)],
-           uu,
+             meuu <> " has no usage message", 
+           ! StringStartsQ[uu, sn],
+             meuu <> " "<>uu,
            True,
-           ""
+             {uu, meuu <> " has no usage message"}
            ],
          StringCases[uu, 
-           (StartOfLine | StartOfString) ~~ Except["\n"] ... ~~ meuu ~~
-             Except["\n"] ... ~~ EndOfLine,
+           (StartOfLine | StartOfString) ~~ 
+             Except["\n"]... ~~ meuu ~~
+             Except["\n"]... ~~ EndOfLine,
            1
            ][[1]]
          ]
@@ -670,7 +678,8 @@ reducePatterns[p_] :=
      Except[
        _Pattern | _Optional | _Blank | _BlankSequence | 
         _BlankNullSequence | _PatternSequence | _OptionsPattern |
-        _Repeated | _RepeatedNull | _Default | _PatternTest | _Condition
+        _Repeated | _RepeatedNull | _Default | _PatternTest | _Condition | 
+        _List
        ] -> _
      },
     {2, Infinity}
@@ -693,34 +702,68 @@ reducePatterns[p_] :=
 
 
 (* ::Subsubsection::Closed:: *)
+(*extractArgStructureHead*)
+
+
+(* ::Text:: *)
+(*Done in multiple arguments for (assumed) dispatch efficiency*)
+
+
+extractArgStructureHead[f_, Verbatim[HoldPattern][f_[a___][___]]]:=
+	HoldPattern[f[a]];
+extractArgStructureHead[f_, Verbatim[HoldPattern][f_[a___][___][___]]]:=
+	HoldPattern[f[a]];
+extractArgStructureHead[f_, Verbatim[HoldPattern][f_[a___][___][___][___]]]:=
+	HoldPattern[f[a]];
+extractArgStructureHead[f_, Verbatim[HoldPattern][f_[a___][___][___][___][___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][f_[a___][___][___][___][___][___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][_[___, f_[a___], ___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][_[___, f_[a___][___], ___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][_[___, f_[a___][___][___], ___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][_[___, f_[a___][___][___][___], ___]]]:=
+	HoldPattern@f[a];
+extractArgStructureHead[f_, Verbatim[HoldPattern][_[___, f_[a___][___][___][___][___], ___]]]:=
+	HoldPattern[f[a]];
+extractArgStructureHead[f_, e:Except[_List]]:=e;
+
+
+extractArgStructureHead~SetAttributes~{Listable, HoldFirst}
+
+
+(* ::Subsubsection::Closed:: *)
 (*reconstructPatterns*)
 
 
 reconstructPatterns[p_] :=
-  p //. {
-     "Optional"[a_] :> Optional[a],
-     "Default" -> _.,
-     "OptionsPattern" -> OptionsPattern[],
-     "Blank" -> _,
-     "BlankSequence" -> __,
-     "BlankNullSequence" -> ___,
-     "Repeated"[\[Infinity]] -> Repeated[_],
-     "RepeatedNull"[\[Infinity]] -> RepeatedNull[_],
-     "Repeated"[s_] :> Repeated[_, s],
-     "RepeatedNull"[s_] :> RepeatedNull[_, s]
-     } // Flatten;
+  Flatten[
+    p //. {
+       "Optional"[a_] :> Optional[a],
+       "Default" -> _.,
+       "OptionsPattern" -> OptionsPattern[],
+       "Blank" -> _,
+       "BlankSequence" -> __,
+       "BlankNullSequence" -> ___,
+       "Repeated"[\[Infinity]] -> Repeated[_],
+       "RepeatedNull"[\[Infinity]] -> RepeatedNull[_],
+       "Repeated"[s_] :> Repeated[_, s],
+       "RepeatedNull"[s_] :> RepeatedNull[_, s]
+       },
+    1
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
 (*argPatPartLens*)
 
 
-argPatPartLens[patList_] :=
-  Thread[
-   patList ->
-    Replace[
-     patList,
-     {
+argPathDispatch=
+	Dispatch[
+	  {
       _Blank -> 1 ;; 1,
       _BlankSequence -> 1 ;; \[Infinity],
       _BlankNullSequence -> 0 ;; \[Infinity],
@@ -733,14 +776,34 @@ argPatPartLens[patList_] :=
       _Optional -> 0 ;; 1,
       _Default -> 0 ;; 1,
       _OptionsPattern -> 0 ;; \[Infinity],
+      l_List :> iArgPatLens[l],
       _ -> 1 ;; 1
-      },
-     {1}
-     ]
-   ];
+      }
+    ];
+iArgPatLens[patList_]:=
+	Replace[
+   patList,
+   argPathDispatch,
+   {1}
+   ]
+
+
+argPatPartLens[patList_] :=
+  Thread[ patList -> iArgPatLens[patList] ];
 
 
 (* ::Subsubsection::Closed:: *)
+(*argPatSimplifyDispatch*)
+
+
+argPatSimplifyDispatch=
+  Dispatch@
+    {
+      Verbatim[Repeated][_, {1,1}]->_
+      }
+
+
+(* ::Subsubsection:: *)
 (*mergeArgPats*)
 
 
@@ -753,46 +816,90 @@ mergeArgPats[pats_, returnNum : False | True : False] :=
    werkit = True,
    patMaxes,
    patMins,
+   patListPatsNums,
    patChoices,
    patNs,
-   patCho
+   patCho,
+   patListing
    },
   mlen = Max[Length /@ reppedPats];
   paddies = PadRight[#, mlen, _. -> 0 ;; 1] & /@ reppedPats;
-  MapThread[
-   Function[
-    patMins = MinimalBy[{##}, #[[2, 1]] &];
-    patMaxes = MaximalBy[{##}, #[[2, 2]] &];
-    patChoices = Intersection[patMins, patMaxes];
-    patNs = {patMins[[1, 2, 1]], patMaxes[[1, 2, 2]]};
-    patCho =
-     If[Length@patChoices > 0,
-      SortBy[patChoices,
-        Switch[#[[1]],
-          _OptionsPattern,
-          0,
-          _RepeatedNull | _Repeated,
-          1,
-          _Optional | _Default,
-          2,
-          _,
-          3
-          ] &
-        ][[1, 1]],
-      Replace[ patNs,
-       {
-        {0, 1} -> _.,
-        {1, \[Infinity]} -> __,
-        {0, \[Infinity]} -> ___,
-        {m_, n_} :> Repeated[_, {m, n}]
-        }
-       ]
-      ];
-    If[returnNum, patCho -> patNs, patCho]
-    ],
-   paddies
-   ]
+  patListing=
+    MapThread[
+     Function[
+      patMins = MinimalBy[{##},  If[ListQ@#, 1, #[[2, 1]]] &];
+      patMaxes = MaximalBy[{##}, If[ListQ@#, 1, #[[2, 2]]] &];
+      patChoices = Intersection[patMins, patMaxes];
+      patListPatsNums = Length/@Cases[patChoices, {___, _List, ___}];
+      patChoices= 
+        SortBy[patChoices,
+         Replace[
+           {
+             l_List:>
+               Depth[l]*(Max[patListPatsNums] - Length[l]),
+             _->0
+             }
+           ]
+         ];
+      patNs = 
+      {
+        If[ListQ@patMins[[1, 1]], 1, patMins[[1, 2, 1]]], 
+        If[ListQ@patMaxes[[1, 1]], 1, patMaxes[[1, 2, 2]]]
+        };
+      patCho =
+       If[Length@patChoices > 0,
+        SortBy[patChoices,
+          Replace[#[[1]],
+            {
+              _OptionsPattern->
+                0,
+              _RepeatedNull | _Repeated->
+                1,
+              _Optional | _Default->
+                2,
+              _->
+                3
+              }
+            ] &
+          ][[1, 1]],
+        Replace[ 
+          patNs,
+         {
+          {0, 1} -> _.,
+          {1, \[Infinity]} -> __,
+          {0, \[Infinity]} -> ___,
+          {m_, n_} :> Repeated[_, {m, n}]
+          }
+         ]
+        ];
+      If[returnNum, patCho -> patNs, patCho]
+      ],
+     paddies
+     ];
+  If[Length@patListing>1,
+    ReplaceAll[Most[patListing], _OptionsPattern->___]
+      ~Append~
+    Last[patListing],
+    patListing
+    ]/.argPatSimplifyDispatch
   ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*generateArgPatList*)
+
+
+generateArgPatList[f_, dvs_]:=
+  DeleteDuplicates[
+   reconstructPatterns /@
+    ReplaceAll[
+     reducePatterns /@ extractArgStructureHead[f, dvs],
+     {
+      (f | HoldPattern) -> List
+      }
+     ]
+   ];
+generateArgPatList~SetAttributes~HoldFirst
 
 
 (* ::Subsection:: *)
@@ -805,40 +912,7 @@ mergeArgPats[pats_, returnNum : False | True : False] :=
 
 generateSIArgPat[f_] :=
   With[{dvs = Keys@getCodeValues[f, {DownValues, SubValues, UpValues}]},
-   mergeArgPats@
-    DeleteDuplicates[
-     reconstructPatterns /@
-      ReplaceAll[
-       reducePatterns /@ 
-         Replace[dvs,
-           {
-           Verbatim[HoldPattern][
-             HoldPattern[
-              f[a___][___]|
-              f[a___][___][___]|
-              f[a___][___][___][___]|
-              f[a___][___][___][___][___]|
-              f[a___][___][___][___][___][___]
-              ]
-             ]:>HoldPattern[f[a]],
-            Verbatim[HoldPattern][
-             HoldPattern[
-              _[___, f[a___], ___]|
-              _[___, f[a___][___], ___]|
-              _[___, f[a___][___][___], ___]|
-              _[___, f[a___][___][___][___], ___]|
-              _[___, f[a___][___][___][___][___], ___]|
-              _[___, f[a___][___][___][___][___][___],  ___]
-              ]
-             ]:>HoldPattern[f[a]]
-            },
-           1
-           ],
-       {
-        (f | HoldPattern) -> List
-        }
-       ]
-     ]
+   mergeArgPats@generateArgPatList[f, dvs]
    ];
 generateSIArgPat~SetAttributes~HoldFirst
 
@@ -946,43 +1020,9 @@ generateArgCount[f_] :=
     doNonOp = False
     },
    dvs=
-     Replace[dvs,
-       {
-         Verbatim[HoldPattern][
-           HoldPattern[
-            f[a___][___]|
-            f[a___][___][___]|
-            f[a___][___][___][___]|
-            f[a___][___][___][___][___]|
-            f[a___][___][___][___][___][___]
-            ]
-           ]:>HoldPattern[f[a]],
-          Verbatim[HoldPattern][
-           HoldPattern[
-            _[___, f[a___], ___]|
-            _[___, f[a___][___], ___]|
-            _[___, f[a___][___][___], ___]|
-            _[___, f[a___][___][___][___], ___]|
-            _[___, f[a___][___][___][___][___], ___]|
-            _[___, f[a___][___][___][___][___][___],  ___]
-            ]
-           ]:>HoldPattern[f[a]]
-          },
-       1
-       ];
+     extractArgStructureHead[f, dvs];
    patsNums =
-    mergeArgPats[
-     DeleteDuplicates[
-      reconstructPatterns /@
-       ReplaceAll[
-        reducePatterns /@ dvs,
-        {
-         (f | HoldPattern) -> List
-         }
-        ]
-      ],
-     True
-     ];
+     mergeArgPats[generateArgPatList[f, dvs], True];
    patsTypes = patsNums[[All, 1]];
    patsMin =
     Block[{noopnoop = False},
@@ -1032,16 +1072,29 @@ generateArgCount~SetAttributes~HoldFirst
 
 setArgCount[f_Symbol, minA : _Integer, maxA : _Integer|Infinity, 
    noo : True | False] :=
-  f[argPatLongToNotDupe___] :=
-   (
-    1 /; (ArgumentCountQ[f,
-        Length@If[noo,
-          Replace[Hold[argPatLongToNotDupe], 
-            Hold[argPatLongToNotDupe2___, 
-              (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
-              ] :> Hold[argPatLongToNotDupe2]
-            ], Hold[argPatLongToNotDupe]], minA, maxA]; False)
-    );
+  Quiet[
+    Unset[f[___] /; CompoundExpression[_ArgumentCountQ, _] ];
+    f[argPatLongToNotDupe___] /; (
+      ArgumentCountQ[f,
+        Length@
+          If[noo,
+            Replace[
+              Hold[argPatLongToNotDupe], 
+              Hold[argPatLongToNotDupe2___, 
+                (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
+                ] :> Hold[argPatLongToNotDupe2]
+              ], 
+            Hold[argPatLongToNotDupe]
+            ], 
+         minA, 
+         maxA
+         ]; 
+       False
+       ) := "If you're seeing this, there's an issue",
+    {
+      Unset::norep
+      }
+    ];
 setArgCount~SetAttributes~HoldFirst
 
 

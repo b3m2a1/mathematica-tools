@@ -220,7 +220,7 @@ SObjNew[
 		]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Instantiate object*)
 
 
@@ -621,7 +621,7 @@ SObj/:Extract[o:SObj[s_], e___]:=
 	(SObjExtract[o, e]/;SObjQ@o);
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Property setting*)
 
 
@@ -672,6 +672,19 @@ Map[
 		AddTo, SubtractFrom, TimesBy, DivideBy,
 		AppendTo, PrependTo,
 		AssociateTo, KeyDropFrom
+		}
+	];
+Map[
+	Function[
+		SObjMutationHandler[
+			#[(sym:(_SObj|_Symbol)?SObjQ)[prop__]]
+			] := SObjPropMutator[#][sym, prop];
+		SObjMutationHandler[
+			#[(sym:(_SObj|_Symbol)?SObjQ)[[part__]]]
+			] := SObjPartMutator[#][sym, part];
+		],
+	{
+		Increment, Decrement
 		}
 	];
 
