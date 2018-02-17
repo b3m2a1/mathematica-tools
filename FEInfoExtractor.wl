@@ -803,7 +803,7 @@ argPatSimplifyDispatch=
       }
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*mergeArgPats*)
 
 
@@ -1066,34 +1066,48 @@ generateArgCount[f_] :=
 generateArgCount~SetAttributes~HoldFirst
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*setArgCount*)
 
 
 setArgCount[f_Symbol, minA : _Integer, maxA : _Integer|Infinity, 
    noo : True | False] :=
-  Quiet[
-    Unset[f[___] /; CompoundExpression[_ArgumentCountQ, _] ];
-    f[argPatLongToNotDupe___] /; (
-      ArgumentCountQ[f,
-        Length@
-          If[noo,
-            Replace[
-              Hold[argPatLongToNotDupe], 
-              Hold[argPatLongToNotDupe2___, 
-                (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
-                ] :> Hold[argPatLongToNotDupe2]
+  With[{wasProt=MemberQ[Attributes[f], Protected]},
+    If[wasProt, Unprotect[f]];
+    Quiet[
+      DownValues[f]=
+        Cases[DownValues[f], 
+          Except[
+            Verbatim[HoldPattern][
+              HoldPattern[Verbatim[Condition][f[___], (_ArgumentCountQ;False)]]
+              ]:>_Failure
+            ]
+          ];
+      f[argPatLongToNotDupe___] /; (
+        ArgumentCountQ[f,
+          Length@
+            If[noo,
+              Replace[
+                Hold[argPatLongToNotDupe], 
+                Hold[argPatLongToNotDupe2___, 
+                  (_Rule | _RuleDelayed | {(_Rule | _RuleDelayed) ..}) ...
+                  ] :> Hold[argPatLongToNotDupe2]
+                ], 
+              Hold[argPatLongToNotDupe]
               ], 
-            Hold[argPatLongToNotDupe]
-            ], 
-         minA, 
-         maxA
-         ]; 
-       False
-       ) := "If you're seeing this, there's an issue",
-    {
-      Unset::norep
-      }
+           minA, 
+           maxA
+           ]; 
+         False
+         ) := 
+          Failure["Bad Definition",
+            "If you're seeing this we have a bug; Raise an issue on GitHub"
+            ],
+      {
+        Unset::norep
+        }
+      ];
+    If[wasProt, Protect[f]];
     ];
 setArgCount~SetAttributes~HoldFirst
 
