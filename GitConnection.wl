@@ -227,7 +227,7 @@ packageAddAutocompletions[s_, l_]:=
 		];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*packageFilePath*)
 
 
@@ -1860,7 +1860,7 @@ If[Not@ValueQ@$GitHubConfig,
 If[Not@ValueQ@$GitHubUserName,
 	$GitHubUserName:=
 		Replace[
-			$KeyChain["$GitHubUserName"],
+			$KeyChain["GitHubUserName"],
 			_Missing:>
 				$GitHubConfig["Username"]
 			]

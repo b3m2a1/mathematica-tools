@@ -72,6 +72,26 @@ Begin["`Private`"];
 
 
 (* ::Subsection::Closed:: *)
+(*Helpers*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*packageAddAutocompletions*)
+
+
+(* ::Text:: *)
+(*Lazy dupe of the way my packages implement this*)
+
+
+packageAddAutocompletions[s_, l_]:=
+	If[$Notebooks&&
+		Internal`CachedSystemInformation["FrontEnd","VersionNumber"]>10.0,
+		FE`Evaluate[FEPrivate`AddSpecialArgCompletion[s->l]],
+		$Failed
+		];
+
+
+(* ::Subsection::Closed:: *)
 (*Options*)
 
 
@@ -637,7 +657,7 @@ EncodedCache/:
 
 
 (* ::Subsection::Closed:: *)
-(*Default*)
+(*$EncodedCache*)
 
 
 If[!ValueQ@$EncodedCacheDefaultKey,
@@ -755,6 +775,10 @@ $EncodedCacheDirectory/:
 				dir
 				]
 			];
+
+
+(* ::Subsection::Closed:: *)
+(*$KeyChain*)
 
 
 If[!ValueQ@$KeyChainKey,
@@ -945,6 +969,12 @@ KeyChainRemove[site_->username:Except[None]]:=
 	$KeyChain[{site,username}]=.;
 
 
+(* ::Subsubsection::Closed:: *)
+(*KeyChainGet*)
+
+
+$KeyChainGetAccountKeys=
+	{"AccountData", "WolframCloud"};
 KeyChainGet[site_String,lookup:True|False:False]:=
 	If[lookup,
 		FirstCase[#,_String?(StringLength@#>0&),
@@ -954,7 +984,10 @@ KeyChainGet[site_String,lookup:True|False:False]:=
 		]&@
 		$KeyChain[{site,Key@{site,""}}];
 KeyChainGet[
-	{site_String,username_String},
+	{
+		site:Except[Alternatives@@Append[$KeyChainGetAccountKeys, ""], _String], 
+		username_String
+		},
 	lookup:True|False:False]:=
 	If[lookup,
 		FirstCase[#,Except[$keyChainFailureForms],
@@ -969,8 +1002,28 @@ KeyChainGet[
 	Replace[
 		KeyChainGet[{site,key}],
 		e:$keyChainFailureForms:>
-			If[lookup,KeyChainAdd[site->{None,key}],e]
-		]
+			If[lookup, KeyChainAdd[site->{None,key}],e]
+		];
+KeyChainGet[
+	{s:Alternatives@@$KeyChainGetAccountKeys, username_String},
+	lookup:True|False:False
+	]:=
+	KeyChainGet[s->{None, username}, lookup];
+
+
+packageAddAutocompletions[
+	"KeyChainGet",
+	{
+		Map[
+			ToString[{"\""<>#<>"\"", "accountName"}]&,
+			$KeyChainGetAccountKeys
+			]
+		}
+	]
+
+
+(* ::Subsubsection::Closed:: *)
+(*KeyChainConnect*)
 
 
 $KeyChainCloudAccounts=
@@ -980,7 +1033,7 @@ $KeyChainCloudAccounts=
 		"PaidAccount"|"FreeAccount";
 
 
-PackageAddAutocompletions[
+packageAddAutocompletions[
 	"KeyChainConnect",
 	{List@@$KeyChainCloudAccounts}
 	]
