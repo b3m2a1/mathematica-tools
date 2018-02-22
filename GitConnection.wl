@@ -7,6 +7,11 @@
 BeginPackage["GitConnection`"]
 
 
+Needs["EncodedCache`", 
+	"https://raw.githubusercontent.com/b3m2a1/mathematica-tools/master/EncodedCache.wl"
+	];
+
+
 (* ::Subsection::Closed:: *)
 (*Git*)
 
@@ -220,6 +225,18 @@ packageAddAutocompletions[s_, l_]:=
 		FE`Evaluate[FEPrivate`AddSpecialArgCompletion[s->l]],
 		$Failed
 		];
+
+
+(* ::Subsubsection:: *)
+(*packageFilePath*)
+
+
+(* ::Text:: *)
+(*Something my packages implement. Obviously harder to have here...*)
+
+
+packageFilePath[p__]:=
+	FileNameJoin@{$UserBaseDirectory, "ApplicationData", "GitConnection", p};
 
 
 (* ::Subsection:: *)
@@ -1812,7 +1829,7 @@ If[Not@ValueQ@$GitHubConfig,
 	$GitHubConfig:=
 		Replace[
 			Do[
-				With[{f=PackageFilePath["Private", d]},
+				With[{f=packageFilePath["Private", d]},
 					If[FileExistsQ@f,
 						$GitHubConfig=
 							Replace[Import@f,
@@ -1836,7 +1853,7 @@ If[Not@ValueQ@$GitHubConfig,
 	]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*$GitHubUserName*)
 
 
