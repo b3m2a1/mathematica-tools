@@ -1223,7 +1223,7 @@ GitFilterTree[
 (*Prune*)
 
 
-$GitParamMap["Branch"]=
+$GitParamMap["Prune"]=
 	{
 		"DryRun"->"dry-run",
 		"Verbose"->"verbose",
@@ -1232,7 +1232,7 @@ $GitParamMap["Branch"]=
 
 
 Options[GitPrune]=
-	Thread[$GitParamMap["Branch"]->Automatic];
+	Thread[Keys@$GitParamMap["Prune"]->Automatic];
 GitPrune[
 	dir:_String?DirectoryQ|Automatic:Automatic,
 	args___String,
@@ -1503,7 +1503,7 @@ GitHelpFlagMap[cmd_]:=
 		]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Git*)
 
 
@@ -1557,6 +1557,8 @@ $GitActions=
 			GitReset,
 		"Checkout"->
 			GitCheckout,
+		"Prune"->
+			GitPrune,
 		"Pull"->
 			GitPull,
 		"PullOrigin"->
@@ -1853,7 +1855,7 @@ If[Not@ValueQ@$GitHubConfig,
 	]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*$GitHubUserName*)
 
 
@@ -1870,7 +1872,7 @@ If[Not@ValueQ@$GitHubUserName,
 	];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*$GitHubPassword*)
 
 
@@ -1952,7 +1954,7 @@ $GitHubSSHConnected:=
 		);
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*GitHubPath*)
 
 
