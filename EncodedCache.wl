@@ -777,8 +777,12 @@ $EncodedCacheDirectory/:
 			];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*$KeyChain*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*KeyChain interface*)
 
 
 If[!ValueQ@$KeyChainKey,
@@ -901,6 +905,10 @@ $KeyChainDirectory/:
 $keyChainFailureForms=""|$Failed|$Canceled|_Missing;
 
 
+(* ::Subsubsection::Closed:: *)
+(*KeyChainAdd*)
+
+
 KeyChainAdd[site_->{username:Except[None],password:Except[$keyChainFailureForms]}]:=
 	$KeyChain[{site,username}]=password;
 KeyChainAdd[{site_->{username:Except[None],password:Except[$keyChainFailureForms]}}]:=
@@ -965,11 +973,15 @@ KeyChainAdd[
 				}];
 
 
+(* ::Subsubsection:: *)
+(*KeyChainRemove*)
+
+
 KeyChainRemove[site_->username:Except[None]]:=
 	$KeyChain[{site,username}]=.;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*KeyChainGet*)
 
 
@@ -986,15 +998,16 @@ KeyChainGet[site_String,lookup:True|False:False]:=
 KeyChainGet[
 	{
 		site:Except[Alternatives@@Append[$KeyChainGetAccountKeys, ""], _String], 
-		username_String
+		username_String,
+		subparts___String
 		},
 	lookup:True|False:False]:=
 	If[lookup,
 		FirstCase[#,Except[$keyChainFailureForms],
-			KeyChainAdd[site->username]
+			KeyChainAdd[site->StringJoin[username, subparts]]
 			],
 		FirstCase[#,Except[$keyChainFailureForms]]
-		]&@$KeyChain[{Key@{site,username}}];
+		]&@$KeyChain[{Key@{site,StringJoin[username, subparts]}}];
 KeyChainGet[
 	site_->{None,key_},
 	lookup:True|False:False
@@ -1005,10 +1018,18 @@ KeyChainGet[
 			If[lookup, KeyChainAdd[site->{None,key}],e]
 		];
 KeyChainGet[
-	{s:Alternatives@@$KeyChainGetAccountKeys, username_String},
+	{
+		site:Alternatives@@$KeyChainGetAccountKeys, 
+		username_String,
+		subparts___String
+		},
 	lookup:True|False:False
 	]:=
-	KeyChainGet[s->{None, username}, lookup];
+	Replace[
+		KeyChainGet[{site, StringJoin[username, subparts]}],
+		e:$keyChainFailureForms:>
+			If[lookup, KeyChainAdd[site->{None, StringJoin[username, subparts]}], e]
+		];
 
 
 packageAddAutocompletions[

@@ -1860,7 +1860,7 @@ If[Not@ValueQ@$GitHubConfig,
 If[Not@ValueQ@$GitHubUserName,
 	$GitHubUserName:=
 		Replace[
-			$KeyChain["GitHubUserName"],
+			KeyChainGet[{"AccountData", "GitHub", "Username"}, True],
 			_Missing:>
 				$GitHubConfig["Username"]
 			]
