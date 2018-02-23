@@ -995,13 +995,14 @@ KeyChainGet[site_String,lookup:True|False:False]:=
 		FirstCase[#,_String?(StringLength@#>0&)]
 		]&@
 		$KeyChain[{site,Key@{site,""}}];
-KeyChainGet[
+iKeyChainGet[
 	{
-		site:Except[Alternatives@@Append[$KeyChainGetAccountKeys, ""], _String], 
+		site_String, 
 		username_String,
 		subparts___String
 		},
-	lookup:True|False:False]:=
+	lookup:True|False:False
+	]:=
 	If[lookup,
 		FirstCase[#,Except[$keyChainFailureForms],
 			KeyChainAdd[site->StringJoin[username, subparts]]
@@ -1009,13 +1010,24 @@ KeyChainGet[
 		FirstCase[#,Except[$keyChainFailureForms]]
 		]&@$KeyChain[{Key@{site,StringJoin[username, subparts]}}];
 KeyChainGet[
-	site_->{None,key_},
+	{
+		site:Except[Alternatives@@Append[$KeyChainGetAccountKeys, ""], _String],
+		username_String,
+		subparts___String
+		},
 	lookup:True|False:False
 	]:=
-	Replace[
-		KeyChainGet[{site,key}],
-		e:$keyChainFailureForms:>
-			If[lookup, KeyChainAdd[site->{None,key}],e]
+	iKeyChainGet[{site, username, subparts}, lookup];
+KeyChainGet[
+	site_->{None, username_, subparts__},
+	lookup:True|False:False
+	]:=
+	With[{key=StringJoin[username, subparts]},
+		Replace[
+			iKeyChainGet[{site,key}],
+			e:$keyChainFailureForms:>
+				If[lookup, KeyChainAdd[site->{None,key}],e]
+			]
 		];
 KeyChainGet[
 	{
@@ -1025,11 +1037,7 @@ KeyChainGet[
 		},
 	lookup:True|False:False
 	]:=
-	Replace[
-		KeyChainGet[{site, StringJoin[username, subparts]}],
-		e:$keyChainFailureForms:>
-			If[lookup, KeyChainAdd[site->{None, StringJoin[username, subparts]}], e]
-		];
+	KeyChainGet[site->{None, username, subparts}, lookup]
 
 
 packageAddAutocompletions[

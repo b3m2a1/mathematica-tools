@@ -1857,6 +1857,9 @@ If[Not@ValueQ@$GitHubConfig,
 (*$GitHubUserName*)
 
 
+$GitHubUserName//Clear
+
+
 If[Not@ValueQ@$GitHubUserName,
 	$GitHubUserName:=
 		Replace[
@@ -1949,7 +1952,7 @@ $GitHubSSHConnected:=
 		);
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*GitHubPath*)
 
 
