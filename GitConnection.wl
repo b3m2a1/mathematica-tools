@@ -1870,7 +1870,7 @@ If[Not@ValueQ@$GitHubUserName,
 	];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*$GitHubPassword*)
 
 
@@ -1883,13 +1883,13 @@ GitHubPassword[s_String]:=
 		{
 			base=
 				Replace[gitHubPasswordCache[s],
-					Except[_String]:>KeyChainGet[{"github.com",	s}, False]
+					Except[_String]:>KeyChainGet[{"github.com", s}, False]
 					]
 			},
 		If[StringQ@base,
 			base,
 			If[$GitHubStorePassword,
-				KeyChainGet[{"github.com",	s}, True],
+				KeyChainGet[{"github.com", s}, True],
 				AuthenticationDialog[
 					Dynamic@$ghauth,
 					"",
