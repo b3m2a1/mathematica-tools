@@ -332,22 +332,13 @@ NotebookToPackage[nb_NotebookObject] :=
            Flatten@{
              Cell["Private Declarations", "Subsubsection"],
 						 Cell[
-		          BoxData@
-								RowBox[{RowBox[{"AppendTo", "[",
-									RowBox[{"$ContextPath", ",",
-										RowBox[{"$Context", "<>", "\"Package`\""}]
-										}], "]"
-									}], ";"}],
-		          "Code"
-		          ],
-						 Cell[
-		          BoxData@RowBox[{RowBox[{"Begin", "[", "\"`Package`\"", "]"}],
+		          BoxData@RowBox[{RowBox[{"BeginPackage", "[", "\"`Package`\"", "]"}],
 		             ";"}],
 		          "Code"
 		          ],
              usagecells[[2]],
 						 Cell[
-		          BoxData@RowBox[{RowBox[{"End", "[", "]"}],
+		          BoxData@RowBox[{RowBox[{"EndPackage", "[", "]"}],
 		             ";"}],
 		          "Code"
 		          ]

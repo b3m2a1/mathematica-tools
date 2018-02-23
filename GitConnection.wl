@@ -343,23 +343,29 @@ Git::nrepo="`` not a git repository";
 $GitParamMap=<||>;
 
 
+GitPrepType//Clear
+GitPrepType[n_?NumericQ]:=
+	ToString[n];
+GitPrepType[n_?DateObjectQ]:=
+	ToString@UnixTime[n];
+GitPrepType[q_Quantity]:=
+	ToString@
+		QuantityMagnitude@
+			If[CompatibleUnitQ[q, "Seconds"], 
+				UnitConvert[q, "Seconds"],
+				q
+				];
+GitPrepType[l_List]:=
+	StringRiffle[GitPrepType/@l, ","];
+GitPrepType[e_]:=e;
+
+
 GitPrepParamVals[ops_]:=
 	Replace[
 		ops,
 		{
-			(h:Rule|RuleDelayed)[s_String, n_?NumericQ]:>
-				s->ToString[n],
-			(h:Rule|RuleDelayed)[s_String, n_?DateObjectQ]:>
-				s->ToString@UnixTime[n],
-			(h:Rule|RuleDelayed)[s_String, q_Quantity]:>
-					s->
-					ToString@QuantityMagnitude@
-						If[CompatibleUnitQ[q, "Seconds"], 
-							UnitConvert[q, "Seconds"],
-							q
-							],
-			(RuleDelayed[s_String, v_]):>
-				Rule[s, v]
+			(h:Rule|RuleDelayed)[s_String, o_]:>
+				s->GitPrepType[o]
 			},
 		1
 		];
@@ -399,6 +405,57 @@ GitPrepParams[ops_, map_]:=
 		];
 GitPrepParams[fn_, ops_, map_]:=
 	GitPrepParams[Flatten[{Options@fn, ops}], map]
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitRegisterFunction*)
+
+
+GitRegisterFunction//Clear
+GitRegisterFunction[
+	sym_Symbol, 
+	cmd:{__String},
+	map_?OptionQ,
+	joinOps:_List?OptionQ:{}
+	]:=
+	With[
+		{
+			main=ToLowerCase[First@cmd],
+			rest=Sequence@@Map[ToLowerCase, Rest@cmd],
+			big=ToUpperCase[StringTake[#, 1]]<>StringDrop[#, 1]&/@Map[ToLowerCase, cmd]
+			},
+		$GitParamMap[big]=map;
+		Options[sym]=
+			DeleteDuplicates[
+				Join[
+					joinOps,
+					Thread[Keys@$GitParamMap[big]->Automatic]
+					]
+				];
+		sym[
+			dir:_String?DirectoryQ|Automatic:Automatic,
+			args___String,
+			ops:OptionsPattern[]
+			]:=
+			GitRun[dir,
+				main,
+				rest,
+				Sequence@@
+					GitPrepParams[
+						sym,
+						{ops}, 
+						$GitParamMap[big]
+						],
+				args
+				]
+		];
+GitRegisterFunction[
+	sym_Symbol, 
+	cmd_String,
+	map_?OptionQ,
+	joinOps:_List?OptionQ:{}
+	]:=
+	GitRegisterFunction[sym, {cmd}, map, joinOps]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -471,12 +528,35 @@ GitCreate[dir_String?(DirectoryQ@*DirectoryName)]:=
 		];
 
 
+$GitParamMap["Init"]=
+	{
+		"Quiet"->"quiet",
+		"Bare"->"bare",
+		"Template"->"template",
+		"SeparateGitDir"->"separate-git-dir",
+		"Shared"->"shared"
+		};
+Options[GitInit]=
+	Thread[Keys@$GitParamMap["Init"]->Automatic];
 GitInit[
 	dir:_String?DirectoryQ|Automatic:Automatic,
 	ignorePats:{___String}|None:None,
-	excludePats:{___String}|None:None
+	excludePats:{___String}|None:None,
+	ops:OptionsPattern[]
 	]:=
-	With[{r=GitRun[dir, "init"]},
+	With[
+	{
+		r=
+			GitRun[dir, 
+				Sequence@@
+						GitPrepParams[
+							GitInit,
+							{ops}, 
+							$GitParamMap["Init"]
+							],
+				"init"
+				]
+		},
 		If[ignorePats=!=None, 
 			GitAddGitIgnore[dir, ignorePats]
 			];
@@ -599,88 +679,292 @@ GitIgnore[dir:_String?DirectoryQ|Automatic:Automatic,filePatterns:{___}]:=
 (*GitAdd*)
 
 
-GitAdd[dir:_String?DirectoryQ|Automatic:Automatic,files___]:=
-	GitRun[dir,"add",files];
+GitRegisterFunction[GitAdd, "add",
+	{
+		"DryRun"->"dry-run",
+		"Verbose"->"verbose",
+		"Force"->"force",
+		"Interactive"->"interactive",
+		"Patch"->"patch",
+		"Edit"->"edit",
+		"Update"->"update",
+		"NoIgnoreRemoval"->"no-ignore-removal",
+		"IgnoreRemoval"->"ignore-removal",
+		"IntentToAdd"->"intent-to-add",
+		"Refresh"->"refresh",
+		"IgnoreErrors"->"ignore-errors",
+		"IgnoreMissing"->"ignore-missing",
+		"NoWarnEmbeddedRepo"->"no-warn-embedded-repo",
+		"ChangeModee"->"chmod"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
 (*GitRemove*)
 
 
-GitRemove[dir:_String?DirectoryQ|Automatic:Automatic,files___]:=
-	GitRun[dir,"rm",files];
+GitRegisterFunction[GitRemove,
+ "rm",
+	{
+		"Force"->"force",
+		"DryRun"->"dry-run",
+		"Recursive"->"r",
+		"Cached"->"cached",
+		"IgnoreUnmatch"->"ignore-unmatch",
+		"Quiet"->"quiet"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
 (*GitRemoveRecursive*)
 
 
-GitRemoveRecursive[dir:_String?DirectoryQ|Automatic:Automatic,files___]:=
-	GitRun[dir,"rm","-r",files];
+Options[GitRemoveRecursive]=
+	Options[GitRemove]
+GitRemoveRecursive[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	args___String,
+	ops:OptionsPattern[]
+	]:=
+	GitRemove[dir, args, "Recursive"->True, ops]
 
 
 (* ::Subsubsection::Closed:: *)
 (*GitRemoveCached*)
 
 
-GitRemoveCached[dir:_String?DirectoryQ|Automatic:Automatic,files___]:=
-	GitRun[dir,"rm",
-		"--cached",
-		files];
+Options[GitRemoveCached]=
+	Options[GitRemove]
+GitRemoveCached[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	args___String,
+	ops:OptionsPattern[]
+	]:=
+	GitRemove[dir, args, "Cached"->True, ops]
 
 
 (* ::Subsubsection::Closed:: *)
 (*GitRemoveCachedRecursive*)
 
 
-GitRemoveCachedRecursive[dir:_String?DirectoryQ|Automatic:Automatic,files___]:=
-	GitRun[dir,"rm",
-		"-r",
-		"--cached",
-		files
-		];
-
-
-(* ::Subsubsection::Closed:: *)
-(*GitBranch*)
-
-
-GitBranch[dir:_String?DirectoryQ, spec__]:=
-	GitRun[dir,"branch", spec];
+Options[GitRemoveCachedRecursive]=
+	Options[GitRemove]
+GitRemoveCachedRecursive[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	args___String,
+	ops:OptionsPattern[]
+	]:=
+	GitRemove[dir, args, "Recursive"->True, "Cached"->True, ops]
 
 
 (* ::Subsubsection::Closed:: *)
 (*GitCommit*)
 
 
-Options[GitCommit]={Message->"Commited via Mathematica"};
-GitCommit[dir:_String?DirectoryQ|Automatic:Automatic,
-	opts___String,
-	OptionsPattern[]]:=
-	With[{squargs=
-		If[
-			Not@MemberQ[{opts},"-m"],
-			Join[{opts},{"-m",OptionValue@Message}],
-			{opts}]},
-		GitRun[dir,"commit",Sequence@@squargs]
-		];
+GitRegisterFunction[
+	GitCommit,
+	"commit",
+	{
+		"All"->"all",
+		"Patch"->"patch",
+		"ReuseMessage"->"reuse-message",
+		"ReeditMessage"->"reedit-message",
+		"FixUp"->"fixup",
+		"Squash"->"squash",
+		"ResetAuthor"->"reset-author",
+		"Short"->"short",
+		"Branch"->"branch",
+		"Porcelain"->"porcelain",
+		"Long"->"long",
+		"Null"->"null",
+		"File"->"file",
+		"Author"->"author",
+		"Date"->"date",
+		"Message"->"message",
+		"Template"->"template",
+		"Signoff"->"signoff",
+		"NoVerify"->"no-verify",
+		"AllowEmpty"->"allow-empty",
+		"AllowEmptyMessage"->"allow-empty-message",
+		"Cleanup"->"cleanup",
+		"Edit"->"edit",
+		"NoEdit"->"no-edit",
+		"Amend"->"amend",
+		"NoPostRewrite"->"no-post-rewrite",
+		"Include"->"include",
+		"Only"->"only",
+		"UntrackedFiles"->"untracked-files",
+		"Verbose"->"verbose",
+		"Quiet"->"quiet",
+		"DryRun"->"dry-run",
+		"Status"->"status",
+		"NoStatus"->"no-status",
+		"GpgSign"->"gpg-sign",
+		"NoGpgSign"->"no-gpg-sign"
+		},
+	{
+		"Message"->"Commited via Mathematica"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
-(*Git status*)
+(*GitLog*)
 
 
-GitLog[dir:_String?DirectoryQ|Automatic:Automatic,
-		pFlag_:"-p",entries_:"-2",opts___]:=
-	GitRun[dir,"log",opts];
-
-
-GitStatus[dir:_String?DirectoryQ|Automatic:Automatic]:=
-	GitRun[dir,"status"];
+GitRegisterFunction[
+	GitLog,
+	"log",
+	{
+		"Follow"->"follow",
+		"Decorate"->"decorate",
+		"Source"->"source",
+		"UseMailmap"->"use-mailmap",
+		"FullDiff"->"full-diff",
+		"LogSize"->"log-size",
+		"TraceLines"->"L",
+		"MaxCount"->"max-count",
+		"Skip"->"skip",
+		"Since"->"since",
+		"Before"->"before",
+		"Committer"->"committer",
+		"GrepReflog"->"grep-reflog",
+		"Grep"->"grep",
+		"AllMatch"->"all-match",
+		"InvertGrep"->"invert-grep",
+		"RegexpIgnoreCase"->"regexp-ignore-case",
+		"BasicRegexp"->"basic-regexp",
+		"ExtendedRegexp"->"extended-regexp",
+		"FixedStrings"->"fixed-strings",
+		"PerlRegexp"->"perl-regexp",
+		"RemoveEmpty"->"remove-empty",
+		"Merges"->"merges",
+		"NoMerges"->"no-merges",
+		"MinParents"->"min-parents",
+		"NoMaxParents"->"no-max-parents",
+		"FirstParent"->"first-parent",
+		"Bisect"->"bisect",
+		"Not"->"not",
+		"All"->"all",
+		"Branches"->"branches",
+		"Tags"->"tags",
+		"Remotes"->"remotes",
+		"Glob"->"glob",
+		"Exclude"->"exclude",
+		"Reflog"->"reflog",
+		"IgnoreMissing"->"ignore-missing",
+		"Stdin"->"stdin",
+		"CherryMark"->"cherry-mark",
+		"CherryPick"->"cherry-pick",
+		"RightOnly"->"right-only",
+		"Cherry"->"cherry",
+		"WalkReflogs"->"walk-reflogs",
+		"Merge"->"merge",
+		"Boundary"->"boundary",
+		"SimplifyByDecoration"->"simplify-by-decoration",
+		"FullHistory"->"full-history",
+		"Dense"->"dense",
+		"Sparse"->"sparse",
+		"SimplifyMerges"->"simplify-merges",
+		"AncestryPath"->"ancestry-path",
+		"DateOrder"->"date-order",
+		"AuthorDateOrder"->"author-date-order",
+		"TopoOrder"->"topo-order",
+		"Reverse"->"reverse",
+		"NoWalk"->"no-walk",
+		"DoWalk"->"do-walk",
+		"Pretty"->"pretty",
+		"AbbrevCommit"->"abbrev-commit",
+		"NoAbbrevCommit"->"no-abbrev-commit",
+		"Oneline"->"oneline",
+		"Encoding"->"encoding",
+		"ExpandTabs"->"expand-tabs",
+		"Notes"->"notes",
+		"NoNotes"->"no-notes",
+		"ShowNotes"->"show-notes",
+		"ShowSignature"->"show-signature",
+		"RelativeDate"->"relative-date",
+		"Date"->"date",
+		"Parents"->"parents",
+		"Children"->"children",
+		"LeftRight"->"left-right",
+		"Graph"->"graph",
+		"ShowLinearBreak"->"show-linear-break",
+		"Compress"->"c",
+		"CompressComplete"->"cc",
+		"ShowMergeDiffs"->"m",
+		"Recursive"->"r",
+		"ShowTree"->"t"
+		}
+	]
 
 
 (* ::Subsubsection::Closed:: *)
-(*Git config and help*)
+(*GitStatus*)
+
+
+GitRegisterFunction[
+	GitStatus,
+	"status",
+	{
+		"Short"->"short",
+		"Branch"->"branch",
+		"ShowStash"->"show-stash",
+		"Porcelain"->"porcelain",
+		"Long"->"long",
+		"Verbose"->"verbose",
+		"UntrackedFiles"->"untracked-files",
+		"IgnoreSubmodules"->"ignore-submodules",
+		"Ignored"->"ignored",
+		"NULTerminated"->"z",
+		"Column"->"column"
+		}
+	]
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitConfig*)
+
+
+GitRegisterFunction[
+	GitConfig,
+	"config",
+	{
+		"ReplaceAll"->"replace-all",
+		"Add"->"add",
+		"Get"->"get",
+		"GetAll"->"get-all",
+		"GetRegexp"->"get-regexp",
+		"GetUrlmatch"->"get-urlmatch",
+		"Global"->"global",
+		"System"->"system",
+		"Local"->"local",
+		"File"->"file",
+		"Blob"->"blob",
+		"RemoveSection"->"remove-section",
+		"RenameSection"->"rename-section",
+		"Unset"->"unset",
+		"UnsetAll"->"unset-all",
+		"List"->"list",
+		"Bool"->"bool",
+		"Int"->"int",
+		"BoolOrInt"->"bool-or-int",
+		"Path"->"path",
+		"Null"->"null",
+		"NameOnly"->"name-only",
+		"ShowOrigin"->"show-origin",
+		"GetColorbool"->"get-colorbool",
+		"GetColor"->"get-color",
+		"Edit"->"edit",
+		"Includes"->"includes",
+		"NoIncludes"->"no-includes"
+		},
+	{
+		"Global"->True
+		}
+	]
 
 
 GitConfig[setting:_String:"--global",opts___String]:=
@@ -705,15 +989,14 @@ GitConfig[setting:_String:"--global",opts__Rule]:=
 			];
 
 
-GitHelp[thing_String]:=
-	GitRun["help",thing];
-
-
 (* ::Subsubsection::Closed:: *)
 (*Repository finding and stuff*)
 
 
-GitRepositories[dirs:{(_String?DirectoryQ)..}|_String?DirectoryQ,depth:_Integer|\[Infinity]:2]:=
+GitRepositories[
+	dirs:{(_String?DirectoryQ)..}|_String?DirectoryQ,
+	depth:_Integer|\[Infinity]:2
+	]:=
 	ParentDirectory/@FileNames[".git",dirs,depth];
 
 
@@ -749,11 +1032,14 @@ GitRepoQ[r:(_String|_File)?DirectoryQ]:=
 
 
 (* ::Subsubsection::Closed:: *)
-(*ListRemotes*)
+(*GitListRemotes*)
 
 
-GitListRemotes[dir:_String?DirectoryQ|Automatic:Automatic]:=
-	GitRun[dir,"remote","-v","show"]
+GitListRemotes[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	remoteName:_String?(Not@*DirectoryQ):"origin"
+	]:=
+	GitRun[dir,"remote", "-v", "show", remoteName];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -839,64 +1125,128 @@ GitReattachHead[
 (*Push*)
 
 
-Options[GitPush]={
-	"Username"->
-		None,
-	"Password"->
-		None,
-	"Force"->False
-	};
+GitRegisterFunction[
+	iGitPush,
+	"push",
+	{
+		"All"->"all",
+		"Prune"->"prune",
+		"Mirror"->"mirror",
+		"DryRun"->"dry-run",
+		"Porcelain"->"porcelain",
+		"Delete"->"delete",
+		"Tags"->"tags",
+		"FollowTags"->"follow-tags",
+		"Sign"->"sign",
+		"Atomic"->"atomic",
+		"NoAtomic"->"no-atomic",
+		"PushOption"->"push-option",
+		"ReceivePack"->"receive-pack",
+		"ForceWithLease"->"force-with-lease",
+		"Force"->"force",
+		"Repo"->"repo",
+		"SetUpstream"->"set-upstream",
+		"Thin"->"thin",
+		"NoThin"->"no-thin",
+		"Quiet"->"quiet",
+		"Verbose"->"verbose",
+		"Progress"->"progress",
+		"RecurseSubmodules"->"recurse-submodules",
+		"Verify"->"verify",
+		"NoVerify"->"no-verify"
+		}
+	]
+
+
+Options[GitPush]=
+	Join[
+		{
+			"Username"->
+				None,
+			"Password"->
+				None
+			},
+		Options[iGitPush]
+		];
 GitPush[
 	dir:_String?DirectoryQ,
 	loc_String,
 	branch:_String:"master",
-	ops:OptionsPattern[]]:=
-	GitRun[dir,
+	ops:OptionsPattern[]
+	]:=
+	iGitPush[
+		dir,
 		"push",
-		If[TrueQ@OptionValue["Force"],
-			"-f",
-			Sequence@@{}
-			],
+		ops,
 		loc,
-		branch];
+		branch
+		];
 
 
 (* ::Subsubsection::Closed:: *)
 (*Fetch*)
 
 
-GitFetch[
-	dir:_String?DirectoryQ
-	]:=
-	GitRun[
-		dir,
-		"fetch"
-		];
+GitRegisterFunction[
+	GitFetch,
+	"fetch",
+	{
+		"All"->"all",
+		"Append"->"append",
+		"Depth"->"depth",
+		"Deepen"->"deepen",
+		"ShallowSince"->"shallow-since",
+		"ShallowExclude"->"shallow-exclude",
+		"Unshallow"->"unshallow",
+		"UpdateShallow"->"update-shallow",
+		"DryRun"->"dry-run",
+		"Force"->"force",
+		"Keep"->"keep",
+		"Multiple"->"multiple",
+		"Prune"->"prune",
+		"NoTags"->"no-tags",
+		"Refmap"->"refmap",
+		"Tags"->"tags",
+		"RecurseSubmodules"->"recurse-submodules",
+		"Jobs"->"jobs",
+		"NoRecurseSubmodules"->"no-recurse-submodules",
+		"SubmodulePrefix"->"submodule-prefix",
+		"RecurseSubmodulesDefault"->"recurse-submodules-default",
+		"UpdateHeadOk"->"update-head-ok",
+		"UploadPack"->"upload-pack",
+		"Quiet"->"quiet",
+		"Verbose"->"verbose",
+		"Progress"->"progress"
+		}
+	]
 
 
 (* ::Subsubsection::Closed:: *)
 (*Reset*)
 
 
-GitReset[
-	dir:_String?DirectoryQ,
-	src___
-	]:=
-	GitRun[
-		dir,
-		"reset",
-		src
-		];
+GitRegisterFunction[
+	GitReset,
+	"fetch",
+	{
+		"Patch"->"patch",
+		"Soft"->"soft",
+		"Mixed"->"mixed",
+		"Hard"->"hard",
+		"Merge"->"merge",
+		"Keep"->"keep",
+		"Verbose"->"verbose"
+		}
+	]
 
 
 (* ::Subsubsection::Closed:: *)
 (*Checkout*)
 
 
-GitCheckout//Clear
-
-
-$GitParamMap["Checkout"]=
+GitRegisterFunction[
+	GitCheckout,
+	"checkout",
 	{
 		"Quiet"->"q",
 		"MakeBranch"->"b",
@@ -915,85 +1265,86 @@ $GitParamMap["Checkout"]=
 		"Patch"->"p",
 		"IgnoreOtherWorktrees"->"ignore-other-worktrees",
 		"RecurseSubmodules"->"recurse-submodules"
-		};
-
-
-Options[GitCheckout]=
-	{
-		"Quiet"->Automatic,
-		"MakeBranch"->Automatic,
-		"Track"->Automatic,
-		"Progress"->Automatic,
-		"Force"->Automatic,
-		"Ours"->Automatic,
-		"Theirs"->Automatic,
-		"NoTrack"->Automatic,
-		"Log"->Automatic,
-		"Detach"->Automatic,
-		"Orphan"->Automatic,
-		"Conflict"->Automatic,
-		"Patch"->Automatic,
-		"IgnoreSkipWorktreeBits"->Automatic,
-		"IgnoreOtherWorktrees"->Automatic,
-		"RecurseSubmodules"->Automatic
-		};
-GitCheckout[
-	dir:_String?DirectoryQ,
-	args__String,
-	o:OptionsPattern[]
-	]:=
-	GitRun[dir,
-		"checkout",
-		Sequence@@
-			GitPrepParams[
-				GitCheckout,
-				{o}, 
-				$GitParamMap["Checkout"]
-				],
-		args
-		]
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
 (*Pull*)
 
 
-Options[GitPull]={
-	"Username"->
-		None,
-	"Password"->
-		None
-	};
-GitPull[
-	dir:_String?DirectoryQ,
-	loc_String,
-	branch:_String:"master",
-	ops:OptionsPattern[]]:=
-	GitRun[dir,
-		"pull",
-		loc,
-		branch];
+GitRegisterFunction[
+	GitPull,
+	"pull",
+	{
+		"Quiet"->"quiet",
+		"Verbose"->"verbose",
+		"RecurseSubmodules"->"recurse-submodules",
+		"NoRecurseSubmodules"->"no-recurse-submodules",
+		"NoCommit"->"no-commit",
+		"NoEdit"->"no-edit",
+		"FastForward"->"ff",
+		"NoFastForward"->"no-ff",
+		"FastForwardOnly"->"ff-only",
+		"Log"->"log",
+		"NoStat"->"no-stat",
+		"NoSquash"->"no-squash",
+		"Strategy"->"strategy",
+		"StrategyOption"->"strategy-option",
+		"NoVerifySignatures"->"no-verify-signatures",
+		"NoSummary"->"no-summary",
+		"AllowUnrelatedHistories"->"allow-unrelated-histories",
+		"Rebase"->"rebase",
+		"NoRebase"->"no-rebase",
+		"NoAutostash"->"no-autostash",
+		"All"->"all",
+		"Append"->"append",
+		"Depth"->"depth",
+		"Deepen"->"deepen",
+		"ShallowSince"->"shallow-since",
+		"ShallowExclude"->"shallow-exclude",
+		"Unshallow"->"unshallow",
+		"UpdateShallow"->"update-shallow",
+		"Force"->"force",
+		"Keep"->"keep",
+		"NoTags"->"no-tags",
+		"UpdateHeadOk"->"update-head-ok",
+		"UploadPack"->"upload-pack",
+		"Progress"->"progress"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
 (*PullOrigin*)
 
 
-GitPullOrigin[dir:_String?DirectoryQ|Automatic:Automatic]:=
-	GitPull[dir,"origin","master"]
+Options[GitPullOrigin]=
+	Options[GitPull];
+GitPullOrigin[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	args___String,
+	ops:OptionsPattern[]
+	]:=
+	GitPull[dir, "origin", "master", args, ops]
 
 
 (* ::Subsubsection::Closed:: *)
 (*PushOrigin*)
 
 
-GitPushOrigin[dir:_String?DirectoryQ|Automatic:Automatic,
-	force:True|False:False
+Options[GitPushOrigin]=
+	Options[GitPush];
+GitPushOrigin[
+	dir:_String?DirectoryQ|Automatic:Automatic,
+	args___String,
+	ops:OptionsPattern[]
 	]:=
 	GitPush[dir,
-		If[force,"-f",Sequence@@{}],
 		"origin",
-		"master"
+		"master",
+		args,
+		ops
 		];
 
 
@@ -1069,24 +1420,21 @@ GitGetFetchURL[
 (*ListTree*)
 
 
-Options[GitListTree]=
+GitRegisterFunction[
+	GitListTree,
+	"ls-tree",
 	{
-		"NameOnly"->True
-		};
-GitListTree[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	branch:_String:"master",
-	ops:OptionsPattern[]
-	]:=
-	StringSplit[
-		GitRun[dir,"ls-tree",branch,
-			If[OptionValue["NameOnly"]//TrueQ,
-				"--name-only",
-				Sequence@@{}
-				]
-			],
-		"\n"
-		];
+		"NoChildren"->"d",
+		"Recursive"->"r",
+		"ShowRecursiveTrees"->"t",
+		"Long"->"long",
+		"NULTerminated"->"z",
+		"NameStatus"->"name-status",
+		"Abbrev"->"abbrev",
+		"FullName"->"full-name",
+		"FullTree"->"full-tree"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1097,40 +1445,141 @@ Options[GitListTreeRecursive]=
 	Options@GitListTree;
 GitListTreeRecursive[
 	dir:_String?DirectoryQ|Automatic:Automatic,
-	branch:_String:"master",
+	args___String,
 	ops:OptionsPattern[]
 	]:=
-	StringSplit[
-		GitRun[dir,"ls-tree","-r",branch,
-			If[OptionValue["NameOnly"]//TrueQ,
-				"--name-only",
-				Sequence@@{}
-				]
-			],
-		"\n"
-		]
+	GitListTree[dir, args, "Recursive"->True, ops]
 
 
 (* ::Subsubsection::Closed:: *)
 (*RefLog*)
 
 
-GitRefLog[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	args___
-	]:=
-	GitRun[dir,"reflog"]
+GitRegisterFunction[
+	GitReflog,
+	"reflog",
+	{
+		"All"->"all",
+		"Expire"->"expire",
+		"ExpireUnreachable"->"expire-unreachable",
+		"Updateref"->"updateref",
+		"Rewrite"->"rewrite",
+		"StaleFix"->"stale-fix",
+		"DryRun"->"dry-run",
+		"Verbose"->"verbose"
+		}
+	]
+
+
+(* ::Subsubsection::Closed:: *)
+(*RefLogShow*)
+
+
+GitRegister[
+	RefLogShow,
+	{"reflog", "show"},
+	{
+		"Follow"->"follow",
+		"Decorate"->"decorate",
+		"Source"->"source",
+		"UseMailmap"->"use-mailmap",
+		"FullDiff"->"full-diff",
+		"LogSize"->"log-size",
+		"TraceLines"->"L",
+		"MaxCount"->"max-count",
+		"Skip"->"skip",
+		"Since"->"since",
+		"Before"->"before",
+		"Committer"->"committer",
+		"GrepReflog"->"grep-reflog",
+		"Grep"->"grep",
+		"AllMatch"->"all-match",
+		"InvertGrep"->"invert-grep",
+		"RegexpIgnoreCase"->"regexp-ignore-case",
+		"BasicRegexp"->"basic-regexp",
+		"ExtendedRegexp"->"extended-regexp",
+		"FixedStrings"->"fixed-strings",
+		"PerlRegexp"->"perl-regexp",
+		"RemoveEmpty"->"remove-empty",
+		"Merges"->"merges",
+		"NoMerges"->"no-merges",
+		"MinParents"->"min-parents",
+		"NoMaxParents"->"no-max-parents",
+		"FirstParent"->"first-parent",
+		"Bisect"->"bisect",
+		"Not"->"not",
+		"All"->"all",
+		"Branches"->"branches",
+		"Tags"->"tags",
+		"Remotes"->"remotes",
+		"Glob"->"glob",
+		"Exclude"->"exclude",
+		"Reflog"->"reflog",
+		"IgnoreMissing"->"ignore-missing",
+		"Stdin"->"stdin",
+		"CherryMark"->"cherry-mark",
+		"CherryPick"->"cherry-pick",
+		"RightOnly"->"right-only",
+		"Cherry"->"cherry",
+		"WalkReflogs"->"walk-reflogs",
+		"Merge"->"merge",
+		"Boundary"->"boundary",
+		"SimplifyByDecoration"->"simplify-by-decoration",
+		"FullHistory"->"full-history",
+		"Dense"->"dense",
+		"Sparse"->"sparse",
+		"SimplifyMerges"->"simplify-merges",
+		"AncestryPath"->"ancestry-path",
+		"DateOrder"->"date-order",
+		"AuthorDateOrder"->"author-date-order",
+		"TopoOrder"->"topo-order",
+		"Reverse"->"reverse",
+		"NoWalk"->"no-walk",
+		"DoWalk"->"do-walk",
+		"Pretty"->"pretty",
+		"AbbrevCommit"->"abbrev-commit",
+		"NoAbbrevCommit"->"no-abbrev-commit",
+		"Oneline"->"oneline",
+		"Encoding"->"encoding",
+		"ExpandTabs"->"expand-tabs",
+		"Notes"->"notes",
+		"NoNotes"->"no-notes",
+		"ShowNotes"->"show-notes",
+		"ShowSignature"->"show-signature",
+		"RelativeDate"->"relative-date",
+		"Date"->"date",
+		"Parents"->"parents",
+		"Children"->"children",
+		"LeftRight"->"left-right",
+		"Graph"->"graph",
+		"ShowLinearBreak"->"show-linear-break",
+		"Compress"->"c",
+		"CompressComplete"->"cc",
+		"ShowMergeDiffs"->"m",
+		"Recursive"->"r",
+		"ShowTree"->"t"
+		}
+	]
 
 
 (* ::Subsubsection::Closed:: *)
 (*RefLogExpire*)
 
 
-GitRefLogExpire[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	expireTime_:"--all"
-	]:=
-	GitRun[dir,"reflog","expire",expireTime]
+GitRegister[
+	RefLogExpire,
+	{"reflog", "expire"},
+	{
+		"All"->"all",
+		"Expire"->"expire",
+		"ExpireUnreachable"->"expire-unreachable",
+		"Updateref"->"updateref",
+		"Rewrite"->"rewrite",
+		"StaleFix"->"stale-fix",
+		"DryRun"->"dry-run",
+		"Verbose"->"verbose"
+		}
+	]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1223,84 +1672,56 @@ GitFilterTree[
 (*Prune*)
 
 
-$GitParamMap["Prune"]=
+GitRegister[
+	GitPrune,
+	"Prune",
 	{
 		"DryRun"->"dry-run",
 		"Verbose"->"verbose",
 		"Expire"->{"expire", " "}
-		};
-
-
-Options[GitPrune]=
-	Thread[Keys@$GitParamMap["Prune"]->Automatic];
-GitPrune[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	args___String,
-	ops:OptionsPattern[]
-	]:=
-	GitRun[dir,"prune",
-		Sequence@@
-			GitPrepParams[
-				GitPrune,
-				{ops}, 
-				$GitParamMap["Prune"]
-				],
-		args
-		]
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
 (*Branch*)
 
 
-$GitParamMap["Branch"]=
+GitRegister[
+	GitBranch,
+	"Branch",
 	{
-		"Delete"->"delete",
-		"ForceDelete"->"D",
-		"CreateReflog"->"create-reflog",
-		"Force"->"force",
-		"Move"->"move",
-		"ForceMOve"->"M",
-		"Color"->"color",
-		"NoColor"->"no-color",
-		"IgnoreCase"->"ignore-case",
-		"NoColumn"->"no-column",
-		"Remotes"->"remotes",
-		"All"->"all",
-		"List"->"list",
-		"Verbose"->"verbose",
-		"Quiet"->"quiet",
-		"Abbrev"->"abbrev",
-		"NoAbbrev"->"no-abbrev",
-		"Track"->"track",
-		"NoTrack"->"no-track",
-		"SetUpstream"->"set-upstream",
-		"SetUpstreamTo"->"set-upstream-to",
-		"UnsetUpstream"->"unset-upstream",
-		"EditDescription"->"edit-description",
-		"Contains"->"contains",
-		"NoContains"->"no-contains",
-		"Merged"->"merged",
-		"NoMerged"->"no-merged",
-		"Sort"->"sort",
-		"PointsAt"->"points-at",
-		"Format"->"format"
-		};
-Options[GitBranch]=
-	Thread[Keys[$GitParamMap["Branch"]]->Automatic];
-GitBranch[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	args___String,
-	o___?OptionQ
-	]:=
-	GitRun[dir,"branch",
-		Sequence@@
-			GitPrepParams[
-				GitBranch,
-				{o}, 
-				$GitParamMap["Branch"]
-				],
-		args
+			"Delete"->"delete",
+			"ForceDelete"->"D",
+			"CreateReflog"->"create-reflog",
+			"Force"->"force",
+			"Move"->"move",
+			"ForceMOve"->"M",
+			"Color"->"color",
+			"NoColor"->"no-color",
+			"IgnoreCase"->"ignore-case",
+			"NoColumn"->"no-column",
+			"Remotes"->"remotes",
+			"All"->"all",
+			"List"->"list",
+			"Verbose"->"verbose",
+			"Quiet"->"quiet",
+			"Abbrev"->"abbrev",
+			"NoAbbrev"->"no-abbrev",
+			"Track"->"track",
+			"NoTrack"->"no-track",
+			"SetUpstream"->"set-upstream",
+			"SetUpstreamTo"->"set-upstream-to",
+			"UnsetUpstream"->"unset-upstream",
+			"EditDescription"->"edit-description",
+			"Contains"->"contains",
+			"NoContains"->"no-contains",
+			"Merged"->"merged",
+			"NoMerged"->"no-merged",
+			"Sort"->"sort",
+			"PointsAt"->"points-at",
+			"Format"->"format"
+			}
 		]
 
 
@@ -1308,7 +1729,9 @@ GitBranch[
 (*ShowBranch*)
 
 
-$GitParamMap["ShowBranch"]=
+GitRegister[
+	GitShowBranch,
+	"show-branch",
 	{
 		"Remotes"->"remotes",
 		"All"->"all",
@@ -1326,23 +1749,8 @@ $GitParamMap["ShowBranch"]=
 		"Reflog"->"reflog",
 		"Color"->"color",
 		"NoColor"->"no-color"
-		};
-Options[GitShowBranch]=
-	Thread[Keys[$GitParamMap["ShowBranch"]]->Automatic];
-GitShowBranch[
-	dir:_String?DirectoryQ|Automatic:Automatic,
-	args___String,
-	o___?OptionQ
-	]:=
-	GitRun[dir,"show-branch",
-		Sequence@@
-			GitPrepParams[
-				GitShowBranch,
-				{o}, 
-				$GitParamMap["ShowBranch"]
-				],
-		args
-		]
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1403,7 +1811,7 @@ GitHelpPart[cmd_, delim1_, delim2_]:=
 	With[{h=GitHelp[cmd]},
 		Replace[
 			StringCases[h, 
-				Shortest[delim1~~t:__~~delim2]:>
+				Shortest[delim1~~t__~~delim2]:>
 				With[{ws=
 						MinimalBy[
 							StringCases[t, (StartOfString|StartOfLine)~~Except["\n", Whitespace]], 
@@ -1415,7 +1823,7 @@ GitHelpPart[cmd_, delim1_, delim2_]:=
 					]
 				],
 			{
-				{s_}:>
+				l:{s_, ___}:>
 					StringTrim@s,
 				_->None
 				}
@@ -1454,10 +1862,11 @@ GitHelpOptions[cmd_String]:=
 
 
 GitHelpFlags[cmd_String]:=
-	StringCases[
-		GitHelpOptions[cmd],
-		Shortest[StartOfLine~~"-"~~__~~EndOfLine]
-		]
+	StringTrim@
+		StringCases[
+			GitHelpOptions[cmd],
+			Shortest[StartOfLine~~(Whitespace|"")~~"-"~~__~~EndOfLine]
+			]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1490,20 +1899,24 @@ GitHelpFlagMap[cmd_]:=
 							],
 						UpTo[1]
 						]&,
-					StringSplit[GitHelpFlags[cmd],  ","]
+					StringSplit[GitHelpFlags[cmd], ","]
 					]
 				],
 			"["|" "|"="
 			]//Map[First],
 		"-"..|Whitespace
-		]//Map[
-		StringReplace[ToUpperCase[StringTake[#, 1]]<>StringDrop[#, 1],
-			"-"~~s_:>ToUpperCase[s]
-			]->#&
-		]
+		]//DeleteDuplicates//
+			Select[
+				StringStartsQ[#, LetterCharacter]&&
+				StringEndsQ[#, LetterCharacter]&
+				]//Map[
+					StringReplace[ToUpperCase[StringTake[#, 1]]<>StringDrop[#, 1],
+						"-"~~s_:>ToUpperCase[s]
+						]->#&
+					]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Git*)
 
 
