@@ -33,6 +33,9 @@
 BeginPackage["FEInfoExtractor`"];
 
 
+ClearAll["FEInfoExtractor`*", "FEInfoExtractor`*`*"];
+
+
 (*Package Declarations*)
 AutoFrontEndInfo::usage=
 	"AutoFrontEndInfo[function, ops] generates the front-end integration info
@@ -46,10 +49,7 @@ AutoFrontEndInfoExport::usage=
 (*Private Declarations*)
 
 
-AppendTo[$ContextPath,$Context<>"Package`"];
-
-
-Begin["`Package`"];
+BeginPackage["`Package`"];
 
 
 (*Package Declarations*)
@@ -94,7 +94,7 @@ setArgCount::usage="setArgCount[f, minA, maxA, noo]";
 generateAutoFrontEndInfo::usage="generateAutoFrontEndInfo[f, ops]";
 
 
-End[];
+EndPackage[];
 
 
 Begin["`Private`"];
@@ -308,10 +308,18 @@ With[{
 $pkgCont = $Context;
 
 
-generateSymbolUsage[f_, 
-	defaultMessages : {(_Rule | _RuleDelayed) ...} : {}] :=
+$defaultUsageTemplate = "`` has no usage message";
+
+
+generateSymbolUsage[
+	f_Symbol, 
+	defaultMessages : {(_Rule | _RuleDelayed) ...} : {},
+	uTemp:_String|Automatic:Automatic
+	] :=
 With[
 	{
+		ut=
+			Replace[uTemp, Automatic->$defaultUsageTemplate], 
 		uml =
 		Replace[defaultMessages,
 			{
@@ -333,30 +341,36 @@ With[
 				{
 					(* original usage message *)
 					uu =
-					StringTrim@
-					Replace[HoldPattern[s[a]] /. uml,
-						Except[_String] :>
-						Replace[Quiet@s::usage, Except[_String] -> ""]
-						],
+						StringTrim@
+						Replace[HoldPattern[s[a]] /. uml,
+							Except[_String] :>
+							Replace[Quiet@s::usage, Except[_String] -> ""]
+							],
 					sn = ToString[Unevaluated@s],
 					(* head for the usage message I'm going to add*)
-					meuu = StringReplace[ToString[Unevaluated[s[a]], InputForm], $pkgCont -> ""]
+					meuu = 
+						StringReplace[ToString[Unevaluated[s[a]], InputForm], 
+							$pkgCont -> ""]
 					},
-				If[!StringContainsQ[uu, meuu],
+				Which[!StringContainsQ[uu, StringSplit[meuu, "["][[1]]<>"[" ],
 					Which[
 						uu == "",
-						meuu <> " has no usage message", 
+							TemplateApply[ut, meuu], 
 						! StringStartsQ[uu, sn],
-						meuu <> " "<>uu,
+							meuu<>" "<>uu,
 						True,
-						{uu, meuu <> " has no usage message"}
+							{uu, TemplateApply[ut, meuu]}
 						],
-					StringCases[uu, 
-						(StartOfLine | StartOfString) ~~ 
-						Except["\n"]... ~~ meuu ~~
-						Except["\n"]... ~~ EndOfLine,
-						1
-						][[1]]
+					!StringContainsQ[uu, meuu],
+						TemplateApply[ut, meuu],
+					True,
+						StringCases[
+							uu, 
+							(StartOfLine | StartOfString) ~~ 
+								Except["\n"]... ~~ meuu ~~
+								Except["\n"]... ~~ EndOfLine,
+							1
+							][[1]]
 					]
 				],
 			_ -> Nothing
@@ -652,11 +666,11 @@ If[$Notebooks &&
 	
 	Internal`CachedSystemInformation["FrontEnd", "VersionNumber"] > 
 	10.0,
-	Scan[
-		FE`Evaluate[FEPrivate`AddSpecialArgCompletion[#]] &,
-		pats
-		];
-	pats,
+	FrontEndExecute@FE`Evaluate@
+		Map[
+			FEPrivate`AddSpecialArgCompletion[#]&,
+			pats
+			],
 	$Failed
 	];
 addAutocompletions[pat : (_String -> {$autoCompletionFormats ..})] :=
