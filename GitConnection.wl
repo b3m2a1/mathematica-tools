@@ -701,6 +701,21 @@ GitRegisterFunction[GitAdd, "add",
 
 
 (* ::Subsubsection::Closed:: *)
+(*GitMove*)
+
+
+GitRegisterFunction[GitMove, 
+	"mv",
+	{
+		"Force"->"force",
+		"IgnoreErrors"->"k",
+		"DryRun"->"dry-run",
+		"Verbose"->"verbose"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
 (*GitRemove*)
 
 
@@ -987,6 +1002,579 @@ GitConfig[setting:_String:"--global",opts__Rule]:=
 				],
 			"\n"
 			];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitDiff*)
+
+
+GitRegisterFunction[GitDiff, 
+	"diff",
+	{
+		"Patch"->"patch",
+		"NoPatch"->"no-patch",
+		"Unified"->"unified",
+		"Raw"->"raw",
+		"PatchWithRaw"->"patch-with-raw",
+		"NoIndentHeuristic"->"no-indent-heuristic",
+		"Minimal"->"minimal",
+		"Patience"->"patience",
+		"Histogram"->"histogram",
+		"DiffAlgorithm"->"diff-algorithm",
+		"Stat"->"stat",
+		"Numstat"->"numstat",
+		"Shortstat"->"shortstat",
+		"Dirstat"->"dirstat",
+		"Summary"->"summary",
+		"PatchWithStat"->"patch-with-stat",
+		"NULTerminated"->"z",
+		"NameOnly"->"name-only",
+		"NameStatus"->"name-status",
+		"Submodule"->"submodule",
+		"Color"->"color",
+		"NoColor"->"no-color",
+		"WordDiff"->"word-diff",
+		"WordDiffRegex"->"word-diff-regex",
+		"ColorWords"->"color-words",
+		"NoRenames"->"no-renames",
+		"Check"->"check",
+		"WsErrorHighlight"->"ws-error-highlight",
+		"FullIndex"->"full-index",
+		"Binary"->"binary",
+		"Abbrev"->"abbrev",
+		"BreakRewrites"->"break-rewrites",
+		"FindRenames"->"find-renames",
+		"FindCopies"->"find-copies",
+		"FindCopiesHarder"->"find-copies-harder",
+		"IrreversibleDelete"->"irreversible-delete",
+		"DiffFilter"->"diff-filter",
+		"PickaxeAll"->"pickaxe-all",
+		"PickaxeRegex"->"pickaxe-regex",
+		"Recursive"->"R",
+		"Relative"->"relative",
+		"Text"->"text",
+		"IgnoreSpaceAtEol"->"ignore-space-at-eol",
+		"IgnoreSpaceChange"->"ignore-space-change",
+		"IgnoreAllSpace"->"ignore-all-space",
+		"IgnoreBlankLines"->"ignore-blank-lines",
+		"InterHunkContext"->"inter-hunk-context",
+		"FunctionContext"->"function-context",
+		"ExitCode"->"exit-code",
+		"Quiet"->"quiet",
+		"ExtDiff"->"ext-diff",
+		"NoExtDiff"->"no-ext-diff",
+		"NoTextconv"->"no-textconv",
+		"IgnoreSubmodules"->"ignore-submodules",
+		"SrcPrefix"->"src-prefix",
+		"DstPrefix"->"dst-prefix",
+		"NoPrefix"->"no-prefix",
+		"LinePrefix"->"line-prefix",
+		"ItaInvisibleInIndex"->"ita-invisible-in-index"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitMerge*)
+
+
+GitRegisterFunction[
+	GitMerge, 
+	"merge",
+	{
+		"NoCommit"->"no-commit",
+		"NoEdit"->"no-edit",
+		"FastForward"->"ff",
+		"NoFastForward"->"no-ff",
+		"FastForwardOnly"->"ff-only",
+		"Log"->"log",
+		"NoStat"->"no-stat",
+		"NoSquash"->"no-squash",
+		"Strategy"->"strategy",
+		"StrategyOption"->"strategy-option",
+		"NoVerifySignatures"->"no-verify-signatures",
+		"NoSummary"->"no-summary",
+		"Quiet"->"quiet",
+		"Verbose"->"verbose",
+		"NoProgress"->"no-progress",
+		"AllowUnrelatedHistories"->"allow-unrelated-histories",
+		"GpgSign"->"gpg-sign",
+		"Message"->"m",
+		"RerereAutoupdate"->"rerere-autoupdate",
+		"NoRerereAutoupdate"->"no-rerere-autoupdate",
+		"Abort"->"abort",
+		"Continue"->"continue"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitMergeTool*)
+
+
+GitRegisterFunction[
+	GitMergeTool, 
+	"mergetool",
+	{
+		"Tool"->"tool",
+		"ToolHelp"->"tool-help",
+		"NoPrompt"->"no-prompt",
+		"Prompt"->"prompt"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitTag*)
+
+
+GitRegisterFunction[
+	GitTag, 
+	"tag",
+	{
+		"Annotate"->"annotate",
+		"Sign"->"sign",
+		"LocalUser"->"local-user",
+		"Force"->"force",
+		"Delete"->"delete",
+		"Verify"->"verify",
+		"List"->"list",
+		"Sort"->"sort",
+		"IgnoreCase"->"ignore-case",
+		"Column"->"column",
+		"Contains"->"contains",
+		"NoContains"->"no-contains",
+		"Merged"->"merged",
+		"NoMerged"->"no-merged",
+		"PointsAt"->"points-at",
+		"Message"->"message",
+		"File"->"file",
+		"Cleanup"->"cleanup",
+		"CreateReflog"->"create-reflog"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitWorkTree*)
+
+
+GitRegisterFunction[
+	GitWorkTree, 
+	"worktree",
+	{
+		"Force"->"force",
+		"Branch"->"b",
+		"Detach"->"detach",
+		"Checkout"->"checkout",
+		"NoCheckout"->"no-checkout",
+		"Lock"->"lock",
+		"DryRun"->"dry-run",
+		"Porcelain"->"porcelain",
+		"Verbose"->"verbose",
+		"Expire"->"expire",
+		"Reason"->"reason"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitSubmodule*)
+
+
+GitRegisterFunction[
+	GitSubmodule, 
+	"submodule",
+	{
+		"Quiet"->"quiet",
+		"All"->"all",
+		"Branch"->"branch",
+		"Force"->"force",
+		"Cached"->"cached",
+		"Files"->"files",
+		"SummaryLimit"->"summary-limit",
+		"Remote"->"remote",
+		"NoFetch"->"no-fetch",
+		"Checkout"->"checkout",
+		"Merge"->"merge",
+		"Rebase"->"rebase",
+		"Init"->"init",
+		"Name"->"name",
+		"Reference"->"reference",
+		"Recursive"->"recursive",
+		"Depth"->"depth",
+		"RecommendShallow"->"recommend-shallow",
+		"NoRecommendShallow"->"no-recommend-shallow",
+		"Jobs"->"jobs"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitShow*)
+
+
+GitRegisterFunction[
+	GitShow, 
+	"show",
+	{
+		"Pretty"->"pretty",
+		"AbbrevCommit"->"abbrev-commit",
+		"NoAbbrevCommit"->"no-abbrev-commit",
+		"Oneline"->"oneline",
+		"Encoding"->"encoding",
+		"ExpandTabs"->"expand-tabs",
+		"Notes"->"notes",
+		"NoNotes"->"no-notes",
+		"ShowNotes"->"show-notes",
+		"ShowSignature"->"show-signature"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitShortLog*)
+
+
+GitRegisterFunction[
+	GitShortLog, 
+	"shortlog",
+	{
+		"Numbered"->"numbered",
+		"Summary"->"summary",
+		"Email"->"email",
+		"Format"->"format",
+		"Committer"->"committer",
+		"Width"->"w"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitDescribe*)
+
+
+GitRegisterFunction[
+	GitDescribe, 
+	"Describe",
+	{
+		"Broken"->"broken",
+		"All"->"all",
+		"Tags"->"tags",
+		"Contains"->"contains",
+		"Abbrev"->"abbrev",
+		"Candidates"->"candidates",
+		"ExactMatch"->"exact-match",
+		"Debug"->"debug",
+		"Long"->"long",
+		"Match"->"match",
+		"Exclude"->"exclude",
+		"Always"->"always",
+		"FirstParent"->"first-parent"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitApply*)
+
+
+GitRegisterFunction[
+	GitApply,
+	{
+		"Stat"->"stat",
+		"Numstat"->"numstat",
+		"Summary"->"summary",
+		"Check"->"check",
+		"Index"->"index",
+		"Cached"->"cached",
+		"BuildFakeAncestor"->"build-fake-ancestor",
+		"Reverse"->"reverse",
+		"Reject"->"reject",
+		"Z"->"z",
+		"UnidiffZero"->"unidiff-zero",
+		"Apply"->"apply",
+		"NoAdd"->"no-add",
+		"AllowBinaryReplacement"->"allow-binary-replacement",
+		"Exclude"->"exclude",
+		"Include"->"include",
+		"IgnoreSpaceChange"->"ignore-space-change",
+		"Whitespace"->"whitespace",
+		"InaccurateEof"->"inaccurate-eof",
+		"Verbose"->"verbose",
+		"Recount"->"recount",
+		"Directory"->"directory",
+		"UnsafePaths"->"unsafe-paths"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitRebase*)
+
+
+GitRegisterFunction[
+	GitRebase,
+	{
+		"Onto"->"onto",
+		"Continue"->"continue",
+		"Abort"->"abort",
+		"Quit"->"quit",
+		"KeepEmpty"->"keep-empty",
+		"Skip"->"skip",
+		"EditTodo"->"edit-todo",
+		"Merge"->"merge",
+		"Strategy"->"strategy",
+		"StrategyOption"->"strategy-option",
+		"GpgSign"->"gpg-sign",
+		"Quiet"->"quiet",
+		"Verbose"->"verbose",
+		"Stat"->"stat",
+		"NoStat"->"no-stat",
+		"NoVerify"->"no-verify",
+		"Verify"->"verify",
+		"ForceRebase"->"force-rebase",
+		"NoForkPoint"->"no-fork-point",
+		"Whitespace"->"whitespace",
+		"CommitterDateIsAuthorDate"->"committer-date-is-author-date",
+		"Interactive"->"interactive",
+		"Signoff"->"signoff",
+		"PreserveMerges"->"preserve-merges",
+		"Exec"->"exec",
+		"Root"->"root",
+		"NoAutosquash"->"no-autosquash",
+		"NoAutostash"->"no-autostash",
+		"NoFf"->"no-ff"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitRevert*)
+
+
+GitRegisterFunction[
+	GitRevert,
+	{
+		"Edit"->"edit",
+		"Mainline"->"mainline",
+		"NoEdit"->"no-edit",
+		"NoCommit"->"no-commit",
+		"GpgSign"->"gpg-sign",
+		"Signoff"->"signoff",
+		"Strategy"->"strategy",
+		"StrategyOption"->"strategy-option"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitBisect*)
+
+
+GitRegisterFunction[
+	GitBisect,
+	{
+		"NoCheckout"->"no-checkout"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitBlame*)
+
+
+GitRegisterFunction[
+	GitBlame,
+	{
+		"ShowBlank"->"b",
+		"Root"->"root",
+		"ShowStats"->"show-stats",
+		"Lines"->"L",
+		"Log"->"l",
+		"ShowTimestamps"->"t",
+		"RevisionsFile"->"S",
+		"Reverse"->"reverse",
+		"Porcelain"->"porcelain",
+		"LinePorcelain"->"line-porcelain",
+		"Incremental"->"incremental",
+		"Encoding"->"encoding",
+		"Contents"->"contents",
+		"Date"->"date",
+		"Progress"->"progress",
+		"NoProgress"->"no-progress",
+		"DetectMoves"->"M",
+		"DetectExternalMoves"->"C",
+		"Help"->"h",
+		"AnnotateOutput"->"c",
+		"ScoreDebug"->"score-debug",
+		"ShowName"->"show-name",
+		"ShowNumber"->"show-number",
+		"SuppressTimestamp"->"s",
+		"ShowEmail"->"show-email",
+		"IgnoreWhitespace"->"w",
+		"Abbrev"->"abbrev",
+		"NoIndentHeuristic"->"no-indent-heuristic"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitGrep*)
+
+
+GitRegisterFunction[
+	GitGrep,
+	{
+		"Cached"->"cached",
+		"NoIndex"->"no-index",
+		"Untracked"->"untracked",
+		"NoExcludeStandard"->"no-exclude-standard",
+		"ExcludeStandard"->"exclude-standard",
+		"RecurseSubmodules"->"recurse-submodules",
+		"ParentBasename"->"parent-basename",
+		"Text"->"text",
+		"Textconv"->"textconv",
+		"NoTextconv"->"no-textconv",
+		"IgnoreCase"->"ignore-case",
+		"IgnoreBinary"->"I",
+		"MaxDepth"->"max-depth",
+		"WordRegexp"->"word-regexp",
+		"InvertMatch"->"invert-match",
+		"HideFilename"->"h",
+		"FullName"->"full-name",
+		"BasicRegexp"->"basic-regexp",
+		"ExtendedRegexp"->"extended-regexp",
+		"PerlRegexp"->"perl-regexp",
+		"FixedStrings"->"fixed-strings",
+		"LineNumber"->"line-number",
+		"FilesWithoutMatch"->"files-without-match",
+		"OpenFilesInPager"->"open-files-in-pager",
+		"Null"->"null",
+		"Count"->"count",
+		"Color"->"color",
+		"NoColor"->"no-color",
+		"Break"->"break",
+		"Heading"->"heading",
+		"ShowFunction"->"show-function",
+		"Context"->"context",
+		"AfterContext"->"after-context",
+		"BeforeContext"->"before-context",
+		"FunctionContext"->"function-context",
+		"Threads"->"threads",
+		"File"->"f",
+		"Pattern"->"e",
+		"And"->"and",
+		"AllMatch"->"all-match",
+		"Quiet"->"quiet"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitInstaWeb*)
+
+
+GitRegisterFunction[
+	GitInstaWeb,
+	{
+		"Local"->"local",
+		"HTTPDaemon"->"httpd",
+		"ModulePath"->"module-path",
+		"Port"->"port",
+		"Browser"->"browser"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitArchive*)
+
+
+GitRegisterFunction[
+	GitArchive,
+	{
+		"Format"->"format",
+		"List"->"list",
+		"Verbose"->"verbose",
+		"Prefix"->"prefix",
+		"Output"->"output",
+		"WorktreeAttributes"->"worktree-attributes",
+		"Remote"->"remote",
+		"Exec"->"exec"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitSVN*)
+
+
+GitRegisterFunction[
+	GitSVN,
+	{
+		"Shared"->"shared",
+		"Template"->"template",
+		"Revision"->"revision",
+		"StandardIn"->"stdin",
+		"Pretty"->"pretty",
+		"RemoveDirector"->"rmdir",
+		"Edit"->"edit",
+		"FindCopiesHarder"->"find-copies-harder",
+		"AuthorsFile"->"authors-file",
+		"AuthorsProg"->"authors-prog",
+		"Quiet"->"quiet",
+		"Strategy"->"strategy",
+		"DryRun"->"dry-run",
+		"UseLogAuthor"->"use-log-author",
+		"AddAuthorFrom"->"add-author-from"
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitBundle*)
+
+
+GitRegisterFunction[
+	GitBundle,
+	{
+		}
+	];
+
+
+(* ::Subsubsection::Closed:: *)
+(*GitDaemon*)
+
+
+GitRegisterFunction[
+	GitDaemon,
+	{
+		"StrictPaths"->"strict-paths",
+		"BasePath"->"base-path",
+		"BasePathRelaxed"->"base-path-relaxed",
+		"InterpolatedPath"->"interpolated-path",
+		"ExportAll"->"export-all",
+		"Inetd"->"inetd",
+		"Listen"->"listen",
+		"Port"->"port",
+		"InitTimeout"->"init-timeout",
+		"Timeout"->"timeout",
+		"MaxConnections"->"max-connections",
+		"Syslog"->"syslog",
+		"UserPath"->"user-path",
+		"Verbose"->"verbose",
+		"Reuseaddr"->"reuseaddr",
+		"Detach"->"detach",
+		"PidFile"->"pid-file",
+		"Group"->"group",
+		"Disable"->"disable",
+		"ForbidOverride"->"forbid-override",
+		"InformativeErrors"->"informative-errors",
+		"NoInformativeErrors"->"no-informative-errors",
+		"AccessHook"->"access-hook"
+		}
+	];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1916,11 +2504,12 @@ GitHelpFlagMap[cmd_]:=
 					]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Git*)
 
 
 $GitActions=
+	KeySort@
 	<|
 		"Repo"->
 			GitRepo,
@@ -1938,6 +2527,8 @@ $GitActions=
 			GitAddGitExclude,
 		"Add"->
 			GitAdd,
+		"Move"->
+			GitMove,
 		"Remove"->
 			GitRemove,
 		"RemoveCached"->
@@ -2008,6 +2599,46 @@ $GitActions=
 			GitFilterTree,
 		"Config"->
 			GitConfig,
+		"Diff"->
+			GitDiff,
+		"Merge"->
+			GitMerge,
+		"MergeTool"->
+			GitMergeTool,
+		"Tag"->
+			GitTag,
+		"WorkTree"->
+			GitWorkTree,
+		"Submodule"->
+			GitSubmodule,
+		"Show"->
+			GitShow,
+		"ShortLog"->
+			GitShortLog,
+		"Describe"->
+			GitDescribe,
+		"Apply"->
+			GitApply,
+		"Rebse"->
+			GitRebase,
+		"Revert"->
+			GitRevert,
+		"Bisect"->
+			GitBisect,
+		"Blame"->
+			GitBlame,
+		"Grep"->
+			GitGrep,
+		"InstaWeb"->
+			GitInstaWeb,
+		"Archive"->
+			GitArchive,
+		"SVN"->
+			GitSVN,
+		"Bundle"->
+			GitBundle,
+		"Daemon"->
+			GitDaemon,
 		"Help"->
 			GitHelp,
 		"HelpSynopsis"->
