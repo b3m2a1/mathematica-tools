@@ -7,10 +7,14 @@
 BeginPackage["StyleSheetEdit`"]
 
 
+StyleSheetCells::usage=
+	"Gets the cells in the current stylesheet that match a given style.
+Styles can be specified by a String, Symbol, or StyleData expression or a list thereof";
 StyleSheetEdit::usage=
 	"Applies the options given to the given cell styles in the given notebook";
 StyleSheetNew::usage=
 	"Creates a new style cell with a given name and optional parent style and options";
+StyleSheetDelete::usage="Deletes all matching style cells";
 
 
 (* ::Subsection:: *)
@@ -43,24 +47,10 @@ StyleSheetTemplate::usage=
 	"Creates a stylesheet editing template
 -Create in the current document by default
 -Opens a new one when passed Notebook[<ssname>] as the first argument";
-StyleSheetDelete::usage="Deletes all matching style cells";
 StyleSheetUpdate::usage="StyleSheetDelete + StyleSheetNew";
 
 
 StyleSheetDefaultStyles::usage="Sets a default styling cascade";
-
-
-(* ::Subsubsection::Closed:: *)
-(*Cells*)
-
-
-StyleSheetCells::usage=
-	"Gets the cells in the current stylesheet that match a given style.
-Styles can be specified by a String, Symbol, or StyleData expression or a list thereof";
-
-
-(*StylesheetNotebook::usage=
-	"Finds the stylesheet notebook expression the given notebook depends on";*)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -105,7 +95,7 @@ StyleSheetEditTaggingRules::usage=
 	"Edits the TaggingRules";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Style Attributes*)
 
 
