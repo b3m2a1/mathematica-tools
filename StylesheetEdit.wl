@@ -1708,7 +1708,8 @@ PackageAddAutocompletions@
 		{
 			"StyleSheetEdit",
 			"StyleSheetNew",
-			"StyleSheetCells"
+			"StyleSheetCells",
+			"StyleSheetDelete"
 			}
 		]
 
