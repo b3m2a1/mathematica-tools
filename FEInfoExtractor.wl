@@ -864,8 +864,8 @@ mergeArgPats[pats_, returnNum : False | True : False] :=
 	patListing=
 	MapThread[
 		Function[
-			patMins = MinimalBy[{##},  If[ListQ@#, 1, #[[2, 1]]] &];
-			patMaxes = MaximalBy[{##}, If[ListQ@#, 1, #[[2, 2]]] &];
+			patMins = MinimalBy[{##},  If[ListQ@#[[2]], 1, #[[2, 1]]] &];
+			patMaxes = MaximalBy[{##}, If[ListQ@#[[2]], 1, #[[2, 2]]] &];
 			patChoices = Intersection[patMins, patMaxes];
 			patListPatsNums = Length/@Cases[patChoices, {___, _List, ___}];
 			patChoices= 
