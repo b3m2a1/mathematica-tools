@@ -17,7 +17,7 @@ OpsFind::usage=
 MsgFind::usage="Finds all the messages for a given object and MessageName pattern";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Package Scope*)
 
 
@@ -45,6 +45,22 @@ EndPackage[]
 
 
 Begin["`Private`"];
+
+
+(* ::Subsubsection::Closed:: *)
+(*packageAddAutocompletions*)
+
+
+(* ::Text:: *)
+(*Lazy dupe of the way my packages implement this*)
+
+
+packageAddAutocompletions[s_, l_]:=
+	If[$Notebooks&&
+		Internal`CachedSystemInformation["FrontEnd","VersionNumber"]>10.0,
+		FE`Evaluate[FEPrivate`AddSpecialArgCompletion[s->l]],
+		$Failed
+		];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -358,7 +374,7 @@ SymbolDetermineType[{},___]:=
 SymbolDetermineType~SetAttributes~HoldFirst;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*DocFind*)
 
 
@@ -572,11 +588,13 @@ $DocFindInterestingContexts=
 			};
 
 
-PackageAddAutocompletions[
-	"DocFind",
+packageAddAutocompletions[
 	{
-		None,
-		$DocFindInterestingContexts
+		"DocFind"->
+			{
+				0,
+				$DocFindInterestingContexts
+				}
 		}
 	]
 
