@@ -55,62 +55,57 @@ Cell[CellGroupData[{
 Cell[StyleData["LinkedImage"],
  TemplateBoxOptions->{DisplayFunction->(TooltipBox[
    DynamicBox[
-    Refresh[If[
-       Not[
-        AssociationQ[LinkedImage`Private`$LinkedImages]], 
-       LinkedImage`Private`$LinkedImages = Association[]]; ToBoxes[
-       EventHandler[
-        Lookup[
-        LinkedImage`Private`$LinkedImages, #, 
-         LinkedImage`Private`$LinkedImages[#] = Quiet[
-           Check[
-            Import[#], 
-            Framed[
-             Style[#, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5, 
-             Background -> GrayLevel[0.95], FrameStyle -> Gray]]]], {
-        "MouseClicked" :> Replace[
-           DialogInput[{$CellContext`alt = #2, $CellContext`link = #}, 
-            Grid[{{"Image URL:", 
-               EventHandler[
-                InputField[
-                 Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
-                "ReturnKeyDown" :> If[
-                  And[
-                   StringQ[$CellContext`alt], 
-                   
-                   AllTrue[{$CellContext`alt, $CellContext`link}, 
-                    StringLength[#] > 0& ]], 
-                  DialogReturn[{$CellContext`link, $CellContext`alt}], 
-                  FrontEndExecute[
-                   FrontEnd`MoveCursorToInputField[
-                    EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
-               EventHandler[
-                InputField[
-                 Dynamic[$CellContext`alt], String, BoxID -> "alt-text"], 
-                "ReturnKeyDown" :> If[
-                  And[
-                   StringQ[$CellContext`link], 
-                   
-                   AllTrue[{$CellContext`alt, $CellContext`link}, 
-                    StringLength[#] > 0& ]], 
-                  DialogReturn[{$CellContext`link, $CellContext`alt}], 
-                  FrontEndExecute[
-                   FrontEnd`MoveCursorToInputField[
-                    EvaluationNotebook[], "image-url"]]]]}, {
-               Spacer[{10, 10}]}}, Alignment -> Left, Spacings -> {1, 1}], 
-            WindowSize -> {300, All}, WindowMargins -> ({{
-               Part[#, 1], Automatic}, {Automatic, 
-               Part[#, 2]}}& )[
-              MousePosition[]]], {
-             Pattern[$CellContext`link, 
-              Blank[String]], 
-             Pattern[$CellContext`alt, 
-              Blank[String]]} :> NotebookWrite[
-             Nest[ParentBox, 
-              EvaluationBox[], 3], 
-             
-             TemplateBox[{$CellContext`link, $CellContext`alt}, 
-              "LinkedImage"]]], Method -> "Queued"}]], None], 
+    Refresh[
+     ToBoxes[
+      EventHandler[
+       Quiet[
+        Check[
+         Import[#], 
+         Framed[
+          Style[#, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5, 
+          Background -> GrayLevel[0.95], FrameStyle -> Gray]]], {
+       "MouseClicked" :> Replace[
+          DialogInput[{$CellContext`alt = #2, $CellContext`link = #}, 
+           Grid[{{"Image URL:", 
+              EventHandler[
+               InputField[
+                Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
+               "ReturnKeyDown" :> If[
+                 And[
+                  StringQ[$CellContext`alt], 
+                  
+                  AllTrue[{$CellContext`alt, $CellContext`link}, 
+                   StringLength[#] > 0& ]], 
+                 DialogReturn[{$CellContext`link, $CellContext`alt}], 
+                 FrontEndExecute[
+                  FrontEnd`MoveCursorToInputField[
+                   EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
+              EventHandler[
+               InputField[
+                Dynamic[$CellContext`alt], String, BoxID -> "alt-text"], 
+               "ReturnKeyDown" :> If[
+                 And[
+                  StringQ[$CellContext`link], 
+                  
+                  AllTrue[{$CellContext`alt, $CellContext`link}, 
+                   StringLength[#] > 0& ]], 
+                 DialogReturn[{$CellContext`link, $CellContext`alt}], 
+                 FrontEndExecute[
+                  FrontEnd`MoveCursorToInputField[
+                   EvaluationNotebook[], "image-url"]]]]}, {
+              Spacer[{10, 10}]}}, Alignment -> Left, Spacings -> {1, 1}], 
+           WindowSize -> {300, All}, WindowMargins -> ({{
+              Part[#, 1], Automatic}, {Automatic, 
+              Part[#, 2]}}& )[
+             MousePosition[]]], {
+            Pattern[$CellContext`link, 
+             Blank[String]], 
+            Pattern[$CellContext`alt, 
+             Blank[String]]} :> NotebookWrite[
+            Nest[ParentBox, 
+             EvaluationBox[], 3], 
+            TemplateBox[{$CellContext`link, $CellContext`alt}, 
+             "LinkedImage"]]], Method -> "Queued"}]], None], 
     TrackedSymbols :> {}], #2]& ),
  Editable->False,
  InterpretationFunction->(RowBox[{"LinkedImage", "[", 
@@ -137,27 +132,11 @@ Cell[BoxData[{
             RowBox[{
              RowBox[{"Refresh", "[", "\[IndentingNewLine]", 
               RowBox[{
-               RowBox[{
-                RowBox[{"If", "[", 
+               RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
+                RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
                  RowBox[{
-                  RowBox[{"!", 
-                   RowBox[{"AssociationQ", "[", "$LinkedImages", "]"}]}], ",",
-                   "\[IndentingNewLine]", 
-                  RowBox[{"$LinkedImages", "=", 
-                   RowBox[{"<|", "|>"}]}]}], "\[IndentingNewLine]", "]"}], 
-                ";", "\[IndentingNewLine]", 
-                RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
-                 RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
-                  RowBox[{
-                   RowBox[{"Lookup", "[", "\[IndentingNewLine]", 
-                    RowBox[{
-                    "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#", 
-                    ",", "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"$LinkedImages", "[", "#", "]"}], "=", 
-                    "\[IndentingNewLine]", 
-                    RowBox[{"Quiet", "[", "\[IndentingNewLine]", 
-                    RowBox[{"Check", "[", 
+                  RowBox[{"Quiet", "[", "\[IndentingNewLine]", 
+                   RowBox[{"Check", "[", 
                     RowBox[{
                     RowBox[{"Import", "[", "#", "]"}], ",", 
                     "\[IndentingNewLine]", " ", 
@@ -172,11 +151,10 @@ Cell[BoxData[{
                     RowBox[{"Background", "\[Rule]", 
                     RowBox[{"GrayLevel", "[", ".95", "]"}]}], ",", " ", 
                     RowBox[{"FrameStyle", "\[Rule]", "Gray"}]}], "]"}]}], 
-                    "]"}], "\[IndentingNewLine]", "]"}]}]}], 
-                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
-                   
-                   RowBox[{"{", "\[IndentingNewLine]", 
-                    RowBox[{
+                    "]"}], "\[IndentingNewLine]", "]"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"{", "\[IndentingNewLine]", 
+                   RowBox[{
                     RowBox[{
                     "\"\<MouseClicked\>\"", "\[RuleDelayed]", 
                     "\[IndentingNewLine]", 
@@ -234,8 +212,8 @@ Cell[BoxData[{
                     "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "}"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"{", 
-                    RowBox[{"\"\<Alt Text:\>\"", ",", " ", 
-                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<Alt Text:\>\"", ",", " ", "\[IndentingNewLine]", 
                     RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"InputField", "[", 
@@ -331,8 +309,8 @@ Cell[BoxData[{
                     "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
                     "]"}]}], ",", "\[IndentingNewLine]", 
                     RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}]}], 
-                    "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
-                  "]"}]}]}], ",", "\[IndentingNewLine]", "None"}], 
+                   "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+                 "]"}]}], ",", "\[IndentingNewLine]", "None"}], 
               "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
              RowBox[{"TrackedSymbols", "\[RuleDelayed]", 
               RowBox[{"{", "}"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
@@ -351,7 +329,7 @@ Cell[BoxData[{
    "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"End", "[", "]"}], ";"}]}], "Input",
- CellLabel->"In[466]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+ CellLabel->"In[491]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 
@@ -475,15 +453,6 @@ Cell[BoxData[{
            RowBox[{"DynamicBox", "[", "\[IndentingNewLine]", 
             RowBox[{
              RowBox[{"Refresh", "[", "\[IndentingNewLine]", 
-              RowBox[{"(*", 
-               RowBox[{
-                RowBox[{"If", "[", 
-                 RowBox[{
-                  RowBox[{"!", 
-                   RowBox[{"AssociationQ", "[", "$LinkedImages", "]"}]}], ",", 
-                  RowBox[{"$LinkedImages", "=", 
-                   RowBox[{"<|", "|>"}]}]}], "]"}], ";"}], "*)"}], 
-              "\[IndentingNewLine]", 
               RowBox[{
                RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
                 RowBox[{"Annotation", "[", "\[IndentingNewLine]", 
@@ -491,17 +460,9 @@ Cell[BoxData[{
                   RowBox[{"MouseAppearance", "[", "\[IndentingNewLine]", 
                    RowBox[{
                     RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
-                    RowBox[{"(*", 
-                    RowBox[{"Lookup", "[", "\[IndentingNewLine]", 
                     RowBox[{
-                    "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#2", 
-                    ",", "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"$LinkedImages", "[", "#2", "]"}], "="}]}]}], 
-                    "*)"}], "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"Quiet", "[", 
-                    RowBox[{"Check", "[", 
+                    RowBox[{"Quiet", "[", "\[IndentingNewLine]", 
+                    RowBox[{"Check", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"Import", "[", "#2", "]"}], ",", 
                     "\[IndentingNewLine]", " ", 
@@ -516,8 +477,8 @@ Cell[BoxData[{
                     RowBox[{"Background", "\[Rule]", 
                     RowBox[{"GrayLevel", "[", ".95", "]"}]}], ",", " ", 
                     RowBox[{"FrameStyle", "\[Rule]", "Gray"}]}], "]"}]}], 
-                    "]"}], "]"}], "\[IndentingNewLine]", 
-                    RowBox[{"(*", "]", "*)"}], ",", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{
@@ -755,8 +716,8 @@ Cell[BoxData[{
           "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
    "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"End", "[", "]"}], ";"}]}], "Input",
- CellLabel->"In[472]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+  RowBox[{"End", "[", "]"}], 
+  ";"}]}], "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 },
