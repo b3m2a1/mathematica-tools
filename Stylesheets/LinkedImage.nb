@@ -1,36 +1,52 @@
-(* Content-type: application/vnd.wolfram.mathematica *)
-
-(*** Wolfram Notebook File ***)
-(* http://www.wolfram.com/nb *)
-
-(* CreatedBy='Mathematica 11.1' *)
-
-(*CacheID: 234*)
-(* Internal cache information:
-NotebookFileLineBreakTest
-NotebookFileLineBreakTest
-NotebookDataPosition[       158,          7]
-NotebookDataLength[     37222,        790]
-NotebookOptionsPosition[     35605,        752]
-NotebookOutlinePosition[     36266,        776]
-CellTagsIndexPosition[     36223,        773]
-WindowFrame->Normal*)
-
-(* Beginning of Notebook Content *)
 Notebook[{
-Cell[StyleData[StyleDefinitions -> "Default.nb"],ExpressionUUID->"520da036-c443-433c-9548-ec117674896b"],
+Cell[StyleData[StyleDefinitions -> \
+"Default.nb"],ExpressionUUID->"520da036-c443-433c-9548-ec117674896b"],
+
+Cell[BoxData[
+ RowBox[{"SetOptions", "[", 
+  RowBox[{
+   RowBox[{"EvaluationNotebook", "[", "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"PrivateNotebookOptions", "\[Rule]", "\[IndentingNewLine]", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"\"\<FileOutlineCache\>\"", "\[Rule]", "False"}], 
+       "\[IndentingNewLine]", "}"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"System`TrackCellChangeTimes", "\[Rule]", "False"}]}], 
+    "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}]], "Input",
+ CellLabel->
+  "In[440]:=",ExpressionUUID->"ca60ac48-cd63-4176-a088-9b0a40fc19aa"],
 
 Cell[CellGroupData[{
 
-Cell["LinkedImage", "Subsection",
- CellChangeTimes->{{3.7328345601111403`*^9, 3.732834575592201*^9}, 
-   3.732835915974389*^9},ExpressionUUID->"97f27afe-678e-4edc-8904-\
-9f751e396181"],
+Cell["Notebook", \
+"Subsection",ExpressionUUID->"8ec52605-5607-4b07-8e25-4bf2fb1fa4db"],
+
+Cell[BoxData[
+ RowBox[{"StyleSheetNew", "[", "\"\<Notebook\>\"", "]"}]], "Input",
+ CellLabel->
+  "In[436]:=",ExpressionUUID->"39e0c866-c2b7-475c-afde-a7a13b852320"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["Notebook"],
+ CacheGraphics->False,ExpressionUUID->"23f0aa5c-838a-46f9-b81b-2c25333b2722"],
+
+Cell[BoxData[
+ RowBox[{"StyleSheetEdit", "[", 
+  RowBox[{"\"\<Notebook\>\"", ",", " ", "\[IndentingNewLine]", 
+   RowBox[{"CacheGraphics", "\[Rule]", "False"}]}], 
+  "]"}]], "Input",ExpressionUUID->"ba69cbf6-8f2c-4810-84d3-521aebbb2a7f"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["LinkedImage", \
+"Subsection",ExpressionUUID->"97f27afe-678e-4edc-8904-9f751e396181"],
 
 Cell[BoxData[
  RowBox[{"StyleSheetNew", "[", "\"\<LinkedImage\>\"", "]"}]], "Input",
- CellChangeTimes->{{3.732834138664401*^9, 3.732834141671363*^9}, 
-   3.732835931214126*^9},
  CellLabel->
   "In[304]:=",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
 
@@ -64,7 +80,7 @@ Cell[StyleData["LinkedImage"],
                    
                    AllTrue[{$CellContext`alt, $CellContext`link}, 
                     StringLength[#] > 0& ]], 
-                  DialogReturn[{$CellContext`alt, $CellContext`link}], 
+                  DialogReturn[{$CellContext`link, $CellContext`alt}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
@@ -77,7 +93,7 @@ Cell[StyleData["LinkedImage"],
                    
                    AllTrue[{$CellContext`alt, $CellContext`link}, 
                     StringLength[#] > 0& ]], 
-                  DialogReturn[{$CellContext`alt, $CellContext`link}], 
+                  DialogReturn[{$CellContext`link, $CellContext`alt}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "image-url"]]]]}, {
@@ -97,7 +113,8 @@ Cell[StyleData["LinkedImage"],
               "LinkedImage"]]], Method -> "Queued"}]]], None], #2]& ),
  Editable->False,
  InterpretationFunction->(RowBox[{"LinkedImage", "[", 
-    SlotSequence[1], "]"}]& )},
+    ToBoxes[#], ",", 
+    ToBoxes[#2], "]"}]& )},
  TemplateBoxOptions -> {
   Deployed -> True},ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
 
@@ -174,8 +191,8 @@ Cell[BoxData[{
                     RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"{", 
-                    RowBox[{
-                    "\"\<Image URL:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"\"\<Image URL:\>\"", ",", " ", 
+                    "\[IndentingNewLine]", 
                     RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"InputField", "[", 
@@ -322,37 +339,24 @@ Cell[BoxData[{
         RowBox[{"Function", "[", 
          RowBox[{"RowBox", "[", 
           RowBox[{"{", 
-           RowBox[{
-           "\"\<LinkedImage\>\"", ",", "\"\<[\>\"", ",", " ", "##", ",", " ", 
-            "\"\<]\>\""}], "}"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", 
-      "}"}]}]}], "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+           RowBox[{"\"\<LinkedImage\>\"", ",", "\"\<[\>\"", ",", " ", 
+            RowBox[{"ToBoxes", "@", "#"}], ",", "\"\<,\>\"", ",", " ", 
+            RowBox[{"ToBoxes", "@", "#2"}], " ", ",", "\"\<]\>\""}], "}"}], 
+          "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"End", "[", "]"}], ";"}]}], "Input",
- CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
-  3.73283409733034*^9, 3.7328341260677423`*^9}, {3.7328341823965187`*^9, 
-  3.732834182809713*^9}, {3.732834214060285*^9, 3.7328343382795*^9}, {
-  3.7328343807515173`*^9, 3.732834386109606*^9}, {3.732835330564651*^9, 
-  3.7328353324018993`*^9}, {3.73283539903463*^9, 3.73283539956883*^9}, {
-  3.732835506400524*^9, 3.732835511462656*^9}, {3.732835938135606*^9, 
-  3.7328359839719954`*^9}, {3.732837863507745*^9, 3.732837878334031*^9}, {
-  3.732837963055702*^9, 3.7328379928552437`*^9}, {3.732838111961526*^9, 
-  3.732838123048553*^9}},ExpressionUUID->"6e219c4c-c75c-4024-b427-\
-35bd858db839"]
+ CellLabel->"In[426]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["LinkedImageLink", "Subsection",
- CellChangeTimes->{{3.7328345601111403`*^9, 3.732834575592201*^9}, {
-   3.732834891648129*^9, 3.732834892207067*^9}, 
-   3.732836088874379*^9},ExpressionUUID->"05962ef2-bf87-4a77-babb-\
-45fc820291ec"],
+Cell["LinkedImageLink", \
+"Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
 
 Cell[BoxData[
  RowBox[{"StyleSheetNew", "[", "\"\<LinkedImageLink\>\"", "]"}]], "Input",
- CellChangeTimes->{{3.732834138664401*^9, 3.732834141671363*^9}, 
-   3.732834895863316*^9, 3.732836041057096*^9},
  CellLabel->
   "In[316]:=",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
 
@@ -390,12 +394,12 @@ $CellContext`link = #},
                  Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
                 "ReturnKeyDown" :> If[
                   
-                  AllTrue[{$CellContext`alt, $CellContext`url, \
-$CellContext`link}, And[
+                  AllTrue[{$CellContext`link, $CellContext`url, \
+$CellContext`alt}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{$CellContext`alt, $CellContext`url, \
-$CellContext`link}], 
+                  DialogReturn[{$CellContext`link, $CellContext`url, \
+$CellContext`alt}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "link-url"]]]]}, {"Link URL:", 
@@ -408,8 +412,8 @@ $CellContext`link}],
 $CellContext`link}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{$CellContext`alt, $CellContext`url, \
-$CellContext`link}], 
+                  DialogReturn[{$CellContext`link, $CellContext`url, \
+$CellContext`alt}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
@@ -422,8 +426,8 @@ $CellContext`link}],
 $CellContext`link}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{$CellContext`alt, $CellContext`url, \
-$CellContext`link}], 
+                  DialogReturn[{$CellContext`link, $CellContext`url, \
+$CellContext`alt}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "image-url"]]]]}, {
@@ -446,7 +450,9 @@ $CellContext`alt}, "LinkedImageLink"]]]], Method -> "Queued", ButtonNote -> #,
           Appearance -> None], "LinkHand"]]], None], #3]& ),
  Editable->False,
  InterpretationFunction->(RowBox[{"LinkedImageLink", "[", 
-    SlotSequence[1], "]"}]& )},
+    ToBoxes[#], ",", 
+    ToBoxes[#2], ",", 
+    ToBoxes[#3], "]"}]& )},
  TemplateBoxOptions -> {
   Deployed -> True},ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
 
@@ -623,7 +629,8 @@ Cell[BoxData[{
                     " ", 
                     RowBox[{"BoxID", "\[Rule]", "\"\<alt-text\>\""}]}], "]"}],
                      ",", "\[IndentingNewLine]", 
-                    RowBox[{"\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    RowBox[{
+                    "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
                     "\[IndentingNewLine]", 
                     RowBox[{"If", "[", 
                     RowBox[{
@@ -729,30 +736,23 @@ Cell[BoxData[{
         RowBox[{"Function", "[", 
          RowBox[{"RowBox", "[", 
           RowBox[{"{", 
-           RowBox[{
-           "\"\<LinkedImageLink\>\"", ",", "\"\<[\>\"", ",", " ", "##", ",", 
-            " ", "\"\<]\>\""}], "}"}], "]"}], "]"}]}]}], 
-      "\[IndentingNewLine]", "}"}]}]}], "\[IndentingNewLine]", "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+           RowBox[{"\"\<LinkedImageLink\>\"", ",", "\"\<[\>\"", ",", " ", 
+            RowBox[{"ToBoxes", "@", "#"}], ",", "\"\<,\>\"", ",", " ", 
+            RowBox[{"ToBoxes", "@", "#2"}], ",", "\"\<,\>\"", ",", " ", 
+            RowBox[{"ToBoxes", "@", "#3"}], ",", " ", "\"\<]\>\""}], "}"}], 
+          "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"End", "[", "]"}], ";"}]}], "Input",
- CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
-   3.73283409733034*^9, 3.7328341260677423`*^9}, {3.7328341823965187`*^9, 
-   3.732834182809713*^9}, {3.732834214060285*^9, 3.7328343382795*^9}, {
-   3.7328343807515173`*^9, 3.732834386109606*^9}, 3.7328348991881227`*^9, {
-   3.7328349338187027`*^9, 3.7328350385142403`*^9}, {3.7328350745321617`*^9, 
-   3.732835319130041*^9}, {3.73283535536584*^9, 3.732835413427431*^9}, {
-   3.732835455205632*^9, 3.7328354961369133`*^9}, {3.7328356066303043`*^9, 
-   3.732835620207415*^9}, {3.732836044094234*^9, 3.7328360799419613`*^9}, {
-   3.732837890281328*^9, 3.732837945621737*^9}, {3.732838128102159*^9, 
-   3.732838145058687*^9}},ExpressionUUID->"f96eff00-2519-4672-9efa-\
-43004ff15f3c"]
+ CellLabel->"In[430]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 },
 Saveable->True,
 WindowSize->{808, 755},
 WindowMargins->{{182, Automatic}, {47, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->Notebook[{
@@ -764,35 +764,3 @@ StyleDefinitions->Notebook[{
   "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "Default.nb"]
 ]
-(* End of Notebook Content *)
-
-(* Internal cache information *)
-(*CellTagsOutline
-CellTagsIndex->{}
-*)
-(*CellTagsIndex
-CellTagsIndex->{}
-*)
-(*NotebookFileOutline
-Notebook[{
-Cell[558, 20, 104, 0, 36, 49, 0, "StyleData", "StyleDefinitions", "",ExpressionUUID->"520da036-c443-433c-9548-ec117674896b"],
-Cell[CellGroupData[{
-Cell[687, 24, 184, 3, 45, "Subsection",ExpressionUUID->"97f27afe-678e-4edc-8904-9f751e396181"],
-Cell[874, 29, 259, 5, 30, "Input",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
-Cell[CellGroupData[{
-Cell[1158, 38, 2783, 63, 36, 30, 0, "StyleData", "LinkedImage", "All",ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
-Cell[3944, 103, 12097, 236, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
-}, Open  ]]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[16090, 345, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
-Cell[16331, 351, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
-Cell[CellGroupData[{
-Cell[16641, 360, 3747, 90, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
-Cell[20391, 452, 15186, 296, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
-}, Open  ]]
-}, Open  ]]
-}
-]
-*)
-
