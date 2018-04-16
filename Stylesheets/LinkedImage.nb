@@ -1,0 +1,814 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     37829,        806]
+NotebookOptionsPosition[     36211,        768]
+NotebookOutlinePosition[     36872,        792]
+CellTagsIndexPosition[     36829,        789]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[StyleData[StyleDefinitions -> "Default.nb"],ExpressionUUID->"520da036-c443-433c-9548-ec117674896b"],
+
+Cell[CellGroupData[{
+
+Cell["LinkedImage", "Subsection",
+ CellChangeTimes->{{3.7328345601111403`*^9, 3.732834575592201*^9}, 
+   3.732835915974389*^9},ExpressionUUID->"97f27afe-678e-4edc-8904-\
+9f751e396181"],
+
+Cell[BoxData[
+ RowBox[{"StyleSheetNew", "[", "\"\<LinkedImage\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.732834138664401*^9, 3.732834141671363*^9}, 
+   3.732835931214126*^9},
+ CellLabel->
+  "In[304]:=",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["LinkedImage"],
+ TemplateBoxOptions->{DisplayFunction->(TooltipBox[
+   DynamicBox[
+    Refresh[If[
+       Not[
+        AssociationQ[LinkedImage`Private`$LinkedImages]], 
+       LinkedImage`Private`$LinkedImages = Association[]]; ToBoxes[
+       EventHandler[
+        Lookup[
+        LinkedImage`Private`$LinkedImages, #2, 
+         LinkedImage`Private`$LinkedImages[#2] = Quiet[
+           Check[
+            Import[#2], 
+            Framed[
+             Style[#2, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5, 
+             Background -> GrayLevel[0.95], FrameStyle -> Gray]]]], {
+        "MouseClicked" :> Replace[
+           
+           DialogInput[{
+            LinkedImage`Private`alt = #, LinkedImage`Private`link = #2}, 
+            Grid[{{"Image URL:", 
+               EventHandler[
+                InputField[
+                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
+                 "image-url"], "ReturnKeyDown" :> If[
+                  And[
+                   StringQ[LinkedImage`Private`alt], 
+                   
+                   AllTrue[{
+                    LinkedImage`Private`alt, LinkedImage`Private`link}, 
+                    StringLength[#] > 0& ]], 
+                  
+                  DialogReturn[{
+                   LinkedImage`Private`alt, LinkedImage`Private`link}], 
+                  FrontEndExecute[
+                   FrontEnd`MoveCursorToInputField[
+                    EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
+               EventHandler[
+                InputField[
+                 Dynamic[LinkedImage`Private`alt], String, BoxID -> 
+                 "alt-text"], "ReturnKeyDown" :> If[
+                  And[
+                   StringQ[LinkedImage`Private`link], 
+                   
+                   AllTrue[{
+                    LinkedImage`Private`alt, LinkedImage`Private`link}, 
+                    StringLength[#] > 0& ]], 
+                  
+                  DialogReturn[{
+                   LinkedImage`Private`alt, LinkedImage`Private`link}], 
+                  FrontEndExecute[
+                   FrontEnd`MoveCursorToInputField[
+                    EvaluationNotebook[], "image-url"]]]]}, {
+               Spacer[{10, 10}]}}, Alignment -> Left, Spacings -> {1, 1}], 
+            WindowSize -> {300, All}, WindowMargins -> ({{
+               Part[#, 1], Automatic}, {Automatic, 
+               Part[#, 2]}}& )[
+              MousePosition[]]], {
+             Pattern[LinkedImage`Private`alt, 
+              Blank[String]], 
+             Pattern[LinkedImage`Private`link, 
+              Blank[String]]} :> NotebookWrite[
+             Nest[ParentBox, 
+              EvaluationBox[], 3], 
+             
+             TemplateBox[{LinkedImage`Private`alt, LinkedImage`Private`link}, 
+              "LinkedImage"]]], Method -> "Queued"}]]], None], #]& ),
+ Editable->False,
+ InterpretationFunction->(RawBoxes[
+   TemplateBox[{
+     SlotSequence[1]}, "LinkedImage"]]& )},
+ TemplateBoxOptions -> {
+  Deployed -> True},ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<LinkedImage`Private`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"StyleSheetEdit", "[", 
+   RowBox[{"\"\<LinkedImage\>\"", ",", "\[IndentingNewLine]", 
+    RowBox[{"TemplateBoxOptions", "\[Rule]", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"DisplayFunction", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"Function", "@", "\[IndentingNewLine]", 
+         RowBox[{"TooltipBox", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"DynamicBox", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Refresh", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"!", 
+                  RowBox[{"AssociationQ", "[", "$LinkedImages", "]"}]}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"$LinkedImages", "=", 
+                  RowBox[{"<|", "|>"}]}]}], "\[IndentingNewLine]", "]"}], ";",
+                "\[IndentingNewLine]", 
+               RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
+                RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Lookup", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                   "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#2", 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"$LinkedImages", "[", "#2", "]"}], "=", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Quiet", "[", 
+                    RowBox[{"Check", "[", 
+                    RowBox[{
+                    RowBox[{"Import", "[", "#2", "]"}], ",", 
+                    "\[IndentingNewLine]", " ", 
+                    RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{"#2", ",", " ", 
+                    RowBox[{
+                    "FontFamily", "\[Rule]", "\"\<Helvetica Serif\>\""}]}], 
+                    "]"}], ",", " ", 
+                    RowBox[{"RoundingRadius", "\[Rule]", "5"}], ",", " ", 
+                    RowBox[{"Background", "\[Rule]", 
+                    RowBox[{"GrayLevel", "[", ".95", "]"}]}], ",", " ", 
+                    RowBox[{"FrameStyle", "\[Rule]", "Gray"}]}], "]"}]}], 
+                    "]"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"{", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    "\"\<MouseClicked\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"DialogInput", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"alt", "=", "#"}], ",", " ", 
+                    RowBox[{"link", "=", "#2"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Grid", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Image URL:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "link", "]"}], ",", "String", ",",
+                     " ", 
+                    RowBox[{"BoxID", "\[Rule]", "\"\<image-url\>\""}]}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringQ", "@", "alt"}], "&&", 
+                    RowBox[{"AllTrue", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "link"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringLength", "[", "#", "]"}], ">", "0"}], 
+                    "&"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "link"}], "}"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "FrontEnd`MoveCursorToInputField", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", "\"\<alt-text\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Alt Text:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "alt", "]"}], ",", "String", ",", 
+                    " ", 
+                    RowBox[{"BoxID", "\[Rule]", "\"\<alt-text\>\""}]}], "]"}],
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringQ", "@", "link"}], "&&", 
+                    RowBox[{"AllTrue", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "link"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringLength", "[", "#", "]"}], ">", "0"}], 
+                    "&"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "link"}], "}"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "FrontEnd`MoveCursorToInputField", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", "\"\<image-url\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+                    "\[IndentingNewLine]", " ", "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"Spacer", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"10", ",", " ", "10"}], "}"}], "]"}], "}"}]}], 
+                    "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"Alignment", "\[Rule]", "Left"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Spacings", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"1", ",", " ", "1"}], "}"}]}]}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"WindowSize", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"300", ",", " ", "All"}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"WindowMargins", "\[Rule]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Function", "[", "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", " ", "Automatic"}], 
+                    " ", "}"}], ",", " ", 
+                    RowBox[{"{", 
+                    RowBox[{"Automatic", ",", " ", 
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "}"}], 
+                    "\[IndentingNewLine]", "]"}], "[", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"MousePosition", "[", "]"}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "alt_String", ",", " ", "\[IndentingNewLine]", " ", 
+                    "link_String"}], "\[IndentingNewLine]", "}"}], 
+                    "\[RuleDelayed]", "\[IndentingNewLine]", 
+                    RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Nest", "[", 
+                    RowBox[{"ParentBox", ",", " ", 
+                    RowBox[{"EvaluationBox", "[", "]"}], ",", " ", "3"}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"TemplateBox", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{"alt", ",", "\[IndentingNewLine]", "link"}], 
+                    "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+                    "\"\<LinkedImage\>\""}], "\[IndentingNewLine]", "]"}]}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}]}], 
+                   "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
+                 "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+             "\[IndentingNewLine]", "None"}], "\[IndentingNewLine]", "]"}], 
+           ",", "\[IndentingNewLine]", "#"}], "\[IndentingNewLine]", 
+          "]"}]}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Editable", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Deployed", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"InterpretationFunction", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"Function", "[", 
+         RowBox[{"RawBoxes", "[", 
+          RowBox[{"TemplateBox", "[", 
+           RowBox[{
+            RowBox[{"{", "##", "}"}], ",", " ", "\"\<LinkedImage\>\""}], 
+           "]"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
+  3.73283409733034*^9, 3.7328341260677423`*^9}, {3.7328341823965187`*^9, 
+  3.732834182809713*^9}, {3.732834214060285*^9, 3.7328343382795*^9}, {
+  3.7328343807515173`*^9, 3.732834386109606*^9}, {3.732835330564651*^9, 
+  3.7328353324018993`*^9}, {3.73283539903463*^9, 3.73283539956883*^9}, {
+  3.732835506400524*^9, 3.732835511462656*^9}, {3.732835938135606*^9, 
+  3.7328359839719954`*^9}},
+ CellLabel->
+  "In[313]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["LinkedImageLink", "Subsection",
+ CellChangeTimes->{{3.7328345601111403`*^9, 3.732834575592201*^9}, {
+   3.732834891648129*^9, 3.732834892207067*^9}, 
+   3.732836088874379*^9},ExpressionUUID->"05962ef2-bf87-4a77-babb-\
+45fc820291ec"],
+
+Cell[BoxData[
+ RowBox[{"StyleSheetNew", "[", "\"\<LinkedImageLink\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.732834138664401*^9, 3.732834141671363*^9}, 
+   3.732834895863316*^9, 3.732836041057096*^9},
+ CellLabel->
+  "In[316]:=",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
+
+Cell[CellGroupData[{
+
+Cell[StyleData["LinkedImageLink"],
+ TemplateBoxOptions->{DisplayFunction->(TooltipBox[
+   DynamicBox[
+    Refresh[If[
+       Not[
+        AssociationQ[LinkedImage`Private`$LinkedImages]], 
+       LinkedImage`Private`$LinkedImages = Association[]]; ToBoxes[
+       MouseAppearance[
+        Button[
+         Lookup[
+         LinkedImage`Private`$LinkedImages, #2, 
+          LinkedImage`Private`$LinkedImages[#2] = Quiet[
+            Check[
+             Import[#2], 
+             Framed[
+              Style[#2, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5,
+               Background -> GrayLevel[0.95], FrameStyle -> Gray]]]], 
+         If[
+          MemberQ[
+           CurrentValue["ModifierKeys"], 
+           Alternatives["Control", "Command"]], 
+          SystemOpen[#3], 
+          Replace[
+           
+           DialogInput[{
+            LinkedImage`Private`alt = #, LinkedImage`Private`url = #2, 
+             LinkedImage`Private`link = #3}, 
+            Grid[{{"Image URL:", 
+               EventHandler[
+                InputField[
+                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
+                 "image-url"], "ReturnKeyDown" :> If[
+                  
+                  AllTrue[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}, And[
+                    StringQ[#], StringLength[#] > 0]& ], 
+                  
+                  DialogReturn[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}], 
+                  FrontEndExecute[
+                   FrontEnd`MoveCursorToInputField[
+                    EvaluationNotebook[], "link-url"]]]]}, {"Link URL:", 
+               EventHandler[
+                InputField[
+                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
+                 "link-url"], "ReturnKeyDown" :> If[
+                  
+                  AllTrue[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}, And[
+                    StringQ[#], StringLength[#] > 0]& ], 
+                  
+                  DialogReturn[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}], 
+                  FrontEndExecute[
+                   FrontEnd`MoveCursorToInputField[
+                    EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
+               EventHandler[
+                InputField[
+                 Dynamic[LinkedImage`Private`alt], String, BoxID -> 
+                 "alt-text"], "ReturnKeyDown" :> If[
+                  
+                  AllTrue[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}, And[
+                    StringQ[#], StringLength[#] > 0]& ], 
+                  
+                  DialogReturn[{
+                   LinkedImage`Private`alt, LinkedImage`Private`url, 
+                    LinkedImage`Private`link}], 
+                  FrontEndExecute[
+                   FrontEnd`MoveCursorToInputField[
+                    EvaluationNotebook[], "image-url"]]]]}, {
+               Spacer[{10, 10}]}}, Alignment -> Left, Spacings -> {1, 1}], 
+            WindowSize -> {300, All}, WindowMargins -> ({{
+               Part[#, 1], Automatic}, {Automatic, 
+               Part[#, 2]}}& )[
+              MousePosition[]]], {
+             Pattern[LinkedImage`Private`alt, 
+              Blank[String]], 
+             Pattern[LinkedImage`Private`url, 
+              Blank[String]], 
+             Pattern[LinkedImage`Private`link, 
+              Blank[String]]} :> NotebookWrite[
+             Nest[ParentBox, 
+              EvaluationBox[], 3], 
+             
+             TemplateBox[{
+              LinkedImage`Private`alt, LinkedImage`Private`url, 
+               LinkedImage`Private`link}, "LinkedImageLink"]]]], Method -> 
+         "Queued", ButtonNote -> #3, Appearance -> None], "LinkHand"]]], 
+    None], #]& ),
+ Editable->False,
+ InterpretationFunction->(RawBoxes[
+   TemplateBox[{
+     SlotSequence[1]}, "LinkedImageLink"]]& )},
+ TemplateBoxOptions -> {
+  Deployed -> True},ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<LinkedImage`Private`\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"StyleSheetEdit", "[", 
+   RowBox[{"\"\<LinkedImageLink\>\"", ",", "\[IndentingNewLine]", 
+    RowBox[{"TemplateBoxOptions", "\[Rule]", "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"DisplayFunction", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"Function", "@", "\[IndentingNewLine]", 
+         RowBox[{"TooltipBox", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"DynamicBox", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Refresh", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"!", 
+                  RowBox[{"AssociationQ", "[", "$LinkedImages", "]"}]}], ",", 
+                 
+                 RowBox[{"$LinkedImages", "=", 
+                  RowBox[{"<|", "|>"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"ToBoxes", "@", "\[IndentingNewLine]", 
+                RowBox[{"MouseAppearance", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Button", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"Lookup", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#2", 
+                    ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"$LinkedImages", "[", "#2", "]"}], "=", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Quiet", "[", 
+                    RowBox[{"Check", "[", 
+                    RowBox[{
+                    RowBox[{"Import", "[", "#2", "]"}], ",", 
+                    "\[IndentingNewLine]", " ", 
+                    RowBox[{"Framed", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{"#2", ",", " ", 
+                    RowBox[{
+                    "FontFamily", "\[Rule]", "\"\<Helvetica Serif\>\""}]}], 
+                    "]"}], ",", " ", 
+                    RowBox[{"RoundingRadius", "\[Rule]", "5"}], ",", " ", 
+                    RowBox[{"Background", "\[Rule]", 
+                    RowBox[{"GrayLevel", "[", ".95", "]"}]}], ",", " ", 
+                    RowBox[{"FrameStyle", "\[Rule]", "Gray"}]}], "]"}]}], 
+                    "]"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    "CurrentValue", "[", "\"\<ModifierKeys\>\"", "]"}], ",", 
+                    " ", 
+                    RowBox[{"\"\<Control\>\"", "|", "\"\<Command\>\""}]}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"SystemOpen", "[", "#3", "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Replace", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"DialogInput", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"alt", "=", "#"}], ",", " ", 
+                    RowBox[{"url", "=", "#2"}], ",", " ", 
+                    RowBox[{"link", "=", "#3"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Grid", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Image URL:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "link", "]"}], ",", "String", ",",
+                     " ", 
+                    RowBox[{"BoxID", "\[Rule]", "\"\<image-url\>\""}]}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"AllTrue", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringQ", "[", "#", "]"}], "&&", 
+                    RowBox[{
+                    RowBox[{"StringLength", "[", "#", "]"}], ">", "0"}]}], 
+                    "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "FrontEnd`MoveCursorToInputField", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", "\"\<link-url\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Link URL:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "link", "]"}], ",", "String", ",",
+                     " ", 
+                    RowBox[{"BoxID", "\[Rule]", "\"\<link-url\>\""}]}], "]"}],
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"AllTrue", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringQ", "[", "#", "]"}], "&&", 
+                    RowBox[{
+                    RowBox[{"StringLength", "[", "#", "]"}], ">", "0"}]}], 
+                    "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "FrontEnd`MoveCursorToInputField", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", "\"\<alt-text\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Alt Text:\>\"", ",", " ", "\[IndentingNewLine]", 
+                    RowBox[{"EventHandler", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"InputField", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", "alt", "]"}], ",", "String", ",", 
+                    " ", 
+                    RowBox[{"BoxID", "\[Rule]", "\"\<alt-text\>\""}]}], "]"}],
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{"\"\<ReturnKeyDown\>\"", "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"AllTrue", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"StringQ", "[", "#", "]"}], "&&", 
+                    RowBox[{
+                    RowBox[{"StringLength", "[", "#", "]"}], ">", "0"}]}], 
+                    "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"DialogReturn", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                     "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "FrontEnd`MoveCursorToInputField", "[", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"EvaluationNotebook", "[", "]"}], ",", 
+                    "\[IndentingNewLine]", "\"\<image-url\>\""}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}]}]}], "\[IndentingNewLine]", "]"}]}], "}"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"Spacer", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"10", ",", " ", "10"}], "}"}], "]"}], "}"}]}], 
+                    "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"Alignment", "\[Rule]", "Left"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Spacings", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"1", ",", " ", "1"}], "}"}]}]}], 
+                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"WindowSize", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"300", ",", " ", "All"}], "}"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"WindowMargins", "\[Rule]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Function", "[", "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", " ", "Automatic"}], 
+                    " ", "}"}], ",", " ", 
+                    RowBox[{"{", 
+                    RowBox[{"Automatic", ",", " ", 
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "}"}], 
+                    "\[IndentingNewLine]", "]"}], "[", "\[IndentingNewLine]", 
+                    
+                    RowBox[{"MousePosition", "[", "]"}], 
+                    "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "alt_String", ",", " ", "\[IndentingNewLine]", 
+                    "url_String", ",", "\[IndentingNewLine]", " ", 
+                    "link_String"}], "\[IndentingNewLine]", "}"}], 
+                    "\[RuleDelayed]", "\[IndentingNewLine]", 
+                    RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Nest", "[", 
+                    RowBox[{"ParentBox", ",", " ", 
+                    RowBox[{"EvaluationBox", "[", "]"}], ",", " ", "3"}], 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"TemplateBox", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "alt", ",", "\[IndentingNewLine]", "url", ",", 
+                    "\[IndentingNewLine]", "link"}], "\[IndentingNewLine]", 
+                    "}"}], ",", "\[IndentingNewLine]", 
+                    "\"\<LinkedImageLink\>\""}], "\[IndentingNewLine]", 
+                    "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"ButtonNote", "\[Rule]", "#3"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Appearance", "\[Rule]", "None"}]}], 
+                   "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                  "\"\<LinkHand\>\""}], "\[IndentingNewLine]", "]"}]}]}], 
+              "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+             "None"}], "\[IndentingNewLine]", "]"}], ",", 
+           "\[IndentingNewLine]", "#"}], "\[IndentingNewLine]", "]"}]}]}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"Editable", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Deployed", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"InterpretationFunction", "\[Rule]", "\[IndentingNewLine]", 
+        RowBox[{"Function", "[", 
+         RowBox[{"RawBoxes", "[", 
+          RowBox[{"TemplateBox", "[", 
+           RowBox[{
+            RowBox[{"{", "##", "}"}], ",", " ", "\"\<LinkedImageLink\>\""}], 
+           "]"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
+   3.73283409733034*^9, 3.7328341260677423`*^9}, {3.7328341823965187`*^9, 
+   3.732834182809713*^9}, {3.732834214060285*^9, 3.7328343382795*^9}, {
+   3.7328343807515173`*^9, 3.732834386109606*^9}, 3.7328348991881227`*^9, {
+   3.7328349338187027`*^9, 3.7328350385142403`*^9}, {3.7328350745321617`*^9, 
+   3.732835319130041*^9}, {3.73283535536584*^9, 3.732835413427431*^9}, {
+   3.732835455205632*^9, 3.7328354961369133`*^9}, {3.7328356066303043`*^9, 
+   3.732835620207415*^9}, {3.732836044094234*^9, 3.7328360799419613`*^9}},
+ CellLabel->
+  "In[317]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+}, Open  ]]
+}, Open  ]]
+},
+Saveable->True,
+WindowSize->{808, 755},
+WindowMargins->{{182, Automatic}, {47, Automatic}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "StylesheetFormatting.nb"]], 
+   Cell[
+    StyleData["Notebook"], Editable -> True, Saveable -> True]}, Visible -> 
+  False, FrontEndVersion -> 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
+  StyleDefinitions -> "Default.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 104, 0, 36, 49, 0, "StyleData", "StyleDefinitions", "",ExpressionUUID->"520da036-c443-433c-9548-ec117674896b"],
+Cell[CellGroupData[{
+Cell[687, 24, 184, 3, 45, "Subsection",ExpressionUUID->"97f27afe-678e-4edc-8904-9f751e396181"],
+Cell[874, 29, 259, 5, 30, "Input",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
+Cell[CellGroupData[{
+Cell[1158, 38, 3069, 72, 36, 30, 0, "StyleData", "LinkedImage", "All",ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
+Cell[4230, 112, 11983, 235, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16262, 353, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
+Cell[16503, 359, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
+Cell[CellGroupData[{
+Cell[16813, 368, 4264, 100, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
+Cell[21080, 470, 15103, 294, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
