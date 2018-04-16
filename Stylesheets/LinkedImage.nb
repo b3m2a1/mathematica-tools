@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     37175,        790]
-NotebookOptionsPosition[     35558,        752]
-NotebookOutlinePosition[     36219,        776]
-CellTagsIndexPosition[     36176,        773]
+NotebookDataLength[     37222,        790]
+NotebookOptionsPosition[     35605,        752]
+NotebookOutlinePosition[     36266,        776]
+CellTagsIndexPosition[     36223,        773]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -201,7 +201,7 @@ Cell[BoxData[{
                     "&"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
                     RowBox[{"DialogReturn", "[", 
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "link"}], "}"}], "]"}], ",", 
+                    RowBox[{"link", ",", " ", "alt"}], "}"}], "]"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
                     RowBox[{
@@ -241,7 +241,7 @@ Cell[BoxData[{
                     "&"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
                     RowBox[{"DialogReturn", "[", 
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "link"}], "}"}], "]"}], ",", 
+                    RowBox[{"link", ",", " ", "alt"}], "}"}], "]"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
                     RowBox[{
@@ -335,9 +335,9 @@ Cell[BoxData[{
   3.7328353324018993`*^9}, {3.73283539903463*^9, 3.73283539956883*^9}, {
   3.732835506400524*^9, 3.732835511462656*^9}, {3.732835938135606*^9, 
   3.7328359839719954`*^9}, {3.732837863507745*^9, 3.732837878334031*^9}, {
-  3.732837963055702*^9, 3.7328379928552437`*^9}},
- CellLabel->
-  "In[381]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+  3.732837963055702*^9, 3.7328379928552437`*^9}, {3.732838111961526*^9, 
+  3.732838123048553*^9}},ExpressionUUID->"6e219c4c-c75c-4024-b427-\
+35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 
@@ -549,7 +549,7 @@ Cell[BoxData[{
                     RowBox[{"AllTrue", "[", 
                     RowBox[{
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                    RowBox[{"link", ",", " ", "url", ",", " ", "alt"}], "}"}],
                      ",", 
                     RowBox[{
                     RowBox[{
@@ -559,7 +559,7 @@ Cell[BoxData[{
                     "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"DialogReturn", "[", 
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                    RowBox[{"link", ",", " ", "url", ",", " ", "alt"}], "}"}],
                      "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
                     RowBox[{
@@ -600,7 +600,7 @@ Cell[BoxData[{
                     "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"DialogReturn", "[", 
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                    RowBox[{"link", ",", " ", "url", ",", " ", "alt"}], "}"}],
                      "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
                     RowBox[{
@@ -640,7 +640,7 @@ Cell[BoxData[{
                     "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"DialogReturn", "[", 
                     RowBox[{"{", 
-                    RowBox[{"alt", ",", " ", "url", ",", " ", "link"}], "}"}],
+                    RowBox[{"link", ",", " ", "url", ",", " ", "alt"}], "}"}],
                      "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"FrontEndExecute", "@", "\[IndentingNewLine]", 
                     RowBox[{
@@ -744,9 +744,9 @@ Cell[BoxData[{
    3.732835319130041*^9}, {3.73283535536584*^9, 3.732835413427431*^9}, {
    3.732835455205632*^9, 3.7328354961369133`*^9}, {3.7328356066303043`*^9, 
    3.732835620207415*^9}, {3.732836044094234*^9, 3.7328360799419613`*^9}, {
-   3.732837890281328*^9, 3.732837945621737*^9}},
- CellLabel->
-  "In[378]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+   3.732837890281328*^9, 3.732837945621737*^9}, {3.732838128102159*^9, 
+   3.732838145058687*^9}},ExpressionUUID->"f96eff00-2519-4672-9efa-\
+43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -781,15 +781,15 @@ Cell[687, 24, 184, 3, 45, "Subsection",ExpressionUUID->"97f27afe-678e-4edc-8904-
 Cell[874, 29, 259, 5, 30, "Input",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
 Cell[CellGroupData[{
 Cell[1158, 38, 2783, 63, 36, 30, 0, "StyleData", "LinkedImage", "All",ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
-Cell[3944, 103, 12074, 236, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+Cell[3944, 103, 12097, 236, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[16067, 345, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
-Cell[16308, 351, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
+Cell[16090, 345, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
+Cell[16331, 351, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
 Cell[CellGroupData[{
-Cell[16618, 360, 3747, 90, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
-Cell[20368, 452, 15162, 296, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+Cell[16641, 360, 3747, 90, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
+Cell[20391, 452, 15186, 296, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 }
