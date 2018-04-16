@@ -371,7 +371,7 @@ $CellContext`link = #},
               Grid[{{"Image URL:", 
                  EventHandler[
                   InputField[
-                   Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
+                   Dynamic[$CellContext`url], String, BoxID -> "image-url"], 
                   "ReturnKeyDown" :> If[
                     
                     AllTrue[{$CellContext`link, $CellContext`url, \
@@ -516,8 +516,8 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"InputField", "[", 
                     RowBox[{
-                    RowBox[{"Dynamic", "[", "link", "]"}], ",", "String", ",",
-                     " ", 
+                    RowBox[{"Dynamic", "[", "url", "]"}], ",", "String", ",", 
+                    " ", 
                     RowBox[{"BoxID", "\[Rule]", "\"\<image-url\>\""}]}], 
                     "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{
@@ -716,8 +716,8 @@ Cell[BoxData[{
           "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
    "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"End", "[", "]"}], 
-  ";"}]}], "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+  RowBox[{"End", "[", "]"}], ";"}]}], "Input",
+ CellLabel->"In[508]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 },
