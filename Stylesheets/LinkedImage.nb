@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     37829,        806]
-NotebookOptionsPosition[     36211,        768]
-NotebookOutlinePosition[     36872,        792]
-CellTagsIndexPosition[     36829,        789]
+NotebookDataLength[     37175,        790]
+NotebookOptionsPosition[     35558,        752]
+NotebookOutlinePosition[     36219,        776]
+CellTagsIndexPosition[     36176,        773]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -45,47 +45,39 @@ Cell[StyleData["LinkedImage"],
        LinkedImage`Private`$LinkedImages = Association[]]; ToBoxes[
        EventHandler[
         Lookup[
-        LinkedImage`Private`$LinkedImages, #2, 
-         LinkedImage`Private`$LinkedImages[#2] = Quiet[
+        LinkedImage`Private`$LinkedImages, #, 
+         LinkedImage`Private`$LinkedImages[#] = Quiet[
            Check[
-            Import[#2], 
+            Import[#], 
             Framed[
-             Style[#2, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5, 
+             Style[#, FontFamily -> "Helvetica Serif"], RoundingRadius -> 5, 
              Background -> GrayLevel[0.95], FrameStyle -> Gray]]]], {
         "MouseClicked" :> Replace[
-           
-           DialogInput[{
-            LinkedImage`Private`alt = #, LinkedImage`Private`link = #2}, 
+           DialogInput[{$CellContext`alt = #2, $CellContext`link = #}, 
             Grid[{{"Image URL:", 
                EventHandler[
                 InputField[
-                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
-                 "image-url"], "ReturnKeyDown" :> If[
+                 Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
+                "ReturnKeyDown" :> If[
                   And[
-                   StringQ[LinkedImage`Private`alt], 
+                   StringQ[$CellContext`alt], 
                    
-                   AllTrue[{
-                    LinkedImage`Private`alt, LinkedImage`Private`link}, 
+                   AllTrue[{$CellContext`alt, $CellContext`link}, 
                     StringLength[#] > 0& ]], 
-                  
-                  DialogReturn[{
-                   LinkedImage`Private`alt, LinkedImage`Private`link}], 
+                  DialogReturn[{$CellContext`alt, $CellContext`link}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
                EventHandler[
                 InputField[
-                 Dynamic[LinkedImage`Private`alt], String, BoxID -> 
-                 "alt-text"], "ReturnKeyDown" :> If[
+                 Dynamic[$CellContext`alt], String, BoxID -> "alt-text"], 
+                "ReturnKeyDown" :> If[
                   And[
-                   StringQ[LinkedImage`Private`link], 
+                   StringQ[$CellContext`link], 
                    
-                   AllTrue[{
-                    LinkedImage`Private`alt, LinkedImage`Private`link}, 
+                   AllTrue[{$CellContext`alt, $CellContext`link}, 
                     StringLength[#] > 0& ]], 
-                  
-                  DialogReturn[{
-                   LinkedImage`Private`alt, LinkedImage`Private`link}], 
+                  DialogReturn[{$CellContext`alt, $CellContext`link}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "image-url"]]]]}, {
@@ -94,19 +86,18 @@ Cell[StyleData["LinkedImage"],
                Part[#, 1], Automatic}, {Automatic, 
                Part[#, 2]}}& )[
               MousePosition[]]], {
-             Pattern[LinkedImage`Private`alt, 
+             Pattern[$CellContext`link, 
               Blank[String]], 
-             Pattern[LinkedImage`Private`link, 
+             Pattern[$CellContext`alt, 
               Blank[String]]} :> NotebookWrite[
              Nest[ParentBox, 
               EvaluationBox[], 3], 
              
-             TemplateBox[{LinkedImage`Private`alt, LinkedImage`Private`link}, 
-              "LinkedImage"]]], Method -> "Queued"}]]], None], #]& ),
+             TemplateBox[{$CellContext`link, $CellContext`alt}, 
+              "LinkedImage"]]], Method -> "Queued"}]]], None], #2]& ),
  Editable->False,
- InterpretationFunction->(RawBoxes[
-   TemplateBox[{
-     SlotSequence[1]}, "LinkedImage"]]& )},
+ InterpretationFunction->(RowBox[{"LinkedImage", "[", 
+    SlotSequence[1], "]"}]& )},
  TemplateBoxOptions -> {
   Deployed -> True},ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
 
@@ -141,20 +132,20 @@ Cell[BoxData[{
                  RowBox[{
                   RowBox[{"Lookup", "[", "\[IndentingNewLine]", 
                    RowBox[{
-                   "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#2", 
-                    ",", "\[IndentingNewLine]", 
+                   "$LinkedImages", ",", " ", "\[IndentingNewLine]", "#", ",",
+                     "\[IndentingNewLine]", 
                     RowBox[{
-                    RowBox[{"$LinkedImages", "[", "#2", "]"}], "=", 
+                    RowBox[{"$LinkedImages", "[", "#", "]"}], "=", 
                     "\[IndentingNewLine]", 
                     RowBox[{"Quiet", "[", 
                     RowBox[{"Check", "[", 
                     RowBox[{
-                    RowBox[{"Import", "[", "#2", "]"}], ",", 
+                    RowBox[{"Import", "[", "#", "]"}], ",", 
                     "\[IndentingNewLine]", " ", 
                     RowBox[{"Framed", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"Style", "[", 
-                    RowBox[{"#2", ",", " ", 
+                    RowBox[{"#", ",", " ", 
                     RowBox[{
                     "FontFamily", "\[Rule]", "\"\<Helvetica Serif\>\""}]}], 
                     "]"}], ",", " ", 
@@ -175,8 +166,8 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"{", 
                     RowBox[{
-                    RowBox[{"alt", "=", "#"}], ",", " ", 
-                    RowBox[{"link", "=", "#2"}]}], "}"}], ",", 
+                    RowBox[{"alt", "=", "#2"}], ",", " ", 
+                    RowBox[{"link", "=", "#"}]}], "}"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"Grid", "[", "\[IndentingNewLine]", 
                     RowBox[{
@@ -302,9 +293,9 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
-                    "alt_String", ",", " ", "\[IndentingNewLine]", " ", 
-                    "link_String"}], "\[IndentingNewLine]", "}"}], 
-                    "\[RuleDelayed]", "\[IndentingNewLine]", 
+                    "link_String", ",", "\[IndentingNewLine]", "alt_String"}],
+                     "\[IndentingNewLine]", "}"}], "\[RuleDelayed]", 
+                    "\[IndentingNewLine]", 
                     RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"Nest", "[", 
@@ -314,7 +305,7 @@ Cell[BoxData[{
                     RowBox[{"TemplateBox", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"{", "\[IndentingNewLine]", 
-                    RowBox[{"alt", ",", "\[IndentingNewLine]", "link"}], 
+                    RowBox[{"link", ",", "\[IndentingNewLine]", "alt"}], 
                     "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
                     "\"\<LinkedImage\>\""}], "\[IndentingNewLine]", "]"}]}], 
                     "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
@@ -323,18 +314,18 @@ Cell[BoxData[{
                    "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", 
                  "]"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
              "\[IndentingNewLine]", "None"}], "\[IndentingNewLine]", "]"}], 
-           ",", "\[IndentingNewLine]", "#"}], "\[IndentingNewLine]", 
+           ",", "\[IndentingNewLine]", "#2"}], "\[IndentingNewLine]", 
           "]"}]}]}], ",", "\[IndentingNewLine]", 
        RowBox[{"Editable", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
        RowBox[{"Deployed", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
        RowBox[{"InterpretationFunction", "\[Rule]", "\[IndentingNewLine]", 
         RowBox[{"Function", "[", 
-         RowBox[{"RawBoxes", "[", 
-          RowBox[{"TemplateBox", "[", 
+         RowBox[{"RowBox", "[", 
+          RowBox[{"{", 
            RowBox[{
-            RowBox[{"{", "##", "}"}], ",", " ", "\"\<LinkedImage\>\""}], 
-           "]"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
-   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+           "\"\<LinkedImage\>\"", ",", "\"\<[\>\"", ",", " ", "##", ",", " ", 
+            "\"\<]\>\""}], "}"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", 
+      "}"}]}]}], "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"End", "[", "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
@@ -343,9 +334,10 @@ Cell[BoxData[{
   3.7328343807515173`*^9, 3.732834386109606*^9}, {3.732835330564651*^9, 
   3.7328353324018993`*^9}, {3.73283539903463*^9, 3.73283539956883*^9}, {
   3.732835506400524*^9, 3.732835511462656*^9}, {3.732835938135606*^9, 
-  3.7328359839719954`*^9}},
+  3.7328359839719954`*^9}, {3.732837863507745*^9, 3.732837878334031*^9}, {
+  3.732837963055702*^9, 3.7328379928552437`*^9}},
  CellLabel->
-  "In[313]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+  "In[381]:=",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 
@@ -387,58 +379,51 @@ Cell[StyleData["LinkedImageLink"],
           MemberQ[
            CurrentValue["ModifierKeys"], 
            Alternatives["Control", "Command"]], 
-          SystemOpen[#3], 
+          SystemOpen[#], 
           Replace[
            
-           DialogInput[{
-            LinkedImage`Private`alt = #, LinkedImage`Private`url = #2, 
-             LinkedImage`Private`link = #3}, 
+           DialogInput[{$CellContext`alt = #3, $CellContext`url = #2, \
+$CellContext`link = #}, 
             Grid[{{"Image URL:", 
                EventHandler[
                 InputField[
-                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
-                 "image-url"], "ReturnKeyDown" :> If[
+                 Dynamic[$CellContext`link], String, BoxID -> "image-url"], 
+                "ReturnKeyDown" :> If[
                   
-                  AllTrue[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}, And[
+                  AllTrue[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}], 
+                  DialogReturn[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "link-url"]]]]}, {"Link URL:", 
                EventHandler[
                 InputField[
-                 Dynamic[LinkedImage`Private`link], String, BoxID -> 
-                 "link-url"], "ReturnKeyDown" :> If[
+                 Dynamic[$CellContext`link], String, BoxID -> "link-url"], 
+                "ReturnKeyDown" :> If[
                   
-                  AllTrue[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}, And[
+                  AllTrue[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}], 
+                  DialogReturn[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "alt-text"]]]]}, {"Alt Text:", 
                EventHandler[
                 InputField[
-                 Dynamic[LinkedImage`Private`alt], String, BoxID -> 
-                 "alt-text"], "ReturnKeyDown" :> If[
+                 Dynamic[$CellContext`alt], String, BoxID -> "alt-text"], 
+                "ReturnKeyDown" :> If[
                   
-                  AllTrue[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}, And[
+                  AllTrue[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}, And[
                     StringQ[#], StringLength[#] > 0]& ], 
                   
-                  DialogReturn[{
-                   LinkedImage`Private`alt, LinkedImage`Private`url, 
-                    LinkedImage`Private`link}], 
+                  DialogReturn[{$CellContext`alt, $CellContext`url, \
+$CellContext`link}], 
                   FrontEndExecute[
                    FrontEnd`MoveCursorToInputField[
                     EvaluationNotebook[], "image-url"]]]]}, {
@@ -447,24 +432,21 @@ Cell[StyleData["LinkedImageLink"],
                Part[#, 1], Automatic}, {Automatic, 
                Part[#, 2]}}& )[
               MousePosition[]]], {
-             Pattern[LinkedImage`Private`alt, 
+             Pattern[$CellContext`link, 
               Blank[String]], 
-             Pattern[LinkedImage`Private`url, 
+             Pattern[$CellContext`url, 
               Blank[String]], 
-             Pattern[LinkedImage`Private`link, 
+             Pattern[$CellContext`alt, 
               Blank[String]]} :> NotebookWrite[
              Nest[ParentBox, 
               EvaluationBox[], 3], 
              
-             TemplateBox[{
-              LinkedImage`Private`alt, LinkedImage`Private`url, 
-               LinkedImage`Private`link}, "LinkedImageLink"]]]], Method -> 
-         "Queued", ButtonNote -> #3, Appearance -> None], "LinkHand"]]], 
-    None], #]& ),
+             TemplateBox[{$CellContext`link, $CellContext`url, \
+$CellContext`alt}, "LinkedImageLink"]]]], Method -> "Queued", ButtonNote -> #,
+          Appearance -> None], "LinkHand"]]], None], #3]& ),
  Editable->False,
- InterpretationFunction->(RawBoxes[
-   TemplateBox[{
-     SlotSequence[1]}, "LinkedImageLink"]]& )},
+ InterpretationFunction->(RowBox[{"LinkedImageLink", "[", 
+    SlotSequence[1], "]"}]& )},
  TemplateBoxOptions -> {
   Deployed -> True},ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
 
@@ -532,7 +514,7 @@ Cell[BoxData[{
                     " ", 
                     RowBox[{"\"\<Control\>\"", "|", "\"\<Command\>\""}]}], 
                     "]"}], ",", "\[IndentingNewLine]", 
-                    RowBox[{"SystemOpen", "[", "#3", "]"}], ",", 
+                    RowBox[{"SystemOpen", "[", "#", "]"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"Replace", "[", "\[IndentingNewLine]", 
                     RowBox[{
@@ -540,9 +522,9 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"{", 
                     RowBox[{
-                    RowBox[{"alt", "=", "#"}], ",", " ", 
+                    RowBox[{"alt", "=", "#3"}], ",", " ", 
                     RowBox[{"url", "=", "#2"}], ",", " ", 
-                    RowBox[{"link", "=", "#3"}]}], "}"}], ",", 
+                    RowBox[{"link", "=", "#"}]}], "}"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"Grid", "[", "\[IndentingNewLine]", 
                     RowBox[{
@@ -709,9 +691,9 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
-                    "alt_String", ",", " ", "\[IndentingNewLine]", 
+                    "link_String", ",", " ", "\[IndentingNewLine]", 
                     "url_String", ",", "\[IndentingNewLine]", " ", 
-                    "link_String"}], "\[IndentingNewLine]", "}"}], 
+                    "alt_String"}], "\[IndentingNewLine]", "}"}], 
                     "\[RuleDelayed]", "\[IndentingNewLine]", 
                     RowBox[{"NotebookWrite", "[", "\[IndentingNewLine]", 
                     RowBox[{
@@ -723,8 +705,8 @@ Cell[BoxData[{
                     RowBox[{
                     RowBox[{"{", "\[IndentingNewLine]", 
                     RowBox[{
-                    "alt", ",", "\[IndentingNewLine]", "url", ",", 
-                    "\[IndentingNewLine]", "link"}], "\[IndentingNewLine]", 
+                    "link", ",", "\[IndentingNewLine]", "url", ",", 
+                    "\[IndentingNewLine]", "alt"}], "\[IndentingNewLine]", 
                     "}"}], ",", "\[IndentingNewLine]", 
                     "\"\<LinkedImageLink\>\""}], "\[IndentingNewLine]", 
                     "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
@@ -732,25 +714,26 @@ Cell[BoxData[{
                     "]"}], ",", "\[IndentingNewLine]", 
                     RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}], ",", 
                     "\[IndentingNewLine]", 
-                    RowBox[{"ButtonNote", "\[Rule]", "#3"}], ",", 
+                    RowBox[{"ButtonNote", "\[Rule]", "#"}], ",", 
                     "\[IndentingNewLine]", 
                     RowBox[{"Appearance", "\[Rule]", "None"}]}], 
                    "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
                   "\"\<LinkHand\>\""}], "\[IndentingNewLine]", "]"}]}]}], 
               "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
              "None"}], "\[IndentingNewLine]", "]"}], ",", 
-           "\[IndentingNewLine]", "#"}], "\[IndentingNewLine]", "]"}]}]}], 
+           "\[IndentingNewLine]", "#3"}], "\[IndentingNewLine]", "]"}]}]}], 
        ",", "\[IndentingNewLine]", 
        RowBox[{"Editable", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
        RowBox[{"Deployed", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
        RowBox[{"InterpretationFunction", "\[Rule]", "\[IndentingNewLine]", 
         RowBox[{"Function", "[", 
-         RowBox[{"RawBoxes", "[", 
-          RowBox[{"TemplateBox", "[", 
+         RowBox[{"RowBox", "[", 
+          RowBox[{"{", 
            RowBox[{
-            RowBox[{"{", "##", "}"}], ",", " ", "\"\<LinkedImageLink\>\""}], 
-           "]"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}]}], 
-   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+           "\"\<LinkedImageLink\>\"", ",", "\"\<[\>\"", ",", " ", "##", ",", 
+            " ", "\"\<]\>\""}], "}"}], "]"}], "]"}]}]}], 
+      "\[IndentingNewLine]", "}"}]}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"End", "[", "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.732833660129696*^9, 3.73283404279132*^9}, {
@@ -760,9 +743,10 @@ Cell[BoxData[{
    3.7328349338187027`*^9, 3.7328350385142403`*^9}, {3.7328350745321617`*^9, 
    3.732835319130041*^9}, {3.73283535536584*^9, 3.732835413427431*^9}, {
    3.732835455205632*^9, 3.7328354961369133`*^9}, {3.7328356066303043`*^9, 
-   3.732835620207415*^9}, {3.732836044094234*^9, 3.7328360799419613`*^9}},
+   3.732835620207415*^9}, {3.732836044094234*^9, 3.7328360799419613`*^9}, {
+   3.732837890281328*^9, 3.732837945621737*^9}},
  CellLabel->
-  "In[317]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+  "In[378]:=",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -796,16 +780,16 @@ Cell[CellGroupData[{
 Cell[687, 24, 184, 3, 45, "Subsection",ExpressionUUID->"97f27afe-678e-4edc-8904-9f751e396181"],
 Cell[874, 29, 259, 5, 30, "Input",ExpressionUUID->"b8117d8c-ce63-4d67-a1eb-b1756f2ec84b"],
 Cell[CellGroupData[{
-Cell[1158, 38, 3069, 72, 36, 30, 0, "StyleData", "LinkedImage", "All",ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
-Cell[4230, 112, 11983, 235, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
+Cell[1158, 38, 2783, 63, 36, 30, 0, "StyleData", "LinkedImage", "All",ExpressionUUID->"f142c4b8-23e6-4f18-8642-d8c776ea6193"],
+Cell[3944, 103, 12074, 236, 2110, "Input",ExpressionUUID->"6e219c4c-c75c-4024-b427-35bd858db839"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[16262, 353, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
-Cell[16503, 359, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
+Cell[16067, 345, 238, 4, 45, "Subsection",ExpressionUUID->"05962ef2-bf87-4a77-babb-45fc820291ec"],
+Cell[16308, 351, 285, 5, 30, "Input",ExpressionUUID->"6e15a24f-07fb-466b-8502-460338e87947"],
 Cell[CellGroupData[{
-Cell[16813, 368, 4264, 100, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
-Cell[21080, 470, 15103, 294, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
+Cell[16618, 360, 3747, 90, 36, 34, 0, "StyleData", "LinkedImageLink", "All",ExpressionUUID->"78832648-94ad-49ff-bdda-567f5c21a553"],
+Cell[20368, 452, 15162, 296, 2467, "Input",ExpressionUUID->"f96eff00-2519-4672-9efa-43004ff15f3c"]
 }, Open  ]]
 }, Open  ]]
 }
