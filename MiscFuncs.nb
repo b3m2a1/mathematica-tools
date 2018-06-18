@@ -1,0 +1,1222 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Miscellaneous Functions", "CodeSection",
+ CellChangeTimes->{{3.732881779661751*^9, 
+  3.732881785177685*^9}},ExpressionUUID->"256e540c-1645-42e4-80cb-\
+e18db9ec9e8d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<MiscFuncs`\>\"", "]"}], 
+  ";"}]], "InputSection",
+ CellChangeTimes->{{3.732881881687924*^9, 
+  3.732881885416585*^9}},ExpressionUUID->"18889da0-2590-4afc-a860-\
+bbbac5c68356"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"getCloudObjectDS", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Gets cloud objects\n\n\
+https://mathematica.stackexchange.com/questions/170802/how-can-i-spelunk-\
+cloudobjects/170803#170803\n\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"07eb6420-742e-4972-b7e7-2d531ef93379"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getFormatImportData", "::", "usage"}], "=", 
+   "\"\<https://mathematica.stackexchange.com/questions/164121/find-import-\
+export-format-data\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getFormatExportData", "::", "usage"}], "=", 
+   "\"\<https://mathematica.stackexchange.com/questions/164121/find-import-\
+export-format-data\>\""}], ";"}]}], "CodeInput",
+ CellChangeTimes->{{3.734558789430477*^9, 
+  3.734558803174415*^9}},ExpressionUUID->"a52cfa90-2eb0-496c-8c62-\
+67a3d9df0b4c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"applyPlotTheming", "::", "usage"}], "=", 
+   "\"\<Wraps a graphics function to work better with themes\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"9cbec4b2-baf7-4fc3-9bf7-e980f98c63b9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"myLVP3D", "::", "usage"}], "=", 
+   "\"\<Function for vector plots\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"61aab2cc-4568-472d-a259-316e6e12a5da"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"prettyString", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"933f7f6b-2a95-41e4-a8f5-cf052827323c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"d9701886-bbbc-4065-a1fe-\
+e6300b16d312"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]getCloudObjectDS\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,
+ CellChangeTimes->{{3.734558740440556*^9, 
+  3.734558744568722*^9}},ExpressionUUID->"3357313c-f56e-4d5e-8b66-\
+8878d2a47b59"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "getCloudObjectPath", "]"}], " ", "=", "\n", "  ", 
+   
+   RowBox[{"{", "\n", "   ", 
+    RowBox[{"\"\<Username\>\"", " ", "->", " ", "None"}], "\n", "   ", 
+    "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getCloudObjectPath", "[", 
+    RowBox[{"path_String", ",", " ", 
+     RowBox[{"ops", " ", ":", " ", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], " ", ":=", "\n", "\n", 
+   "  ", 
+   RowBox[{"URLBuild", "@", 
+    RowBox[{"Flatten", "@", 
+     RowBox[{"{", "\n", "     ", 
+      RowBox[{
+       RowBox[{"Replace", "[", 
+        RowBox[{
+         RowBox[{"OptionValue", "[", "\"\<Username\>\"", "]"}], ",", "\n", 
+         "      ", 
+         RowBox[{"{", "\n", "       ", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"s_String", "?", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"StringLength", "[", "#", "]"}], " ", ">", " ", "0"}],
+                " ", "&"}], ")"}]}], " ", ":>", "\n", "        ", 
+            RowBox[{"\"\<user:\>\"", " ", "<>", " ", 
+             RowBox[{
+              RowBox[{"StringSplit", "[", 
+               RowBox[{"s", ",", " ", "\"\<@\>\""}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}]}], ",", "\n", "       ", 
+           RowBox[{"_", " ", "->", " ", "\"\<\>\""}]}], "\n", "       ", 
+          "}"}]}], "\n", "      ", "]"}], ",", "\n", "     ", 
+       RowBox[{"URLParse", "[", 
+        RowBox[{"path", ",", " ", "\"\<Path\>\""}], "]"}]}], "\n", "     ", 
+      "}"}]}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "getCloudObjectList", "]"}], " ", "=", "\n", "  ", 
+   
+   RowBox[{"{", "\n", "   ", 
+    RowBox[{"\"\<Iterations\>\"", " ", "->", " ", "None"}], "\n", "   ", 
+    "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getCloudObjectList", "[", 
+    RowBox[{"copath_", ",", " ", 
+     RowBox[{"ops", " ", ":", " ", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], " ", ":=", "\n", "\n", 
+   "  ", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"IntegerQ", "@", 
+      RowBox[{"OptionValue", "[", "\"\<Iterations\>\"", "]"}]}], ",", "\n", 
+     "   ", 
+     RowBox[{"Nest", "[", "\n", "    ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Sort", "@", 
+         RowBox[{"DeleteDuplicates", "@", "\n", "       ", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Map", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Quiet", "@", 
+                 RowBox[{"Check", "[", 
+                  RowBox[{
+                   RowBox[{"CloudObjects", "@", "#"}], ",", " ", 
+                   RowBox[{"{", "}"}]}], "]"}]}], " ", "&"}], ",", " ", "#"}],
+               "]"}], ",", " ", "#"}], "}"}], "]"}]}]}], " ", "&"}], ",", " ",
+        "\n", "    ", 
+       RowBox[{"CloudObjects", "[", "copath", "]"}], ",", "\n", "    ", 
+       RowBox[{"OptionValue", "[", "\"\<Iterations\>\"", "]"}]}], "\n", 
+      "    ", "]"}], ",", "\n", "   ", 
+     RowBox[{"Quiet", "@", 
+      RowBox[{"Check", "[", 
+       RowBox[{
+        RowBox[{"CloudObjects", "@", "copath"}], ",", " ", "$Failed"}], 
+       "]"}]}]}], "\n", "   ", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"formatCloudObjectDS", "[", "cloudObjData_Association", "]"}], " ",
+    ":=", "\n", "\n", "  ", 
+   RowBox[{
+    RowBox[{"Association", "@", "\n", "    ", 
+     RowBox[{"KeyValueMap", "[", "\n", "     ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"StringReplace", "[", 
+          RowBox[{
+           RowBox[{"First", "@", "#"}], ",", " ", "\n", "        ", 
+           RowBox[{
+           "\"\<https://www.wolframcloud.com/objects/\>\"", " ", "->", " ", 
+            "\"\<user:\>\""}]}], "]"}], " ", "->", "\n", "       ", 
+         RowBox[{"Association", "@", 
+          RowBox[{"Prepend", "[", 
+           RowBox[{"#2", ",", " ", 
+            RowBox[{"CloudObject", " ", "->", " ", "#"}]}], "]"}]}]}], " ", 
+        "&"}], ",", "\n", "     ", "cloudObjData"}], "\n", "     ", "]"}]}], 
+    " ", "//", " ", "Dataset"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "getCloudObjectDS", "]"}], " ", "=", "\n", "  ", 
+   RowBox[{"Join", "[", "\n", "   ", 
+    RowBox[{
+     RowBox[{"{", "\n", "    ", 
+      RowBox[{"\"\<CheckPrivate\>\"", " ", "->", " ", "False"}], "\n", "    ",
+       "}"}], ",", "\n", "   ", 
+     RowBox[{"Options", "[", "getCloudObjectList", "]"}], ",", "\n", "   ", 
+     RowBox[{"Options", "[", "getCloudObjectPath", "]"}]}], "\n", "   ", 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getCloudObjectDS", "[", 
+    RowBox[{"cpath_String", ",", " ", 
+     RowBox[{"ops", " ", ":", " ", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], " ", ":=", "\n", "  ", 
+   
+   RowBox[{"Replace", "[", "\n", "   ", 
+    RowBox[{
+     RowBox[{"getCloudObjectList", "[", "\n", "    ", 
+      RowBox[{
+       RowBox[{"getCloudObjectPath", "[", 
+        RowBox[{"cpath", ",", " ", "\n", "     ", 
+         RowBox[{"FilterRules", "[", 
+          RowBox[{
+           RowBox[{"{", "ops", "}"}], ",", " ", 
+           RowBox[{"Options", "[", "getCloudObjectPath", "]"}]}], "]"}]}], 
+        "]"}], ",", " ", "\n", "    ", 
+       RowBox[{"FilterRules", "[", 
+        RowBox[{
+         RowBox[{"{", "ops", "}"}], ",", " ", 
+         RowBox[{"Options", "[", "getCloudObjectList", "]"}]}], "]"}]}], "\n",
+       "    ", "]"}], ",", "\n", "   ", 
+     RowBox[{"l_List", " ", ":>", "\n", "    ", 
+      RowBox[{"formatCloudObjectDS", "[", "\n", "     ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"l", " ", "//", " ", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"TrueQ", "@", 
+             RowBox[{"OptionValue", "[", "\"\<CheckPrivate\>\"", "]"}]}], ",",
+             "\n", "         ", 
+            RowBox[{"Map", "[", 
+             RowBox[{
+              RowBox[{"#", " ", "->", " ", 
+               RowBox[{"Quiet", "@", 
+                RowBox[{"Check", "[", 
+                 RowBox[{
+                  RowBox[{"Options", "[", "#", "]"}], ",", " ", "$Failed"}], 
+                 "]"}]}]}], " ", "&"}], "]"}], ",", "\n", "         ", 
+            RowBox[{"Map", "[", 
+             RowBox[{
+              RowBox[{"#", " ", "->", " ", 
+               RowBox[{"{", "}"}]}], " ", "&"}], "]"}]}], "\n", "         ", 
+           "]"}]}], " ", "//", " ", "Association"}], " ", "//", " ", 
+        RowBox[{"Select", "[", 
+         RowBox[{"Not", "@*", "FailureQ"}], "]"}]}], "\n", "     ", "]"}]}]}],
+     "\n", "   ", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"getCloudObjectDS", "[", 
+   RowBox[{"ops", " ", ":", " ", 
+    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], " ", ":=", "\n", " ", 
+  RowBox[{"getCloudObjectDS", "[", 
+   RowBox[{"\"\<\>\"", ",", " ", "ops"}], "]"}]}]}], "CodeInput",
+ CellChangeTimes->{{3.732881791088584*^9, 
+  3.732881801008265*^9}},ExpressionUUID->"00031b15-4276-4ddd-906a-\
+8a822a462d9b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]getFormatImportData\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,
+ CellChangeTimes->{
+  3.734558754637294*^9},ExpressionUUID->"b0d58353-d99f-4440-8ac1-\
+45b5d48da95b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getFormatImportDataRaw", "[", "fmt_", "]"}], " ", ":=", "\n", 
+   "\n", "  ", 
+   RowBox[{"Block", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+       "$Context", " ", "=", " ", "\n", "     ", 
+        "\"\<ItsASecretToEverybody`Private`\>\""}], ",", " ", 
+       RowBox[{"$ContextPath", " ", "=", " ", 
+        RowBox[{"{", "\"\<System`\>\"", "}"}]}]}], "}"}], ",", "\n", "   ", 
+     RowBox[{"Replace", "[", "\n", "    ", 
+      RowBox[{
+       RowBox[{"SelectFirst", "[", "\n", "     ", 
+        RowBox[{
+         RowBox[{"Map", "[", 
+          RowBox[{
+           RowBox[{"Function", " ", "@", " ", 
+            RowBox[{"FileNameJoin", " ", "@", " ", 
+             RowBox[{"{", 
+              RowBox[{"#", ",", " ", "fmt", ",", " ", "\"\<Import.m\>\""}], 
+              "}"}]}]}], ",", "\n", "      ", 
+           "System`ConvertersDump`$FormatsDirectory"}], "\n", "      ", "]"}],
+          ",", "\n", "     ", "FileExistsQ", ",", "\n", "     ", "$Failed"}], 
+        "\n", "     ", "]"}], ",", "\n", "    ", 
+       RowBox[{"s_String", " ", ":>", " ", 
+        RowBox[{"s", " ", "->", " ", 
+         RowBox[{"Import", "[", 
+          RowBox[{"s", ",", " ", "\"\<HeldExpressions\>\""}], "]"}]}]}]}], 
+      "\n", "    ", "]"}]}], "\n", "   ", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"getFormatImportData", "[", "fmt_", "]"}], " ", ":=", "\n", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "\n", "   ", 
+     RowBox[{"data", ",", " ", "\n", "   ", "file"}], "\n", "   ", "}"}], ",",
+     "\n", "  ", 
+    RowBox[{
+     RowBox[{"data", " ", "=", " ", 
+      RowBox[{"getFormatImportDataRaw", "[", "fmt", "]"}]}], ";", "\n", "  ", 
+     
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"data", " ", "=!=", " ", "$Failed"}], ",", "\n", "   ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"file", ",", " ", "data"}], "}"}], " ", "=", " ", 
+         RowBox[{"List", " ", "@@", " ", "data"}]}], ";", "\n", "   ", 
+        RowBox[{"data", " ", "/.", " ", 
+         RowBox[{"{", "\n", "     ", 
+          RowBox[{
+           RowBox[{"HoldPattern", "[", 
+            RowBox[{"Set", "[", 
+             RowBox[{"s_Symbol", ",", " ", 
+              RowBox[{"v", " ", ":", " ", 
+               RowBox[{"_List", " ", "|", " ", "_Association"}]}]}], "]"}], 
+            "]"}], " ", ":>", "\n", "      ", 
+           RowBox[{"RuleCondition", "[", 
+            RowBox[{
+             RowBox[{"Set", "[", 
+              RowBox[{"s", ",", " ", "v"}], "]"}], ",", " ", "True"}], 
+            "]"}]}], "\n", "     ", "}"}]}], ";", "\n", "   ", 
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"cont", " ", "=", " ", "\n", "      ", 
+            RowBox[{"FirstCase", "[", 
+             RowBox[{"data", ",", " ", 
+              RowBox[{
+               RowBox[{"HoldPattern", "[", 
+                RowBox[{"Begin", "[", "c_", "]"}], "]"}], " ", ":>", " ", 
+               "c"}], ",", " ", "\n", "       ", "\"\<System`FakeHo`\>\"", 
+              ",", " ", "\[Infinity]"}], "]"}]}], "}"}], ",", "\n", "    ", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"SortBy", "[", "\n", "       ", 
+             RowBox[{
+              RowBox[{"Switch", "[", 
+               RowBox[{
+                RowBox[{"#", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], ",", " ", "\n", "         ", 
+                "\"\<FormatName\>\"", ",", " ", "0", ",", "\n", "         ", 
+                "\"\<BinaryFormat\>\"", ",", " ", "2", ",", "\n", 
+                "         ", "\"\<File\>\"", ",", " ", "3", ",", "\n", 
+                "         ", "_", ",", " ", "1"}], "\n", "         ", "]"}], 
+              " ", "&"}], "\n", "       ", "]"}], "@", "\n", "      ", 
+            RowBox[{"Flatten", "@", 
+             RowBox[{"{", "\n", "        ", 
+              RowBox[{
+               RowBox[{
+               "\"\<DocumentedElements\>\"", " ", "->", "\n", "         ", 
+                RowBox[{"FirstCase", "[", 
+                 RowBox[{"data", ",", " ", "\n", "          ", 
+                  RowBox[{
+                   RowBox[{"HoldPattern", "[", "\n", "            ", 
+                    RowBox[{"Set", "[", 
+                    RowBox[{
+                    RowBox[{"_Symbol", "?", 
+                    RowBox[{"(", 
+                    RowBox[{"Function", "[", 
+                    RowBox[{"Null", ",", " ", "\n", "                ", 
+                    RowBox[{
+                    RowBox[{"SymbolName", "[", 
+                    RowBox[{"Unevaluated", "@", "#"}], "]"}], " ", "==", " ", 
+                    "\"\<$DocumentedElements\>\""}], ",", " ", "\n", 
+                    "                ", "HoldFirst"}], "]"}], ")"}]}], ",", 
+                    " ", "v_"}], "]"}], "]"}], " ", ":>", " ", 
+                   RowBox[{"Hold", "@", "v"}]}], ",", "\n", "          ", 
+                  "None", ",", "\n", "          ", "\[Infinity]"}], "\n", 
+                 "          ", "]"}]}], ",", "\n", "        ", 
+               RowBox[{"\"\<HiddenElements\>\"", " ", "->", "\n", "         ", 
+                RowBox[{"FirstCase", "[", 
+                 RowBox[{"data", ",", " ", "\n", "          ", 
+                  RowBox[{
+                   RowBox[{"HoldPattern", "[", "\n", "            ", 
+                    RowBox[{"Set", "[", 
+                    RowBox[{
+                    RowBox[{"_Symbol", "?", 
+                    RowBox[{"(", 
+                    RowBox[{"Function", "[", 
+                    RowBox[{"Null", ",", " ", "\n", "                ", 
+                    RowBox[{
+                    RowBox[{"SymbolName", "[", 
+                    RowBox[{"Unevaluated", "@", "#"}], "]"}], " ", "==", " ", 
+                    "\"\<$HiddenElements\>\""}], ",", " ", "\n", 
+                    "                ", "HoldFirst"}], "]"}], ")"}]}], ",", 
+                    " ", "v_"}], "]"}], "]"}], " ", ":>", " ", 
+                   RowBox[{"Hold", "@", "v"}]}], ",", "\n", "          ", 
+                  "None", ",", "\n", "          ", "\[Infinity]"}], "\n", 
+                 "          ", "]"}]}], ",", "\n", "        ", 
+               RowBox[{"FirstCase", "[", 
+                RowBox[{"data", ",", "\n", "         ", 
+                 RowBox[{
+                  RowBox[{"HoldPattern", "[", "\n", "           ", 
+                   RowBox[{
+                   "ImportExport`RegisterImport", "[", "\n", "            ", 
+                    RowBox[{
+                    "fmtName_", ",", " ", "\n", "            ", "raw_", ",", 
+                    "\n", "            ", 
+                    RowBox[{"post", " ", ":", " ", "_List", " ", ":", " ", 
+                    RowBox[{"{", "}"}]}], ",", "\n", "            ", 
+                    RowBox[{"ruls___", "?", "System`ConvertersDump`RuleQ"}]}],
+                     "\n", "            ", "]"}], "\n", "           ", "]"}], 
+                  " ", ":>", "\n", "          ", 
+                  RowBox[{"{", "\n", "           ", 
+                   RowBox[{
+                    RowBox[{"\"\<FormatName\>\"", " ", "->", " ", "fmtName"}],
+                     ",", "\n", "           ", 
+                    RowBox[{"Replace", "[", "\n", "            ", 
+                    RowBox[{
+                    RowBox[{"Flatten", "@", 
+                    RowBox[{"List", "@", "raw"}]}], ",", "\n", "            ", 
+                    RowBox[{"{", "\n", "             ", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"r", " ", ":", " ", 
+                    RowBox[{"Rule", " ", "|", " ", "RuleDelayed"}]}], ")"}], 
+                    "[", 
+                    RowBox[{"k_", ",", " ", "h_"}], "]"}], " ", ":>", "\n", 
+                    "              ", 
+                    RowBox[{"r", "[", 
+                    RowBox[{"k", ",", " ", "h"}], "]"}]}], ",", "\n", 
+                    "             ", 
+                    RowBox[{
+                    RowBox[{"f", " ", ":", " ", 
+                    RowBox[{"Except", "[", 
+                    RowBox[{"_Rule", " ", "|", " ", "_RuleDelayed"}], "]"}]}],
+                     " ", ":>", " ", 
+                    RowBox[{
+                    "\"\<DefaultImport\>\"", " ", "->", " ", "f"}]}]}], "\n", 
+                    "             ", "}"}], ",", "\n", "            ", "1"}], 
+                    "\n", "            ", "]"}], ",", "\n", "           ", 
+                    RowBox[{"Replace", "[", "\n", "            ", 
+                    RowBox[{"post", ",", "\n", "            ", 
+                    RowBox[{"{", "\n", "             ", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"r", " ", ":", " ", 
+                    RowBox[{"Rule", " ", "|", " ", "RuleDelayed"}]}], ")"}], 
+                    "[", 
+                    RowBox[{"k_", ",", " ", "h_"}], "]"}], " ", ":>", "\n", 
+                    "              ", 
+                    RowBox[{"r", "[", 
+                    RowBox[{"k", ",", " ", "h"}], "]"}]}], ",", "\n", 
+                    "             ", 
+                    RowBox[{
+                    RowBox[{"f", " ", ":", " ", 
+                    RowBox[{"Except", "[", 
+                    RowBox[{"_Rule", " ", "|", " ", "_RuleDelayed"}], "]"}]}],
+                     " ", ":>", " ", 
+                    RowBox[{
+                    "\"\<DefaultImport\>\"", " ", "->", " ", "f"}]}]}], "\n", 
+                    "             ", "}"}], ",", "\n", "            ", "1"}], 
+                    "\n", "            ", "]"}], ",", "\n", "           ", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"{", "ruls", "}"}], ",", "\n", "            ", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    "\"\<AvailableElements\>\"", " ", "->", " ", "_Symbol"}], 
+                    ")"}], " ", "->", " ", "Nothing"}], ",", "\n", 
+                    "            ", "1"}], "\n", "            ", "]"}], ",", 
+                    "\n", "           ", 
+                    RowBox[{"\"\<File\>\"", " ", "->", " ", "file"}]}], "\n", 
+                   "           ", "}"}]}], ",", "\n", "         ", "None", 
+                 ",", "\n", "         ", "\[Infinity]"}], "\n", "         ", 
+                "]"}]}], "\n", "        ", "}"}]}]}], " ", "/.", " ", "\n", 
+           "     ", 
+           RowBox[{
+            RowBox[{"s_Symbol", "?", 
+             RowBox[{"(", 
+              RowBox[{"Function", "[", 
+               RowBox[{"Null", ",", " ", "\n", "         ", 
+                RowBox[{
+                 RowBox[{"Context", "[", "#", "]"}], " ", "==", " ", 
+                 "\"\<ItsASecretToEverybody`Private`\>\""}], ",", " ", "\n", 
+                "         ", "HoldFirst"}], "]"}], ")"}]}], " ", ":>", " ", 
+            "\n", "      ", 
+            RowBox[{"RuleCondition", "[", "\n", "       ", 
+             RowBox[{
+              RowBox[{"ToExpression", "[", 
+               RowBox[{
+                RowBox[{"cont", " ", "<>", " ", 
+                 RowBox[{"SymbolName", "[", 
+                  RowBox[{"Unevaluated", "[", "s", "]"}], "]"}]}], ",", " ", 
+                "StandardForm", ",", " ", "\n", "        ", "Inactivate"}], 
+               "]"}], ",", " ", "True"}], "]"}]}]}]}], "\n", "    ", "]"}]}], 
+       ",", "\n", "   ", 
+       RowBox[{"{", "}"}]}], "\n", "   ", "]"}]}]}], "\n", "  ", 
+   "]"}]}]}], "CodeInput",
+ CellChangeTimes->{{3.734558748884747*^9, 
+  3.734558748887073*^9}},ExpressionUUID->"51637cd7-15d0-4d82-bf82-\
+7921ad2e8b5e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]getFormatExportData\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,
+ CellChangeTimes->{
+  3.7345587854293537`*^9},ExpressionUUID->"76c238e1-2e12-4bb3-88cd-\
+666fd2c86ab7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getFormatExportDataRaw", "[", "fmt_", "]"}], " ", ":=", " ", "\n",
+    "  ", 
+   RowBox[{"Block", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+       "$Context", " ", "=", " ", "\n", "     ", 
+        "\"\<ItsASecretToEverybody`Private`\>\""}], ",", " ", 
+       RowBox[{"$ContextPath", " ", "=", " ", 
+        RowBox[{"{", "\"\<System`\>\"", "}"}]}]}], "}"}], ",", " ", "\n", 
+     "   ", 
+     RowBox[{"Replace", "[", "\n", "    ", 
+      RowBox[{
+       RowBox[{"SelectFirst", "[", "\n", "     ", 
+        RowBox[{
+         RowBox[{"Map", "[", 
+          RowBox[{
+           RowBox[{"Function", "@", 
+            RowBox[{"FileNameJoin", "@", 
+             RowBox[{"{", 
+              RowBox[{"#", ",", " ", "fmt", ",", " ", "\"\<Export.m\>\""}], 
+              "}"}]}]}], ",", " ", "\n", "      ", 
+           "System`ConvertersDump`$FormatsDirectory"}], "]"}], ",", "\n", 
+         "     ", "FileExistsQ", ",", " ", "$Failed"}], "]"}], ",", " ", "\n",
+        "    ", 
+       RowBox[{"s_String", " ", ":>", " ", 
+        RowBox[{"s", " ", "->", " ", 
+         RowBox[{"Import", "[", 
+          RowBox[{"s", ",", " ", "\"\<HeldExpressions\>\""}], "]"}]}]}]}], 
+      "\n", "    ", "]"}]}], "\n", "   ", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"getFormatExportData", "[", "fmt_", "]"}], " ", ":=", "\n", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"data", ",", " ", "file"}], "}"}], ",", "\n", "  ", 
+    RowBox[{
+     RowBox[{"data", " ", "=", " ", 
+      RowBox[{"getFormatExportDataRaw", "[", "fmt", "]"}]}], ";", "\n", "  ", 
+     
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"data", " ", "=!=", " ", "$Failed"}], ",", "\n", "   ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"file", ",", " ", "data"}], "}"}], " ", "=", " ", 
+         RowBox[{"List", " ", "@@", " ", "data"}]}], ";", "\n", "   ", 
+        RowBox[{"data", " ", "/.", " ", 
+         RowBox[{"{", "\n", "     ", 
+          RowBox[{
+           RowBox[{"HoldPattern", "[", 
+            RowBox[{"Set", "[", 
+             RowBox[{"s_Symbol", ",", " ", 
+              RowBox[{"v", " ", ":", " ", 
+               RowBox[{"_List", " ", "|", " ", "_Association"}]}]}], "]"}], 
+            "]"}], " ", ":>", "\n", "      ", 
+           RowBox[{"RuleCondition", "[", 
+            RowBox[{
+             RowBox[{"Set", "[", 
+              RowBox[{"s", ",", " ", "v"}], "]"}], ",", " ", "True"}], 
+            "]"}]}], "\n", "     ", "}"}]}], ";", "\n", "   ", 
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"cont", " ", "=", " ", "\n", "      ", 
+            RowBox[{"FirstCase", "[", 
+             RowBox[{"data", ",", " ", 
+              RowBox[{
+               RowBox[{"HoldPattern", "[", 
+                RowBox[{"Begin", "[", "c_", "]"}], "]"}], " ", ":>", " ", 
+               "c"}], ",", " ", "\n", "       ", "\"\<System`FakeHo`\>\"", 
+              ",", " ", "\[Infinity]"}], "]"}]}], "}"}], ",", "\n", "    ", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"SortBy", "[", "\n", "       ", 
+             RowBox[{
+              RowBox[{"Switch", "[", 
+               RowBox[{
+                RowBox[{"#", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+                "\"\<FormatName\>\"", ",", " ", "0", ",", " ", 
+                "\"\<BinaryFormat\>\"", ",", " ", "2", ",", " ", 
+                "\"\<File\>\"", ",", " ", "\n", "         ", "3", ",", " ", 
+                "_", ",", " ", "1"}], "]"}], " ", "&"}], "\n", "       ", 
+             "]"}], "@", "\n", "      ", 
+            RowBox[{"Flatten", "@", 
+             RowBox[{"{", "\n", "        ", 
+              RowBox[{
+               RowBox[{
+               "\"\<DocumentedElements\>\"", " ", "->", "\n", "         ", 
+                RowBox[{"FirstCase", "[", 
+                 RowBox[{"data", ",", "\n", "          ", 
+                  RowBox[{
+                   RowBox[{"HoldPattern", "[", "\n", "            ", 
+                    RowBox[{"Set", "[", "\n", "             ", 
+                    RowBox[{
+                    RowBox[{"_Symbol", "?", 
+                    RowBox[{"(", "\n", "               ", 
+                    RowBox[{"Function", "[", 
+                    RowBox[{"Null", ",", "\n", "                ", 
+                    RowBox[{
+                    RowBox[{"SymbolName", "[", 
+                    RowBox[{"Unevaluated", "@", "#"}], "]"}], " ", "==", " ", 
+                    "\"\<$DocumentedElements\>\""}], ",", "\n", 
+                    "                ", "HoldFirst"}], "\n", 
+                    "                ", "]"}], ")"}]}], ",", "\n", 
+                    "             ", "v_"}], "]"}], "\n", "            ", 
+                    "]"}], " ", ":>", " ", 
+                   RowBox[{"Hold", "@", "v"}]}], ",", " ", "None", ",", " ", 
+                  "\[Infinity]"}], "]"}]}], ",", "\n", "        ", 
+               RowBox[{"\"\<HiddenElements\>\"", " ", "->", "\n", "         ", 
+                RowBox[{"FirstCase", "[", 
+                 RowBox[{"data", ",", "\n", "          ", 
+                  RowBox[{
+                   RowBox[{"HoldPattern", "[", "\n", "            ", 
+                    RowBox[{"Set", "[", "\n", "             ", 
+                    RowBox[{
+                    RowBox[{"_Symbol", "?", 
+                    RowBox[{"(", "\n", "               ", 
+                    RowBox[{"Function", "[", 
+                    RowBox[{"Null", ",", "\n", "                ", 
+                    RowBox[{
+                    RowBox[{"SymbolName", "[", 
+                    RowBox[{"Unevaluated", "@", "#"}], "]"}], " ", "==", " ", 
+                    "\"\<$HiddenElements\>\""}], ",", "\n", 
+                    "                ", "HoldFirst"}], "\n", 
+                    "                ", "]"}], ")"}]}], ",", "\n", 
+                    "             ", "v_"}], "\n", "             ", "]"}], 
+                    "\n", "            ", "]"}], " ", ":>", " ", 
+                   RowBox[{"Hold", "@", "v"}]}], ",", "\n", "          ", 
+                  "None", ",", "\n", "          ", "\[Infinity]"}], "]"}]}], 
+               ",", "\n", "        ", 
+               RowBox[{"FirstCase", "[", 
+                RowBox[{"data", ",", "\n", "         ", 
+                 RowBox[{
+                  RowBox[{"HoldPattern", "[", "\n", "           ", 
+                   RowBox[{"ImportExport`RegisterExport", "[", 
+                    RowBox[{
+                    "fmtName_", ",", "\n", "            ", "function_", ",", 
+                    "\n", "            ", 
+                    RowBox[{"ruls___", "?", "System`ConvertersDump`RuleQ"}]}],
+                     "\n", "            ", "]"}], "\n", "           ", "]"}], 
+                  " ", ":>", " ", 
+                  RowBox[{"{", "\n", "           ", 
+                   RowBox[{
+                    RowBox[{"\"\<FormatName\>\"", " ", "->", " ", "fmtName"}],
+                     ",", "\n", "           ", 
+                    RowBox[{"\"\<Function\>\"", " ", "->", " ", "function"}], 
+                    ",", "\n", "           ", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"{", "ruls", "}"}], ",", "\n", "            ", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    "\"\<AvailableElements\>\"", " ", "->", " ", "_Symbol"}], 
+                    ")"}], " ", "->", " ", "Nothing"}], ",", "\n", 
+                    "            ", "1"}], "]"}], ",", "\n", "           ", 
+                    RowBox[{"\"\<File\>\"", " ", "->", " ", "file"}]}], "\n", 
+                   "           ", "}"}]}], ",", "\n", "         ", "None", 
+                 ",", "\n", "         ", "\[Infinity]"}], "]"}]}], "\n", 
+              "        ", "}"}]}]}], " ", "/.", " ", 
+           RowBox[{
+            RowBox[{"s_Symbol", "?", 
+             RowBox[{"(", "\n", "        ", 
+              RowBox[{"Function", "[", 
+               RowBox[{"Null", ",", "\n", "         ", 
+                RowBox[{
+                 RowBox[{"Context", "[", "#", "]"}], " ", "==", " ", 
+                 "\"\<ItsASecretToEverybody`Private`\>\""}], ",", "\n", 
+                "         ", "HoldFirst"}], "\n", "         ", "]"}], "\n", 
+              "        ", ")"}]}], " ", ":>", "\n", "      ", 
+            RowBox[{"RuleCondition", "[", "\n", "       ", 
+             RowBox[{
+              RowBox[{"ToExpression", "[", 
+               RowBox[{
+                RowBox[{"cont", " ", "<>", " ", 
+                 RowBox[{"SymbolName", "[", 
+                  RowBox[{"Unevaluated", "[", "s", "]"}], "]"}]}], ",", "\n", 
+                "        ", "StandardForm", ",", "\n", "        ", 
+                "Inactivate"}], "\n", "        ", "]"}], ",", "\n", "       ",
+               "True"}], "]"}]}]}]}], "\n", "    ", "]"}]}], ",", "\n", "   ", 
+       RowBox[{"{", "}"}]}], "\n", "   ", "]"}]}]}], "\n", "  ", 
+   "]"}]}]}], "CodeInput",
+ CellChangeTimes->{{3.734558782415597*^9, 
+  3.734558782417171*^9}},ExpressionUUID->"b85338f5-ff59-4631-9f27-\
+577f87fa44d7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]applyPlotTheming\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"01a2e904-3a5d-4371-96e6-9f705567bb0a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"applyPlotTheming", "[", "\n", "\t", 
+   RowBox[{
+   "coreData_", ",", "\n", "\t", "baseFunction_", ",", "\n", "\t", 
+    "inheritFrom_", ",", "\n", "\t", 
+    RowBox[{"o", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "\t", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"Module", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"inheritBase", "=", 
+       RowBox[{
+        RowBox[{"Flatten", "[", 
+         RowBox[{"{", "inheritFrom", "}"}], "]"}], "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], ",", "\n", "\t", "\t\t", "theme", 
+      ",", "\n", "\t", "\t\t", "premethod", ",", "\n", "\t", "\t\t", "method",
+       ",", "\n", "\t", "\t\t", "defaultstyle", ",", "\n", "\t", "\t\t", 
+      "defaultcf", ",", "\n", "\t", "\t\t", "cf", ",", "\n", "\t", "\t\t", 
+      "opts", ",", "\n", "\t", "\t\t", "threeDFlag", ",", "\n", "\t", "\t\t", 
+      "ticks"}], "\n", "\t", "\t\t", "}"}], ",", "\n", "\t", "\t", 
+    RowBox[{
+     RowBox[{"opts", " ", "=", " ", "\n", "\t", "\t\t", 
+      RowBox[{"Flatten", " ", "@", " ", 
+       RowBox[{"{", "o", "}"}]}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"Quiet", "[", "\n", "\t", "\t\t", 
+      RowBox[{"theme", " ", "=", " ", 
+       RowBox[{"OptionValue", "[", 
+        RowBox[{"inheritFrom", ",", " ", "opts", ",", " ", "PlotTheme"}], 
+        "]"}]}], "\n", "\t", "\t\t", "]"}], ";", "\n", "\t", "\t", 
+     RowBox[{"theme", "=", 
+      RowBox[{"Charting`ResolvePlotTheme", "[", 
+       RowBox[{"theme", ",", " ", "inheritBase"}], "]"}]}], ";", "\n", "\t", 
+     "\t", 
+     RowBox[{"Quiet", "[", 
+      RowBox[{"premethod", " ", "=", 
+       RowBox[{"Quiet", "@", " ", 
+        RowBox[{"OptionValue", "[", 
+         RowBox[{"inheritBase", ",", " ", "theme", ",", " ", "Method"}], 
+         "]"}]}]}], "]"}], ";", "\n", "\t", "\t", 
+     RowBox[{"premethod", " ", "=", " ", 
+      RowBox[{"Charting`ConstructMethod", "@", " ", "premethod"}]}], ";", 
+     "\n", "\t", "\t", 
+     RowBox[{"theme", " ", "=", " ", 
+      RowBox[{"FilterRules", "[", 
+       RowBox[{"theme", ",", " ", 
+        RowBox[{"Except", " ", "@", " ", "Method"}]}], "]"}]}], ";", "\n", 
+     "\t", "\t", 
+     RowBox[{"theme", " ", "=", "\n", "\t", "\t\t", 
+      RowBox[{"FilterRules", "[", "\n", "\t", "\t\t\t", 
+       RowBox[{"theme", ",", "\n", "\t", "\t", "\t\t", 
+        RowBox[{"Join", "@@", 
+         RowBox[{"Map", "[", 
+          RowBox[{"Options", ",", " ", 
+           RowBox[{"Flatten", "[", 
+            RowBox[{"{", "inheritFrom", "}"}], "]"}]}], "]"}]}]}], "\n", "\t",
+        "\t", "\t\t", "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"opts", " ", "=", " ", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{"{", 
+        RowBox[{"opts", ",", " ", "theme"}], "}"}], "]"}]}], ";", "\n", "\t", 
+     "\t", 
+     RowBox[{"method", "=", 
+      RowBox[{"Quiet", "@", 
+       RowBox[{"OptionValue", "[", 
+        RowBox[{"inheritFrom", ",", " ", "opts", ",", " ", "Method"}], 
+        "]"}]}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"method", "=", "\n", "\t", "\t\t", 
+      RowBox[{"Charting`parseMethod", "[", "\n", "\t", "\t\t\t", 
+       RowBox[{
+        RowBox[{"Charting`ConstructMethod", "@", "method"}], ",", "\n", "\t", 
+        "\t", "\t\t", "premethod"}], "\n", "\t", "\t", "\t\t", "]"}]}], ";", 
+     "\n", "\t", "\t", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "defaultstyle", ",", " ", "defaultcf", ",", " ", "cf", ",", " ", 
+        "ticks"}], "}"}], " ", "=", "\n", "\t", "\t\t", 
+      RowBox[{"Quiet", " ", "@", " ", "\n", "\t", "\t\t\t", 
+       RowBox[{"OptionValue", "[", "\n", "\t", "\t", "\t\t\t", 
+        RowBox[{"inheritFrom", ",", "\n", "\t", "\t", "\t", "\t\t", 
+         RowBox[{"Flatten", " ", "@", " ", 
+          RowBox[{"{", 
+           RowBox[{"method", ",", " ", "opts"}], "}"}]}], ",", "\n", "\t", 
+         "\t", "\t", "\t\t", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<DefaultPlotStyle\>\"", ",", " ", 
+           "\"\<DefaultColorFunction\>\"", ",", " ", "ColorFunction", ",", 
+           " ", "Ticks"}], "}"}]}], "\n", "\t", "\t", "\t\t\t", "]"}]}]}], 
+     ";", "\n", "\t", "\t", 
+     RowBox[{"cf", " ", "=", " ", 
+      RowBox[{"Charting`customColorFunction", "[", 
+       RowBox[{"inheritBase", ",", " ", "cf", ",", " ", "defaultcf"}], 
+       "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"threeDFlag", " ", "=", " ", 
+      RowBox[{"StringContainsQ", "[", 
+       RowBox[{
+        RowBox[{"SymbolName", "[", "inheritBase", "]"}], ",", " ", 
+        "\"\<3D\>\""}], "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"Visualization`Utilities`TicksQ", "[", "ticks", "]"}], ",", 
+       "\n", "\t", "\t\t", 
+       RowBox[{"ticks", " ", "=", " ", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+          "threeDFlag", ",", "\n", "\t", "\t", "\t\t\t", 
+           "Visualization`Utilities`TicksExpand3D", ",", "\n", "\t", "\t", 
+           "\t\t\t", "Visualization`Utilities`TicksExpand"}], "\n", "\t", 
+          "\t", "\t\t\t", "]"}], " ", "@", " ", "ticks"}]}], ",", "\n", "\t", 
+       "\t\t", 
+       RowBox[{"ticks", " ", "=", " ", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+          "threeDFlag", ",", "\n", "\t", "\t", "\t\t\t", 
+           "Visualization`Utilities`TicksExpand3D", ",", "\n", "\t", "\t", 
+           "\t\t\t", "Visualization`Utilities`TicksExpand"}], "\n", "\t", 
+          "\t", "\t\t\t", "]"}], " ", "@", " ", "Automatic"}]}]}], "\n", "\t",
+       "\t\t", "]"}], ";", "\n", "\t", "\t", 
+     RowBox[{"ticks", " ", "=", "\n", "\t", "\t\t", 
+      RowBox[{"Visualization`Utilities`ScaleTicks", "[", "\n", "\t", "\t\t\t", 
+       RowBox[{
+        RowBox[{"ConstantArray", "[", "\n", "\t", "\t", "\t\t\t", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Identity", ",", " ", "Identity"}], "}"}], ",", "\n", "\t",
+           "\t", "\t\t\t", 
+          RowBox[{"If", "[", 
+           RowBox[{"threeDFlag", ",", " ", "3", ",", " ", "2"}], "]"}]}], 
+         "\n", "\t", "\t", "\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t\t", 
+        "ticks"}], "\n", "\t", "\t", "\t\t", "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"opts", "=", "\n", "\t", "\t\t", 
+      RowBox[{"Join", "[", "\n", "\t", "\t\t\t", 
+       RowBox[{"opts", ",", "\n", "\t", "\t", "\t\t", 
+        RowBox[{"{", "\n", "\t", "\t", "\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<DefaultPlotStyle\>\"", "\[Rule]", "defaultstyle"}], 
+          ",", "\n", "\t", "\t", "\t\t\t", 
+          RowBox[{"ColorFunction", "\[Rule]", "cf"}], ",", "\n", "\t", "\t", 
+          "\t\t\t", 
+          RowBox[{"Ticks", "\[Rule]", "ticks"}]}], "\n", "\t", "\t", "\t\t\t",
+          "}"}]}], "\n", "\t", "\t", "\t\t", "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"baseFunction", "[", "\n", "\t", "\t\t", 
+      RowBox[{"coreData", ",", "\n", "\t", "\t\t", 
+       RowBox[{"Charting`FilterGraphicsOptions", "[", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"Flatten", "@", 
+          RowBox[{"{", 
+           RowBox[{"opts", ",", " ", 
+            RowBox[{"Method", "\[Rule]", "method"}]}], "}"}]}], ",", "\n", 
+         "\t", "\t\t\t", 
+         RowBox[{"Options", "@", "baseFunction"}]}], "\n", "\t", "\t\t\t", 
+        "]"}]}], "\n", "\t", "\t\t", "]"}]}]}], "\n", "\t", "\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"08864834-47c3-44e1-bcb3-3906f59057dd"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]customArrows3D\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a57f5395-d170-48bc-89d3-e3893282e680"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "customArrows3D", "]"}], "=", "\n", "\t", 
+   RowBox[{"Join", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"Options", "[", "ListVectorPlot3D", "]"}], ",", "\n", "\t", "\t", 
+     RowBox[{
+     "Options", "[", "System`VectorPlotsDump`iListVectorPlot3D", "]"}], ",", 
+     "\n", "\t", "\t", "Charting`$GraphicsExtraOptions"}], "\n", "\t", "\t", 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"customArrows3D", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"coords_", ",", " ", "vels_"}], "}"}], ",", "  ", 
+    RowBox[{"ops", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"Module", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"velNorms", "=", 
+       RowBox[{"Norm", "/@", "vels"}]}], ",", " ", "\n", "\t", "\t\t", 
+      "velMax", ",", "\n", "\t", "\t\t", 
+      RowBox[{"boxSize", "=", 
+       RowBox[{"Max", "@", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", 
+           RowBox[{"(", 
+            RowBox[{"Subtract", "@@", 
+             RowBox[{"MinMax", "@", 
+              RowBox[{"CoordinateBounds", "[", "coords", "]"}]}]}], ")"}]}], 
+          ",", " ", ".001"}], "}"}]}]}], ",", "\n", "\t", "\t\t", 
+      RowBox[{"defps", "=", 
+       RowBox[{"OptionValue", "[", "\"\<DefaultPlotStyle\>\"", "]"}]}], ",", 
+      "\n", "\t", "\t\t", 
+      RowBox[{"cf", "=", "\n", "\t\t\t\t", 
+       RowBox[{"Replace", "[", "\n", "\t\t\t\t\t", 
+        RowBox[{
+         RowBox[{
+         "Charting`customColorFunction", "[", "\n", "\t", "\t", "\t\t\t\t", 
+          RowBox[{"ListVectorPlot3D", ",", "\n", "\t", "\t", "\t\t\t\t", 
+           RowBox[{"OptionValue", "[", "VectorColorFunction", "]"}], ",", 
+           "\n", "\t", "\t", "\t\t\t\t", 
+           RowBox[{
+           "OptionValue", "[", "\"\<DefaultColorFunction\>\"", "]"}]}], "\n", 
+          "\t", "\t", "\t\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t\t\t", 
+         RowBox[{"cd_ColorDataFunction", "\[RuleDelayed]", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"cd", "[", "#", "]"}], "&"}], ")"}]}]}], "\n", "\t", "\t",
+         "\t\t\t", "]"}]}], ",", "\n", "\t", "\t\t", "velVecs", ",", "\n", 
+      "\t", "\t\t", "ps", ",", "\n", "\t", "\t\t", "hackColorMap"}], "\n", 
+     "\t", "\t\t", "}"}], ",", "\n", "\t", "\t", 
+    RowBox[{
+     RowBox[{"velMax", "=", 
+      RowBox[{"Max", "@", "velNorms"}]}], ";", "\n", "\t\t", 
+     RowBox[{"ps", "=", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"Charting`customVectorStyle", "[", " ", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{"OptionValue", "[", "VectorStyle", "]"}], ",", "\n", "\t", 
+         "\t", "\t\t", "defps", ",", "\n", "\t", "\t", "\t\t", "1"}], "\n", 
+        "\t", "\t", "\t\t", "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", "\n", "\t", "\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"velMax", "!=", "0"}], ",", "\n", "\t", "\t\t", 
+       RowBox[{
+        RowBox[{"velVecs", "=", 
+         RowBox[{"Thread", "[", 
+          RowBox[{"{", 
+           RowBox[{"coords", ",", " ", 
+            RowBox[{"coords", "+", 
+             RowBox[{"vels", "*", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"boxSize", "/", "10"}], "/", "velMax"}], ")"}]}]}]}], 
+           "}"}], "]"}]}], ";", "\n", "\t", "\t\t", 
+        RowBox[{"hackColorMap", "=", "\n", "\t", "\t\t", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"cf", "===", "None"}], ",", "\n", "\t", "\t\t\t", 
+           "Nothing", ",", "\n", "\t", "\t\t\t", 
+           RowBox[{"Association", "@", "\n", "\t\t\t\t\t", 
+            RowBox[{"MapThread", "[", "\n", "\t\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"#", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "\[Rule]", 
+                RowBox[{"(", 
+                 RowBox[{"cf", "@@", 
+                  RowBox[{"Flatten", "[", 
+                   RowBox[{"Prepend", "[", "##", "]"}], "]"}]}], ")"}]}], 
+               "&"}], ",", "\n", "\t", "\t", "\t\t\t\t", 
+              RowBox[{"{", "\n", "\t", "\t", "\t\t\t\t\t", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"OptionValue", "@", "VectorColorFunctionScaling"}], 
+                  ",", "\n", "\t", "\t", "\t\t\t\t\t\t", 
+                  RowBox[{"Rescale", "@", "velVecs"}], ",", "\n", "\t", "\t", 
+                  "\t\t\t\t\t\t", "velVecs"}], "\n", "\t", "\t", 
+                 "\t\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t\t\t\t\t", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"OptionValue", "@", "VectorColorFunctionScaling"}], 
+                  ",", "\n", "\t", "\t", "\t\t\t\t\t\t", 
+                  RowBox[{"Rescale", "@", "velNorms"}], ",", "\n", "\t", "\t",
+                   "\t\t\t\t\t\t", "velNorms"}], "\n", "\t", "\t", 
+                 "\t\t\t\t\t\t", "]"}]}], "\n", "\t", "\t", "\t\t\t\t\t", 
+               "}"}]}], "\n", "\t", "\t", "\t\t\t\t", "]"}]}]}], "\n", "\t", 
+          "\t\t\t", "]"}]}]}], ",", "\n", "\t\t\t", 
+       RowBox[{"hackColorMap", "=", "\n", "\t\t\t\t", 
+        RowBox[{"AssociationMap", "[", 
+         RowBox[{"Nothing", ",", "  ", "cf"}], "]"}]}]}], "\n", "\t", "\t\t", 
+      "]"}], ";", "\n", "\t", "\t", 
+     RowBox[{"Show", "[", "\n", "\t", "\t\t", 
+      RowBox[{
+       RowBox[{"ListPointPlot3D", "[", 
+        RowBox[{"coords", ",", "\n", "\t", "\t\t\t", 
+         RowBox[{"FilterRules", "[", "\n", "\t", "\t\t\t\t", 
+          RowBox[{
+           RowBox[{"Flatten", "@", "\n", "\t\t\t\t\t\t", 
+            RowBox[{"{", "\n", "\t\t\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{
+              "ColorFunctionScaling", "\[Rule]", "\n", "\t\t\t\t\t\t\t\t", 
+               RowBox[{"OptionValue", "@", "VectorColorFunctionScaling"}]}], 
+              ",", "\n", "\t\t\t\t\t\t\t", 
+              RowBox[{"ColorFunction", "\[Rule]", "\n", "\t\t\t\t\t\t\t\t", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"cf", "=!=", "None"}], ",", "\n", "\t", "\t", "\t", 
+                 "\t\t\t\t\t\t", 
+                 RowBox[{"With", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"nf", "=", 
+                    RowBox[{"Nearest", "[", 
+                    RowBox[{"Keys", "@", "hackColorMap"}], "]"}]}], "}"}], 
+                   ",", "\n", "\t", "\t", "\t", "\t\t\t\t\t\t\t", 
+                   RowBox[{
+                    RowBox[{"hackColorMap", "[", 
+                    RowBox[{
+                    RowBox[{"nf", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "}"}], 
+                    "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "]"}], "&"}]}], "\n", 
+                  "\t", "\t", "\t", "\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t", 
+                 "\t", "\t", "\t\t\t\t\t\t", "cf"}], "\n", "\t", 
+                "\t\t\t\t\t\t\t\t", "]"}]}], ",", "\n", "\t", "\t", 
+              "\t\t\t\t\t", "ops", ",", "\n", "\t", "\t", "\t\t\t\t\t", 
+              RowBox[{"PlotStyle", "\[Rule]", "ps"}], ",", "\n", "\t", "\t", 
+              "\t\t\t\t\t", 
+              RowBox[{"BoxRatios", "\[Rule]", "Automatic"}]}], "\n", "\t", 
+             "\t\t\t\t\t\t", "}"}]}], ",", " ", "\n", "\t", "\t\t\t\t", 
+           RowBox[{"Options", "@", "ListPointPlot3D"}]}], "\n", "\t", 
+          "\t\t\t\t", "]"}]}], "\n", "\t", "\t\t\t", "]"}], ",", "\n", "\t", 
+       "\t\t", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"velMax", "!=", "0"}], ",", "\n", "\t", "\t\t\t", 
+         RowBox[{"Graphics3D", "[", "\n", "\t", "\t\t\t\t", 
+          RowBox[{
+           RowBox[{"MapThread", "[", "\n", "\t", "\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"Flatten", "@*", "List"}], ",", "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{"{", "\n", "\t", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"Replace", "[", 
+                RowBox[{
+                 RowBox[{"Quiet", "@", 
+                  RowBox[{"OptionValue", "[", "VectorScale", "]"}]}], ",", 
+                 "\n", "\t", "\t\t\t\t\t\t\t", 
+                 RowBox[{"{", "\n", "\t\t\t\t\t\t\t\t\t", 
+                  RowBox[{
+                   RowBox[{"Automatic", ":>", "\n", "\t\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{"Thread", "@", 
+                    RowBox[{"Arrowheads", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"velNorms", "/", "velMax"}], "/", "25"}], ",", 
+                    " ", 
+                    RowBox[{"Appearance", "\[Rule]", "\"\<Projected\>\""}]}], 
+                    "]"}]}]}], ",", "\n", "\t", "\t\t\t\t\t\t\t\t", 
+                   RowBox[{
+                    RowBox[{"n", ":", 
+                    RowBox[{"_", "?", "NumericQ"}]}], "\[RuleDelayed]", "\n", 
+                    "\t\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{"Thread", "@", 
+                    RowBox[{"Arrowheads", "[", 
+                    RowBox[{
+                    RowBox[{"n", "*", 
+                    RowBox[{"velNorms", "/", "velMax"}]}], ",", " ", 
+                    RowBox[{"Appearance", "\[Rule]", "\"\<Projected\>\""}]}], 
+                    "]"}]}]}], ",", "\n", "\t\t\t\t\t\t\t\t\t", 
+                   RowBox[{"_", ":>", "\n", "\t\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    "ConstantArray", "[", "\n", "\t\t\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    RowBox[{"Arrowheads", "[", 
+                    RowBox[{"Appearance", "\[Rule]", "\"\<Projected\>\""}], 
+                    "]"}], ",", "\n", "\t", "\t", "\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{"Length", "@", "velNorms"}]}], "\n", "\t", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", "]"}]}]}], "\n", "\t", 
+                  "\t\t\t\t\t\t\t\t", "}"}]}], "\n", "\t", "\t\t\t\t\t\t\t", 
+                "]"}], ",", "\n", "\t", "\t\t\t\t\t\t", 
+               RowBox[{"ConstantArray", "[", 
+                RowBox[{"ps", ",", 
+                 RowBox[{"Length", "@", "velNorms"}]}], "]"}], ",", "\n", 
+               "\t", "\t\t\t\t\t\t", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"cf", "===", "None"}], ",", "\n", "\t", 
+                 "\t\t\t\t\t\t\t", "Nothing", ",", "\n", "\t", 
+                 "\t\t\t\t\t\t\t", 
+                 RowBox[{"Values", "@", "hackColorMap"}]}], "\n", "\t", 
+                "\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t\t\t\t\t\t", 
+               RowBox[{"Thread", "[", 
+                RowBox[{"Arrow", "@", "velVecs"}], "]"}]}], "\n", "\t", 
+              "\t\t\t\t\t\t", "}"}]}], "\n", "\t", "\t\t\t\t\t", "]"}], ",", 
+           "\n", "\t", "\t\t\t\t", 
+           RowBox[{"FilterRules", "[", 
+            RowBox[{
+             RowBox[{"{", "ops", "}"}], ",", " ", 
+             RowBox[{"Options", "@", "Graphics3D"}]}], "]"}]}], "\n", "\t", 
+          "\t\t\t\t", "]"}]}], "\n", "\t", "\t\t\t", "]"}], ",", "\n", "\t", 
+       "\t\t", 
+       RowBox[{"{", "}"}]}], "\n", "\t", "\t\t", "]"}]}]}], "\n", "\t", "\t", 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"89d52911-b2fc-4846-aa92-54e84ffdaa8f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]myLVP3D\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"63184438-0ff0-44be-9c63-b890995ab436"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"myLVP3D", "[", 
+   RowBox[{"data_", ",", " ", 
+    RowBox[{"ops", ":", 
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"applyPlotTheming", "[", "\n", "\t\t", 
+   RowBox[{
+   "data", ",", "\n", "\t", "\t", "customArrows3D", ",", "\n", "\t", "\t", 
+    RowBox[{"{", 
+     RowBox[{
+     "ListVectorPlot3D", ",", "System`VectorPlotsDump`iListVectorPlot3D"}], 
+     "}"}], ",", "\n", "\t", "\t", "ops"}], "\n", "\t", "\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"bc133b5f-0ff7-46cb-aeeb-015075e30078"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]prettyString\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"19d3d16f-4078-4430-8b7e-e3e48278d943"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"prettyString", "[", 
+   RowBox[{"expr_", ",", "\n", "   ", 
+    RowBox[{"elementsPerLine", " ", ":", " ", 
+     RowBox[{"_", "?", "IntegerQ"}], " ", ":", " ", "1"}], ",", "\n", "  ", 
+    RowBox[{"dataType", " ", ":", " ", 
+     RowBox[{"TextData", " ", "|", " ", "BoxData"}], " ", ":", " ", 
+     "BoxData"}], ",", "\n", "  ", 
+    RowBox[{
+    "cellStyle", " ", ":", " ", "_String", " ", ":", " ", "\"\<Input\>\""}], 
+    ",", "\n", "  ", 
+    RowBox[{"ops", " ", ":", " ", 
+     RowBox[{"OptionsPattern", "[", "Cell", "]"}]}]}], "\n", "  ", "]"}], " ",
+   ":=", "\n", " ", 
+  RowBox[{"StringDelete", "[", "\n", "  ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"FrontEndExecute", "[", "\n", "    ", 
+      RowBox[{"FrontEnd`ExportPacket", "[", "\n", "     ", 
+       RowBox[{
+        RowBox[{"Cell", "[", "\n", "      ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"dataType", "@", "\n", "        ", 
+            RowBox[{"GeneralUtilities`PrettyFormBoxes", "[", 
+             RowBox[{"expr", ",", " ", "elementsPerLine"}], "]"}]}], " ", "/.",
+            "\n", "\n", "           ", 
+           RowBox[{
+            RowBox[{"TemplateBox", "[", "\n", "         ", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"sym_", ",", " ", "___"}], "}"}], ",", "\n", 
+              "         ", "\"\<DefinitionSymbol\>\"", ",", " ", "\n", 
+              "         ", "___"}], "\n", "         ", "]"}], " ", ":>", " ", 
+            "sym"}]}], ",", " ", "\n", "      ", "cellStyle", ",", "\n", 
+          "      ", "ops", ",", "\n", "      ", 
+          RowBox[{"PageWidth", " ", "->", " ", "Infinity"}]}], "\n", "      ",
+          "]"}], ",", "\n", "     ", "\"\<PlainText\>\""}], "\n", "     ", 
+       "]"}], "\n", "    ", "]"}], "[", 
+     RowBox[{"[", "1", "]"}], "]"}], ",", "\n", "  ", 
+    RowBox[{"\"\<\\\\\>\"", " ", "~~", " ", "\"\<\\n\>\""}]}], "\n", "  ", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"09fd260e-420a-4480-8678-8a1500e788fb"]
+}, Closed]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"28b1dc32-6518-447e-aa0c-\
+781bc6bddc92"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], ";"}]], "InputSection",
+ CellChangeTimes->{{3.732881874865632*^9, 
+  3.732881875562667*^9}},ExpressionUUID->"2f73eccf-26ac-4afb-b9fc-\
+2871897a42e1"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"5817823c-3768-4d2d-9b89-\
+3b28503b69d3"]
+},
+WindowSize->{808, 755},
+WindowMargins->{{236, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+

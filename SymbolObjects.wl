@@ -1,33 +1,5 @@
 (* ::Package:: *)
 
-(* ::Input:: *)
-(*<<BTools`FrontEnd`*)
-
-
-(* ::Input:: *)
-(*MakeIndentable["IndentCharacter"->"  "]*)
-
-
-(* ::Input:: *)
-(*CurrentValue[EvaluationNotebook[],{TaggingRules, "IndentCharacter"}]="  ";*)
-
-
-(* ::Input:: *)
-(*BatchIndentationEvent["Restore", *)
-(*	CellStyle->"Code"*)
-(*	]*)
-
-
-(* ::Input:: *)
-(*CurrentValue[EvaluationNotebook[],{TaggingRules, "IndentCharacter"}]="\t";*)
-
-
-(* ::Input:: *)
-(*BatchIndentationEvent["Replace", *)
-(*	CellStyle->"Code"*)
-(*	]*)
-
-
 (* ::Section:: *)
 (*SymbolObjects*)
 
@@ -41,18 +13,18 @@ SObj[s][props...] gets properties
 
 
 (* ::Subsubsection::Closed:: *)
-(*Private Declarations*)
+(*Package Declarations*)
 
 
-AppendTo[$ContextPath, $Context<>"Package`" ];
-
-
-Begin["`Package`"];
+BeginPackage["`Package`"];
 
 
 (*Package Declarations*)
 $SObjTemplates::usage="$SObjTemplates";
 $SObjGetDecorate::usage="$SObjGetDecorate";
+SObjGetDecorateRecurse::usage="SObjGetDecorateRecurse";
+$SObjGetNew::usage=
+	"$SObjGetNew specifies whether or not to make a new SObj on Get calls";
 $SObjFormat::usage="$SObjFormat";
 
 
@@ -96,7 +68,7 @@ SObjMutationHandler[sym[[p]] = newvalue]
 SObjMutationHandler[sym[[p]] := newvalue]";
 
 
-End[];
+EndPackage[];
 
 
 Begin["`Private`"];
@@ -224,8 +196,10 @@ SObjNew[
 (*Instantiate object*)
 
 
-SObj::noinit="Instance failed to initialize, the \"ObjectInitialize\" function must return the SObj"; 
-SObj::nonew="New object failed to build, the \"ObjectNew\" function must return a new SObj";
+SObj::noinit=
+	"Instance failed to initialize, the \"ObjectInitialize\" function must return the SObj"; 
+SObj::nonew=
+	"New object failed to build, the \"ObjectNew\" function must return a new SObj";
 Clear[SObjInstantiate];
 SObjInstantiate[o_SObj, args___]:=
 	Catch@
@@ -264,7 +238,7 @@ SObjInstantiate[o_SObj, args___]:=
 				Keys@$SObjTemplates["Class"]
 				]
 			];
-		If[!SObjQ@newO, Message[SObj::nonint];Throw[$Failed]];
+		If[!SObjQ@newO, Message[SObj::noinit];Throw[$Failed]];
 		newO
 		];
 
@@ -306,7 +280,7 @@ SObjValues[SObj[s_Symbol]] :=
  Values@s
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Accessor decorators and methods*)
 
 
@@ -337,16 +311,19 @@ SObjProperty[f__][obj_SObj] :=
 		decorates Part, Extract, and Lookup calls
 *)
 $SObjGetDecorate = True;
+$SObjGetDecorateRecurse=False;
 SObjGetDecorate//Clear
 SObjGetDecorate[o_SObj, m:_SObjMethod | _SObjProperty] :=
 	m[o]
-SObjGetDecorate[o_SObj, l_List] :=
+SObjGetDecorate[o_SObj, l_List?Developer`PackedArrayQ]:=
+	l;
+SObjGetDecorate[o_SObj, l_List]/;TrueQ[$SObjGetDecorateRecurse]:=
 	SObjGetDecorate[o, #]&/@l;
 SObjGetDecorate[o_SObj, r_]:=r;(*
 SObjGetDecorate[e_]:=e*)
 
 
-$SObjGetWrap=True;
+$SObjGetNew=Automatic;
 
 
 (*
@@ -358,7 +335,7 @@ SObjAccess[
 	o:SObj[s_Symbol],
 	k__
 	]:=
-	If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
 		s[k]
 
 
@@ -371,14 +348,14 @@ SObjPart[
 	o : SObj[s_Symbol], 
 	k:_Span|_List
 	] :=
-	If[$SObjGetWrap, SObj, Identity]@Evaluate@
+	If[TrueQ@$SObjGetNew, SObj, Identity]@Evaluate@
 		s[[k]];
 SObjPart[
 	o : SObj[s_Symbol], 
 	k__
 	] :=
-If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
-	s[[k]];
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+		s[[k]];
 
 
 (*
@@ -390,20 +367,20 @@ SObjExtract[
 	o:SObj[s_Symbol], 
 	k:{_List}|Except[_List]
 	] :=
-	If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
 		Extract[s, k];
 SObjExtract[
 	o:SObj[s_Symbol], 
 	k_
 	] :=
-	If[$SObjGetWrap, SObj, Identity]@Evaluate@
+	If[TrueQ@$SObjGetNew, SObj, Identity]@Evaluate@
 		Extract[s, k];
 SObjExtract[
 	o:SObj[s_Symbol], 
 	k_,
 	h_
 	] :=
-	If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
 		Extract[s, k, h];
 
 
@@ -415,28 +392,28 @@ SObjLookup[
 	o:SObj[s_Symbol], 
 	k_
 	] :=
-If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
-	Lookup[s, k];
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+		Lookup[s, k];
 SObjLookup[
 	o:SObj[s_Symbol], 
 	k_,
 	d_
 	] :=
-If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
-	Lookup[s, k, d];
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+		Lookup[s, k, d];
 SObjLookup[
 	o : {__SObj},
 	k_
 	] :=
-If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
-	Lookup[SObjSymbol /@ o, k];
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+		Lookup[SObjSymbol /@ o, k];
 SObjLookup[
 	o : {__SObj},
 	k_,
 	d_
 	] :=
-If[$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
-	Lookup[SObjSymbol /@ o, k, d];
+	If[TrueQ@$SObjGetDecorate, SObjGetDecorate[o, #] &, Identity]@
+		Lookup[SObjSymbol /@ o, k, d];
 SetAttributes[SObjLookup, HoldRest]
 
 
@@ -448,7 +425,7 @@ SObjAccessWrapper[o:SObj[s_Symbol],
 	fn_, 
 	k___
 	]:=
-	If[$SObjGetWrap, SObj, Identity]@Evaluate@
+	If[TrueQ@$SObjGetNew, SObj, Identity]@Evaluate@
 		fn[s, k];
 
 
@@ -536,7 +513,7 @@ $SObjFormat = True;
 SObjFormat[o : SObj[s_]] :=
  Block[
 	{
-		$SObjGetWrap = False,
+		$SObjGetNew = False,
 		$SObjGetDecorate = False,
 		$SObjFormat = False
 		},
@@ -621,7 +598,7 @@ SObj/:Extract[o:SObj[s_], e___]:=
 	(SObjExtract[o, e]/;SObjQ@o);
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Property setting*)
 
 
@@ -692,7 +669,7 @@ Map[
 Language`SetMutationHandler[SObj, SObjMutationHandler];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpValues interface*)
 
 
@@ -703,35 +680,73 @@ SObj /: Keys[o_SObj?SObjQ] := SObjKeys@o;
 SObj /: Values[o_SObj?SObjQ] := SObjValues@o;
 SObj /: Normal[o_SObj?SObjQ] := SObjSymbol@o;
 SObj /: Dataset[o_SObj?SObjQ] := SObjSymbol[o, Dataset];
+
+
+(* ::Subsubsubsection:: *)
+(*Single Argument No New Obj*)
+
+
 Map[
 	Function[
 		SObj /: #[o_SObj?SObjQ] :=
-			Block[{$SObjGetWrap=False}, SObjAccessWrapper[o, #]];
+			Block[{$SObjGetNew=False}, SObjAccessWrapper[o, #]];
 		],
 	{
 		First, Last, Length
 		}
 	];
+
+
+(* ::Subsubsubsection:: *)
+(*Multi Argument No New Obj*)
+
+
 Map[
 	Function[
 		SObj /: #[o_SObj?SObjQ, a__] :=
-			Block[{$SObjGetWrap=False}, SObjAccessWrapper[o, #, a]];
+			Block[{$SObjGetNew=False}, SObjAccessWrapper[o, #, a]];
 		],
 	{
-		KeyExistsQ, KeyMemberQ
+		KeyExistsQ, KeyMemberQ, KeyFreeQ
 		}
 	];
+
+
+(* ::Subsubsubsection:: *)
+(*Single Argument New Obj*)
+
+
+Map[
+	Function[
+		SObj /: #[o_SObj?SObjQ] :=
+			Block[{$SObjGetNew=$SObjGetNew=!=False},
+				SObjAccessWrapper[o, #]
+				];
+		],
+	{
+		Most, Rest
+		}
+	];
+
+
+(* ::Subsubsubsection:: *)
+(*New  Accessors*)
+
+
 Map[
 	Function[
 		SObj /: #[o_SObj?SObjQ, a__] :=
-			SObjAccessWrapper[o, #, a];
+			Block[{$SObjGetNew=$SObjGetNew=!=False},
+				SObjAccessWrapper[o, #, a]
+				];
 		],
 	{
-		Most, Rest, Take, 
-		Select, Cases, Pick,
-		Drop, Delete, DeleteCases,
-		Insert, 
-		KeyTake, KeySelect, KeyDrop
+		Take, Drop, Delete, 
+		Insert, Append, Prepend,
+		Select, Cases, Pick, DeleteCases,
+		KeyTake, KeySelect, KeyDrop,
+		KeyValueMap, KeyMap,
+		KeyComplement, KeyIntersection, KeyUnion
 		}
 	];
 
