@@ -16,6 +16,13 @@ Cell["\[LeftCeiling]Settings\[RightFloor]", "CodeSubsubsection",
   3.728934702502795*^9}},ExpressionUUID->"183d2e89-3598-4c96-bb8f-\
 b11dffbe194f"],
 
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"$PacletServer", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<The default server to work off of\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"94d363c3-f0f7-4606-99e7-ce5bb7d28ede"],
+
 Cell[BoxData[{
  RowBox[{
   RowBox[{
@@ -370,6 +377,26 @@ d1f37ad0f22c"],
 
 Cell[CellGroupData[{
 
+Cell["\[LeftCeiling]$PacletServer\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"947d2638-d5c7-423e-838a-905c8208e91f"],
+
+Cell[BoxData[
+ RowBox[{"$PacletServer", "=", "\n", "\t", 
+  RowBox[{"<|", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"\"\<ServerName\>\"", "\[Rule]", "\"\<PacletServer\>\""}], ",", 
+    "\n", "\t\t", 
+    RowBox[{"\"\<ServerExtension\>\"", "\[Rule]", "Nothing"}], ",", "\n", 
+    "\t\t", 
+    RowBox[{"\"\<ServerBase\>\"", ":>", 
+     RowBox[{"CloudDirectory", "[", "]"}]}], ",", "\n", "\t\t", 
+    RowBox[{"Permissions", "\[Rule]", "\"\<Public\>\""}]}], "\n", "\t\t", 
+   "|>"}]}]], \
+"CodeInput",ExpressionUUID->"90b9be8d-566c-49f0-b932-7c22a2c0f72d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["\[LeftCeiling]$PacletSettings\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"0fd00eb9-8d96-47cb-a769-b4ab3cedac6e"],
 
@@ -474,7 +501,7 @@ Cell[BoxData[{
   RowBox[{"PacletSettingsLookup", "~", "SetAttributes", "~", "HoldRest"}], 
   ";"}]}], "CodeInput",ExpressionUUID->"1f1a31a0-29ca-42dd-8d0e-4b72351539a6"]\
 
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3725,16 +3752,15 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"Automatic", "|", "Default"}], ":>", "\n", "\t\t\t\t", 
        RowBox[{"Lookup", "[", 
-        RowBox[{"$PacletServer", ",", "Permissions"}], "]"}]}]}], "\n", 
+        RowBox[{"$PacletServer", ",", " ", "Permissions"}], "]"}]}]}], "\n", 
      "\t\t\t", "]"}], ",", 
     RowBox[{"{", "\n", "\t\t", 
      RowBox[{
       RowBox[{"e", ":", 
        RowBox[{"Except", "[", "_String", "]"}]}], "\[RuleDelayed]", 
-      "$Permissions"}], "\n", "\t\t", "}"}]}], "]"}]}]], "CodeInput",
- CellChangeTimes->{{3.705685161902059*^9, 3.705685196237986*^9}, {
-  3.7056883688591127`*^9, 3.705688398308114*^9}, {3.71279264389014*^9, 
-  3.71279265365458*^9}},ExpressionUUID->"57b0999f-c942-4850-bbc6-51327c76e72d"]
+      "$Permissions"}], "\n", "\t\t", "}"}]}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"57b0999f-c942-4850-bbc6-51327c76e72d"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -4138,10 +4164,10 @@ Cell[BoxData[{
                     RowBox[{"URLBuild", "@", 
                     RowBox[{"Flatten", "@", 
                     RowBox[{"{", "\n", "\t\t\t\t\t\t\t\t\t\t\t\t\t", 
-                    RowBox[{"ext", ",", "\n", "\t\t\t\t\t\t\t\t\t\t\t\t\t", 
-                    "p"}], "}"}]}]}]}], "\n", "\t", "\t", 
-                    "\t\t\t\t\t\t\t\t\t\t", "}"}]}]}], ",", "\n", "\t", "\t", 
-                    "\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    "ext", ",", "\n", "\t\t\t\t\t\t\t\t\t\t\t\t\t", "p"}], 
+                    "}"}]}]}]}], "\n", "\t", "\t", "\t\t\t\t\t\t\t\t\t\t", 
+                    "}"}]}]}], ",", "\n", "\t", "\t", "\t\t\t\t\t\t\t\t", 
                     RowBox[{
                     RowBox[{"{", "r_", "}"}], ":>", "\n", "\t", "\t", 
                     "\t\t\t\t\t\t\t\t\t", 
@@ -5111,7 +5137,7 @@ PacletSite file\>\""}], ";"}], "*)"}]}], "\n",
    3.7334547290412083`*^9}},ExpressionUUID->"1f2797c9-339d-42b4-ba15-\
 09f8f8975dc1"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -5546,7 +5572,8 @@ Cell[BoxData[{
                     "\n", "\t", "\t\t\t\t\t\t\t\t\t   \t\t\t\t", 
                     RowBox[{
                     "{", "\n", "\t", "\t\t\t\t\t\t\t\t\t   \t\t\t\t\t", 
-                    RowBox[{"PacletManager`Private`a", ",", " ", "\n", "\t", 
+                    RowBox[{
+                    "PacletManager`Private`a", ",", " ", "\n", "\t", 
                     "\t\t\t\t\t\t\t\t\t   \t\t\t\t\t", 
                     "PacletManager`Private`b", ",", " ", "\n", "\t", 
                     "\t\t\t\t\t\t\t\t\t   \t\t\t\t\t", 

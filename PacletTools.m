@@ -12,6 +12,10 @@
 
 
 
+$PacletServer::usage=
+	"The default server to work off of";
+
+
 $PacletSettings::usage=
 	"A set of settings for the PacletTools";
 PacletSettingsLookup::usage=
@@ -151,6 +155,20 @@ Begin["`Private`"];
 (* ::Subsection:: *)
 (*Config*)
 
+
+
+(* ::Subsubsection::Closed:: *)
+(*$PacletServer*)
+
+
+
+$PacletServer=
+	<|
+		"ServerName"->"PacletServer",
+		"ServerExtension"->Nothing,
+		"ServerBase":>CloudDirectory[],
+		Permissions->"Public"
+		|>
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1504,7 +1522,7 @@ pacletStandardServerPermissions[perms_]:=
 		Replace[
 			perms,
 			Automatic|Default:>
-				Lookup[$PacletServer,Permissions]
+				Lookup[$PacletServer, Permissions]
 			],{
 		e:Except[_String]:>$Permissions
 		}]
