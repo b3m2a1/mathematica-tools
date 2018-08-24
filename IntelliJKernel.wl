@@ -64,38 +64,83 @@ $IntelliJREPLSettings=
     |>;
 
 
+evaluateThings[e_]:=
+  Reap[
+    GeneralUtilities`WithMessageHandler[
+      ReleaseHold@e,
+      With[
+        {
+          sym=Extract[#, {2, "MessageTemplate", 1}, Hold],
+          name=Extract[#, {2, "MessageTemplate", 2}],
+          params=Sequence@@Extract[#, {2, "MessageParameters"}]
+          },
+        Sow[MessagePacket[sym, name]/.Hold[s_]:>s];
+        Sow[TextPacket@
+          Replace[
+            Internal`MessageButtonHandler[
+              MessageName[Evaluate@ReleaseHold[sym], name],
+              Hold[MessageName[sym, name]]/.Hold[s_Symbol]:>s,
+              Hold[Message[MessageName[sym, name], params]]/.Hold[s_Symbol]:>s
+              ],
+            $Failed:>
+              ToString[HoldForm[MessageName[sym, name]]/.Hold[s_Symbol]:>s]
+                <>" "<>
+              ToString@
+                StringForm[
+                  Replace[
+                    Extract[#, {2, "MessageTemplate"}], 
+                    Except[_String]:>MessageName[General, name]
+                    ],
+                  params
+                  ]
+            ]
+          ]
+        ]&
+      ]
+    ]
+
+
+standardEvaluationProcedure[expr_, makePacket_]:=
+  Module[{evRes=evaluateThings[expr], e, errs},
+    $incrementLine=True;
+    e=evRes[[1]];
+    errs=evRes[[2]];
+    {
+      errs,
+      Switch[e, 
+        Null,
+          {},
+        _ErrorBox,
+          {
+            OutputNamePacket["Out[``]="~TemplateApply~$Line],
+            makePacket@e
+            },
+        _,
+          {
+            OutputNamePacket["Out[``]="~TemplateApply~$Line],
+            makePacket@e
+            }
+        ]
+     }
+    ]
+
+
 processPacket//Clear
 processPacket[HoldComplete@EvaluatePacket[res_]]:=
   (ReturnPacket[res]);
 processPacket[HoldComplete@EnterExpressionPacket[expr_]]:=
-  With[{e=ReleaseHold@expr},
-    $incrementLine=True;
-    Switch[e, 
-      Null,
-        {},
-      _ErrorBox,
-        {
-          OutputNamePacket["Out[``]="~TemplateApply~$Line],
-          ReturnExpressionPacket[BoxData@e]
-          },
-      _,
-        {
-          OutputNamePacket["Out[``]="~TemplateApply~$Line],
-          ReturnExpressionPacket[BoxData@ToBoxes@e]
-          }
-      ]
+  standardEvaluationProcedure[
+    expr,
+    ReturnExpressionPacket[BoxData@If[Head@#===ErrorBox, #, ToBoxes@#]]&
     ];
 processPacket[HoldComplete@EnterTextPacket[expr_]]:=
-  With[{e=ReleaseHold@expr},
-    $incrementLine=True;
-    If[e=!=Null,
-      {
-        OutputNamePacket["Out[``]="~TemplateApply~$Line],
-        ReturnTextPacket[ToString[ToExpression@e, InputForm]]
-        },
-      {}
-      ]
-    ];
+  standardEvaluationProcedure[
+    expr,
+    If[Head@#===ErrorBox,
+      {},
+      ReturnTextPacket[ToString@#]
+      ]&
+    ]
 processPacket[HoldComplete@InputPacket[expr_]]:=
   (
     $incrementLine=True;
