@@ -79,7 +79,7 @@ $SubprocessREPLSettings=
         |>,
     "LogPackets"->False,
     "PollTime"->.1,
-    "Blocking"->True
+    "Blocking"->False
     |>;
 
 
