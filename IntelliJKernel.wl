@@ -66,31 +66,46 @@ $IntelliJREPLSettings=
 
 processPacket//Clear
 processPacket[HoldComplete@EvaluatePacket[res_]]:=
-  ($dontIncrementLine=True;ReturnPacket[res]);
+  (ReturnPacket[res]);
 processPacket[HoldComplete@EnterExpressionPacket[expr_]]:=
   With[{e=ReleaseHold@expr},
-    If[e=!=Null,
-      {
-        OutputNamePacket["Out[``]="~TemplateApply~$Line++],
-        ReturnExpressionPacket[BoxData@ToBoxes@e]
-        },
-      {}
+    $incrementLine=True;
+    Switch[e, 
+      Null,
+        {},
+      _ErrorBox,
+        {
+          OutputNamePacket["Out[``]="~TemplateApply~$Line],
+          ReturnExpressionPacket[BoxData@e]
+          },
+      _,
+        {
+          OutputNamePacket["Out[``]="~TemplateApply~$Line],
+          ReturnExpressionPacket[BoxData@ToBoxes@e]
+          }
       ]
     ];
 processPacket[HoldComplete@EnterTextPacket[expr_]]:=
   With[{e=ReleaseHold@expr},
+    $incrementLine=True;
     If[e=!=Null,
       {
-        OutputNamePacket["Out[``]="~TemplateApply~$Line++],
+        OutputNamePacket["Out[``]="~TemplateApply~$Line],
         ReturnTextPacket[ToString[ToExpression@e, InputForm]]
         },
       {}
       ]
     ];
 processPacket[HoldComplete@InputPacket[expr_]]:=
-  ReturnTextPacket[expr];
+  (
+    $incrementLine=True;
+    ReturnTextPacket[expr]
+    );
 processPacket[HoldComplete[packet_]]:=
-  (Print@packet;)
+  (
+    Print@packet;
+    ReturnExpressionPacket[BoxData@ToBoxes@packet]
+    )
 
 
 StartIntelliJREPL[]:=
@@ -118,13 +133,14 @@ StartIntelliJREPL[]:=
               Flatten[{response}], 
               packet
               ];
-            If[!TrueQ@$dontIncrementLine,
+            If[TrueQ@$incrementLine, $Line++];
+            If[Head@response=!=ReturnPacket,
               LinkWrite[
                 $IntelliJKernel, 
-                InputNamePacket["In[``]:="~TemplateApply~++$Line]
+                InputNamePacket["In[``]:="~TemplateApply~$Line]
                 ]
               ];
-            $dontIncrementLine=False
+            $incrementLine=False
             ];
           If[$IntelliJREPLSettings["PollTime"]>0,
             Pause[$IntelliJREPLSettings["PollTime"]]
