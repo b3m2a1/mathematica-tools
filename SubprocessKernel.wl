@@ -68,9 +68,9 @@ $SubprocessREPLSettings=
     "STDOUTWrite"->
       Function[
         {output, input},
-        Print[">> ------ Output: `` ------ >>"];
-        Print[ToString[#]<>"\n", InputForm]&/@output;
-        Print["<< ------ Output: `` ------ <<"]
+        Print[">> ------ Output: `` ------ >>"~TemplateApply~$Line];
+        Print[ToString[#, InputForm]<>"\n"]&/@output;
+        Print["<< ------ Output: `` ------ <<"~TemplateApply~$Line]
         ],
     "RouteOutput"->
       <|
@@ -164,10 +164,15 @@ processPacket[HoldComplete@InputPacket[expr_]]:=
     ReturnTextPacket[expr]
     );
 processPacket[HoldComplete[packet_]]:=
-  (
-    Print@packet;
+  With[
+    {
+      log=FileNameJoin@{$TemporaryDirectory, "subproc_repl_log.txt"}
+      },
+    If[!FileExistsQ@log, CreateFile@log];
+    packet>>>log;
+    Close@log;
     ReturnExpressionPacket[BoxData@ToBoxes@packet]
-    )
+    ]
 
 
 exitSubprocessREPL[]:=
@@ -217,14 +222,13 @@ StartSubprocessREPL[]:=
           If[$SubprocessREPLSettings["RouteOutput"]["STDIN"]==="STDOUT",
             Block[{$ParentLink=Null},
               $SubprocessREPLSettings["STDOUTWrite"][
-                $SubprocessKernel, 
-                Flatten[{output}, 1], 
+                Flatten[{output}], 
                 input
                 ]
               ];,
             $SubprocessREPLSettings["LinkWrite"][
               $SubprocessKernel, 
-              Flatten[{output}, 1], 
+              Flatten[{output}], 
               input
               ];
             ]
@@ -233,7 +237,6 @@ StartSubprocessREPL[]:=
           If[$SubprocessREPLSettings["RouteOutput"]["FrontEnd"]==="STDOUT",
             Block[{$ParentLink=Null},
               $SubprocessREPLSettings["STDOUTWrite"][
-                $SubprocessKernel, 
                 Flatten[{response}], 
                 packet
                 ]
