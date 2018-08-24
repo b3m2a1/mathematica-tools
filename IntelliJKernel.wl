@@ -58,51 +58,39 @@ $IntelliJREPLSettings=
     "LinkWrite"->
       Function[{link, response, packet},
         (*Print@{packet, response};*)
-        LinkWrite[link, #]&/@Flatten[{response}]
+        LinkWrite[link, response]
         ],
-    "PollTime"->.25
+    "PollTime"->.1
     |>;
 
 
 processPacket//Clear
 processPacket[HoldComplete@EvaluatePacket[res_]]:=
-  ReturnPacket[res];
+  ($dontIncrementLine=True;ReturnPacket[res]);
 processPacket[HoldComplete@EnterExpressionPacket[expr_]]:=
   With[{e=ReleaseHold@expr},
-    {
-      If[e=!=Null,
-        {
-          OutputNamePacket["Out[``]="~TemplateApply~$Line++],
-          ReturnExpressionPacket[BoxData@ToBoxes@e]
-          },
-        $Line++;
-        {}
-        ],
-      InputNamePacket["In[``]:="~TemplateApply~$Line]
-      }
+    If[e=!=Null,
+      {
+        OutputNamePacket["Out[``]="~TemplateApply~$Line++],
+        ReturnExpressionPacket[BoxData@ToBoxes@e]
+        },
+      {}
+      ]
     ];
 processPacket[HoldComplete@EnterTextPacket[expr_]]:=
   With[{e=ReleaseHold@expr},
-    {
-      If[e=!=Null,
-        {
-          OutputNamePacket["Out[``]="~TemplateApply~$Line++],
-          ReturnTextPacket[ToString[ToExpression@e, InputForm]]
-          },
-        $Line++;
-        {}
-        ],
-      InputNamePacket["In[``]:="~TemplateApply~$Line]
-      }
+    If[e=!=Null,
+      {
+        OutputNamePacket["Out[``]="~TemplateApply~$Line++],
+        ReturnTextPacket[ToString[ToExpression@e, InputForm]]
+        },
+      {}
+      ]
     ];
 processPacket[HoldComplete@InputPacket[expr_]]:=
-  
+  ReturnTextPacket[expr];
 processPacket[HoldComplete[packet_]]:=
-  (
-    Print@packet;
-    $Line++;
-    InputNamePacket["In[``]:="~TemplateApply~$Line]
-    );
+  (Print@packet;)
 
 
 StartIntelliJREPL[]:=
@@ -125,7 +113,14 @@ StartIntelliJREPL[]:=
             packet=LinkRead[$IntelliJKernel, HoldComplete];
             If[packet===$Failed, Break[]];
             response=$IntelliJREPLSettings["ProcessPacket"][packet];
-             $IntelliJREPLSettings["LinkWrite"][$IntelliJKernel, response, packet]
+            $IntelliJREPLSettings["LinkWrite"][$IntelliJKernel, response, packet];
+            If[!TrueQ@$dontIncrementLine,
+              LinkWrite[
+                $IntelliJKernel, 
+                InputNamePacket["In[``]:="~TemplateApply~++$Line]
+                ]
+              ];
+            $dontIncrementLine=False
             ];
           If[$IntelliJREPLSettings["PollTime"]>0,
             Pause[$IntelliJREPLSettings["PollTime"]]
