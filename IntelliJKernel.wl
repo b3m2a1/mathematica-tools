@@ -58,7 +58,7 @@ $IntelliJREPLSettings=
     "LinkWrite"->
       Function[{link, response, packet},
         (*Print@{packet, response};*)
-        LinkWrite[link, response]
+        LinkWrite[link, #]&/@response
         ],
     "PollTime"->.1
     |>;
@@ -113,7 +113,11 @@ StartIntelliJREPL[]:=
             packet=LinkRead[$IntelliJKernel, HoldComplete];
             If[packet===$Failed, Break[]];
             response=$IntelliJREPLSettings["ProcessPacket"][packet];
-            $IntelliJREPLSettings["LinkWrite"][$IntelliJKernel, response, packet];
+            $IntelliJREPLSettings["LinkWrite"][
+              $IntelliJKernel, 
+              Flatten[{response}], 
+              packet
+              ];
             If[!TrueQ@$dontIncrementLine,
               LinkWrite[
                 $IntelliJKernel, 
