@@ -67,7 +67,7 @@ $IntelliJREPLSettings=
 evaluateThings[e_]:=
   Reap[
     GeneralUtilities`WithMessageHandler[
-      ReleaseHold@e,
+      CheckAbort[ReleaseHold@e, $Aborted],
       With[
         {
           sym=Extract[#, {2, "MessageTemplate", 1}, Hold],
@@ -165,32 +165,31 @@ StartIntelliJREPL[]:=
       FrontEndExecute@FrontEnd`EvaluatorStart["IntelliJ"];
       LinkWrite[$IntelliJKernel, InputNamePacket["In[1]:="]];
       $ParentLink=$IntelliJKernel;
-      AbortProtect@
-        While[
-          Quiet@TrueQ[LinkConnectedQ@$IntelliJFrontEnd]&&
-          Quiet@TrueQ[LinkConnectedQ@$IntelliJKernel],
-          If[LinkReadyQ@$IntelliJKernel,
-            packet=LinkRead[$IntelliJKernel, HoldComplete];
-            If[packet===$Failed, Break[]];
-            response=$IntelliJREPLSettings["ProcessPacket"][packet];
-            $IntelliJREPLSettings["LinkWrite"][
-              $IntelliJKernel, 
-              Flatten[{response}], 
-              packet
-              ];
-            If[TrueQ@$incrementLine, $Line++];
-            If[Head@response=!=ReturnPacket,
-              LinkWrite[
-                $IntelliJKernel, 
-                InputNamePacket["In[``]:="~TemplateApply~$Line]
-                ]
-              ];
-            $incrementLine=False
+      While[
+        Quiet@TrueQ[LinkConnectedQ@$IntelliJFrontEnd]&&
+        Quiet@TrueQ[LinkConnectedQ@$IntelliJKernel],
+        If[LinkReadyQ@$IntelliJKernel,
+          packet=LinkRead[$IntelliJKernel, HoldComplete];
+          If[packet===$Failed, Break[]];
+          response=$IntelliJREPLSettings["ProcessPacket"][packet];
+          $IntelliJREPLSettings["LinkWrite"][
+            $IntelliJKernel, 
+            Flatten[{response}], 
+            packet
             ];
-          If[$IntelliJREPLSettings["PollTime"]>0,
-            Pause[$IntelliJREPLSettings["PollTime"]]
-            ]
+          If[TrueQ@$incrementLine, $Line++];
+          If[Head@response=!=ReturnPacket,
+            LinkWrite[
+              $IntelliJKernel, 
+              InputNamePacket["In[``]:="~TemplateApply~$Line]
+              ]
+            ];
+          $incrementLine=False
+          ];
+        If[$IntelliJREPLSettings["PollTime"]>0,
+          Pause[$IntelliJREPLSettings["PollTime"]]
           ]
+        ]
      ]
 
 
