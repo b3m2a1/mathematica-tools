@@ -84,7 +84,7 @@ $SubprocessREPLSettings=
         "STDIN"->"STDOUT",
         "FrontEnd"->"Link"
         |>,
-    "logEvents"->False,
+    "LogPackets"->False,
     "PollTime"->.1,
     "Blocking"->False
     |>;
@@ -173,22 +173,22 @@ logEcho[event_]:=
 
 processPacket//Clear
 processPacket[p:HoldComplete@EvaluatePacket[res_]]:=
-  If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity][ 
-    If[$SubprocessREPLSettings["LogPackets"], logEvent[p]];
+  If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][ 
+    If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEvent[p]];
     ReturnPacket[res]
     ];
 processPacket[p:HoldComplete@EnterExpressionPacket[expr_]]:=
-  If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
-    If[$SubprocessREPLSettings["LogPackets"], logEvent[p]];
-    If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity]@
+  If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
+    If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEvent[p]];
+    If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity]@
       standardEvaluationProcedure[
         expr,
         ReturnExpressionPacket[BoxData@If[Head@#===ErrorBox, #, ToBoxes@#]]&
         ]
     ];
 processPacket[p:HoldComplete@EnterTextPacket[expr_]]:=
-  If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
-    If[$SubprocessREPLSettings["LogPackets"], logEvent[p]];
+  If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
+    If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEvent[p]];
     standardEvaluationProcedure[
       MakeExpression[expr, StandardForm],
       If[Head@#===ErrorBox,
@@ -198,13 +198,13 @@ processPacket[p:HoldComplete@EnterTextPacket[expr_]]:=
       ]
     ];
 processPacket[p:HoldComplete@InputPacket[expr_]]:=
-  If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
-    If[$SubprocessREPLSettings["LogPackets"], logEvent[p]];
+  If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
+    If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEvent[p]];
     $incrementLine=True;
     ReturnTextPacket[expr]
     ];
 processPacket[p:HoldComplete[packet_]]:=
-  If[$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
+  If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
     logEvent[p];
     ReturnExpressionPacket[BoxData@ToBoxes@packet]
     ]
