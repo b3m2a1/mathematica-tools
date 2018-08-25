@@ -62,6 +62,7 @@ configureSubprocessFrontEnd[]:=
 
 $SubprocessREPLSettings=
   <|
+    "InitializationMessage"->"Starting kernel...",
     "ProcessPacket"->processPacket,
     "ProcessInput"->Function[{text}, processPacket@HoldComplete[EnterTextPacket[text]]],
     "LinkWrite"->
@@ -411,6 +412,9 @@ StartSubprocessREPL[]:=
         LinkWrite[$SubprocessKernel, InputNamePacket["In[1]:="]],
         .1
         ]
+      ];
+    If[StringQ@$SubprocessREPLSettings["InitializationMessage"],
+      Print@$SubprocessREPLSettings["InitializationMessage"]
       ];
     $ParentLink=$SubprocessKernel;
     If[blocking,
