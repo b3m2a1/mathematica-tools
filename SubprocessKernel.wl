@@ -48,7 +48,9 @@ startSubprocessKernel[]:=
 
 configureSubprocessFrontEnd[]:=
   (
-    CurrentValue[$FrontEnd, {EvaluatorNames, $SubprocessKernelName}]=
+    $cachedKernelConfiguration=
+      CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}];
+    CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}]=
      {
       "AutoStartOnLaunch"->False,
       "MLOpenArguments"->
@@ -416,6 +418,7 @@ StartSubprocessREPL[]:=
     If[StringQ@$SubprocessREPLSettings["InitializationMessage"],
       Print@$SubprocessREPLSettings["InitializationMessage"]
       ];
+    
     $ParentLink=$SubprocessKernel;
     If[blocking,
       subprocessBlockingREPL[];,
