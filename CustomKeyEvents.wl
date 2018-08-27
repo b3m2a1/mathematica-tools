@@ -5,6 +5,8 @@ BeginPackage["CustomKeyEvents`"]
 
 AddKeyEvent::usage="Adds a key event";
 RemoveKeyEvent::usage="Removes a key event";
+SetKeyEventsMenuName::usage="Sets the menu name for the key events";
+SetKeyEventsMenuPosition::usage="Sets the menu position for the key events";
 
 
 Begin["`Private`"]
@@ -47,6 +49,10 @@ loadMenuSetup[]:=
       ];
 
 
+ensureMenu[]:=
+  If[!MatchQ[$menu, _Menu], loadMenuSetup[]];
+
+
 updateMenuSetup[]:=
   doInContext[
     FrontEndExecute@
@@ -61,54 +67,71 @@ convertOptions[ops_]:=
 
 
 makeKeyEventMenuItem[key_String, event_, ops_]:=
-  MenuItem[
-    Lookup[
-      ops,
-      FrontEnd`Name,
-      StringRiffle[
-        Flatten@{
-          key,
-          Replace[
-            Flatten@{Lookup[ops, System`Modifiers, Nothing]}, 
-            s_Symbol:>SymbolName[s], 
-            1
-            ]
-          },
-        "+"
-        ]
-      ],
-    event,
-    Evaluate@MenuKey[
-      key,
-      Apply[
-        Sequence,
-        FilterRules[{ops}, 
-          Alternatives[
-            System`Modifiers,
-            System`BoxClass,
-            System`CellClass
-            ]
-          ]
-        ]
-      ],
-    Evaluate@
-      Apply[
-        Sequence,
-        FilterRules[{ops}, 
-          Except@
-            Alternatives[
-              FrontEnd`Name,
-              System`Modifiers,
-              System`BoxClass,
-              System`CellClass
+  Module[
+    {
+      isPreemptive=True,
+      ev=HoldComplete[event]
+      },
+     ev=
+      Replace[ev,
+        {
+          HoldComplete[e:Except[_FrontEndExecute|_String|_Rule|_RuleDelayed]]:>
+            (isPreemptive=False;HoldComplete[KernelExecute[e]])
+          }
+        ];
+    Replace[ev,
+      HoldComplete[e_]:>
+        MenuItem[
+          Lookup[
+            ops,
+            FrontEnd`Name,
+            StringRiffle[
+              Flatten@{
+                key,
+                Replace[
+                  Flatten@{Lookup[ops, System`Modifiers, Nothing]}, 
+                  s_Symbol:>SymbolName[s], 
+                  1
+                  ]
+                },
+              "+"
+              ]
+            ],
+          e,
+          Evaluate@MenuKey[
+            key,
+            Apply[
+              Sequence,
+              FilterRules[{ops}, 
+                Alternatives[
+                  System`Modifiers,
+                  System`BoxClass,
+                  System`CellClass
+                  ]
+                ]
+              ]
+            ],
+          Evaluate@
+            Apply[
+              Sequence,
+              FilterRules[{ops, If[!isPreemptive, MenuEvaluator->Automatic, Nothing]}, 
+                Except@
+                  Alternatives[
+                    FrontEnd`Name,
+                    System`Modifiers,
+                    System`BoxClass,
+                    System`CellClass
+                    ]
+                ]
               ]
           ]
-        ]
+       ]
     ];
 makeKeyEventMenuItem~SetAttributes~HoldRest
 
 
-$keyEventsMenuPos=-2;
+If[!IntegerQ@$keyEventsMenuPos, $keyEventsMenuPos=-2];
+If[!StringQ@$keyEventsMenuName, $keyEventsMenuName="KeyEvents"];
 
 
 addKeyEventMenuItem[key_, event_, ops___]:=
@@ -118,14 +141,15 @@ addKeyEventMenuItem[key_, event_, ops___]:=
       kepos,
       kem
       },
-    If[$menu[[2, $keyEventsMenuPos, 1]]==="KeyEvents",
+    If[$menu[[2, $keyEventsMenuPos, 1]]===$keyEventsMenuName,
       kem=$menu[[2, $keyEventsMenuPos]];
       kepos=FirstPosition[kem[[2, All, 1]], mi[[1]], None];
       If[kepos===None,
         $menu[[2, $keyEventsMenuPos]]=Insert[kem, mi, {2, -1}],
         $menu[[2, $keyEventsMenuPos, 2, kepos[[1]]]]=mi
         ],
-      $menu=Insert[$menu, Menu["KeyEvents", {mi}], {2, $keyEventsMenuPos}]
+      $menu=
+        Insert[$menu, Menu[$keyEventsMenuName, {mi}], {2, $keyEventsMenuPos}]
       ];
     updateMenuSetup[];
     ];
@@ -139,7 +163,7 @@ removeKeyEventMenuItem[key_, ops___]:=
       kepos,
       kem
       },
-    If[$menu[[2, $keyEventsMenuPos, 1]]==="KeyEvents",
+    If[$menu[[2, $keyEventsMenuPos, 1]]===$keyEventsMenuName,
       kem=$menu[[2, $keyEventsMenuPos]];
       kepos=FirstPosition[kem[[2, All, 1]], mi[[1]], None];
       If[kepos=!=None, 
@@ -161,27 +185,49 @@ Options[AddKeyEvent]=
     "BoxClass"->"GraphEdit2D"
     };
 AddKeyEvent[key_String, event_, ops___?OptionQ]:=
-  Module[
-    {
-      ev=HoldComplete[event]
-      },
-    If[!MatchQ[$menu, _Menu], loadMenuSetup[]];
-    ev=
-      Replace[ev,
-        {
-          HoldComplete[e:Except[_FrontEndExecute|_String|_Rule|_RuleDelayed]]:>
-            HoldComplete[KernelExecute[e]]
-          }
-        ];
-    Replace[ev,
-      HoldComplete[e_]:>
-        addKeyEventMenuItem[key, e, convertOptions@Flatten@{ops}]
-      ]
-    ]
+  (
+    ensureMenu[];
+    addKeyEventMenuItem[key, event, convertOptions@Flatten@{ops}]
+    );
+AddKeyEvent~SetAttributes~HoldRest
 
 
 RemoveKeyEvent[key_String, ops___?OptionQ]:=
-  removeKeyEventMenuItem[key, Flatten@{ops}]
+  (
+    ensureMenu[];
+    removeKeyEventMenuItem[key, convertOptions@Flatten@{ops}]
+    )
+
+
+SetKeyEventsMenuName[newName_String]:=
+  With[
+    {
+      oldName=$keyEventsMenuName
+      },
+    ensureMenu[];
+    If[$menu[[2, $keyEventsMenuPos, 1]]===oldName, 
+      $menu[[2, $keyEventsMenuPos, 1]]=newName;
+      updateMenuSetup[]
+      ];
+    $keyEventsMenuName=newName
+    ];
+
+
+SetKeyEventsMenuPosition[newPos_Integer]:=
+  Module[
+    {
+      oldPos=$keyEventsMenuPos,
+      men
+      },
+    ensureMenu[];
+    If[$menu[[2, oldPos, 1]]===$keyEventsMenuName, 
+      men=$menu[[2, oldPos]];
+      $menu=Delete[$menu, {2, oldPos}];
+      Insert[$menu, men, newPos];
+      updateMenuSetup[]
+      ];
+    $keyEventsMenuPos=newPos
+    ];
 
 
 End[]
