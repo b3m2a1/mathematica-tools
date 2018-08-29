@@ -3,6 +3,10 @@
 BeginPackage["SubprocessKernel`"]
 
 
+(* ::Text:: *)
+(*In the eventual paclet there needs to be a way for this to manage multiple links at once (maybe even to multiple FEs) and basically act as a packet broker.*)
+
+
 $SubprocessFrontEnd::usage="The front end link for the kernel";
 $SubprocessKernel::usage="The kernel link for the kernel";
 $SubprocessKernelName::usage="The basic kernel name for the subprocess";
@@ -79,10 +83,12 @@ $SubprocessREPLSettings=
         Print[ToString[#, InputForm]<>"\n"]&/@output;
         Print["<< ------ Output: `` ------ <<"~TemplateApply~$Line]
         ],
+    "Links"->
+      Automatic,
     "RouteOutput"->
       <|
         "STDIN"->"STDOUT",
-        "FrontEnd"->"Link"
+        "Link"->Automatic
         |>,
     "LogPackets"->False,
     "PollTime"->.1,
@@ -126,6 +132,84 @@ evaluateThings[e_]:=
     ]
 
 
+logEvent[packet_]:=
+  With[
+    {
+      log=FileNameJoin@{$TemporaryDirectory, "subproc_repl_log.txt"}
+      },
+    If[!FileExistsQ@log, CreateFile@log];
+    OpenAppend[log];
+    WriteString[log, 
+      StringRepeat["\n", 2]<>
+        StringRepeat[" ", 5]<>
+        StringRepeat["-", 25]<>
+        StringRepeat["\n", 2]
+      ];
+    PutAppend[packet, log];
+    Quiet@Close@log;
+    ];
+logEcho[event_]:=
+  (logEvent[event];event)
+
+
+exitSubprocessREPL[]:=
+  (
+    $ParentLink=Null;
+    Quiet[LinkClose@$SubprocessKernel];
+    Quiet[LinkClose@$SubprocessFrontEnd];
+    )
+
+
+doAsync:=
+  If[$VersionNumber<11.2,
+    Function[Null, RunScheduledTask[#, {.0001}], HoldFirst],
+    SessionSubmit
+    ]
+
+
+manageKernelConnections[]:=
+  Module[
+    {
+      conns=$SubprocessREPLSettings["Links"],
+      lia=$SubprocessLinks,
+      deadLinks,
+      newLinks,
+      newStdin
+      },
+    deadLinks=Complement[Keys@lia, conns];
+    newLinks=Complement[conns, Keys@lia];
+    Switch[Head[#],
+      LinkObject, LinkClose[#], 
+      OutputStream|InputStream, Close
+      ]&/@KeyTake[lia, deadLinks];
+    KeyDropFrom[lia, deadLinks];
+    newStdin=MemberQ[newLinks, "STDIN"];
+    If[newStdin, newLinks=DeleteCases[newLinks, "STDIN"]];
+    newLinks=AssociationMap[LinkConnect, newLinks];
+    If[newStdin, AppendTo[newLinks, "STDIN"->OpenRead["!cat", BinaryFormat->True]]];
+    $SubprocessLinks=Join[lia, newLinks];
+    $SubprocessLinks
+    ]
+
+
+getNextPacket[linkName_, link_LinkObject, timeout_]:=
+  If[TrueQ@Quiet@TimeConstrained[LinkReadyQ@link, .01],
+    TimeConstrained[
+      LinkRead[link, HoldComplete],
+      timeout
+      ],
+    None
+    ];
+getNextPacket[linkName_, link_InputStream, timeout_]:=
+  TimeConstrained[
+    If[StringQ@#&&StringLength@#>0,
+      EnterTextPacket[#],
+      None
+      ]&@ReadString[link, EndOfBuffer],
+    timeout
+    ];
+
+
 standardEvaluationProcedure[expr_, makePacket_]:=
   Module[{evRes=evaluateThings[expr], e, errs},
     $incrementLine=True;
@@ -149,26 +233,6 @@ standardEvaluationProcedure[expr_, makePacket_]:=
         ]
      }
     ]
-
-
-logEvent[packet_]:=
-  With[
-    {
-      log=FileNameJoin@{$TemporaryDirectory, "subproc_repl_log.txt"}
-      },
-    If[!FileExistsQ@log, CreateFile@log];
-    OpenAppend[log];
-    WriteString[log, 
-      StringRepeat["\n", 2]<>
-        StringRepeat[" ", 5]<>
-        StringRepeat["-", 25]<>
-        StringRepeat["\n", 2]
-      ];
-    PutAppend[packet, log];
-    Quiet@Close@log;
-    ];
-logEcho[event_]:=
-  (logEvent[event];event)
 
 
 processPacket//Clear
@@ -207,138 +271,163 @@ processPacket[p:HoldComplete[packet_]]:=
   If[TrueQ@$SubprocessREPLSettings["LogPackets"], logEcho, Identity][
     logEvent[p];
     ReturnExpressionPacket[BoxData@ToBoxes@packet]
-    ]
+    ];
+processPacket[___]:=None;
 
 
-exitSubprocessREPL[]:=
-  (
-    $ParentLink=Null;
-    Quiet[LinkClose@$SubprocessKernel];
-    Quiet[LinkClose@$SubprocessFrontEnd];
-    )
-
-
-packetWrite[response_, packet_, src_, link_, linkWrite_, stdoutWrite_]:=
+packetWrite[linkName_, response_, packet_, dest_, link_, linkWrite_, stdoutWrite_]:=
  If[response=!=None,
-   If[src==="STDOUT",
-    Block[{$ParentLink=Null},
-      stdoutWrite[
-        Flatten[{response}], 
-        packet
+   If[dest==="STDOUT",
+      Block[{$ParentLink=Null},
+        stdoutWrite[
+          Flatten[{response}], 
+          packet
+          ]
+         ],
+     With[
+       {
+         targetLink=
+           Which[
+             KeyExistsQ[$SubprocessLinks, dest],
+               $SubprocessLinks[dest],
+             dest==="FrontEnd",
+               $SubprocessLinks[FrontEnd],
+             True,
+               link
+             ]
+         },
+         TimeConstrained[
+          linkWrite[
+            targetLink, 
+            Flatten[{response}], 
+            packet
+            ],
+          .1
+          ];
+      If[Head@response=!=ReturnPacket&&linkName=!=PreemptiveLink,
+        TimeConstrained[
+          LinkWrite[
+            targetLink, 
+            InputNamePacket["In[``]:="~TemplateApply~$Line]
+            ],
+          .1
+          ]
         ]
-       ];,
-    TimeConstrained[
-      linkWrite[
-        link, 
-        Flatten[{response}], 
-        packet
-        ],
-      .1
       ]
     ]
-  ]
+  ];
+packetWrite[
+  linkName_,
+  response_,
+  packet_
+  ]:=
+  packetWrite[
+    linkName,
+    response,
+    packet,
+    Lookup[
+      $SubprocessREPLSettings["RouteOutput"],
+      linkName,
+      Lookup[
+        $SubprocessREPLSettings["RouteOutput"], 
+        "Link",
+        Automatic
+        ]
+      ],
+    $SubprocessREPLSettings["LinkWrite"],
+    $SubprocessREPLSettings["STDOUTWrite"]
+    ];
+
+
+handleLinkPacketResponse//Clear;
+handleLinkPacketResponse[linkName_, None, preemptive:_:False]:=
+  None;
+handleLinkPacketResponse[linkName_, packet_, preemptive:True]:=
+  Block[{$incrementLine},
+    With[{processPacket=$SubprocessREPLSettings["ProcessPacket"]},
+      If[!AssociationQ@$SubprocessEvaluationStack, $SubprocessEvaluationStack=<||>];
+      If[KeyFreeQ[$SubprocessEvaluationStack, linkName], 
+        $SubprocessEvaluationStack[linkName]=<|"Evaluation"->1|>
+        ];
+      With[{n=$SubprocessEvaluationStack[linkName, "Evaluation"]},
+        $SubprocessEvaluationStack[linkName, n]=packet;
+        doAsync[
+          $SubprocessEvaluationStack[linkName, n]=
+            {
+              processPacket@$SubprocessEvaluationStack[linkName, n], 
+              $SubprocessEvaluationStack[linkName, n]
+              };
+          While[KeyExistsQ[$SubprocessEvaluationStack[linkName], n-1],
+            Pause[.0001];
+            ];
+          packetWrite[
+            linkName,
+            $SubprocessEvaluationStack[linkName, n][[1]], 
+            $SubprocessEvaluationStack[linkName, n][[2]]
+            ];
+          $SubprocessEvaluationStack[linkName, n]=.
+          ]
+        ];
+      ]
+    ];
+handleLinkPacketResponse[linkName_, packet_, preemptive:False:False]:=
+  With[
+    {
+      processPacket=
+        If[linkName==="STDIN",
+          $SubprocessREPLSettings["ProcessInput"],
+          $SubprocessREPLSettings["ProcessPacket"]
+          ]
+      },
+    If[linkName===PreemptiveLink,
+      handleLinkPacketResponse[linkName, packet, True],
+      With[{response=processPacket@packet},
+        If[response===ReturnPacket[Quit],
+          exitSubprocessREPL[];
+          Quiet[
+            Break[];
+            If[$VersionNumber<11.2, 
+              RemoveScheduledTask@$ScheduledTask, 
+              TaskRemove@$CurrentTask
+              ]
+            ]
+          ];
+        packetWrite[
+          linkName,
+          response,
+          packet
+          ]
+        ]
+      ]
+    ]
 
 
 subprocessBlockingREPL[]:=
   Module[
     {
-      
-      kernelLink=$SubprocessKernel,
-      packet,
-      response,
-      
-      stdin=OpenRead["!cat", BinaryFormat->True],
-      input,
-      output,
-      
-      preemptiveLink=MathLink`$PreemptiveLink,
-      ppacket,
-      pevalStack=<||>,
-      pevalNum=1,
-      
-      wroteToLink,
-      
-      linkWrite:=$SubprocessREPLSettings["LinkWrite"],
-      processPacket:=$SubprocessREPLSettings["ProcessPacket"],
-      processInput:=$SubprocessREPLSettings["ProcessInput"],
-      stdoutWrite:=$SubprocessREPLSettings["STDOUTWrite"],
-      stdinOutput:=$SubprocessREPLSettings["RouteOutput", "STDIN"],
-      feOutput:=$SubprocessREPLSettings["RouteOutput", "FrontEnd"],
+      links,
+      packets,
+      responses,
       pollTime:=$SubprocessREPLSettings["PollTime"]
       },
-    (*logEvent@"Entering loop";*)
-    While[True
-      (*Quiet@TrueQ[LinkConnectedQ@$SubprocessFrontEnd]&&
-        Quiet@TrueQ[LinkConnectedQ@$SubprocessKernel]*),
-      output=None;
-      response=None;
-      input=ReadString[stdin, EndOfBuffer];
-       
-      (*logEvent["Link Ready: "<>ToString@LinkReadyQ@kernelLink];*)
       
-      If[Quiet@LinkReadyQ@preemptiveLink,
-        ppacket=TimeConstrained[LinkRead[preemptiveLink, HoldComplete], .5];
-        With[{n=pevalNum},
-          pevalStack[n]=ppacket;
-          If[$VersionNumber<11.2,
-            Function[Null, RunScheduledTask[#, {.0001}], HoldFirst],
-            SessionSubmit
-            ][
-            pevalStack[n]={processPacket@pevalStack[n], pevalStack[n]};
-            While[KeyExistsQ[pevalStack, n-1],
-              Pause[.0001];
-              ];
-            packetWrite[
-              pevalStack[n][[1]], pevalStack[n][[2]], "Link", preemptiveLink, 
-              linkWrite, stdoutWrite
-              ];
-            pevalStack[n]=.
-            ]
-          ]
-        ];
-        
-      If[StringQ@input&&StringLength@input>0,
-        output=processInput@input;
-        ];
-      If[Quiet@LinkReadyQ@kernelLink,
-        (*logEvent["Link Read"];*)
-        packet=TimeConstrained[LinkRead[kernelLink, HoldComplete], .5];
-        response=processPacket[packet];
-        ];
-        
-      If[
-        response===ReturnPacket[Quit]||
-        output===ReturnPacket[Quit],
-        exitSubprocessREPL[];
-        Break[]
-        ];
+    While[True,
+      links=
+        Join[
+          manageKernelConnections[], 
+          <|
+            FrontEnd->$SubprocessKernel, 
+            PreemptiveLink->MathLink`$PreemptiveLink
+            |>
+          ];
       
-      packetWrite[
-        output, input, stdinOutput, kernelLink, 
-        Function[wroteToLink=True;linkWrite[##]], stdoutWrite
-        ];
-      
-      packetWrite[
-        response, packet, feOutput, kernelLink, 
-        Function[wroteToLink=True;linkWrite[##]], stdoutWrite
-        ];
+      packets=MapIndexed[getNextPacket[#2[[1, 1]], #, .1]&, links];
+      responses=MapIndexed[handleLinkPacketResponse[#2[[1, 1]], #]&, packets];
         
       If[TrueQ@$incrementLine, $Line++];
       $incrementLine=False;
-       
-      If[Head@response=!=ReturnPacket&&wroteToLink,
-        TimeConstrained[
-          LinkWrite[
-            $SubprocessKernel, 
-            InputNamePacket["In[``]:="~TemplateApply~$Line]
-            ],
-          .1
-          ]
-        ];
       
-      If[pollTime>0,
-        Pause[pollTime]
-        ]
+      If[pollTime>0, Pause[pollTime]]
      ]
    ];
 
@@ -346,65 +435,42 @@ subprocessBlockingREPL[]:=
 subprocessNonBlockingREPL[]:=
   Module[
     {
-      stdin=OpenRead["!cat", BinaryFormat->True],
-      input,
-      output,
-      wroteToLink,
-      linkWrite:=$SubprocessREPLSettings["LinkWrite"],
-      processPacket:=$SubprocessREPLSettings["ProcessPacket"],
-      processInput:=$SubprocessREPLSettings["ProcessInput"],
-      stdoutWrite:=$SubprocessREPLSettings["STDOUTWrite"],
-      stdinOutput:=$SubprocessREPLSettings["RouteOutput", "STDIN"],
-      feOutput:=$SubprocessREPLSettings["RouteOutput", "FrontEnd"],
+      links,
+      packets,
+      responses,
       pollTime:=$SubprocessREPLSettings["PollTime"]
       },
     If[$VersionNumber<11.2, 
       RunScheduledTask, 
       Function[Null, SessionSubmit[ScheduledTask[##]], HoldFirst]
       ][
-      
-        input=ReadString[stdin, EndOfBuffer];
-        output=None;
+        links=manageKernelConnections[];
         
-        If[StringQ@input&&StringLength@input>0,
-          output=$SubprocessREPLSettings["ProcessInput"]@input;
-          ];
-          
-        If[output===ReturnPacket[Quit],
-          exitSubprocessREPL[];
-          If[$VersionNumber<11.2, 
-            RemoveScheduledTask@$ScheduledTask, 
-            TaskRemove@$CurrentTask
-            ]
-          ];
-          
-        packetWrite[
-          output, input, stdinOutput, $SubprocessKernel, 
-          Function[wroteToLink=True;linkWrite[##]], stdoutWrite
-          ];
+        packets=MapIndexed[getNextPacket[#2[[1, 1]], #, .1]&, links];
+        responses=MapIndexed[handleLinkPacketResponse[#2[[1, 1]], #]&, packets];
   
         If[TrueQ@$incrementLine, $Line++];
-        If[wroteToLink&&Head@output=!=ReturnPacket,
-         TimeConstrained[
-           LinkWrite[
-             $SubprocessKernel, 
-             InputNamePacket["In[``]:="~TemplateApply~$Line]
-             ],
-           .1
-           ]
-         ];
-       $incrementLine=False;,
+        $incrementLine=False;,
        
-       pollTime
-       ]
+        pollTime
+        ]
     ]
 
 
 StartSubprocessREPL[]:=
   With[
     {
-      blocking=$SubprocessREPLSettings["Blocking"]=!=False
+      blocking=
+        $SubprocessREPLSettings["Blocking"]===True
       },
+    $SubprocessLinks=<||>;
+    $SubprocessREPLSettings["Links"]=
+      Replace[$SubprocessREPLSettings["Links"],
+        {
+          s_String:>{s},
+          Except[_List]:>{"STDIN"}
+          }
+        ];
     $Line=1;
     startSubprocessFrontEnd[];
     startSubprocessKernel[];
@@ -420,9 +486,9 @@ StartSubprocessREPL[]:=
       ];
     
     $ParentLink=$SubprocessKernel;
+    
     If[blocking,
       subprocessBlockingREPL[];,
-      logEvent["REPL Started"];
       subprocessNonBlockingREPL[]
      ];
     ]
