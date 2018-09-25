@@ -14,6 +14,7 @@ $SubprocessKernelExtension::usage="The extension for the kernel name";
 OpenSubprocessNotebook::usage="Opens an a subprocess notebook";
 StartSubprocessREPL::usage="Starts the subprocess REPL";
 $SubprocessREPLSettings::usage="Settings for the subprocess REPL";
+$OriginalParentLink::usage="The original parent link for the kernel";
 
 
 Begin["`Private`"]
@@ -154,7 +155,7 @@ logEcho[event_]:=
 
 exitSubprocessREPL[]:=
   (
-    $ParentLink=Null;
+    $ParentLink=$OriginalParentLink;
     Quiet[LinkClose@$SubprocessKernel];
     Quiet[LinkClose@$SubprocessFrontEnd];
     )
@@ -278,7 +279,7 @@ processPacket[___]:=None;
 packetWrite[linkName_, response_, packet_, dest_, link_, linkWrite_, stdoutWrite_]:=
  If[response=!=None,
    If[dest==="STDOUT",
-      Block[{$ParentLink=Null},
+      Block[{$ParentLink=$OriginalParentLink},
         stdoutWrite[
           Flatten[{response}], 
           packet
@@ -485,6 +486,7 @@ StartSubprocessREPL[]:=
       Print@$SubprocessREPLSettings["InitializationMessage"]
       ];
     
+    $OriginalParentLink = $ParentLink;
     $ParentLink=$SubprocessKernel;
     
     If[blocking,
