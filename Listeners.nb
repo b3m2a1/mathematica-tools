@@ -1001,14 +1001,12 @@ Cell[BoxData[
            RowBox[{"listener", ",", " ", "id"}], "]"}]}], ",", "\n", 
          "\t\t\t\t", 
          RowBox[{"\"\<Variable\>\"", "\[Rule]", 
-          RowBox[{"HoldPattern", "[", "listener", "]"}]}], ",", "\n", 
-         "\t\t\t\t", 
+          RowBox[{"Hold", "[", "listener", "]"}]}], ",", "\n", "\t\t\t\t", 
          RowBox[{"\"\<Callback\>\"", "\[Rule]", 
-          RowBox[{"HoldPattern", "[", "callback", "]"}]}]}], "\n", "\t\t\t\t",
-         "|>"}]}], "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", 
-   "]"}]}]], "CodeInput",
- CellLabel->
-  "In[7340]:=",ExpressionUUID->"8f082985-3a4a-4257-8966-71a48256bd86"]
+          RowBox[{"Hold", "[", "callback", "]"}]}]}], "\n", "\t\t\t\t", 
+        "|>"}]}], "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"8f082985-3a4a-4257-8966-71a48256bd86"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1028,16 +1026,14 @@ Cell[BoxData[{
      
      RowBox[{
       RowBox[{
-       RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
-       "\n", "\t\t\t", 
+       RowBox[{"Verbatim", "[", "Hold", "]"}], "[", "var_", "]"}], ":>", "\n",
+       "\t\t\t", 
       RowBox[{"Set", "[", 
        RowBox[{"var", ",", " ", "val"}], "]"}]}]}], "\n", "\t\t\t", "]"}]}], 
   ";"}], "\n", 
  RowBox[{
   RowBox[{"setListenerCallback", "~", "SetAttributes", "~", "HoldRest"}], 
-  ";"}]}], "CodeInput",
- CellLabel->
-  "In[7341]:=",ExpressionUUID->"47fbc8d1-d00f-44e3-9831-df876d7a04cd"],
+  ";"}]}], "CodeInput",ExpressionUUID->"47fbc8d1-d00f-44e3-9831-df876d7a04cd"],
 
 Cell[BoxData[{
  RowBox[{
@@ -1050,17 +1046,15 @@ Cell[BoxData[{
       RowBox[{"li", ",", "\"\<Callback\>\""}], "]"}], ",", "\n", "\t\t", 
      RowBox[{
       RowBox[{
-       RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
-       "\n", "\t\t\t", 
+       RowBox[{"Verbatim", "[", "Hold", "]"}], "[", "var_", "]"}], ":>", "\n",
+       "\t\t\t", 
       RowBox[{"SetDelayed", "[", 
        RowBox[{"var", ",", " ", "val"}], "]"}]}]}], "\n", "\t\t\t", "]"}]}], 
   ";"}], "\n", 
  RowBox[{
   RowBox[{
   "setListenerCallbackDelayed", "~", "SetAttributes", "~", "HoldRest"}], 
-  ";"}]}], "CodeInput",
- CellLabel->
-  "In[7342]:=",ExpressionUUID->"19586cb2-f9aa-4ec8-9b49-78d5bc5f1bce"],
+  ";"}]}], "CodeInput",ExpressionUUID->"19586cb2-f9aa-4ec8-9b49-78d5bc5f1bce"],
 
 Cell[BoxData[{
  RowBox[{"callbackFailure", "~", "SetAttributes", "~", "HoldRest"}], "\n", 
@@ -1145,11 +1139,11 @@ Cell[BoxData[{
           RowBox[{"li", "[", "\"\<Name\>\"", "]"}], ",", " ", "args"}], "]"}],
          "=!=", "False"}], ",", "\n", "\t\t\t", 
        RowBox[{"Replace", "[", 
-        RowBox[{"sym", ",", "\n", "\t", "\t\t\t", 
+        RowBox[{"sym", ",", "\n", "\t\t\t\t", 
          RowBox[{
           RowBox[{
-           RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], 
-          ":>", "\n", "\t", "\t\t\t\t", 
+           RowBox[{"Verbatim", "[", "Hold", "]"}], "[", "var_", "]"}], ":>", 
+          "\n", "\t", "\t\t\t\t", 
           RowBox[{"With", "[", 
            RowBox[{
             RowBox[{"{", 
@@ -1174,9 +1168,8 @@ Cell[BoxData[{
      RowBox[{"listenerObject", "[", "name", "]"}], ",", " ", "method", ",", 
      " ", "fn", ",", " ", "args"}], "]"}]}], ";"}], "\n", 
  RowBox[{"updateListenerTemplate", "~", "SetAttributes", "~", 
-  "HoldAllComplete"}]}], "CodeInput",
- CellLabel->
-  "In[7345]:=",ExpressionUUID->"7f1d3af1-cef1-4bea-8872-d8d53e2c3772"]
+  "HoldAllComplete"}]}], \
+"CodeInput",ExpressionUUID->"7f1d3af1-cef1-4bea-8872-d8d53e2c3772"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1365,25 +1358,26 @@ Cell[BoxData[
         RowBox[{"\"\<Remove\>\"", ",", " ", 
          RowBox[{"li", "[", "\"\<Name\>\"", "]"}]}], "]"}], "=!=", "False"}], 
       ",", "\n", "\t\t\t", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{"Clear", "@@", 
+         RowBox[{"Evaluate", "[", 
+          RowBox[{"data", "[", "\"\<Variable\>\"", "]"}], "]"}]}], ";"}], 
+       "*)"}], "\n", "\t\t\t", 
       RowBox[{
-       RowBox[{"Clear", "@@", 
-        RowBox[{"Evaluate", "[", 
-         RowBox[{"data", "[", "\"\<Variable\>\"", "]"}], "]"}]}], ";", "\n", 
-       "\t", "\t\t", 
        RowBox[{"Internal`SetValueNoTrack", "@@", 
         RowBox[{"Append", "[", 
          RowBox[{
-          RowBox[{"Hold", "@@", 
-           RowBox[{"data", "[", "\"\<Variable\>\"", "]"}]}], ",", " ", 
+          RowBox[{"data", "[", "\"\<Variable\>\"", "]"}], ",", " ", 
           RowBox[{"data", "[", "\"\<ID\>\"", "]"}]}], "]"}]}], ";", "\n", 
        "\t\t\t", 
        RowBox[{"dropListener", "[", "li", "]"}], ";"}], ",", "\n", "\t\t\t", 
       RowBox[{"callbackFailure", "[", 
        RowBox[{"\"\<Remove\>\"", ",", " ", 
         RowBox[{"li", "[", "\"\<Name\>\"", "]"}]}], "]"}]}], "\n", "\t\t\t", 
-     "]"}]}], "\n", "\t\t", "]"}]}]], "CodeInput",
- CellLabel->
-  "In[7356]:=",ExpressionUUID->"49fef233-b557-4314-82a5-61def3d84690"]
+     "]"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"49fef233-b557-4314-82a5-61def3d84690"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1501,16 +1495,16 @@ Cell[BoxData[
         "\t\t\t\t\t", 
         RowBox[{
          RowBox[{
-          RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
-          "\n", "\t\t\t\t\t\t", 
+          RowBox[{"Verbatim", "[", "Hold", "]"}], "[", "var_", "]"}], ":>", 
+         "\n", "\t\t\t\t\t\t", 
          RowBox[{"DynamicBox", "[", 
           RowBox[{"ToBoxes", "@", "var"}], "]"}]}]}], "\n", "\t\t\t\t\t", 
        "]"}]}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
     RowBox[{"InterpretationBox", "[", "\n", "\t\t\t", 
      RowBox[{"boxes", ",", "\n", "\t\t\t", "li"}], "\n", "\t\t\t", "]"}]}], 
-   "\n", "\t\t", "]"}]}]], "CodeInput",
- CellLabel->
-  "In[7363]:=",ExpressionUUID->"62319269-f018-4994-8634-104d03028e68"]
+   "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"62319269-f018-4994-8634-104d03028e68"]
 }, Closed]]
 }, Open  ]],
 
@@ -1562,17 +1556,16 @@ Cell[BoxData[{
                  RowBox[{"#", ",", " ", "\"\<Variable\>\""}], "]"}], "&"}], 
                ",", " ", "lis"}], "]"}], ",", " ", "\n", "\t\t\t\t\t\t\t", 
              RowBox[{
-              RowBox[{"Except", "[", "_HoldPattern", "]"}], "\[Rule]", 
-              "Nothing"}], ",", " ", "\n", "\t\t\t\t\t\t\t", "1"}], "\n", 
-            "\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t\t\t", 
-           "HoldPattern"}], "\n", "\t\t\t\t\t\t", "]"}], ",", "\n", 
-         "\t\t\t\t\t", 
-         RowBox[{"{", "\n", "\t", "\t", "\t", "\t\t\t", 
+              RowBox[{"Except", "[", "_Hold", "]"}], "\[Rule]", "Nothing"}], 
+             ",", " ", "\n", "\t\t\t\t\t\t\t", "1"}], "\n", "\t\t\t\t\t\t\t", 
+            "]"}], ",", "\n", "\t\t\t\t\t\t", "Hold"}], "\n", "\t\t\t\t\t\t", 
+          "]"}], ",", "\n", "\t\t\t\t\t", 
+         RowBox[{"{", "\n", "\t\t\t\t\t\t", 
           RowBox[{
            RowBox[{
             RowBox[{
-             RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "s_", "]"}], 
-            ":>", "\n", "\t", "\t", "\t", "\t", "\t\t\t", 
+             RowBox[{"Verbatim", "[", "Hold", "]"}], "[", "s_", "]"}], ":>", 
+            "\n", "\t", "\t", "\t", "\t", "\t\t\t", 
             RowBox[{"DynamicBox", "[", "\n", "\t\t\t\t\t\t\t\t", 
              RowBox[{
               RowBox[{"s", ";", "\n", "\t\t\t\t\t\t\t\t", 
@@ -1627,9 +1620,8 @@ Cell[BoxData[{
      "\n", "\t\t", "ops"}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"ListenerDynamic", "~", "SetAttributes", "~", "HoldFirst"}], 
-  ";"}]}], "CodeInput",
- CellLabel->
-  "In[7364]:=",ExpressionUUID->"5a638b84-5a1d-4753-9270-9f29feb0f613"]
+  ";"}]}], "CodeInput",ExpressionUUID->"5a638b84-5a1d-4753-9270-9f29feb0f613"]\
+
 }, Closed]]
 }, Open  ]],
 
@@ -1661,7 +1653,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"ContextRemove", "[", "\"\<Listeners`\>\"", "]"}]], "Input",
- CellLabel->"In[52]:=",ExpressionUUID->"18ff1545-8615-4a25-a139-40aff5aab986"],
+ CellLabel->"In[67]:=",ExpressionUUID->"18ff1545-8615-4a25-a139-40aff5aab986"],
 
 Cell[BoxData[
  RowBox[{"Block", "[", 
@@ -1672,7 +1664,7 @@ Cell[BoxData[
       RowBox[{"$Path", ",", " ", 
        RowBox[{"NotebookDirectory", "[", "]"}]}], "]"}]}], "}"}], ",", 
    RowBox[{"<<", "Listeners`"}]}], "]"}]], "Input",
- CellLabel->"In[53]:=",ExpressionUUID->"8e495724-0684-4e7a-bd54-a76edba3ae72"],
+ CellLabel->"In[68]:=",ExpressionUUID->"8e495724-0684-4e7a-bd54-a76edba3ae72"],
 
 Cell[BoxData[
  RowBox[{"Get", "[", 
@@ -1680,46 +1672,21 @@ Cell[BoxData[
 ", "]"}]], "Input",
  CellLabel->"In[42]:=",ExpressionUUID->"b960096c-be8d-4007-b4dd-e2524ec07325"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"var", "=", 
-    RowBox[{"Listener", "[", "\"\<b\>\"", "]"}]}], ";"}], "//", 
-  "AbsoluteTiming"}]], "Input",
- CellLabel->"In[54]:=",ExpressionUUID->"172272c7-1d8f-4fad-b479-e9bdba3502e6"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"0.000108`", ",", "Null"}], "}"}]], "Output",
- CellLabel->
-  "Out[54]=",ExpressionUUID->"77a5fd57-fc54-4c99-8a34-4ea910be4e48"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"var", "=", 
-  RowBox[{"2", "//", "AbsoluteTiming"}]}]], "Input",
- CellLabel->"In[55]:=",ExpressionUUID->"16c797be-78c3-4a56-83b2-babf97dcf246"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"1.`*^-6", ",", "2"}], "}"}]], "Output",
- CellLabel->
-  "Out[55]=",ExpressionUUID->"f1da6de5-1a88-4d83-b6b8-2c8f48c46b09"]
-}, Open  ]],
+  RowBox[{"var", "=", 
+   RowBox[{"Listener", "[", "\"\<b\>\"", "]"}]}], ";"}]], "Input",
+ CellLabel->"In[69]:=",ExpressionUUID->"172272c7-1d8f-4fad-b479-e9bdba3502e6"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"var", "//", "InputForm"}]], "Input",
- CellLabel->"In[57]:=",ExpressionUUID->"c7d4739a-f5cc-4eb4-a557-7f8f362cbc7a"],
+ CellLabel->"In[70]:=",ExpressionUUID->"90ad8742-afd8-4f85-a499-a12b58fa012a"],
 
 Cell["Listener[\"b\"]", "Output",
  CellLabel->
-  "Out[57]//InputForm=",ExpressionUUID->"51bc755f-4197-468a-b1d8-993fd455a75e"]
+  "Out[70]//InputForm=",ExpressionUUID->"61bebb46-3ecb-4e8c-b950-a220b8ee5d16"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1733,17 +1700,17 @@ Cell[BoxData[
        RowBox[{"BoxData", "@", 
         RowBox[{"ToBoxes", "@", "expr"}]}], "]"}], ",", " ", 
       "\"\<PlainText\>\""}], "]"}]}]}]}]], "Input",
- CellLabel->"In[50]:=",ExpressionUUID->"252b6b75-1e26-40e5-8d58-22cb6bcb11e8"],
+ CellLabel->"In[63]:=",ExpressionUUID->"252b6b75-1e26-40e5-8d58-22cb6bcb11e8"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"displayedForm", "@", "var"}]], "Input",
- CellLabel->"In[51]:=",ExpressionUUID->"9ec3414a-1f76-40d5-86df-2752faac0304"],
+ CellLabel->"In[71]:=",ExpressionUUID->"9ec3414a-1f76-40d5-86df-2752faac0304"],
 
 Cell[BoxData["\<\"Null\"\>"], "Output",
  CellLabel->
-  "Out[51]=",ExpressionUUID->"a2eb885d-4ecb-40d6-8333-f5bd4490b18d"]
+  "Out[71]=",ExpressionUUID->"c31e1e7b-50bb-4a8d-b111-281275282f8a"]
 }, Open  ]],
 
 Cell[CellGroupData[{

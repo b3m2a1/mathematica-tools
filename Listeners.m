@@ -468,8 +468,8 @@ createListener[name_String]:=
       <|
         "ID"->id,
         "Track"->Internal`TrackExpression[listener, id],
-        "Variable"->HoldPattern[listener],
-        "Callback"->HoldPattern[callback]
+        "Variable"->Hold[listener],
+        "Callback"->Hold[callback]
         |>
       ]
     ]
@@ -482,7 +482,7 @@ createListener[name_String]:=
 
 setListenerCallback[li_Listener, val_]:=
   Replace[listenerData[li, "Callback"],
-    Verbatim[HoldPattern][var_]:>
+    Verbatim[Hold][var_]:>
       Set[var, val]
       ];
 setListenerCallback~SetAttributes~HoldRest;
@@ -490,7 +490,7 @@ setListenerCallback~SetAttributes~HoldRest;
 
 setListenerCallbackDelayed[li_Listener, val_]:=
   Replace[listenerData[li,"Callback"],
-    Verbatim[HoldPattern][var_]:>
+    Verbatim[Hold][var_]:>
       SetDelayed[var, val]
       ];
 setListenerCallbackDelayed~SetAttributes~HoldRest;
@@ -534,7 +534,7 @@ updateListenerTemplate[li_Listener, method_, fn_, args__]:=
       },
     If[cb[method, li["Name"], args]=!=False,
       Replace[sym,
-        Verbatim[HoldPattern][var_]:>
+        Verbatim[Hold][var_]:>
           With[{v=fn[var, args]},
             v
             ]
@@ -623,8 +623,8 @@ removeListener[li_Listener]:=
       data=listenerData[li]
       },
     If[data["Callback"][[1]]["Remove", li["Name"]]=!=False,
-      Clear@@Evaluate[data["Variable"]];
-      Internal`SetValueNoTrack@@Append[Hold@@data["Variable"], data["ID"]];
+      (*Clear@@Evaluate[data["Variable"]];*)
+      Internal`SetValueNoTrack@@Append[data["Variable"], data["ID"]];
       dropListener[li];,
       callbackFailure["Remove", li["Name"]]
       ]
@@ -703,7 +703,7 @@ MakeBoxes[
     {
       boxes=
         Replace[getListenerVariable[li],
-          Verbatim[HoldPattern][var_]:>
+          Verbatim[Hold][var_]:>
             DynamicBox[ToBoxes@var]
           ]
       },
@@ -740,13 +740,13 @@ MakeBoxes[
           Thread[
             Replace[
               Map[listenerData[#, "Variable"]&, lis], 
-              Except[_HoldPattern]->Nothing, 
+              Except[_Hold]->Nothing, 
               1
               ],
-            HoldPattern
+            Hold
             ],
           {
-            Verbatim[HoldPattern][s_]:>
+            Verbatim[Hold][s_]:>
               DynamicBox[
                 s;
                 ToBoxes@expr,
