@@ -80,13 +80,13 @@ listenerMutationHandler~SetAttributes~HoldAllComplete
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists["Callback"]=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Callback"]=val_]:=
   setListenerCallback[s, val];
-listenerMutationHandler[s_Symbol?listenerExists["Callback"]:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Callback"]:=val_]:=
   setListenerCallbackDelayed[s, val];
-listenerMutationHandler[li_Listener?listenerExists["Callback"]=val_]:=
+listenerMutationHandler[li_Listener["Callback"]=val_]:=
   setListenerCallback[li, val];
-listenerMutationHandler[li_Listener?listenerExists["Callback"]:=val_]:=
+listenerMutationHandler[li_Listener["Callback"]:=val_]:=
   setListenerCallbackDelayed[li, val];
 
 
@@ -95,13 +95,13 @@ listenerMutationHandler[li_Listener?listenerExists["Callback"]:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists["Value"]=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Value"]=val_]:=
   updateListener[s, val];
-listenerMutationHandler[s_Symbol?listenerExists["Value"]:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Value"]:=val_]:=
   updateListenerDelayed[s, val];
-listenerMutationHandler[li_Listener?listenerExists["Value"]=val_]:=
+listenerMutationHandler[li_Listener["Value"]=val_]:=
   updateListener[li, val];
-listenerMutationHandler[li_Listener?listenerExists["Value"]:=val_]:=
+listenerMutationHandler[li_Listener["Value"]:=val_]:=
     updateListenerDelayed[li, val];
 
 
@@ -110,14 +110,14 @@ listenerMutationHandler[li_Listener?listenerExists["Value"]:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists["Value"]=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Value"]=val_]:=
   updateListener[s, val];
-listenerMutationHandler[s_Symbol?listenerExists["Value"]:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol["Value"]:=val_]:=
   updateListenerDelayed[s, val];
-listenerMutationHandler[li_Listener?listenerExists["Value"]=val_]:=
+listenerMutationHandler[li_Listener["Value"]=val_]:=
   updateListener[li, val];
-listenerMutationHandler[li_Listener?listenerExists["Value"]:=val_]:=
-    updateListenerDelayed[li, val];
+listenerMutationHandler[li_Listener["Value"]:=val_]:=
+  updateListenerDelayed[li, val];
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -125,13 +125,13 @@ listenerMutationHandler[li_Listener?listenerExists["Value"]:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol=val_]:=
   updateListener[s, val];
-listenerMutationHandler[s_Symbol?listenerExists:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol:=val_]:=
   updateListenerDelayed[s, val];
-listenerMutationHandler[li_Listener?listenerExists=val_]:=
+listenerMutationHandler[li_Listener=val_]:=
   updateListener[li, val];
-listenerMutationHandler[li_Listener?listenerExists:=val_]:=
+listenerMutationHandler[li_Listener:=val_]:=
     updateListenerDelayed[li, val];
 
 
@@ -140,25 +140,25 @@ listenerMutationHandler[li_Listener?listenerExists:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists[key__]=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol[key__]=val_]:=
   Quiet@
     Check[
       updateListenerKey[s, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[s_Symbol?listenerExists[key__]:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol[key__]:=val_]:=
   Quiet@
     Check[
       updateListenerKeyDelayed[s, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[li_Listener?listenerExists[key__]=val_]:=
+listenerMutationHandler[li_Listener[key__]=val_]:=
   Quiet@
     Check[
       updateListenerKey[li, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[li_Listener?listenerExists[key__]:=val_]:=
+listenerMutationHandler[li_Listener[key__]:=val_]:=
   Quiet@
     Check[
       updateListenerKeyDelayed[li, key, val],
@@ -171,25 +171,25 @@ listenerMutationHandler[li_Listener?listenerExists[key__]:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists[[key__]]=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol[[key__]]=val_]:=
   Quiet@
     Check[
       updateListenerPart[s, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[s_Symbol?listenerExists[[key__]]:=val_]:=
+listenerMutationHandler[s_Symbol?listenerSymbol[[key__]]:=val_]:=
   Quiet@
     Check[
       updateListenerPartDelayed[s, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[li_Listener?listenerExists[[key__]]=val_]:=
+listenerMutationHandler[li_Listener[[key__]]=val_]:=
   Quiet@
     Check[
       updateListenerPart[li, key, val],
       Language`MutationFallthrough
       ];
-listenerMutationHandler[li_Listener?listenerExists[[key__]]:=val_]:=
+listenerMutationHandler[li_Listener[[key__]]:=val_]:=
   Quiet@
     Check[
       updateListenerPartDelayed[li, key, val],
@@ -202,13 +202,13 @@ listenerMutationHandler[li_Listener?listenerExists[[key__]]:=val_]:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists=.]:=
+listenerMutationHandler[s_Symbol?listenerSymbol=.]:=
   Quiet@
     Check[
       removeListener[s];s=.,
       Language`MutationFallthrough
       ];
-Listener/:Unset@li_Listener?listenerExists:=
+Listener/:Unset@li_Listener:=
   removeListener[li];
 
 
@@ -217,13 +217,13 @@ Listener/:Unset@li_Listener?listenerExists:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists//Clear]:=
+listenerMutationHandler[s_Symbol?listenerSymbol//Clear]:=
   Quiet@
     Check[
       removeListener[s];s//Clear,
       Language`MutationFallthrough
       ];
-Listener/:Clear@li_Listener?listenerExists:=
+Listener/:Clear@li_Listener?listenerSymbol:=
   removeListener[li];
 
 
@@ -232,13 +232,13 @@ Listener/:Clear@li_Listener?listenerExists:=
 
 
 
-listenerMutationHandler[s_Symbol?listenerExists//Remove]:=
+listenerMutationHandler[s_Symbol?listenerSymbol//Remove]:=
   Quiet@
     Check[
       removeListener[s];s//Remove,
       Language`MutationFallthrough
       ];
-Listener/:Remove@li_Listener?listenerExists:=
+Listener/:Remove@li_Listener:=
   removeListener[li];
 
 
@@ -395,6 +395,11 @@ listenerData[name_]:=
 (* ::Subsubsection::Closed:: *)
 (*listenerExists*)
 
+
+
+listenerSymbol[s_Symbol]:=
+  MatchQ[OwnValues[s], {_:>_Listener}];
+listenerSymbol~SetAttributes~HoldFirst;
 
 
 listenerExists[name_String]:=
