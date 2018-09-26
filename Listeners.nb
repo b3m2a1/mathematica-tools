@@ -1,0 +1,1748 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\[LeftCeiling]Listener Pattern\[RightFloor]", "CodeChapter",
+ Evaluatable->True,ExpressionUUID->"a551d8e8-a497-44fa-9248-dd2e69590f64"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<Listeners`\>\"", "]"}], 
+  ";"}]], "InputChapter",
+ CellLabel->
+  "In[7297]:=",ExpressionUUID->"e5b26613-1b46-48a4-b2b7-c9f7b494e2ec"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Listener", "::", "usage"}], "=", 
+   "\"\<Core listener object to work with\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Listeners", "::", "usage"}], "=", 
+   "\"\<Lists the listener objects\>\""}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7298]:=",ExpressionUUID->"79bd9d53-a529-41e6-ad2c-a0f6105a265c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<`Package`\>\"", "]"}], 
+  ";"}]], "InputSection",
+ CellLabel->
+  "In[7299]:=",ExpressionUUID->"2686e728-bdc7-4a9c-83c3-442d405237f9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"$Listeners", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]], "CodeInput",
+ CellLabel->
+  "In[7300]:=",ExpressionUUID->"16d06e61-d29e-4599-a8cf-53b434f5bece"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"createListener", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListener", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"removeListener", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getListener", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7301]:=",ExpressionUUID->"936de84d-eabf-4978-96ec-3669b8fbccae"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"addListener", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"dropListener", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7302]:=",ExpressionUUID->"08cb38dc-f105-4664-9122-bbcf55a92fbf"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerExists", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerObject", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerData", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7303]:=",ExpressionUUID->"491985ed-fbd6-4dc5-b5e8-99fc83057f1b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], ";"}]], "InputSection",
+ CellLabel->
+  "In[7304]:=",ExpressionUUID->"e8714309-bd13-4bc0-832a-7a1f365d9ce1"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ListenerDynamic", "::", "usage"}], "=", 
+   "\"\<Dynamic-esque block but with a set of named listeners\>\""}], 
+  ";"}]], "CodeInput",
+ CellLabel->
+  "In[7305]:=",ExpressionUUID->"b1ada75c-1032-4fd4-b619-535989ee937d"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], ";"}]], "InputSection",
+ CellLabel->
+  "In[7306]:=",ExpressionUUID->"175e3643-af9b-4f39-8934-38b43070656b"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Listener cache\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"5e33f78e-c85d-4765-8b18-956a987ee3fa"],
+
+Cell["\<\
+\[LeftCeiling]
+\tUsing a weak hash map so that we can store data but still have it nicely \
+cleaned up
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->True,
+ CellLabel->
+  "In[7307]:=",ExpressionUUID->"d076dd37-fa50-490f-acbc-1a7d11225500"],
+
+Cell[BoxData[
+ RowBox[{"If", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Head", "@", "$Listeners"}], "=!=", "Language`ExpressionStore"}], 
+   ",", "\n", "\t", 
+   RowBox[{
+    RowBox[{"$Listeners", "=", 
+     RowBox[{"Language`NewExpressionStore", "[", "\"\<Listeners\>\"", "]"}]}],
+     ";", "\n", "\t", 
+    RowBox[{"Scan", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"$Listeners", "@", 
+        RowBox[{"\"\<remove\>\"", "[", 
+         RowBox[{"#", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "&"}], ",", " ", 
+      RowBox[{"$Listeners", "@", 
+       RowBox[{"\"\<listTable\>\"", "[", "]"}]}]}], "]"}], ";"}]}], "\n", 
+  "\t", "]"}]], "CodeInput",
+ CellLabel->
+  "In[7308]:=",ExpressionUUID->"0872fbbc-ecf3-4f82-9808-51fae6152d16"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]OOP\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"baf775f5-1815-4726-8b7f-2cf9693ad2cd"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]MutationHandler\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"eef49e98-dd72-42b7-b8d0-c12cf36550da"],
+
+Cell["\<\
+\[LeftCeiling]
+\tHandle listener object mutation
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->False,
+ CellLabel->
+  "In[7309]:=",ExpressionUUID->"3e058a32-5f74-4364-9f78-95a0a3996066"],
+
+Cell[BoxData[
+ RowBox[{"listenerMutationHandler", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]], "CodeInput",
+ CellLabel->
+  "In[7310]:=",ExpressionUUID->"c73f2c60-f272-4586-bcd3-6fff35e403e1"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l[\[OpenCurlyDoubleQuote]Callback\[CloseCurlyDoubleQuote]]\
+ =\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"10b9907e-36a2-41c5-acd1-79345696d162"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Callback\>\"", 
+      "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"setListenerCallback", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Callback\>\"", 
+      "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"setListenerCallbackDelayed", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Callback\>\"",
+       "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"setListenerCallback", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Callback\>\"",
+       "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"setListenerCallbackDelayed", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7311]:=",ExpressionUUID->"56eea92b-e2d9-4f65-89b3-19c6df125d99"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l[\[OpenCurlyDoubleQuote]Value\[CloseCurlyDoubleQuote]] =\
+\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"c5dfae73-ec27-4362-96b7-c7ba248dabe7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7312]:=",ExpressionUUID->"72aa69ac-5e7e-44dc-93c1-26228c6bfd33"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l[\[OpenCurlyDoubleQuote]Value\[CloseCurlyDoubleQuote]] \
+:=\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"2468af9c-57e1-49de-9ac9-1cf534a39bd6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+      "]"}], ":=", "val_"}], "]"}], ":=", "\n", "\t\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7313]:=",ExpressionUUID->"60bf9917-c73e-473a-8f5a-567bd04c327c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l =\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"71face8d-98c2-4ff5-8d8c-6203a28f040d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"s_Symbol", "?", "listenerExists"}], "=", "val_"}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"s_Symbol", "?", "listenerExists"}], ":=", "val_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"s", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"li_Listener", "?", "listenerExists"}], "=", "val_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"updateListener", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"li_Listener", "?", "listenerExists"}], ":=", "val_"}], "]"}], ":=",
+    "\n", "\t\t", 
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"li", ",", " ", "val"}], "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7314]:=",ExpressionUUID->"c8d5aecd-9ef3-4f8e-8eee-3642aeb73c78"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l[__] = ...\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"4568c728-c1f4-4cfe-aaf8-bf6cf8346186"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "key__", "]"}], "=", 
+     "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerKey", "[", 
+       RowBox[{"s", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", "key__", "]"}], ":=", 
+     "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerKeyDelayed", "[", 
+       RowBox[{"s", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "key__", "]"}], 
+     "=", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerKey", "[", 
+       RowBox[{"li", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", "key__", "]"}], ":=",
+      "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerKeyDelayed", "[", 
+       RowBox[{"li", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7315]:=",ExpressionUUID->"90d4e3d9-f898-49bb-8a4b-e4b55b61699f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l[[__]] = ...\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"496240bf-f5a2-4d6b-b05d-c541b99d79a1"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", 
+      RowBox[{"[", "key__", "]"}], "]"}], "=", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerPart", "[", 
+       RowBox[{"s", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "listenerExists"}], "[", 
+      RowBox[{"[", "key__", "]"}], "]"}], ":=", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerPartDelayed", "[", 
+       RowBox[{"s", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", 
+      RowBox[{"[", "key__", "]"}], "]"}], "=", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerPart", "[", 
+       RowBox[{"li", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"li_Listener", "?", "listenerExists"}], "[", 
+      RowBox[{"[", "key__", "]"}], "]"}], ":=", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"updateListenerPartDelayed", "[", 
+       RowBox[{"li", ",", " ", "key", ",", " ", "val"}], "]"}], ",", "\n", 
+      "\t\t\t", "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7316]:=",ExpressionUUID->"a0706954-b83b-4d96-ad6d-b9381f21d1db"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]l =.\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"fe405392-9cb6-499c-8a73-d78e03408e2d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"s_Symbol", "?", "listenerExists"}], "=."}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"removeListener", "[", "s", "]"}], ";", 
+       RowBox[{"s", "=."}]}], ",", "\n", "\t\t\t", 
+      "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Listener", "/:", 
+   RowBox[{"Unset", "@", 
+    RowBox[{"li_Listener", "?", "listenerExists"}]}], ":=", "\n", "\t", 
+   RowBox[{"removeListener", "[", "li", "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7317]:=",ExpressionUUID->"6e235854-9791-40ab-a62a-68c9ab22b71f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Clear@l\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"ca6c60a6-9278-4e47-abd6-9f3d969e7a54"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"s_Symbol", "?", "listenerExists"}], "//", "Clear"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"removeListener", "[", "s", "]"}], ";", 
+       RowBox[{"s", "//", "Clear"}]}], ",", "\n", "\t\t\t", 
+      "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Listener", "/:", 
+   RowBox[{"Clear", "@", 
+    RowBox[{"li_Listener", "?", "listenerExists"}]}], ":=", "\n", "\t", 
+   RowBox[{"removeListener", "[", "li", "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7318]:=",ExpressionUUID->"2b599b42-3a16-45c6-8029-42b20887350e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Remove@l\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"e5b3f09f-5197-4a37-b974-eedd4e27dae7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"s_Symbol", "?", "listenerExists"}], "//", "Remove"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"Quiet", "@", "\n", "\t\t", 
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"removeListener", "[", "s", "]"}], ";", 
+       RowBox[{"s", "//", "Remove"}]}], ",", "\n", "\t\t\t", 
+      "Language`MutationFallthrough"}], "\n", "\t\t\t", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Listener", "/:", 
+   RowBox[{"Remove", "@", 
+    RowBox[{"li_Listener", "?", "listenerExists"}]}], ":=", "\n", "\t", 
+   RowBox[{"removeListener", "[", "li", "]"}]}], ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7319]:=",ExpressionUUID->"2ead62fa-4e2c-4e2c-ad1c-516310dcd76b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Fallback\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"86a3d19a-d750-4c15-85cf-a76018f11c46"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerMutationHandler", "[", "e___", "]"}], ":=", "\n", "\t", 
+   "Language`MutationFallthrough"}], ";"}]], "CodeInput",
+ CellLabel->
+  "In[7320]:=",ExpressionUUID->"82689734-a1fb-4cab-a4eb-c7603d55e48d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Language`SetMutationHandler", "[", 
+   RowBox[{"Listener", ",", " ", "listenerMutationHandler"}], "]"}], 
+  ";"}]], "CodeInput",
+ CellLabel->
+  "In[7321]:=",ExpressionUUID->"c91bd650-4184-44b5-b0b9-dd4c4d70366d"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Constructor\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a4c7dfbb-d6fb-49e2-84cd-ac6d254f0101"],
+
+Cell["\<\
+\[LeftCeiling]
+\tHandle listener object construction...unfortunately this has to be slow
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->False,
+ CellLabel->
+  "In[7322]:=",ExpressionUUID->"5c79c7f4-be20-4245-a76e-9124d853bce2"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Listener", "[", "name_String", "]"}], "?", 
+    "System`Private`HoldEntryQ"}], ":=", "\n", "\t", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"listenerObject", "[", "name", "]"}], ",", "\n", "\t\t", 
+     RowBox[{"_Missing", "\[RuleDelayed]", 
+      RowBox[{"createListener", "[", "name", "]"}]}]}], "\n", "\t\t", "]"}]}],
+   ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Listener", "[", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Listener", "[", 
+   RowBox[{"CreateUUID", "[", "]"}], "]"}]}]}], "CodeInput",
+ CellLabel->
+  "In[7323]:=",ExpressionUUID->"681a2f22-8145-4a14-af3a-cd65c4b55814"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Value\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"16d7dfc1-8cd7-4e4e-8417-39156142ca3b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Value\>\"", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"getListener", "[", "li", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7324]:=",ExpressionUUID->"b254e34a-8058-4b29-a8a4-b8af75588534"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Name\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"14ad8fda-d799-4933-907f-82024e6de5e2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Name\>\"", "]"}],
+   ":=", "\n", "\t", "li"}]], "CodeInput",
+ CellLabel->
+  "In[7325]:=",ExpressionUUID->"c9b2496c-ae20-435e-a023-68433da5d808"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Variable\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"fb70da3a-b8a9-49e6-8a98-0a79a187e07d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Variable\>\"", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"getListenerVariable", "[", "li", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7326]:=",ExpressionUUID->"23cc5ed1-a6fa-4027-aaba-c97363b8257e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]ID\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"16a9325e-4f12-4a74-a5d7-5fc11fbeb173"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<ID\>\"", "]"}], ":=",
+   "\n", "\t", 
+  RowBox[{"getListenerID", "[", "li", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7327]:=",ExpressionUUID->"5b48dd65-ed57-4b9c-9941-76b1e651c734"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Expression\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"92b8631d-cbdd-46b2-8b57-5a43e67b72f0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Expression\>\"", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"getListenerExpression", "[", "li", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7328]:=",ExpressionUUID->"2ea3d88e-c295-4db5-814c-5cc3f49af00f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Callback\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"950fa1f9-7f9a-4c66-a458-cfe186b94eb3"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "\"\<Callback\>\"", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"getListenerCallback", "[", "li", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7329]:=",ExpressionUUID->"3c408a7c-ddf5-4278-93b7-8e45b0c29c0a"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Others\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"7ce60686-0a76-4f25-896f-aa6b4ff962e9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", "key__", "]"}], ":=", 
+  "\n", "\t", 
+  RowBox[{
+   RowBox[{"getListener", "[", "li", "]"}], "[", "key", "]"}]}]], "CodeInput",
+ 
+ CellLabel->
+  "In[7330]:=",ExpressionUUID->"ed6db8eb-0847-48bc-8d4e-1eeaae5b1fb6"],
+
+Cell[BoxData[
+ RowBox[{"Listener", "/:", 
+  RowBox[{
+   RowBox[{"li_Listener", "?", "listenerExists"}], "[", 
+   RowBox[{"[", "key__", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"getListener", "[", "li", "]"}], "[", 
+   RowBox[{"[", "key", "]"}], "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7331]:=",ExpressionUUID->"c67eced7-971c-4639-bccd-f1c218cf8454"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]API\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"8fe6a10e-2bec-43f6-8a0b-b873e8a3f293"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Listeners\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"9957a106-1eab-4594-b810-59eb7d0b741f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Listeners", "[", "]"}], ":=", "\n", "\t", 
+   RowBox[{"Listener", "/@", 
+    RowBox[{"$Listeners", "@", 
+     RowBox[{"\"\<getKeys\>\"", "[", "$listeners", "]"}]}]}]}], 
+  ";"}]], "CodeInput",
+ CellLabel->
+  "In[7332]:=",ExpressionUUID->"c030e45a-58cc-49d0-9f0f-62460f121da2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]listenerObject\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"e31b51df-4164-41c1-b4ff-c760e8d64bda"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"listenerObject", "[", "name_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"SelectFirst", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"$Listeners", "@", 
+       RowBox[{"\"\<listTable\>\"", "[", "]"}]}], ")"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"All", ",", " ", "1"}], "]"}], "]"}], ",", " ", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"#", "[", "\"\<Name\>\"", "]"}], "\[Equal]", "name"}], "&"}], 
+    ",", " ", "\n", "\t\t", 
+    RowBox[{"Missing", "[", 
+     RowBox[{"\"\<KeyAbsent\>\"", ",", " ", "name"}], "]"}]}], "\n", "\t\t", 
+   "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7333]:=",ExpressionUUID->"4fd1c0f3-1cc2-4f41-a0ce-16c604bbd6c7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]listenerData\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"1bace080-4bc8-4846-b5eb-444d8f0b051f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerData", "[", 
+    RowBox[{"li_Listener", ",", " ", "key_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Replace", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"$Listeners", "@", 
+      RowBox[{"\"\<get\>\"", "[", 
+       RowBox[{"li", ",", " ", "key"}], "]"}]}], ",", "\n", "\t\t", 
+     RowBox[{"Null", ":>", "\n", "\t\t\t", 
+      RowBox[{"Missing", "[", 
+       RowBox[{"\"\<KeyAbset\>\"", ",", " ", "key"}], "]"}]}]}], "\n", "\t\t",
+     "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerData", "[", 
+    RowBox[{"name_String", ",", " ", "key_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"listener", "=", 
+       RowBox[{"listenerObject", "[", "name", "]"}]}], "}"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"listenerData", "[", 
+      RowBox[{"listener", ",", " ", "key"}], "]"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerData", "[", "li_Listener", "]"}], ":=", "\n", "\t", 
+   RowBox[{"AssociationMap", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"$Listeners", "@", 
+       RowBox[{"\"\<get\>\"", "[", 
+        RowBox[{"li", ",", " ", "#"}], "]"}]}], "&"}], ",", "\n", "\t\t", 
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+      "\"\<ID\>\"", ",", "\n", "\t\t\t", "\"\<Track\>\"", ",", "\n", 
+       "\t\t\t", "\"\<Variable\>\"", ",", "\n", "\t\t\t", 
+       "\"\<Callback\>\""}], "\n", "\t\t\t", "}"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"listenerData", "[", "name_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"listener", "=", 
+      RowBox[{"listenerObject", "[", "name", "]"}]}], "}"}], ",", "\n", 
+    "\t\t", 
+    RowBox[{"listenerData", "@", "listener"}]}], "\n", "\t\t", 
+   "]"}]}]}], "CodeInput",
+ CellLabel->
+  "In[7334]:=",ExpressionUUID->"3b769fce-cf9d-4a62-88f9-0c5aa7538512"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]listenerExists\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"32aa7341-4984-434f-9480-619a5fd3ebf0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerExists", "[", "name_String", "]"}], ":=", "\n", "\t", 
+   RowBox[{"!", 
+    RowBox[{"MissingQ", "@", 
+     RowBox[{"listenerObject", "[", "name", "]"}]}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerExists", "[", "li_Listener", "]"}], ":=", "\n", "\t", 
+   RowBox[{
+    RowBox[{"System`Private`HoldNoEntryQ", "@", "li"}], "&&", "\n", "\t\t", 
+    RowBox[{"IntegerQ", "@", 
+     RowBox[{"listenerData", "[", 
+      RowBox[{"li", ",", " ", "\"\<ID\>\""}], "]"}]}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerExists", "[", "s_Symbol", "]"}], ":=", "\n", "\t", 
+   RowBox[{"MatchQ", "[", 
+    RowBox[{
+     RowBox[{"OwnValues", "[", "s", "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"_", "\[RuleDelayed]", 
+       RowBox[{"_Listener", "?", "listenerExists"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listenerExists", "[", "e_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"eval", "=", 
+       RowBox[{"Evaluate", "@", "e"}]}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"MatchQ", "[", 
+       RowBox[{"eval", ",", " ", 
+        RowBox[{"_Listener", "|", "_String"}]}], "]"}], "&&", "\n", "\t\t\t", 
+      
+      RowBox[{"listenerExists", "@", "eval"}]}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{"listenerExists", "~", "SetAttributes", "~", 
+  "HoldFirst"}]}], "CodeInput",
+ CellLabel->
+  "In[7335]:=",ExpressionUUID->"bf8dabcf-debe-4e36-a278-bd980e2ea1a6"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]addListener\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"cdd9bd7a-4bd3-4d35-8276-8e52af8b80f6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"addListener", "[", 
+   RowBox[{"obj_Listener", ",", " ", "data_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"(", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"KeyValueMap", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"$Listeners", "@", 
+        RowBox[{"\"\<put\>\"", "[", 
+         RowBox[{"obj", ",", " ", "##"}], "]"}]}], "&"}], ",", " ", "data"}], 
+     "]"}], ";", "\n", "\t\t", "obj"}], "\n", "\t\t", ")"}]}]], "CodeInput",
+ CellLabel->
+  "In[7336]:=",ExpressionUUID->"fe920fb0-ff3d-4511-9b63-2f87452456be"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"addListener", "[", 
+   RowBox[{"name_String", ",", " ", "data_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"addListener", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"System`Private`HoldSetNoEntry", "[", 
+     RowBox[{"Listener", "[", "name", "]"}], "]"}], ",", "\n", "\t\t", 
+    "data"}], "\n", "\t\t", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7337]:=",ExpressionUUID->"9c72c549-4f6f-4421-801a-43447d4eb3e3"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]dropListener\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"87ff113a-975f-4816-b0b6-4bf2bbc46654"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"dropListener", "[", "obj_Listener", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$Listeners", "@", 
+    RowBox[{"\"\<remove\>\"", "[", "obj", "]"}]}]}], ";"}]], "CodeInput",
+ CellLabel->
+  "In[7338]:=",ExpressionUUID->"805968bd-59d8-4f37-9d43-9beaac3e7f4d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"dropListener", "[", "name_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"dropListener", "@", 
+    RowBox[{"listenerObject", "[", "name", "]"}]}]}], ";"}]], "CodeInput",
+ CellLabel->
+  "In[7339]:=",ExpressionUUID->"eed99e29-4e9b-481c-9228-e08fae408a43"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Create\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"40c9acc8-e18a-49c7-9813-046b6225d2ee"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"createListener", "[", "name_String", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Module", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{"listener", ",", " ", "\n", "\t\t\t", 
+      RowBox[{"id", "=", "$ModuleNumber"}], ",", "\n", "\t\t\t", "callback"}],
+      "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"listener", "=", "Null"}], ";", "\n", "\t\t", 
+     RowBox[{"callback", "=", 
+      RowBox[{"True", "&"}]}], ";", "\n", "\t\t", 
+     RowBox[{"addListener", "[", "\n", "\t\t\t", 
+      RowBox[{"name", ",", "\n", "\t\t\t", 
+       RowBox[{"<|", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{"\"\<ID\>\"", "\[Rule]", "id"}], ",", "\n", "\t\t\t\t", 
+         RowBox[{"\"\<Track\>\"", "\[Rule]", 
+          RowBox[{"Internal`TrackExpression", "[", 
+           RowBox[{"listener", ",", " ", "id"}], "]"}]}], ",", "\n", 
+         "\t\t\t\t", 
+         RowBox[{"\"\<Variable\>\"", "\[Rule]", 
+          RowBox[{"HoldPattern", "[", "listener", "]"}]}], ",", "\n", 
+         "\t\t\t\t", 
+         RowBox[{"\"\<Callback\>\"", "\[Rule]", 
+          RowBox[{"HoldPattern", "[", "callback", "]"}]}]}], "\n", "\t\t\t\t",
+         "|>"}]}], "\n", "\t\t\t", "]"}]}]}], "\n", "\t\t", 
+   "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7340]:=",ExpressionUUID->"8f082985-3a4a-4257-8966-71a48256bd86"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Callback\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"d766a1d7-5796-4f8a-864f-3d5797972021"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setListenerCallback", "[", 
+    RowBox[{"li_Listener", ",", " ", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"listenerData", "[", 
+      RowBox[{"li", ",", " ", "\"\<Callback\>\""}], "]"}], ",", "\n", "\t\t", 
+     
+     RowBox[{
+      RowBox[{
+       RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
+       "\n", "\t\t\t", 
+      RowBox[{"Set", "[", 
+       RowBox[{"var", ",", " ", "val"}], "]"}]}]}], "\n", "\t\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"setListenerCallback", "~", "SetAttributes", "~", "HoldRest"}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7341]:=",ExpressionUUID->"47fbc8d1-d00f-44e3-9831-df876d7a04cd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setListenerCallbackDelayed", "[", 
+    RowBox[{"li_Listener", ",", " ", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"listenerData", "[", 
+      RowBox[{"li", ",", "\"\<Callback\>\""}], "]"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
+       "\n", "\t\t\t", 
+      RowBox[{"SetDelayed", "[", 
+       RowBox[{"var", ",", " ", "val"}], "]"}]}]}], "\n", "\t\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "setListenerCallbackDelayed", "~", "SetAttributes", "~", "HoldRest"}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7342]:=",ExpressionUUID->"19586cb2-f9aa-4ec8-9b49-78d5bc5f1bce"],
+
+Cell[BoxData[{
+ RowBox[{"callbackFailure", "~", "SetAttributes", "~", "HoldRest"}], "\n", 
+ RowBox[{
+  RowBox[{"callbackFailure", "[", 
+   RowBox[{"key_", ",", " ", "name_", ",", " ", "args__"}], "]"}], ":=", "\n",
+   "\t", 
+  RowBox[{"Failure", "[", 
+   RowBox[{"\"\<CallbackRejected\>\"", ",", "\n", "\t\t", 
+    RowBox[{"<|", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+      "\"\<MessageTemplate\>\"", "\[Rule]", 
+       "\"\<Callback rejected change `` to variable `` with args ``\>\""}], 
+      ",", "\n", "\t\t\t", 
+      RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"key", ",", " ", "name", ",", " ", 
+         RowBox[{"HoldForm", "[", 
+          RowBox[{"{", "args", "}"}], "]"}]}], "}"}]}]}], "\n", "\t\t\t", 
+     "|>"}]}], "\n", "\t\t", "]"}]}]}], "CodeInput",
+ CellLabel->
+  "In[7343]:=",ExpressionUUID->"2625d33c-4360-4da0-ba5b-b34adce97c3d"],
+
+Cell[BoxData[{
+ RowBox[{"callbackFailure", "~", "SetAttributes", "~", "HoldRest"}], "\n", 
+ RowBox[{
+  RowBox[{"callbackFailure", "[", 
+   RowBox[{"key_", ",", " ", "name_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"Failure", "[", 
+   RowBox[{"\"\<CallbackRejected\>\"", ",", "\n", "\t\t", 
+    RowBox[{"<|", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+      "\"\<MessageTemplate\>\"", "\[Rule]", 
+       "\"\<Callback rejected change `` to variable ``\>\""}], ",", "\n", 
+      "\t\t\t", 
+      RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"key", ",", " ", "name"}], "}"}]}]}], "\n", "\t\t\t", 
+     "|>"}]}], "\n", "\t\t", "]"}]}]}], "CodeInput",
+ CellLabel->
+  "In[7344]:=",ExpressionUUID->"a5ede978-c16c-4f95-9173-981de69287c5"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Update\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"4093eafa-c5bc-400f-a708-b4f8b7a1fa56"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Template\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"0a1d7844-76e6-4b1f-8591-76032e17001f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li_Listener", ",", " ", "method_", ",", " ", "fn_", ",", " ", "args__"}],
+     "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"sym", "=", 
+        RowBox[{"listenerData", "[", 
+         RowBox[{"li", ",", " ", "\"\<Variable\>\""}], "]"}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{"cb", " ", "=", 
+        RowBox[{
+         RowBox[{"listenerData", "[", 
+          RowBox[{"li", ",", "\"\<Callback\>\""}], "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}]}], "\n", "\t\t\t", "}"}], ",", "\n",
+      "\t\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"cb", "[", 
+         RowBox[{"method", ",", " ", 
+          RowBox[{"li", "[", "\"\<Name\>\"", "]"}], ",", " ", "args"}], "]"}],
+         "=!=", "False"}], ",", "\n", "\t\t\t", 
+       RowBox[{"Replace", "[", 
+        RowBox[{"sym", ",", "\n", "\t", "\t\t\t", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], 
+          ":>", "\n", "\t", "\t\t\t\t", 
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"v", "=", 
+              RowBox[{"fn", "[", 
+               RowBox[{"var", ",", " ", "args"}], "]"}]}], "}"}], ",", "\n", 
+            "\t\t\t\t\t\t", "v"}], "\n", "\t\t\t\t\t\t", "]"}]}]}], "\n", 
+        "\t\t\t\t", "]"}], ",", "\n", "\t\t\t", 
+       RowBox[{"callbackFailure", "[", 
+        RowBox[{"method", ",", " ", 
+         RowBox[{"li", "[", "\"\<Name\>\"", "]"}], ",", " ", "args"}], 
+        "]"}]}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "name_String", ",", " ", "method_", ",", " ", "fn_", ",", " ", "args__"}],
+     "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+     RowBox[{"listenerObject", "[", "name", "]"}], ",", " ", "method", ",", 
+     " ", "fn", ",", " ", "args"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListenerTemplate", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]}], "CodeInput",
+ CellLabel->
+  "In[7345]:=",ExpressionUUID->"7f1d3af1-cef1-4bea-8872-d8d53e2c3772"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Value\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"c9d1ba4c-cc3b-44e2-9ee7-f3d5e362bd49"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListener", "[", 
+    RowBox[{"li_Listener", ",", " ", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li", ",", " ", "\"\<Update\>\"", ",", " ", "Set", ",", " ", "val"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListener", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7346]:=",ExpressionUUID->"2c4a7cad-fd01-4a62-a433-aa1e185183c0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerDelayed", "[", 
+    RowBox[{"li_Listener", ",", " ", "val_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li", ",", " ", "\"\<UpdateDelayed\>\"", ",", " ", "SetDelayed", ",", " ",
+      "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListenerDelayed", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7347]:=",ExpressionUUID->"c7ea86da-b398-4241-a8cf-ce5601ce10a8"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Key\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"6533d7c2-b838-4a34-beb0-9cd8356a45a8"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setKey", "[", 
+    RowBox[{"var_", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{
+    RowBox[{"var", "[", "key", "]"}], "=", "val"}]}], ";"}], "\n", 
+ RowBox[{"setKey", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]}], "CodeInput",
+ CellLabel->
+  "In[7348]:=",ExpressionUUID->"4ebb8399-3702-4f90-8cf2-e621538fd804"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerKey", "[", 
+    RowBox[{"li_Listener", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li", ",", " ", "\"\<UpdateKey\>\"", ",", " ", "setKey", ",", " ", "key", 
+     ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListenerKey", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7349]:=",ExpressionUUID->"f9910cad-e088-402b-95c3-9c3f8a8da7b2"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setKeyD", "[", 
+    RowBox[{"var_", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{
+    RowBox[{"var", "[", "key", "]"}], ":=", "val"}]}], ";"}], "\n", 
+ RowBox[{"setKeyD", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]}], "CodeInput",
+ CellLabel->
+  "In[7350]:=",ExpressionUUID->"5deb3824-1d50-4da2-a5b9-2febc3e9e247"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerKeyDelayed", "[", 
+    RowBox[{"li_Listener", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li", ",", " ", "\"\<UpdateKeyDelayed\>\"", ",", " ", "setKeyD", ",", " ",
+      "key", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListenerKeyDelayed", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7351]:=",ExpressionUUID->"915dd6bf-6024-4b70-b9e5-3527a565d2ac"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Part\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"9ef22e11-52e0-4fed-bc30-0dda28adab6b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setPart", "[", 
+    RowBox[{"var_", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{
+    RowBox[{"var", "[", 
+     RowBox[{"[", "key", "]"}], "]"}], "=", "val"}]}], ";"}], "\n", 
+ RowBox[{"setPart", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]}], "CodeInput",
+ CellLabel->
+  "In[7352]:=",ExpressionUUID->"6e91e99a-294d-4d06-9def-b283b7d204f1"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"updateListenerPart", "[", 
+    RowBox[{"li_Listener", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"updateListenerTemplate", "[", 
+    RowBox[{
+    "li", ",", " ", "\"\<UpdatePart\>\"", ",", " ", "setPart", ",", " ", 
+     "key", ",", " ", "val"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"updateListenerPart", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7353]:=",ExpressionUUID->"b7b106f2-98a8-448c-9bbd-de8d1819fa5b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"setPartD", "[", 
+    RowBox[{"var_", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{
+    RowBox[{"var", "[", 
+     RowBox[{"[", "key", "]"}], "]"}], ":=", "val"}]}], ";"}], "\n", 
+ RowBox[{"setPartD", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]}], "CodeInput",
+ CellLabel->
+  "In[7354]:=",ExpressionUUID->"c280af91-bb1f-4a39-bef1-aebc143d50ca"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"updateListenerPartDelayed", "[", 
+     RowBox[{"li_Listener", ",", " ", "key__", ",", " ", "val_"}], "]"}], ":=",
+     "\n", "\t", 
+    RowBox[{"updateListenerTemplate", "[", 
+     RowBox[{
+     "li", ",", " ", "\"\<UpdatePart\>\"", ",", " ", "setPartD", ",", " ", 
+      "key", ",", " ", "val"}], "]"}]}], ";"}], ";"}], "\n", 
+ RowBox[{"updateListenerPartDelayed", "~", "SetAttributes", "~", 
+  "HoldRest"}]}], "CodeInput",
+ CellLabel->
+  "In[7355]:=",ExpressionUUID->"32dbfe19-a0d2-4343-99f5-77408021bd05"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Remove\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"850408a0-ead4-4883-a337-e8264e729020"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"removeListener", "[", "li_Listener", "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{"data", "=", 
+      RowBox[{"listenerData", "[", "li", "]"}]}], "\n", "\t\t\t", "}"}], ",", 
+    "\n", "\t\t", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"data", "[", "\"\<Callback\>\"", "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "[", 
+        RowBox[{"\"\<Remove\>\"", ",", " ", 
+         RowBox[{"li", "[", "\"\<Name\>\"", "]"}]}], "]"}], "=!=", "False"}], 
+      ",", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"Clear", "@@", 
+        RowBox[{"Evaluate", "[", 
+         RowBox[{"data", "[", "\"\<Variable\>\"", "]"}], "]"}]}], ";", "\n", 
+       "\t", "\t\t", 
+       RowBox[{"Internal`SetValueNoTrack", "@@", 
+        RowBox[{"Append", "[", 
+         RowBox[{
+          RowBox[{"Hold", "@@", 
+           RowBox[{"data", "[", "\"\<Variable\>\"", "]"}]}], ",", " ", 
+          RowBox[{"data", "[", "\"\<ID\>\"", "]"}]}], "]"}]}], ";", "\n", 
+       "\t\t\t", 
+       RowBox[{"dropListener", "[", "li", "]"}], ";"}], ",", "\n", "\t\t\t", 
+      RowBox[{"callbackFailure", "[", 
+       RowBox[{"\"\<Remove\>\"", ",", " ", 
+        RowBox[{"li", "[", "\"\<Name\>\"", "]"}]}], "]"}]}], "\n", "\t\t\t", 
+     "]"}]}], "\n", "\t\t", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7356]:=",ExpressionUUID->"49fef233-b557-4314-82a5-61def3d84690"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Get\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"727250e4-b2b6-4239-8140-3b575a6e3186"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getListener", "[", "li_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"ReleaseHold", "@", 
+   RowBox[{"listenerData", "[", 
+    RowBox[{"li", ",", "\"\<Variable\>\""}], "]"}]}]}]], "CodeInput",
+ CellLabel->
+  "In[7357]:=",ExpressionUUID->"d5ab7335-e6ef-4493-827e-9383e99518f2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Name\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"c4b2563f-e885-4be2-952f-2711168cfbfa"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"getListenerName", "[", 
+    RowBox[{"Listener", "[", "name_", "]"}], "]"}], ":=", "\n", "\t", 
+   "name"}], ";"}]], "CodeInput",
+ CellLabel->
+  "In[7358]:=",ExpressionUUID->"046312ca-d10b-4447-a15a-81d1dff80d00"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Variable\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"b9232eb7-2846-4997-9197-963718495832"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getListenerVariable", "[", "li_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"listenerData", "[", 
+   RowBox[{"li", ",", "\"\<Variable\>\""}], "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7359]:=",ExpressionUUID->"9a35f2bf-f7da-43a3-85a5-56bb0cc5cc65"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]ID\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"af1bca9a-e643-4d42-8c27-595f321f53c6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getListenerID", "[", "li_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"listenerData", "[", 
+   RowBox[{"li", ",", "\"\<ID\>\""}], "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7360]:=",ExpressionUUID->"d9a4e06e-9135-4f22-b20f-fd7f49aa765c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Expression\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"4f73f62e-3210-40be-8ac1-36e82038b9dd"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getListenerExpression", "[", "li_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"listenerData", "[", 
+   RowBox[{"li", ",", "\"\<Track\>\""}], "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7361]:=",ExpressionUUID->"ff26c25f-5ed1-4f07-a41c-3866ffc57a7c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Callback\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"9a75aea5-25ff-41ab-820b-d1e4507a6052"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getListenerCallback", "[", "li_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"ReleaseHold", "@", 
+   RowBox[{"listenerData", "[", 
+    RowBox[{"li", ",", " ", "\"\<Callback\>\""}], "]"}]}]}]], "CodeInput",
+ CellLabel->
+  "In[7362]:=",ExpressionUUID->"35b0efd5-626b-4551-9cfd-5b378cdcdac2"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Formatting\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"36baa066-bebd-4e39-b1fc-96849324701b"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Format\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"2e27ba4f-250b-49ac-9abd-a8d74b2c0f47"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MakeBoxes", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{"li_Listener", "?", "listenerExists"}], ",", "\n", "\t", 
+    RowBox[{"fmt", ":", "StandardForm"}]}], "\n", "\t", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"With", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{"boxes", "=", "\n", "\t\t\t\t", 
+      RowBox[{"Replace", "[", 
+       RowBox[{
+        RowBox[{"getListenerVariable", "[", "li", "]"}], ",", "\n", 
+        "\t\t\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "var_", "]"}], ":>",
+          "\n", "\t\t\t\t\t\t", 
+         RowBox[{"DynamicBox", "[", 
+          RowBox[{"ToBoxes", "@", "var"}], "]"}]}]}], "\n", "\t\t\t\t\t", 
+       "]"}]}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{"InterpretationBox", "[", "\n", "\t\t\t", 
+     RowBox[{"boxes", ",", "\n", "\t\t\t", "li"}], "\n", "\t\t\t", "]"}]}], 
+   "\n", "\t\t", "]"}]}]], "CodeInput",
+ CellLabel->
+  "In[7363]:=",ExpressionUUID->"62319269-f018-4994-8634-104d03028e68"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Dynamic\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"cffd3098-e527-4e06-bad1-f67e3f794c7f"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]ListenerDynamic\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"6386b536-4950-46a7-aab7-657b88626305"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"MakeBoxes", "[", "\n", "\t", 
+    RowBox[{
+     RowBox[{"ld", ":", 
+      RowBox[{"ListenerDynamic", "[", "\n", "\t\t", 
+       RowBox[{"expr_", ",", " ", "\n", "\t\t", 
+        RowBox[{"lis", ":", 
+         RowBox[{"{", 
+          RowBox[{"__Listener", "?", "listenerExists"}], "}"}]}], ",", " ", 
+        "\n", "\t\t", 
+        RowBox[{"args", ":", 
+         RowBox[{"___", "?", 
+          RowBox[{"(", 
+           RowBox[{"Not", "@*", "OptionQ"}], ")"}]}]}], ",", "\n", "\t\t", 
+        RowBox[{"ops", ":", 
+         RowBox[{"OptionsPattern", "[", "Dynamic", "]"}]}]}], "\n", "\t\t", 
+       "]"}]}], ",", "\n", "\t", 
+     RowBox[{"fmt", ":", "StandardForm"}]}], "\n", "\t", "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"With", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{"boxes", "=", "\n", "\t\t\t\t", 
+       RowBox[{"Replace", "[", "\n", "\t\t\t\t\t", 
+        RowBox[{
+         RowBox[{"Thread", "[", "\n", "\t\t\t\t\t\t", 
+          RowBox[{
+           RowBox[{"Replace", "[", "\n", "\t\t\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"Map", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"listenerData", "[", 
+                 RowBox[{"#", ",", " ", "\"\<Variable\>\""}], "]"}], "&"}], 
+               ",", " ", "lis"}], "]"}], ",", " ", "\n", "\t\t\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{"Except", "[", "_HoldPattern", "]"}], "\[Rule]", 
+              "Nothing"}], ",", " ", "\n", "\t\t\t\t\t\t\t", "1"}], "\n", 
+            "\t\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t\t\t", 
+           "HoldPattern"}], "\n", "\t\t\t\t\t\t", "]"}], ",", "\n", 
+         "\t\t\t\t\t", 
+         RowBox[{"{", "\n", "\t", "\t", "\t", "\t\t\t", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"Verbatim", "[", "HoldPattern", "]"}], "[", "s_", "]"}], 
+            ":>", "\n", "\t", "\t", "\t", "\t", "\t\t\t", 
+            RowBox[{"DynamicBox", "[", "\n", "\t\t\t\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{"s", ";", "\n", "\t\t\t\t\t\t\t\t", 
+               RowBox[{"ToBoxes", "@", "expr"}]}], ",", "\n", 
+              "\t\t\t\t\t\t\t\t", "args", ",", "\n", "\t", "\t", "\t", "\t", 
+              "\t", "\t\t\t", 
+              RowBox[{"TrackedSymbols", "\[RuleDelayed]", "s"}], ",", "\n", 
+              "\t", "\t", "\t", "\t\t\t\t\t", "ops"}], "\n", "\t", "\t", "\t",
+              "\t\t\t\t\t", "]"}]}], ",", "\n", "\t", "\t", "\t", "\t\t\t", 
+           RowBox[{"_", ":>", "\n", "\t\t\t\t\t\t\t", 
+            RowBox[{"DynamicBox", "[", "\n", "\t\t\t\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{"ToBoxes", "@", "expr"}], ",", "\n", "\t", "\t", "\t", 
+              "\t\t\t\t\t", "args", ",", "\n", "\t", "\t", "\t", "\t\t\t\t\t",
+               "ops"}], "\n", "\t", "\t", "\t", "\t\t\t\t\t", "]"}]}]}], "\n",
+           "\t\t\t\t\t\t", "}"}]}], "\n", "\t\t\t\t\t", "]"}]}], "\n", 
+      "\t\t\t", "}"}], ",", "\n", "\t\t", 
+     RowBox[{"InterpretationBox", "[", 
+      RowBox[{"boxes", ",", " ", "ld"}], "]"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ListenerDynamic", "[", 
+    RowBox[{"expr_", ",", " ", "\n", "\t\t", 
+     RowBox[{"blech", ":", 
+      RowBox[{"Except", "[", 
+       RowBox[{
+        RowBox[{"{", "__Listener", "}"}], ",", " ", 
+        RowBox[{"_Listener", "|", "_String", "|", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"_String", "|", "_Listener"}], ")"}], ".."}], "}"}]}]}], 
+       "]"}]}], ",", " ", "\n", "\t\t", 
+     RowBox[{"args", ":", 
+      RowBox[{"___", "?", 
+       RowBox[{"(", 
+        RowBox[{"Not", "@*", "OptionQ"}], ")"}]}]}], ",", "\n", "\t\t", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "Dynamic", "]"}]}]}], "\n", "\t\t", 
+    "]"}], ":=", "\n", "\t", 
+   RowBox[{"ListenerDynamic", "[", "\n", "\t\t", 
+    RowBox[{"expr", ",", " ", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"StringQ", "@", "#"}], ",", " ", 
+         RowBox[{"Listener", "[", "#", "]"}], ",", " ", "#"}], "]"}], "&"}], "/@", 
+      RowBox[{"Flatten", "@", 
+       RowBox[{"{", "blech", "}"}]}]}], ",", "\n", "\t\t", "args", ",", " ", 
+     "\n", "\t\t", "ops"}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ListenerDynamic", "~", "SetAttributes", "~", "HoldFirst"}], 
+  ";"}]}], "CodeInput",
+ CellLabel->
+  "In[7364]:=",ExpressionUUID->"5a638b84-5a1d-4753-9270-9f29feb0f613"]
+}, Closed]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]], "InputSection",
+ CellLabel->
+  "In[7367]:=",ExpressionUUID->"e4ed4cee-063f-41ed-9f24-e637f868252e"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputChapter",ExpressionUUID->"f98dc809-0e50-40ca-a92a-\
+bb5344090f9c"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"7c2762aa-6556-4188-b1cc-\
+c0aa7b5530aa"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$HistoryLength", "=", "0"}], ";"}]], "Input",
+ CellLabel->"In[15]:=",ExpressionUUID->"a825d689-b7ef-4afa-aae9-99d3ce89d77f"],
+
+Cell[BoxData[
+ RowBox[{"<<", "BTools`All`"}]], "Input",
+ CellLabel->"In[5]:=",ExpressionUUID->"e23b0ab1-f994-41a0-987a-19068ae73be0"],
+
+Cell[BoxData[
+ RowBox[{"ContextRemove", "[", "\"\<Listeners`\>\"", "]"}]], "Input",
+ CellLabel->"In[16]:=",ExpressionUUID->"18ff1545-8615-4a25-a139-40aff5aab986"],
+
+Cell[BoxData[
+ RowBox[{"Block", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"$Path", "=", 
+     RowBox[{"Prepend", "[", 
+      RowBox[{"$Path", ",", " ", 
+       RowBox[{"NotebookDirectory", "[", "]"}]}], "]"}]}], "}"}], ",", 
+   RowBox[{"<<", "Listeners`"}]}], "]"}]], "Input",
+ CellLabel->"In[17]:=",ExpressionUUID->"8e495724-0684-4e7a-bd54-a76edba3ae72"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"var", "=", 
+   RowBox[{"Listener", "[", "\"\<b\>\"", "]"}]}], ";"}]], "Input",
+ CellLabel->"In[18]:=",ExpressionUUID->"172272c7-1d8f-4fad-b479-e9bdba3502e6"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"OwnValues", "[", "li", "]"}], "=", 
+  RowBox[{"{", "}"}]}]], "Input",
+ CellLabel->"In[29]:=",ExpressionUUID->"184eff3b-ce45-4d4c-a7c7-7ea621703c88"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellLabel->
+  "Out[29]=",ExpressionUUID->"57258c73-e14e-4f9f-a91d-b4add2ac1108"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"$cache", "=", 
+   RowBox[{
+   "Language`NewExpressionStore", "[", "\"\<ObjectHandler\>\"", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"newObject", "[", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"obj", "=", 
+        RowBox[{"object", "[", "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"value", "=", "Null"}]}], "\[IndentingNewLine]", "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"$cache", "@", 
+       RowBox[{"\"\<put\>\"", "[", 
+        RowBox[{"obj", ",", " ", "\"\<value\>\"", ",", " ", 
+         RowBox[{"Hold", "[", "value", "]"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "obj"}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"setValue", "[", 
+   RowBox[{"obj_", ",", " ", "val_"}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Replace", "[", 
+   RowBox[{
+    RowBox[{"$cache", "@", 
+     RowBox[{"\"\<get\>\"", "[", 
+      RowBox[{"obj", ",", " ", "\"\<value\>\""}], "]"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Hold", "[", "var_", "]"}], "\[RuleDelayed]", 
+     RowBox[{"Set", "[", 
+      RowBox[{"var", ",", " ", "val"}], "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input",ExpressionUUID->"2f0a4163-31cb-4e07-891f-69b68e57552e"]
+},
+WindowSize->{808, 755},
+WindowMargins->{{65, Automatic}, {Automatic, 0}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackagePlain.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+
