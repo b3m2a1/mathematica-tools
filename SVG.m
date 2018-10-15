@@ -20,6 +20,552 @@ Begin["`Private`"];
 
 
 (* ::Subsubsection::Closed:: *)
+(*CSSGenerate*)
+
+
+
+(* ::Text:: *)
+(*
+	Used for styling things
+*)
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*AllowedProperties*)
+
+
+
+$CSSDefaultAllowedProperties=
+  Alternatives@@
+    {
+      "align-content","align-items","align-self",
+      "all","animation","animation-delay",
+      "animation-direction","animation-duration","animation-fill-mode",
+      "animation-iteration-count","animation-name","animation-play-state",
+      "animation-timing-function","backface-visibility","background",
+      "background-attachment","background-blend-mode","background-clip",
+      "background-color","background-image","background-origin",
+      "background-position","background-repeat","background-size",
+      "border","border-bottom","border-bottom-color",
+      "border-bottom-left-radius","border-bottom-right-radius","border-bottom-style",
+      "border-bottom-width","border-collapse","border-color",
+      "border-image","border-image-outset","border-image-repeat",
+      "border-image-slice","border-image-source","border-image-width",
+      "border-left","border-left-color","border-left-style",
+      "border-left-width","border-radius","border-right",
+      "border-right-color","border-right-style","border-right-width",
+      "border-spacing","border-style","border-top",
+      "border-top-color","border-top-left-radius","border-top-right-radius",
+      "border-top-style","border-top-width","border-width",
+      "bottom","box-shadow","box-sizing",
+      "caption-side","clear","clip",
+      "color","column-count","column-fill",
+      "column-gap","column-rule","column-rule-color",
+      "column-rule-style","column-rule-width","column-span",
+      "column-width","columns","content",
+      "counter-increment","counter-reset","cursor",
+      "direction","display","empty-cells",
+      "filter","flex","flex-basis",
+      "flex-direction","flex-flow","flex-grow",
+      "flex-shrink","flex-wrap","float",
+      "font","@font-face","font-family",
+      "font-size","font-size-adjust","font-stretch",
+      "font-style","font-variant","font-weight",
+      "hanging-punctuation","height","justify-content",
+      "@keyframes","left","letter-spacing",
+      "line-height","list-style","list-style-image",
+      "list-style-position","list-style-type","margin",
+      "margin-bottom","margin-left","margin-right",
+      "margin-top","max-height","max-width",
+      "@media","min-height","min-width",
+      "nav-down","nav-index","nav-left",
+      "nav-right","nav-up","opacity",
+      "order","outline","outline-color",
+      "outline-offset","outline-style","outline-width",
+      "overflow","overflow-x","overflow-y",
+      "padding","padding-bottom","padding-left",
+      "padding-right","padding-top","page-break-after",
+      "page-break-before","page-break-inside","perspective",
+      "perspective-origin","position","quotes",
+      "resize","right","tab-size",
+      "table-layout","text-align","text-align-last",
+      "text-decoration","text-decoration-color","text-decoration-line",
+      "text-decoration-style","text-indent","text-justify",
+      "text-overflow","text-shadow","text-transform",
+      "top","transform","transform-origin",
+      "transform-style","transition","transition-delay",
+      "transition-duration","transition-property","transition-timing-function",
+      "unicode-bidi","user-select","vertical-align",
+      "visibility","white-space","width",
+      "word-break","word-spacing","word-wrap",
+      "z-index","color","opacity",
+      "background","background-attachment","background-blend-mode",
+      "background-color","background-image","background-position",
+      "background-repeat","background-clip","background-origin",
+      "background-size","border","border-bottom",
+      "border-bottom-color","border-bottom-left-radius","border-bottom-right-radius",
+      "border-bottom-style","border-bottom-width","border-color",
+      "border-image","border-image-outset","border-image-repeat",
+      "border-image-slice","border-image-source","border-image-width",
+      "border-left","border-left-color","border-left-style",
+      "border-left-width","border-radius","border-right",
+      "border-right-color","border-right-style","border-right-width",
+      "border-style","border-top","border-top-color",
+      "border-top-left-radius","border-top-right-radius","border-top-style",
+      "border-top-width","border-width","box-shadow",
+      "bottom","clear","clip",
+      "display","float","height",
+      "left","margin","margin-bottom",
+      "margin-left","margin-right","margin-top",
+      "max-height","max-width","min-height",
+      "min-width","overflow","overflow-x",
+      "overflow-y","padding","padding-bottom",
+      "padding-left","padding-right","padding-top",
+      "position","right","top",
+      "visibility","width","vertical-align",
+      "z-index","align-content","align-items",
+      "align-self","flex","flex-basis",
+      "flex-direction","flex-flow","flex-grow",
+      "flex-shrink","flex-wrap","justify-content",
+      "order","hanging-punctuation","letter-spacing",
+      "line-height","tab-size","text-align",
+      "text-align-last","text-indent","text-justify",
+      "text-transform","white-space","word-break",
+      "word-spacing","word-wrap","text-decoration",
+      "text-decoration-color","text-decoration-line","text-decoration-style",
+      "text-shadow","@font-face","font",
+      "font-family","font-size","font-size-adjust",
+      "font-stretch","font-style","font-variant",
+      "font-weight","direction","unicode-bidi",
+      "direction","user-select","border-collapse",
+      "border-spacing","caption-side","empty-cells",
+      "table-layout","counter-increment","counter-reset",
+      "list-style","list-style-image","list-style-position",
+      "list-style-type","@keyframes","animation",
+      "animation-delay","animation-direction","animation-duration",
+      "animation-fill-mode","animation-iteration-count","animation-name",
+      "animation-play-state","animation-timing-function","backface-visibility",
+      "perspective","perspective-origin","transform",
+      "transform-origin","transform-style","transition",
+      "transition-property","transition-duration","transition-timing-function",
+      "transition-delay","box-sizing","content",
+      "cursor","nav-down","nav-index",
+      "nav-left","nav-right","nav-up",
+      "outline","outline-color","outline-offset",
+      "outline-style","outline-width","resize",
+      "text-overflow","column-count","column-fill",
+      "column-gap","column-rule","column-rule-color",
+      "column-rule-style","column-rule-width","column-span",
+      "column-width","columns","page-break-after",
+      "page-break-before","page-break-inside","quotes",
+      "filter"
+      };
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*AllowedTypes*)
+
+
+
+$CSSDefaultAllowedTypes=
+  Alternatives@@
+    {
+      "a","abbr","acronym",
+      "address","applet","area",
+      "article","aside","audio",
+      "b","base","basefont",
+      "bdi","bdo","big",
+      "blockquote","body",
+      "br","button","buildto",
+      "canvas","caption","center",
+      "cite","code","col",
+      "colgroup",
+      "data","datalist",
+      "dd","del","details",
+      "dfn","dialog","dir",
+      "div","dl","dt",
+      "em","embed",
+      "fieldset","figcaption","figure",
+      "font","footer","form",
+      "frame","frameset",
+      "header","hr",
+      "h1","h2","h3",
+      "h4","h5","h6",
+      "i","iframe","img",
+      "inputcell",
+      "input","ins",
+      "kbd","keygen",
+      "label","legend","li",
+      "link",
+      "main","map","mark",
+      "menu","menuitem",
+      "meta","meter",
+      "nav","noframes",
+      "noscript",
+      "object","ol",
+      "optgroup","option",
+      "output",
+      "p","param",
+      "picture","pre",
+      "progress",
+      "q",
+      "rp","rt","ruby",
+      "s","samp","script",
+      "section","select","small",
+      "source","span","strike",
+      "strong","style","sub",
+      "summary","sup",
+      "table","tbody","td",
+      "textarea","tfoot","th",
+      "thead","time","title",
+      "tr","track","tt",
+      "u","ul",
+      "var","video",
+      "wbr"
+      };
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*$CSSPropertyRules*)
+
+
+
+$CSSDefaultPropertyRules=
+  {
+    FontColor->"color",
+    FrameStyle->"border",
+    FrameMargins->"margin",
+    TextAlignment->"text-align",
+    TabSpacings->"tab-size",
+    SourceLink->"src",
+    ButtonFunction->
+      "onclick",
+    Annotation->"alt",
+    Hyperlink->"href",
+    RoundingRadius->"border-radius",
+    LineSpacing->"line-height",
+    ImageSize->{"width","height"},
+    CellSize->{"width", "height"},
+    e_:>
+      (
+        ToLowerCase[
+          StringJoin@{
+            StringTake[#,1],
+            StringReplace[StringDrop[#,1],
+              l:LetterCharacter?(Not@*LowerCaseQ):>"-"<>l]
+            }&@ToString[e]
+          ]
+        )
+    };
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*$CSSValueRules*)
+
+
+
+$CSSDefaultValueRules=
+  Join[
+    Map[
+      Replace[#,
+        Hold[c_]:>
+          (c->ToLowerCase@ToString[Unevaluated[c]])
+        ]&,
+      Thread@Hold@{
+        Red,White,Blue,Black,Yellow,
+        Green,Orange,Purple,Pink,Gray,
+        LightBlue,LightRed,LightGray,LightYellow,
+        LightGreen,LightOrange,LightPurple,LightPink,
+        Thick,Dotted,Thin,Dashed
+        }],{
+    c_?ColorQ:>
+      "#"<>Map[
+        StringPadLeft[
+          IntegerString[#,16],
+          2,
+          "0"
+          ]&,
+        Floor[255*Apply[List,ColorConvert[c,RGBColor]]]
+        ],
+    i_Integer:>
+      ToString[i]<>"px",
+    q_Quantity:>
+      StringReplace[
+        ToString[q],
+        " "->""
+        ],
+    Scaled[i_]:>
+      ToString@Floor[i*100]<>"%",
+    r_Rule:>
+      (cssGenerate[r]),
+    {l__}|Directive[l__]:>
+      StringRiffle@Map[#/.$CSSValueRules&,{l}],
+    d_Dynamic:>
+      (Setting[d]/.$CSSValueRules),
+    i_:>ToLowerCase@ToString[i]
+    }
+  ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*$CSSTypeRules*)
+
+
+
+$CSSDefaultTypeRules=
+  {
+    "Title"->"h1",
+    "Subtitle"->"h2",
+    "Section"->"h3",
+    "Subsection"->"h4",
+    "Subsubsection"->"h5",
+    "Subsubsubsection"->"h6",
+    "Hyperlink"->"a",
+    "HyperlinkActive"->"a:hover",
+    "Graphics"->"img",
+    "Text"->"p",
+    s_String:>(ToLowerCase[s])
+    };
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*cssThreadedOptions*)
+
+
+
+cssThreadedOptions[propBase_,propOps_,vals_]:=
+  MapThread[
+    If[!MatchQ[#2,Inherited|None],
+      If[StringContainsQ[propBase,"-"],
+        StringReplace[propBase,{
+          "-"->("-"<>#<>"-")
+          }]->(#2/.$CSSValueRules),
+        StringJoin[propBase,"-"<>#]->(#2/.$CSSValueRules)
+        ],
+      Nothing
+      ]&,{
+    propOps,
+    vals
+    }]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*cssGenerate*)
+
+
+
+cssGenerate//Clear;
+cssGenerate[
+  prop_->val:Except[{__Rule}]
+  ]:=
+  With[{
+    propBase=
+      prop/.$CSSPropertyRules
+    },
+    If[!MatchQ[propBase, $CSSAllowedProperties],
+      Nothing,
+      If[Not@ListQ@propBase,
+        Sequence@@
+            Replace[val,
+              {
+                {{l_,r_},{b_,h_}}:>
+                  If[StringContainsQ[propBase,"radius"],
+                    cssThreadedOptions[
+                      propBase,
+                      {"left-bottom","right-bottom","left-top","right-top"},
+                      {l,r,b,h}
+                      ],
+                    cssThreadedOptions[
+                      propBase,
+                      {"left","right","bottom","top"},
+                      {l,r,b,h}
+                      ]
+                    ],
+                {l_,r_}:>
+                  cssThreadedOptions[
+                    propBase,
+                    {"left","right"},
+                    {l,r}
+                    ],
+                v_:>
+                  {propBase->(v/.$CSSValueRules)}
+                }
+              ],
+        If[ListQ@val,
+          Sequence@@cssGenerate[Thread[propBase->val]],
+          cssGenerate[First@propBase->val]
+          ]
+        ]
+      ]
+    ];
+cssGenerate[
+  type:_String|_Symbol->spec:{__Rule}
+  ]:=
+  With[{tp=ToString[type]/.$CSSTypeRules},
+    If[!MatchQ[tp, $CSSAllowedProperties],
+      Nothing,
+      tp->Map[cssGenerate, spec]
+      ]
+    ];
+cssGenerate[r:{__Rule}]:=
+  cssGenerate/@r;
+cssGenerate[a_Association]:=
+  KeyValueMap[cssGenerate,a];
+cssGenerate[{},Optional[_,_]]:={};
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*generateCSSString*)
+
+
+
+generateCSSString[{}, _]:=""
+
+
+generateCSSString[r:{__Rule}, riffle:_String:" "]:=
+  StringRiffle[
+    KeyValueMap[#<>": "<>#2<>";"&, Association[r]],
+    riffle
+    ];
+generateCSSString[r:{__Rule}, {riffle_String, _}]:=
+  generateCSSString[r, riffle]
+
+
+generateCSSString[a_Association?AssociationQ, 
+  riffle:{_String, _String}:{" ", "\n"}]:=
+  StringRiffle[
+    KeyValueMap[
+        (#/.$CSSTypeRules)<>"{"<>riffle[[1]]<>
+          generateCSSString[#2, riffle[[1]]]<>riffle[[1]]<>"}"&,
+      a
+      ],
+    riffle[[2]]
+    ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*generateObjectStyles*)
+
+
+
+generateObjectStyles//Clear
+
+
+generateObjectStyles[nb_NotebookObject]:=
+  Prepend[
+    AssociationMap[
+      AbsoluteCurrentValue[nb, {StyleDefinitions, #}]&,
+      Select[StringQ]@Keys@
+        FE`Evaluate@
+          FEPrivate`GetPopupList[nb,"MenuListStyles"]
+      ],
+    "body"->Options[nb]
+    ]
+
+
+generateObjectStyles[cell_CellObject]:=
+  Normal@Merge[
+    {
+      Options[cell],
+      AbsoluteCurrentValue[ParentNotebook[cell],
+        {StyleDefinitions, NotebookRead[cell][[2]]}
+        ]
+      },
+    First
+    ]
+
+
+generateObjectStyles[box_BoxObject]:=
+  Options[box];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*CSSGenerate*)
+
+
+
+Options[CSSGenerate]=
+  {
+    "PropertyMapping"->Automatic,
+    "AllowedProperties"->Automatic,
+    "ValueMapping"->Automatic,
+    "TypeMapping"->Automatic,
+    "AllowedTypes"->Automatic,
+    "GenerateString"->True,
+    "RiffleCharacter"->{" ", "\n"}
+    };
+CSSGenerate[l:(_List?OptionQ|_Association?(OptionQ@*Normal)), ops:OptionsPattern[]]:=
+  Block[
+    {
+      $CSSPropertyRules=
+        Replace[OptionValue["PropertyMapping"],
+          Except[_?OptionQ]:>$CSSDefaultPropertyRules
+          ],
+      $CSSValueRules=
+        Replace[OptionValue["ValueMapping"],
+          Except[_?OptionQ]:>$CSSDefaultValueRules
+          ],
+      $CSSTypeRules=
+        Replace[OptionValue["TypeMapping"],
+          Except[_?OptionQ]:>$CSSDefaultTypeRules
+          ],
+      $CSSAllowedProperties=
+        Replace[OptionValue["AllowedProperties"],
+          {
+            {s__String}:>
+              Alternatives[s],
+            Except[_Alternatives]:>
+              $CSSDefaultAllowedProperties
+            }
+          ],
+      $CSSAllowedTypes=
+        Replace[OptionValue["AllowedTypes"],
+          {
+            {s__String}:>
+              Alternatives[s],
+            Except[_Alternatives]:>
+              $CSSDefaultAllowedTypes
+            }
+          ]
+      },
+    If[TrueQ@OptionValue["GenerateString"], 
+      generateCSSString[#, 
+        Replace[OptionValue["RiffleCharacter"], 
+          {
+            s_String?StringQ:>
+              {s, "\n"},
+            Except[{_String?StringQ, _String?StringQ}]:>
+              {" ", "\n"}
+            }]
+        ]&,
+      Identity
+     ]@
+      If[AllTrue[Values@l, OptionQ],
+        Map[cssGenerate, 
+          If[$CSSAllowedTypes===All,
+            Association[l],
+            KeySortBy[FirstPosition[$CSSTypeRules, #/.$CSSTypeRules]&]@
+              KeySelect[Association[l], 
+                MatchQ[#/.$CSSTypeRules, $CSSAllowedTypes]&
+                ]
+            ]
+          ],
+        cssGenerate[l]
+        ]
+    ]
+
+
+CSSGenerate[
+  nb:
+    _NotebookObject|_CellObject|_BoxObject|
+    _FrontEnd`EvaluationNotebook|_FrontEnd`InputNotebook:FrontEnd`InputNotebook[], 
+  ops:OptionsPattern[]
+  ]:=
+  CSSGenerate[generateObjectStyles[FE`Evaluate@nb], ops]
+
+
+(* ::Subsubsection::Closed:: *)
 (*toXML*)
 
 
@@ -120,12 +666,16 @@ $symbDashingFactors=
 toSVGString//Clear
 
 
+toSVGString[Scaled[s_], __]:=
+  toNotStupidString[Floor@100*s]<>"%";
 toSVGString[RGBColor[r__], h__]:=
   "#"<>IntegerString[Floor[{r}*255], 16, 2];
 toSVGString[h_?ColorQ, __]:=
   toSVGString[ColorConvert[h, RGBColor], None, None];
+toSVGString[v_, _, "Style"]:=
+  CSSGenerate[Flatten@{Normal@v}];
 toSVGString[v_, _, "AbsoluteThickness"]:=
-  toSVGString[v, None, None]<>"pt";
+  toSVGString[If[NumericQ@v, Max@{v, 1}, v], None, None]<>"pt";
 toSVGString[l_List, _, "Dashing"]:=
   StringRiffle@Map[ToString]@
     Module[
@@ -196,7 +746,8 @@ $SVGEdgePropMap=
 $SVGPropMap=
   KeyMap[SymbolName]@<|
     TransformationFunction->"transform",
-    FontFamily->"font"
+    FontFamily->"font",
+    Style->"style"
     |>
 
 
@@ -708,6 +1259,47 @@ Annotation[a_, d_, ___]:=
     ];
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*Text*)
+
+
+
+alias@
+Text[body_, coord_, diffs:{_, _}|None:None, o:opsPat[]]:=
+  With[
+    {
+      bops=If[MatchQ[body, Style], List@@Rest@body, {FontSize->50}],
+      boo=toNotStupidString@If[MatchQ[body, Style], First@body, body]
+      },
+    svgText[
+      boo, yAdjustCoord@coord, 
+      Sequence@@If[diffs===None, 
+        {},
+        {
+          Which[
+            diffs[[1]]>=.5,
+              "text-anchor"->"end",
+            diffs[[1]]<=-.5,
+              "text-anchor"->"start",
+            True,
+              "text-anchor"->"middle"
+            ],
+          Which[
+            diffs[[2]]>=.5,
+              "dominant-baseline"->"hanging",
+            diffs[[2]]<=-.5,
+              "dominant-baseline"->"baseline",
+            True,
+              "dominant-baseline"->"middle"
+            ]
+          }
+        ], 
+      o,
+      Style->bops
+      ]
+    ]
+
+
 (* ::Subsubsection::Closed:: *)
 (*ToSVG*)
 
@@ -729,71 +1321,75 @@ Annotation[a_, d_, ___]:=
 
 ToSVG//Clear
 ToSVG[g_Graphics, ops:OptionsPattern[]]:=
-Module[
-  {
-    opp=Flatten@{ops, Options[g]},
-    imsize,
-    viewbox,
-    pr,
-    prpad,
-    svgBody,
-    defs,
-    extra
-    },
-  imsize=
-    4/3*Replace[OptionValue[Graphics, opp, ImageSize],
-      {
-        Automatic:>{360, 338},
-        n_?NumericQ:>
-          {n, Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1]*n}
-        }
-      ];
-  viewbox=Flatten@Transpose@PlotRange@g;
-  prpad=
-    Replace[OptionValue[Graphics, opp, PlotRangePadding],
-      {
-        i:_?NumericQ|_Scaled:>{i, i},
-        Except[{_, _}]->{Scaled[.02], Scaled[.02]}
-        }
-      ];
-  {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
-  pr=PlotRange@g;
-  extra=axesAndFrame[opp, pr, prpad];
-  Block[
+  Module[
     {
-      $svgPlotRange=pr,
-      $svgViewBox=viewbox,
-      $svgViewSize=imsize
+      opp=Flatten@{ops, Options[g]},
+      imsize,
+      viewbox,
+      pr,
+      prpad,
+      svgBody,
+      defs,
+      extra,
+      $$
       },
-    Quiet[
-      svgBody=Reap[toXML/@Flatten@toSVGCore[Throw@{extra, First@g}, opp]];
-      defs=Flatten@svgBody[[2]],
-      {
-        (* optx messages don't matter here, so we quiet them if they show up *)
-        GraphicsComplex::optx,
-        GraphicsComplex::optrs
-        }
+    imsize=
+      4/3*Replace[OptionValue[Graphics, opp, ImageSize],
+        {
+          Automatic:>{360, 338},
+          n_?NumericQ:>
+            {Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1], 1}*n
+          }
+        ];
+    viewbox=Flatten@Transpose@PlotRange@g;
+    prpad=
+      Replace[OptionValue[Graphics, opp, PlotRangePadding],
+        {
+          i:_?NumericQ|_Scaled:>{i, i},
+          Except[{_, _}]->{Scaled[.02], Scaled[.02]}
+          }
+        ];
+    {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
+    pr=PlotRange@g;
+    extra=axesAndFrame[opp, pr, prpad];
+    If[Length@extra>1,
+      {$$, viewbox}=getViewBox[viewbox, {Scaled[.15], Scaled[.15]}, imsize];
       ];
-    XMLElement["svg",
-      Flatten@{
-        Thread[
-          {"width","height"}->Map[toNotStupidString]@Floor@imsize
-          ],
-        "viewbox"->StringRiffle@Map[toNotStupidString]@viewbox,
-        "version"->"1.1",
-        {"http://www.w3.org/2000/xmlns/","xmlns"}->"http://www.w3.org/1999/xhtml"
+    Block[
+      {
+        $svgPlotRange=pr,
+        $svgViewBox=viewbox,
+        $svgViewSize=imsize
         },
-      If[Length@defs>0,
-        Prepend@XMLElement["defs",
-          {},
-          toXML@*toEl/@DeleteDuplicates@defs
-          ],
-        Identity
-        ]@
-        svgBody[[1]]
+      Quiet[
+        svgBody=Reap[toXML/@Flatten@toSVGCore[{extra, First@g}, opp]];
+        defs=Flatten@svgBody[[2]],
+        {
+          (* optx messages don't matter here, so we quiet them if they show up *)
+          GraphicsComplex::optx,
+          GraphicsComplex::optrs
+          }
+        ];
+      XMLElement["svg",
+        Flatten@{
+          Thread[
+            {"width","height"}->Map[toNotStupidString]@Floor@imsize
+            ],
+          "viewbox"->StringRiffle@Map[toNotStupidString]@viewbox,
+          "version"->"1.1",
+          {"http://www.w3.org/2000/xmlns/","xmlns"}->"http://www.w3.org/1999/xhtml"
+          },
+        If[Length@defs>0,
+          Prepend@XMLElement["defs",
+            {},
+            toXML@*toEl/@DeleteDuplicates@defs
+            ],
+          Identity
+          ]@
+          svgBody[[1]]
+        ]
       ]
     ]
-  ]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -848,25 +1444,36 @@ getViewBox[view_, pad_, size_]:=
 
 
 getPlotTicksObjects[{{xmin_, xmax_}, {ymin_, ymax_}}, {x0_, y0_}]:=
-  Module[{xbase, ybase, ends},
+  Module[{xbase, ybase, ends, xdiff, ydiff},
     xbase=Charting`ScaledTicks[{Identity,Identity}][xmin, xmax, 25];
     ybase=Rest@Charting`ScaledTicks[{Identity,Identity}][ymin, ymax, 25];
     {xbase, ybase}=
       MapIndexed[
         If[Mod[#2[[1]], 5]==4, 
-          ReplacePart[#, 3->{1.1, 1}*#[[3]]],
+          ReplacePart[#, 3->{2, 1}*#[[3]]],
           ReplacePart[#, 2->""]
           ]&,
         #
         ]&/@{xbase, ybase};
+    xdiff=(xmax-xmin);
+    ydiff=(ymax-ymin);
     {
       Function[
-        ends={{#[[1]], y0-#[[3, 2]]}, {#, y0+#[[3, 1]]}};
-        {#[[-1]], If[#[[2]]=!="", Text[#[[2]], ends[[1]]], Nothing], Line[ends]}
+        ends={{#[[1]], y0-ydiff*#[[3, 2]]}, {#[[1]], y0+ydiff*#[[3, 1]]}};
+        {
+          If[#[[2]]=!="", 
+            Text[ToString@#[[2]], ends[[1]], {0, 1.2}], 
+            Nothing
+            ], 
+          Line[ends]
+          }
         ]/@xbase,
       Function[
-        ends={{x0-#[[3, 2]], #[[1]]}, {x0+#[[3, 1]], #}};
-        {#[[-1]], If[#[[2]]=!="", Text[#[[2]], ends[[1]]], Nothing], Line[ends]}
+        ends={{x0-xdiff*#[[3, 2]], #[[1]]}, {x0+xdiff*#[[3, 1]], #[[1]]}};
+        {
+          If[#[[2]]=!="", Text[ToString@#[[2]], ends[[1]], {1.2, 0}], Nothing], 
+          Line[ends]
+          }
         ]/@ybase
       }
     ]
@@ -875,7 +1482,7 @@ getPlotTicksObjects[{{xmin_, xmax_}, {ymin_, ymax_}}, {x0_, y0_}]:=
 axesAndFrame[opp_, prange_, pad_]:=
   Module[
     {
-      pr=prange+pad,
+      pr=prange+{{-1, 1}, {-1, 1}}*pad,
       axes,
       aticks,
       ast,
@@ -900,7 +1507,12 @@ axesAndFrame[opp_, prange_, pad_]:=
           e:Except[{_, _}]:>{prange[[1, 1]], prange[[2, 1]]}
           }
         ];
-    ast=Flatten@OptionValue[Graphics, opp, AxesStyle];
+    ast=Replace[OptionValue[Graphics, opp, AxesStyle],
+      {
+        {}|Automatic:>{AbsoluteThickness[1], AbsoluteThickness[1]},
+        e:Except[{_, _}]:>{e, e}
+        }
+      ];
     axesLines=
       If[Or@@Map[TrueQ, axes],
         {
@@ -1099,7 +1711,7 @@ canonicalizeDirective[e___]:=
 $defaultDirectives=
   {
     EdgeForm@
-      Directive[Black, Thickness[.005]],
+      Directive[Black, AbsoluteThickness[1]],
     FaceForm[Black]
     }
 
