@@ -674,6 +674,8 @@ toSVGString[h_?ColorQ, __]:=
   toSVGString[ColorConvert[h, RGBColor], None, None];
 toSVGString[v_, _, "Style"]:=
   CSSGenerate[Flatten@{Normal@v}];
+toSVGString[v_, _, "Thickness"]:=
+  toSVGString[Scaled[v], None, None];
 toSVGString[v_, _, "AbsoluteThickness"]:=
   toSVGString[If[NumericQ@v, Max@{v, 1}, v], None, None]<>"pt";
 toSVGString[l_List, _, "Dashing"]:=
@@ -1060,7 +1062,7 @@ register[svgText, "text", body_->"Body", {x_?NumericQ->"x", y_?NumericQ->"y"}]
 
 
 (* ::Subsubsubsection::Closed:: *)
-(*yAdjustCoord*)
+(*adjustCoord*)
 
 
 
@@ -1071,14 +1073,14 @@ register[svgText, "text", body_->"Body", {x_?NumericQ->"x", y_?NumericQ->"y"}]
 
 
 
-yAdjustCoordC=
-  Compile[{{xy, _Real, 1}, {pr, _Real, 2}},
-    {xy[[1]], pr[[2, 2]]-(xy[[2]]-pr[[2, 1]])},
+adjustCoordC=
+  Compile[{{xy, _Real, 1}, {pr, _Real, 2}, {scaling, _Real, 1}},
+    {xy[[1]]*scaling[[1]], pr[[2, 2]]-(scaling[[2]]*xy[[2]]-pr[[2, 1]])},
     RuntimeOptions->"Speed",
     RuntimeAttributes->{Listable}
     ];
-yAdjustCoord[blah_]:=
-  yAdjustCoordC[blah, $svgPlotRange]
+adjustCoord[blah_]:=
+  adjustCoordC[blah, $svgPlotRange, $svgScaling]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1091,7 +1093,7 @@ Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
   If[ListQ@rad,
     MapThread[svgCircle[##, ops]&, 
       {
-        yAdjustCoord@center, 
+        adjustCoord@center, 
         Replace[rad, {
           r_?NumericQ:>ConstantArray[r, Length@center],
           Except[{__?NumericQ}]:>
@@ -1101,7 +1103,7 @@ Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
           }]
         }
       ],
-    svgCircle[yAdjustCoord@center, 
+    svgCircle[adjustCoord@center, 
       Replace[rad,
         Except[_?NumericQ]->1
         ], 
@@ -1116,7 +1118,7 @@ Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
 
 alias[True]@
 Circle[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
-  toEl[Disk[yAdjustCoord@center, rad, ops]]/.
+  toEl[Disk[adjustCoord@center, rad, ops]]/.
     svgElement["circle", a_]:>svgElement["circle", Append[a, FaceForm[Filling]->None]]
 
 
@@ -1127,7 +1129,7 @@ Circle[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
 
 alias@
 Ellipsoid[center_, radii_, ops:opsPat[]]:=
-  svgEllipsoid[yAdjustCoord@center, radii, ops]
+  svgEllipsoid[adjustCoord@center, radii, ops]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1137,12 +1139,12 @@ Ellipsoid[center_, radii_, ops:opsPat[]]:=
 
 alias@
 Rectangle[{xmin_, ymin_}, {xmax_, ymax_}, ops:opsPat[]]:=
-  svgRect[yAdjustCoord@{xmin, ymin}, {xmax-xmin, ymax-ymin}, ops]
+  svgRect[adjustCoord@{xmin, ymin}, {xmax-xmin, ymax-ymin}, ops]
 
 
 alias@
 Rectangle[{xmin_, ymin_}, ops:opsPat[]]:=
-  svgRect[yAdjustCoord@{xmin, ymin}, Lookup[Flatten@{ops}, ImageSize, {1, 1}], ops]
+  svgRect[adjustCoord@{xmin, ymin}, Lookup[Flatten@{ops}, ImageSize, {1, 1}], ops]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1152,12 +1154,12 @@ Rectangle[{xmin_, ymin_}, ops:opsPat[]]:=
 
 alias@
 Polygon[pts:{{_?NumericQ, _?NumericQ}..}, ops:opsPat[]]:=
-  svgPolygon[yAdjustCoord@pts, ops]
+  svgPolygon[adjustCoord@pts, ops]
 
 
 alias@
 Polygon[poly:{{{_?NumericQ, _?NumericQ}..}..}, ops:opsPat[]]:=
-  svgPolygon[yAdjustCoord@#, ops]&/@poly
+  svgPolygon[adjustCoord@#, ops]&/@poly
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1167,13 +1169,13 @@ Polygon[poly:{{{_?NumericQ, _?NumericQ}..}..}, ops:opsPat[]]:=
 
 alias[True]@
 Line[pts:{{_?NumericQ, _?NumericQ}, {_?NumericQ, _?NumericQ}}, ops:opsPat[]]:=
-  svgLine[yAdjustCoord@pts, ops]
+  svgLine[adjustCoord@pts, ops]
 
 
 alias[True]@
 Line[pts:{{_?NumericQ, _?NumericQ}..}, ops:opsPat[]]:=
-  With[{dat=yAdjustCoord@pts},
-    svgPolyline[yAdjustCoord@pts, FaceForm[Filling]->None, ops]
+  With[{dat=adjustCoord@pts},
+    svgPolyline[adjustCoord@pts, FaceForm[Filling]->None, ops]
     ]
 
 
@@ -1268,11 +1270,11 @@ alias@
 Text[body_, coord_, diffs:{_, _}|None:None, o:opsPat[]]:=
   With[
     {
-      bops=If[MatchQ[body, Style], List@@Rest@body, {FontSize->50}],
+      bops=If[MatchQ[body, Style], List@@Rest@body, {}],
       boo=toNotStupidString@If[MatchQ[body, Style], First@body, body]
       },
     svgText[
-      boo, yAdjustCoord@coord, 
+      boo, adjustCoord@coord, 
       Sequence@@If[diffs===None, 
         {},
         {
@@ -1294,8 +1296,13 @@ Text[body_, coord_, diffs:{_, _}|None:None, o:opsPat[]]:=
             ]
           }
         ], 
-      o,
-      Style->bops
+      DeleteCases[
+        Flatten@{
+          o,
+          Style->bops
+          },
+        EdgeForm[Thickness]->_
+        ]
       ]
     ]
 
@@ -1331,14 +1338,18 @@ ToSVG[g_Graphics, ops:OptionsPattern[]]:=
       svgBody,
       defs,
       extra,
-      $$
+      $$,
+      asp,
+      scalingFactors
       },
+    asp=Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1];
     imsize=
       4/3*Replace[OptionValue[Graphics, opp, ImageSize],
         {
-          Automatic:>{360, 338},
+          Automatic:>
+           {1, asp}*360,
           n_?NumericQ:>
-            {Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1], 1}*n
+            {1, asp}*n
           }
         ];
     viewbox=Flatten@Transpose@PlotRange@g;
@@ -1352,17 +1363,22 @@ ToSVG[g_Graphics, ops:OptionsPattern[]]:=
     {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
     pr=PlotRange@g;
     extra=axesAndFrame[opp, pr, prpad];
+    scalingFactors=imsize/viewbox[[3;;4]];
     If[Length@extra>1,
-      {$$, viewbox}=getViewBox[viewbox, {Scaled[.15], Scaled[.15]}, imsize];
+      {$$, viewbox}=getViewBox[viewbox, {Scaled[.10], Scaled[0]}, imsize];
       ];
+    viewbox*=Join[scalingFactors, scalingFactors];
+    pr*=scalingFactors;
+    imsize=Ceiling@viewbox[[3;;4]];
     Block[
       {
         $svgPlotRange=pr,
         $svgViewBox=viewbox,
-        $svgViewSize=imsize
+        $svgViewSize=imsize,
+        $svgScaling=scalingFactors
         },
       Quiet[
-        svgBody=Reap[toXML/@Flatten@toSVGCore[{extra, First@g}, opp]];
+        svgBody=Reap[toXML/@Flatten@toSVGCore[{extra, First@g}, Flatten@{ops}]];
         defs=Flatten@svgBody[[2]],
         {
           (* optx messages don't matter here, so we quiet them if they show up *)
@@ -1376,6 +1392,7 @@ ToSVG[g_Graphics, ops:OptionsPattern[]]:=
             {"width","height"}->Map[toNotStupidString]@Floor@imsize
             ],
           "viewbox"->StringRiffle@Map[toNotStupidString]@viewbox,
+          (*"preserveAspectRatio"\[Rule]"none",*)
           "version"->"1.1",
           {"http://www.w3.org/2000/xmlns/","xmlns"}->"http://www.w3.org/1999/xhtml"
           },
@@ -1492,7 +1509,8 @@ axesAndFrame[opp_, prange_, pad_]:=
       frame,
       frameLines,
       axesTicks,
-      frameTicks
+      frameTicks,
+      tst
       },
     axes=
       Replace[OptionValue[Graphics, opp, Axes], 
@@ -1509,20 +1527,19 @@ axesAndFrame[opp_, prange_, pad_]:=
         ];
     ast=Replace[OptionValue[Graphics, opp, AxesStyle],
       {
-        {}|Automatic:>{AbsoluteThickness[1], AbsoluteThickness[1]},
+        {}|Automatic:>{Automatic, Automatic},
         e:Except[{_, _}]:>{e, e}
         }
-      ];
+      ]/.Automatic->Thickness[.001];
     axesLines=
       If[Or@@Map[TrueQ, axes],
         {
-          ast,
           If[TrueQ@axes[[1]],
-            Line[Thread[{pr[[1]], orgy[[2]]}]],
+            {ast[[1]], Line[Thread[{pr[[1]], orgy[[2]]}]]},
             Nothing
             ],
           If[TrueQ@axes[[2]],
-            Line[Thread[{orgy[[1]], pr[[2]]}]],
+            {ast[[2]], Line[Thread[{orgy[[1]], pr[[2]]}]]},
             Nothing
             ]
           },
@@ -1537,10 +1554,16 @@ axesAndFrame[opp_, prange_, pad_]:=
         ];
     aticks[[1]]=TrueQ[aticks[[1]]]||(aticks[[1]]===Automatic&&axes[[1]]);
     aticks[[2]]=TrueQ[aticks[[2]]]||(aticks[[2]]===Automatic&&axes[[2]]);
+    tst=Replace[OptionValue[Graphics, opp, TicksStyle],
+      {
+        {}|Automatic:>{Automatic, Automatic},
+        e:Except[{_, _}]:>{e, e}
+        }
+      ]/.Automatic->Thickness[.001];
     axesTicks=
       {
-        If[aticks[[1]], #[[1]], Nothing],
-        If[aticks[[2]], #[[2]], Nothing]
+        If[aticks[[1]], {tst[[1]], #[[1]]}, Nothing],
+        If[aticks[[2]], {tst[[2]], #[[2]]}, Nothing]
         }&@getPlotTicksObjects[pr, orgy];
     frame=
       Replace[OptionValue[Graphics, opp, Frame], 
@@ -1624,8 +1647,7 @@ exportGraphics[{dir___, expr_}, ops:OptionsPattern[]]:=
     Insert[
       expr,
       Flatten@{
-        canonicalizeDirectives[{dir}, expr],
-        ops
+        canonicalizeDirectives[{dir(*, ops*)}, expr]
         },
       -1
       ];
@@ -1633,13 +1655,6 @@ exportGraphics[{dir___, expr_}, ops:OptionsPattern[]]:=
 
 (* ::Subsubsubsection::Closed:: *)
 (*canonicalizeDirectives*)
-
-
-
-(* ::Text:: *)
-(*
-	I leave the expr there in case it\[CloseCurlyQuote]s someday useful. Every format conversion
-*)
 
 
 
@@ -1659,7 +1674,7 @@ canonicalizeDirectives[dir_, expr_]:=
       targ=aliasTarget[expr],
       $svgLineType=TrueQ@lineTypeAlias[expr]
       },
-    DeleteDuplicatesBy[First]@Map[
+    DeleteDuplicatesBy[First]@Reverse@Map[
       canonicalizeDirective[#, targ]&,
       {dir}//.
         {
@@ -1693,7 +1708,10 @@ canonicalizeDirective[EdgeForm[x_], targ_]:=
     canonicalizeDirective[x, targ]
     ];
 canonicalizeDirective[r:_Rule|_RuleDelayed, _]:=
-  r;
+  If[$svgLineType, 
+    Evaluate[EdgeForm[r[[1]]]->r[[2]]],
+    Evaluate[FaceForm[r[[1]]]->r[[2]]]
+    ];
 canonicalizeDirective[(head:Except[List])[x_, ___], _]:=
   If[$svgLineType, 
     Evaluate[EdgeForm[head]->x],
@@ -1711,7 +1729,7 @@ canonicalizeDirective[e___]:=
 $defaultDirectives=
   {
     EdgeForm@
-      Directive[Black, AbsoluteThickness[1]],
+      Directive[Black, Thickness[.01]],
     FaceForm[Black]
     }
 
@@ -1728,7 +1746,7 @@ splitGraphicsListRec[gl_]:=
       ListQ@#, 
         splitGraphicsListRec[#],
       TrueQ@aliasedQ[#],
-        Sow@Append[Reverse@Flatten@{direct}, #],
+        Sow@Flatten@{direct, #},
       True,
         direct={direct, #}
       ]&/@Flatten[{gl}, 1]
