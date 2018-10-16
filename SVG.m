@@ -16,6 +16,40 @@ ToSVG::usage=
   "Export to an SVG XMLObject"
 
 
+BeginPackage["SVG`Package`"];
+
+
+toXML::usage=
+  "Turns svgElement structures into XML";
+
+
+toEl::usage=
+  "Turns aliases and standard SVG into svgElement data";
+
+
+register::usage=
+  "Registers a new transformable SVG element";
+alias::usage=
+  "Registers a new alias for toplevel elements in terms of SVG elements";
+
+
+CSSGenerate::usage=
+  "Copped from BTools. Just there to support style elements";
+
+
+prepareSVGGraphics::usage="";
+getViewBox::usage="";
+getPlotRange::usage="";
+axesAndFrame::usage="";
+toSVGCore::usage="";
+exportGraphics::usage="";
+canonicalizeDirectives::usage="";
+splitGraphicsList::usage="";
+
+
+EndPackage[];
+
+
 Begin["`Private`"];
 
 
@@ -852,6 +886,9 @@ opsPat[]=___?(MatchQ[Flatten[{#}], {opsPatRule...}]&);
 notOp[]:=_?(Not@MatchQ[Flatten@{#}, {opsPatRule...}]&)
 
 
+$toElConvertsFully=True;
+
+
 (* ::Subsubsubsection::Closed:: *)
 (*register*)
 
@@ -891,15 +928,18 @@ register[fn_, head_, args__]:=
           Hold[vals_]
           }:>
         (
-          toEl[fn[pats, ops:opsPat[]]]:=
-            svgElement[head, 
-              Merge[
-                {
-                  Thread[vars->vals],
-                  ops
-                  },
-                First
-                ]
+          toEl[svg:fn[pats, ops:opsPat[]]]:=
+            If[TrueQ@$toElConvertsFully,
+              svgElement[head, 
+                Merge[
+                  {
+                    Thread[vars->vals],
+                    ops
+                    },
+                  First
+                  ]
+                ],
+              svg
               ]
           ),
         _:>Failure["RegistrationFailure",
@@ -949,7 +989,7 @@ alias/:(alias[expr_]:=form_):=
 
 
 
-toEl[e:_svgElement|_XMLElement]:=
+toEl[e:_svgElement|_XMLElement|_Failure]:=
   e;
 
 
@@ -1056,8 +1096,32 @@ register[svgMarker, "marker", id_?StringQ->"id", body_->"Body"]
 register[svgText, "text", body_->"Body", {x_?NumericQ->"x", y_?NumericQ->"y"}]
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*title*)
+
+
+
+register[svgTitle, "title", body_->"Body"]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*group*)
+
+
+
+register[svgGroup, "g", (bodies:{__})->"Body"];
+
+
 (* ::Subsubsection::Closed:: *)
 (*Aliases*)
+
+
+
+(* ::Text:: *)
+(*
+	Need to handle some kind of directive stack that things get pushed onto when recursing.
+Currently directives have to be manually passed down but this isn\[CloseCurlyQuote]t the eventual goal.
+*)
 
 
 
@@ -1090,7 +1154,7 @@ adjustCoord[blah_]:=
 
 alias@
 Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
-  If[ListQ@rad,
+  If[ListQ@center[[1]],
     MapThread[svgCircle[##, ops]&, 
       {
         adjustCoord@center, 
@@ -1103,12 +1167,21 @@ Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
           }]
         }
       ],
-    svgCircle[adjustCoord@center, 
-      Replace[rad,
-        Except[_?NumericQ]->1
-        ], 
-      ops]
+    If[!NumericQ@rad,
+      Ellipsoid[center, rad, ops],
+      svgCircle[adjustCoord@center, 
+        Replace[rad,
+          Except[_?NumericQ]->1
+          ], 
+        ops
+        ]
+      ]
     ]
+
+
+alias@
+DiskBox[a___]:=
+  Disk[a];
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1120,6 +1193,11 @@ alias[True]@
 Circle[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
   toEl[Disk[adjustCoord@center, rad, ops]]/.
     svgElement["circle", a_]:>svgElement["circle", Append[a, FaceForm[Filling]->None]]
+
+
+alias@
+CircleBox[a___]:=
+  Circle[a]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1147,6 +1225,11 @@ Rectangle[{xmin_, ymin_}, ops:opsPat[]]:=
   svgRect[adjustCoord@{xmin, ymin}, Lookup[Flatten@{ops}, ImageSize, {1, 1}], ops]
 
 
+alias@
+RectangleBox[a___]:=
+  Rectangle[a];
+
+
 (* ::Subsubsubsection::Closed:: *)
 (*Polygon*)
 
@@ -1155,11 +1238,14 @@ Rectangle[{xmin_, ymin_}, ops:opsPat[]]:=
 alias@
 Polygon[pts:{{_?NumericQ, _?NumericQ}..}, ops:opsPat[]]:=
   svgPolygon[adjustCoord@pts, ops]
-
-
 alias@
 Polygon[poly:{{{_?NumericQ, _?NumericQ}..}..}, ops:opsPat[]]:=
   svgPolygon[adjustCoord@#, ops]&/@poly
+
+
+alias@
+PolygonBox[a___]:=
+  Polygon[a];
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1177,6 +1263,11 @@ Line[pts:{{_?NumericQ, _?NumericQ}..}, ops:opsPat[]]:=
   With[{dat=adjustCoord@pts},
     svgPolyline[adjustCoord@pts, FaceForm[Filling]->None, ops]
     ]
+
+
+alias@
+LineBox[a___]:=
+  LineBox[a];
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1214,6 +1305,11 @@ Arrow[pts:{{_?NumericQ, _?NumericQ}..}, setBack:notOp[]:Automatic, ops:opsPat[]]
     ]
 
 
+alias@
+ArrowBox[a___]:=
+  Arrow[a];
+
+
 (* ::Subsubsubsection::Closed:: *)
 (*GraphicsComplex*)
 
@@ -1232,33 +1328,9 @@ g:GraphicsComplex[pts_, data_, o___]:=
     ]
 
 
-(* ::Subsubsubsection::Closed:: *)
-(*Rotate*)
-
-
-
-(* ::Text:: *)
-(*
-	This doesn\[CloseCurlyQuote]t actually work yet...
-*)
-
-
-
 alias@
-Rotate[g_, q_]:=
-  Append[g, TransformationFunction->Rotate[q*Degree]]
-
-
-(* ::Subsubsubsection::Closed:: *)
-(*Annotation*)
-
-
-
-alias@
-Annotation[a_, d_, ___]:=
-  toSVGCore[a,
-    {"AnnotationData"->d}
-    ];
+GraphicsComplexBox[a___]:=
+  GraphicsComplex[a];
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1307,6 +1379,70 @@ Text[body_, coord_, diffs:{_, _}|None:None, o:opsPat[]]:=
     ]
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*Tooltip*)
+
+
+
+alias@
+Tooltip[body_, spec_, o:opsPat[]]:=
+  svgGroup[
+    {
+      svgTitle[spec],
+      toSVGCore[body, o]
+      }
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Dynamic*)
+
+
+
+alias@
+Dynamic[body_, blah:notOp[]:Automatic, o:opsPat[]]:=
+  body;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*TransparentObjects*)
+
+
+
+alias@
+StatusArea[body_, spec_, o:opsPat[]]:=
+  body;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Rotate*)
+
+
+
+(* ::Text:: *)
+(*
+	This doesn\[CloseCurlyQuote]t actually work yet...
+*)
+
+
+
+alias@
+Rotate[g_, q_]:=
+  Append[g, TransformationFunction->Rotate[q*Degree]]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Annotation*)
+
+
+
+alias@
+Annotation[a_, d_, ___]:=
+  toSVGCore[a,
+    {"AnnotationData"->d}
+    ];
+
+
 (* ::Subsubsection::Closed:: *)
 (*ToSVG*)
 
@@ -1330,46 +1466,16 @@ ToSVG//Clear
 ToSVG[g_Graphics, ops:OptionsPattern[]]:=
   Module[
     {
-      opp=Flatten@{ops, Options[g]},
       imsize,
       viewbox,
       pr,
-      prpad,
+      scalingFactors,
+      g2,
       svgBody,
-      defs,
-      extra,
-      $$,
-      asp,
-      scalingFactors
+      defs
       },
-    asp=Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1];
-    imsize=
-      4/3*Replace[OptionValue[Graphics, opp, ImageSize],
-        {
-          Automatic:>
-           {1, asp}*360,
-          n_?NumericQ:>
-            {1, asp}*n
-          }
-        ];
-    viewbox=Flatten@Transpose@PlotRange@g;
-    prpad=
-      Replace[OptionValue[Graphics, opp, PlotRangePadding],
-        {
-          i:_?NumericQ|_Scaled:>{i, i},
-          Except[{_, _}]->{Scaled[.02], Scaled[.02]}
-          }
-        ];
-    {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
-    pr=PlotRange@g;
-    extra=axesAndFrame[opp, pr, prpad];
-    scalingFactors=imsize/viewbox[[3;;4]];
-    If[Length@extra>1,
-      {$$, viewbox}=getViewBox[viewbox, {Scaled[.10], Scaled[0]}, imsize];
-      ];
-    viewbox*=Join[scalingFactors, scalingFactors];
-    pr*=scalingFactors;
-    imsize=Ceiling@viewbox[[3;;4]];
+    {pr, viewbox, imsize, scalingFactors, g2}=
+      prepareSVGGraphics[g, ops];
     Block[
       {
         $svgPlotRange=pr,
@@ -1378,7 +1484,7 @@ ToSVG[g_Graphics, ops:OptionsPattern[]]:=
         $svgScaling=scalingFactors
         },
       Quiet[
-        svgBody=Reap[toXML/@Flatten@toSVGCore[{extra, First@g}, Flatten@{ops}]];
+        svgBody=Reap[toXML/@Flatten@toSVGCore[First@g2, Flatten@{ops}]];
         defs=Flatten@svgBody[[2]],
         {
           (* optx messages don't matter here, so we quiet them if they show up *)
@@ -1407,6 +1513,115 @@ ToSVG[g_Graphics, ops:OptionsPattern[]]:=
         ]
       ]
     ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*prepareSVGGraphics*)
+
+
+
+prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
+  Module[
+    {
+      opp=Flatten@{ops, Options[g]},
+      imsize,
+      viewbox,
+      pr,
+      prpad,
+      svgBody,
+      defs,
+      extra,
+      $$,
+      asp,
+      scalingFactors,
+      gpr
+      },
+    asp=Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1];
+    imsize=
+      4/3*Replace[OptionValue[Graphics, opp, ImageSize],
+        {
+          Automatic:>
+           {1, asp}*360,
+          n_?NumericQ:>
+            {1, asp}*n
+          }
+        ];
+    gpr=getPlotRange@g;
+    viewbox=Flatten@Transpose@gpr;
+    prpad=
+      Replace[OptionValue[Graphics, opp, PlotRangePadding],
+        {
+          i:_?NumericQ|_Scaled:>{i, i},
+          Except[{_, _}]->{Scaled[.02], Scaled[.02]}
+          }
+        ];
+    {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
+    extra=axesAndFrame[opp, gpr, prpad];
+    scalingFactors=imsize/viewbox[[3;;4]];
+    If[Length@extra>1,
+      {$$, viewbox}=getViewBox[viewbox, {Scaled[.10], Scaled[0]}, imsize];
+      ];
+    viewbox*=Join[scalingFactors, scalingFactors];
+    gpr*=scalingFactors;
+    imsize=Ceiling@viewbox[[3;;4]];
+    {gpr, viewbox, imsize, scalingFactors, ReplacePart[g, 1->{extra, First@g}]}
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*getPlotRange*)
+
+
+
+igetPlotRange[g_]:=
+  Module[
+    {
+      plop,
+      cbs,
+      xdim,
+      ydim
+      },
+    plop=Lookup[Options[g, PlotRange], PlotRange, All];
+    If[AllTrue[Flatten@plop, NumericQ],
+      plop,
+      cbs=CoordinateBounds@Cases[g[[1]], {_?NumericQ, _?NumericQ}, \[Infinity]];
+      xdim=cbs[[1, 2]]-cbs[[1, 1]];
+      ydim=cbs[[2, 2]]-cbs[[2, 1]];
+      plop=Nest[
+        Replace[
+          {
+            {a:{_, _}, b:Except[{_, _}]}:>{a, {b, b}},
+            {b:Except[{_, _}], a:{_, _}}:>{{b, b}, a},
+            {a:Except[{_, _}], b:Except[{_, _}]}:>{{a, a}, {b, b}},
+            e:Except[{{_, _}, {_, _}}]:>{{e, e}, {e, e}}
+            }
+          ], 
+        plop, 
+        3]/.(All|Automatic->Scaled[1]);
+      {
+        {
+          Replace[plop[[1, 1]],
+            Scaled[s_]:>cbs[[1, 2]]-xdim*s
+            ],
+          Replace[plop[[1, 2]],
+            Scaled[s_]:>cbs[[1, 1]]+xdim*s
+            ]
+          },
+        {
+          Replace[plop[[2, 1]],
+            Scaled[s_]:>cbs[[2, 2]]-ydim*s
+            ],
+          Replace[plop[[2, 2]],
+            Scaled[s_]:>cbs[[2, 1]]+ydim*s
+            ]
+          }
+        }
+      ]
+    ];
+
+
+getPlotRange[g_Graphics]:=
+  Quiet@Check[PlotRange@g, igetPlotRange@g]
 
 
 (* ::Subsubsubsection::Closed:: *)
