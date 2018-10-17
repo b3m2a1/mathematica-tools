@@ -1,0 +1,402 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Props", \
+"CodeSection",ExpressionUUID->"e7827d50-3415-4eb0-a28f-2e84788a8084"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<Props`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"77b270fa-e0d7-48bf-bf97-\
+3e4de5826436"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetProp", "::", "usage"}], "=", 
+   "\"\<SetProperty but works on anything\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PropVal", "::", "usage"}], "=", 
+   "\"\<SetProperty but works on anything\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"RemoveProp", "::", "usage"}], "=", 
+   "\"\<SetProperty but works on anything\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PropList", "::", "usage"}], "=", 
+   "\"\<SetProperty but works on anything\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"460a6575-8ead-4158-a928-d7d51b866566"]\
+
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<`Package`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"f59d8f9f-08db-4a5c-a1d7-\
+01e8ab8e2087"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"$PropertyStore", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"containsQ", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"set", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"get", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"keys", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"remove", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"list", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"1a90743c-e43d-4c62-a3a7-8e277f1cc6d6"]\
+
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"83ee9906-9d5e-4050-b4ec-\
+1cd9b7e053f2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"8f82d3fa-e2eb-4a3d-9091-\
+ba4e61c2bca8"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Basic Interface\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"f6ea37a7-29b1-4d86-adec-c1bf1cdf056a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$PropertyStore", "=", 
+   RowBox[{
+   "Language`NewExpressionStore", "[", "\"\<<PropertyStore>\>\"", "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"8c1bf0e4-c1e8-4698-bb24-5ef7ca2c7c20"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]containsQ\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"506e8226-2c44-46e9-b39e-8e481e6f4903"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"containsQ", "[", "x_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<containsQ\>\"", "[", "x", "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"containsQ", "[", 
+    RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<containsQ\>\"", "[", 
+     RowBox[{"x", ",", " ", "p"}], "]"}]}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"11195b01-b4cc-4356-9853-f53fb13e77c4"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]get\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"81f424cf-7af6-4440-92fa-e7d682af3d2a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"get", "[", 
+    RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<get\>\"", "[", 
+     RowBox[{"x", ",", " ", "p"}], "]"}]}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"9f1df622-2c14-4674-8a2b-5f4badd2c600"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]set\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"eb8ed572-532e-47a7-9149-7c712ca21981"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"set", "[", 
+    RowBox[{"x_", ",", " ", "p_", ",", " ", "v_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<put\>\"", "[", 
+     RowBox[{"x", ",", " ", "p", " ", ",", "v"}], "]"}]}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"0d4b9c04-f076-4087-bd0a-db356f9a097e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]remove\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a10a19d1-cc12-4ffa-9fa4-01e9602c0910"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"remove", "[", "x_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<remove\>\"", "[", "x", "]"}]}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"a75354d3-f2b4-4ed0-aae6-97f79a5010c2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]keys\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"c5b38282-17ef-4d53-9bea-fd325613ee28"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"keys", "[", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<getKeys\>\"", "[", "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"keys", "[", "x_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<getKeys\>\"", "[", "x", "]"}]}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"08171690-d50e-4bc9-8964-e502e32708a4"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]list\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"46fe594d-7f0a-4e45-912d-8ed0ee210c41"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"list", "[", "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<listTable\>\"", "[", "]"}]}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"e703e6f9-fc27-4450-adf0-8a433104fcac"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Exposed\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"e111708b-040b-4d73-a587-27658d7efa37"],
+
+Cell[BoxData[
+ RowBox[{"$$hold", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}]], \
+"CodeInput",ExpressionUUID->"7d16b478-c18b-4e76-aa3e-62e180102620"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]SetProp\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"4961a122-1bd1-4ba6-80e5-7d9ca35db789"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetProp", "[", 
+    RowBox[{"x_", ",", " ", 
+     RowBox[{"p_", "->", "v_"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"set", "[", 
+    RowBox[{"x", ",", " ", "p", ",", " ", "v"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SetProp", "[", 
+    RowBox[{"x_", ",", " ", 
+     RowBox[{"p_", ":>", "v_"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"set", "[", 
+    RowBox[{"x", ",", " ", "p", ",", " ", 
+     RowBox[{"$$hold", "@", "v"}]}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"662c935e-505e-4e77-8348-629c851a29b9"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]PropVal\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"b98a5d68-55be-4322-bb07-37d5b07e60ab"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"PropVal", "[", 
+    RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Replace", "[", 
+    RowBox[{
+     RowBox[{"$PropertyStore", "@", 
+      RowBox[{"\"\<get\>\"", "[", 
+       RowBox[{"x", ",", " ", "p"}], "]"}]}], ",", "\n", "\t\t", 
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"Null", "\[RuleDelayed]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"containsQ", "[", 
+            RowBox[{"x", ",", " ", "p"}], "]"}]}], ",", " ", 
+          RowBox[{"Missing", "[", 
+           RowBox[{"\"\<PropertyAbsent\>\"", ",", " ", "x"}], "]"}], ",", " ",
+           "Null"}], "]"}]}], ",", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"$$hold", "[", "v_", "]"}], "\[RuleDelayed]", "v"}]}], "\n", 
+      "\t\t\t", "}"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"6e387351-5bd5-4cd9-9abb-ad28a72368f7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]PropList\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"9d65ded0-bc58-4e43-8f4c-21f5b5eddbfc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PropList", "[", "x_", "]"}], ":=", "\n", "\t", 
+  RowBox[{
+  "keys", "[", "x", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"87e8f58a-4b29-4023-9d63-55a73968c5df"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]RemoveProp\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"d833ec03-9dee-4cb6-921e-001808418b21"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RemoveProp", "[", 
+   RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"remove", "[", 
+   RowBox[{"x", ",", " ", "p"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"b83551b1-fcbf-4f92-a78c-4036afe46346"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Operator Forms\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"fc72e1a7-491d-4103-be80-a9afcfd67dcd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"SetProp", "[", "x_", "]"}], "[", 
+    RowBox[{"h", ":", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Rule", "|", "RuleDelayed"}], ")"}], "[", 
+      RowBox[{"p_", " ", ",", "v_"}], "]"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"SetProp", "[", 
+    RowBox[{"x", ",", " ", "h"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"PropVal", "[", "x_", "]"}], "[", "p_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"PropVal", "[", 
+    RowBox[{"x", ",", " ", "p"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"RemoveProp", "[", "x_", "]"}], "[", "p_", "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"RemoveProp", "[", 
+    RowBox[{"x", ",", " ", "p"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"fe711da9-2cf8-40f2-ad79-2006aa0cfa1a"]\
+
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"b01804b9-8108-4ed6-b3c2-\
+08dddfccb297"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"08321801-2dd3-4b6c-973a-\
+ca5480e08e95"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"1d01a74e-e48e-4723-bf81-\
+de3e459c540d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"myMat", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{
+     RowBox[{"{", "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"100", ",", " ", "100"}], "}"}]}], "]"}]}], ";"}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"2bd70326-72a6-4de5-a24f-45326a0b009c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cachedCompute", "[", 
+   RowBox[{"m_", ",", " ", "p_", ",", " ", "fn_"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Replace", "[", 
+   RowBox[{
+    RowBox[{"PropVal", "[", 
+     RowBox[{"m", ",", " ", "p"}], "]"}], ",", " ", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Missing", "[", 
+      RowBox[{"\"\<PropertyAbsent\>\"", ",", " ", "p"}], "]"}], 
+     "\[RuleDelayed]", "\[IndentingNewLine]", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"val", "=", 
+         RowBox[{"fn", "[", "m", "]"}]}], "}"}], ",", " ", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"SetProp", "[", 
+         RowBox[{"m", ",", " ", 
+          RowBox[{"p", "\[Rule]", "val"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "val"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+   "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"37aaf91c-1afb-49d7-8ae9-e8cb7266dc34"],
+
+Cell[BoxData[
+ RowBox[{"cachedCompute", "[", 
+  RowBox[{"myMat", ",", " ", "\"\<Inverse\>\"", ",", " ", "Inverse"}], 
+  "]"}]], "Input",
+ CellLabel->"In[3]:=",ExpressionUUID->"5c499974-52f6-4287-b4c7-534c4ff3d782"],
+
+Cell[BoxData[
+ RowBox[{"SetProp", "[", 
+  RowBox[{"myMat", ",", " ", 
+   RowBox[{"\"\<Inverse\>\"", "\[Rule]", 
+    RowBox[{"Inverse", "[", "myMat", "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"2489f002-a7ee-48bb-b64e-c1cdb0bdbd6b"]
+},
+WindowSize->{808, 755},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+

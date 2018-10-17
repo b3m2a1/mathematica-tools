@@ -902,6 +902,7 @@ $svgPrimitives=
 
 register[fn_, head_, args__]:=
   With[{flargs=Flatten@{args}},
+    Context[fn]=StringReplace[Context[fn], "Private"->"Package"];
     $svgPrimitives[fn]=head;
     Replace[
       {
@@ -1105,11 +1106,49 @@ register[svgTitle, "title", body_->"Body"]
 
 
 (* ::Subsubsubsection::Closed:: *)
-(*group*)
+(*g*)
 
 
 
 register[svgGroup, "g", (bodies:{__})->"Body"];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*symbol*)
+
+
+
+register[svgSymbol, "symbol", 
+  id_String->"id",
+  b_->"Body"
+  ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*use*)
+
+
+
+register[svgUse, "use", 
+  id_String->"href",
+  {x_?NumericQ->"x", y_?NumericQ->"y"}
+  ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*a*)
+
+
+
+register[svgLink, "a", href_String->"href", body_->"Body"];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*mask*)
+
+
+
+register[svgMask, "mask", id_String->"id", body_->"Body"];
 
 
 (* ::Subsubsection::Closed:: *)

@@ -2011,6 +2011,13 @@ Cell[BoxData[
        RowBox[{"{", "args", "}"}]}]}], "}"}], ",", "\n", "\t\t", 
     RowBox[{
      RowBox[{
+      RowBox[{"Context", "[", "fn", "]"}], "=", 
+      RowBox[{"StringReplace", "[", 
+       RowBox[{
+        RowBox[{"Context", "[", "fn", "]"}], ",", " ", 
+        RowBox[{"\"\<Private\>\"", "\[Rule]", "\"\<Package\>\""}]}], "]"}]}], 
+     ";", "\n", "\t\t", 
+     RowBox[{
       RowBox[{"$svgPrimitives", "[", "fn", "]"}], "=", "head"}], ";", "\n", 
      "\t\t", 
      RowBox[{"Replace", "[", "\n", "\t\t\t", 
@@ -2119,7 +2126,7 @@ Cell[BoxData[
         "\t\t\t\t", "}"}]}], "\n", "\t\t", "]"}]}]}], "\n", "\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"8f19499a-a2b2-4f22-aaa6-a9822f968282"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -2215,7 +2222,7 @@ Cell[BoxData[
        RowBox[{"{", "e", "}"}]}]}], "\n", "\t\t\t", "|>"}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"f52e99e8-566b-4019-95d4-1f6ca51d667d"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -2418,7 +2425,7 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["\[LeftCeiling]group\[RightFloor]", "CodeSubsubsubsection",
+Cell["\[LeftCeiling]g\[RightFloor]", "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"c8a07cee-cbfe-479b-a169-0a1438112869"],
 
 Cell[BoxData[
@@ -2431,6 +2438,68 @@ Cell[BoxData[
        RowBox[{"{", "__", "}"}]}], ")"}], "\[Rule]", "\"\<Body\>\""}]}], 
    "]"}], ";"}]], \
 "CodeInput",ExpressionUUID->"64935215-68bb-49a5-833c-9500f22164cf"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]symbol\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"0b165fee-7cf7-4da0-814f-922e12d3ff4e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"register", "[", 
+   RowBox[{"svgSymbol", ",", " ", "\"\<symbol\>\"", ",", " ", "\n", "\t", 
+    RowBox[{"id_String", "\[Rule]", "\"\<id\>\""}], ",", "\n", "\t", 
+    RowBox[{"b_", "\[Rule]", "\"\<Body\>\""}]}], "\n", "\t", "]"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"25dcd428-b00a-4f90-be64-9855a32ba5c8"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]use\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"6cca7c90-b8ed-44fa-a869-7184b91a14d2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"register", "[", 
+   RowBox[{"svgUse", ",", " ", "\"\<use\>\"", ",", " ", "\n", "\t", 
+    RowBox[{"id_String", "\[Rule]", "\"\<href\>\""}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"x_", "?", "NumericQ"}], "\[Rule]", "\"\<x\>\""}], ",", " ", 
+      RowBox[{
+       RowBox[{"y_", "?", "NumericQ"}], "\[Rule]", "\"\<y\>\""}]}], "}"}]}], 
+   "\n", "\t", "]"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"2a211077-679d-4d96-9ace-c2e5e922dfec"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]a\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"ebf1891c-0b31-459f-94e5-74a9b5bfcec7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"register", "[", 
+   RowBox[{"svgLink", ",", " ", "\"\<a\>\"", ",", " ", 
+    RowBox[{"href_String", "\[Rule]", "\"\<href\>\""}], ",", " ", 
+    RowBox[{"body_", "\[Rule]", "\"\<Body\>\""}]}], "]"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"3ff8d35b-3e01-4fbd-8dc1-b68e4d51e23d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]mask\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"a7b82050-0df4-4574-881e-ceb73d14975f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"register", "[", 
+   RowBox[{"svgMask", ",", " ", "\"\<mask\>\"", ",", " ", 
+    RowBox[{"id_String", "\[Rule]", "\"\<id\>\""}], ",", " ", 
+    RowBox[{"body_", "\[Rule]", "\"\<Body\>\""}]}], "]"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"d45ed5fe-a6d6-4fba-9be0-a373139e355d"]
 }, Closed]]
 }, Open  ]],
 
@@ -5355,6 +5424,7 @@ Cell[BoxData[
                     AbsoluteThickness[1.5], 
                     Opacity[0.66]}], {}, {}], 
                     RectangleBox[{-2.5, 0.}, {-2., 9}, "RoundingRadius" -> 0]},
+                    
                     ImageSizeCache->{
                     35.91900157928467, {6., 9.256000518798828}}], "}"}],
                   StatusArea[#, 9]& ,
@@ -6253,7 +6323,7 @@ Cell[BoxData[
  CellLabel->"In[782]:=",ExpressionUUID->"7065ceb9-847b-4b63-b319-b1d396aec67f"]
 },
 WindowSize->{808, 755},
-WindowMargins->{{Automatic, 78}, {Automatic, 0}},
+WindowMargins->{{27, Automatic}, {Automatic, 27}},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
