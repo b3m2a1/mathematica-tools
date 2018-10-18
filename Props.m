@@ -73,6 +73,8 @@ set[x_, p_, v_]:=
 
 remove[x_]:=
   $PropertyStore@"remove"[x];
+remove[x_, p_]:=
+  $PropertyStore@"remove"[x]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -122,7 +124,7 @@ SetProp[x_, p_:>v_]:=
 PropVal[x_, p_]:=
   Replace[$PropertyStore@"get"[x, p],
     {
-      Null:>If[!containsQ[x, p], Missing["PropertyAbsent", x], Null],
+      Null:>If[!containsQ[x, p], Missing["PropertyAbsent", p], Null],
       $$hold[v_]:>v
       }
     ];
