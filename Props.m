@@ -78,7 +78,7 @@ set[x_, p_, v_]:=
 remove[x_]:=
   $PropertyStore@"remove"[x];
 remove[x_, p_]:=
-  $PropertyStore@"remove"[x]
+  $PropertyStore@"remove"[x, p];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -140,7 +140,7 @@ PropVal[x_, p_]:=
 
 
 PropList[x_]:=
-  keys[x]
+  Replace[keys[x], Null->Missing["ObjectAbsent", x]]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -175,25 +175,34 @@ RemoveProp[x_][p_]:=
 
 
 
-MakeMutable[head_Symbol]:=
+MakeMutable//Clear
+MakeMutable[head_Symbol, test_:(True&)]:=
   Module[{mutationHandler, objQ},
-    mutationHandler~SetAttributes~HoldAllComplete;
-    objQ~SetAttributes~HoldAllComplete;
-    objQ[s_Symbol]:=Head[Unevaluated@s]===head;
-    head/:(e:head[___])[k_]:=
+    head/:(e_head?test)[k_]:=
       PropVal[e, k];
-    head/:Set[(e:head[___])[k_], v_]:=
-      SetProp[e, k->v];
-    head/:SetDelayed[(e:head[___])[k_], v_]:=
+    head/:Set[(e_head?test)[k_], v_]:=
+      (
+        SetProp[e, k->v];
+        v
+        );
+    head/:SetDelayed[(e_head?test)[k_], v_]:=
       SetProp[e, k:>v];
-    head/:Unset[(e:head[___])[k_]]:=
+    head/:HoldPattern[Unset[(e_head?test)[k_]]]:=
       RemoveProp[e, k];
-    mutationHandler[(h:Set|SetDelayed)[s_Symbol?objQ[k_], v_]]:=
-      With[{e=s}, h[e[k], v]];
-    mutationHandler[Unset[s_Symbol?objQ[k_], v_]]:=
+      
+    objQ~SetAttributes~HoldAllComplete;
+    objQ[s_Symbol]:=MatchQ[OwnValues[s], {_:>(_head?test)}];
+    mutationHandler~SetAttributes~HoldAllComplete;
+    mutationHandler[Set[(s_Symbol)[k_], v_]]:=
+      With[{e=s}, Set[e[k], v]];
+    mutationHandler[SetDelayed[s_Symbol[k_], v_]]:=
+      With[{e=s}, SetDelayed[e[k], v]];
+    mutationHandler[Unset[s_Symbol[k_]]]:=
       With[{e=s}, Unset[e[k]]];
-    mutationHandler[___]:=
-      Language`MutationFallthrough;
+    mutationHandler[e___]:=
+      (
+        Language`MutationFallthrough
+        );
     Language`SetMutationHandler[head, mutationHandler];
     ]
 
@@ -203,15 +212,32 @@ MakeMutable[head_Symbol]:=
 
 
 
-MakeObject[head_Symbol]:=
+MakeObject//Clear
+MakeObject[head_Symbol[a___]]:=
   (
-    MakeMutable[head];
-    e:(head[___]?System`Private`HoldNotValidQ):=
+    e:(head[a]?System`Private`HoldEntryQ):=
       (
-        System`Private`HoldSetValid[e];
+        System`Private`HoldSetNoEntry[e];
         e["Valid"]=True;
-        )
-    )
+        e
+        );
+    (e_head?System`Private`HoldNoEntryQ)["Properties"]:=
+      PropList[e];
+    Format[e_head?System`Private`HoldNoEntryQ]:=
+      RawBoxes@
+        BoxForm`ArrangeSummaryBox[
+          head,
+          e,
+          None,
+          {
+            "-- Object --"
+            },
+          {},
+          StandardForm
+          ];
+    MakeMutable[head, System`Private`HoldNoEntryQ];
+    );
+MakeObject~SetAttributes~HoldAllComplete;
 
 
 End[];

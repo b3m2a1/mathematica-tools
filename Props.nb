@@ -169,13 +169,14 @@ Cell[BoxData[{
    RowBox[{"$PropertyStore", "@", 
     RowBox[{"\"\<remove\>\"", "[", "x", "]"}]}]}], ";"}], "\n", 
  RowBox[{
-  RowBox[{"remove", "[", 
-   RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
-  RowBox[{"$PropertyStore", "@", 
-   RowBox[{
-   "\"\<remove\>\"", "[", "x", 
-    "]"}]}]}]}], \
-"CodeInput",ExpressionUUID->"a75354d3-f2b4-4ed0-aae6-97f79a5010c2"]
+  RowBox[{
+   RowBox[{"remove", "[", 
+    RowBox[{"x_", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"$PropertyStore", "@", 
+    RowBox[{"\"\<remove\>\"", "[", 
+     RowBox[{"x", ",", " ", "p"}], "]"}]}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"a75354d3-f2b4-4ed0-aae6-97f79a5010c2"]\
+
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -278,7 +279,7 @@ Cell[BoxData[
         RowBox[{"$$hold", "[", "v_", "]"}], "\[RuleDelayed]", "v"}]}], "\n", 
       "\t\t\t", "}"}]}], "\n", "\t\t", "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"6e387351-5bd5-4cd9-9abb-ad28a72368f7"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -288,11 +289,15 @@ Cell["\[LeftCeiling]PropList\[RightFloor]", "CodeSubsubsection",
 Cell[BoxData[
  RowBox[{
   RowBox[{"PropList", "[", "x_", "]"}], ":=", "\n", "\t", 
-  RowBox[{
-  "keys", "[", "x", 
+  RowBox[{"Replace", "[", 
+   RowBox[{
+    RowBox[{"keys", "[", "x", "]"}], ",", " ", 
+    RowBox[{"Null", "\[Rule]", 
+     RowBox[{"Missing", "[", 
+      RowBox[{"\"\<ObjectAbsent\>\"", ",", " ", "x"}], "]"}]}]}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"87e8f58a-4b29-4023-9d63-55a73968c5df"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -307,7 +312,7 @@ Cell[BoxData[
    RowBox[{"x", ",", " ", "p"}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"b83551b1-fcbf-4f92-a78c-4036afe46346"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -341,8 +346,8 @@ Cell[BoxData[{
     RowBox[{"x", ",", " ", "p"}], "]"}]}], 
   ";"}]}], "CodeInput",ExpressionUUID->"fe711da9-2cf8-40f2-ad79-2006aa0cfa1a"]\
 
-}, Open  ]]
-}, Closed]],
+}, Closed]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -354,32 +359,25 @@ Cell[CellGroupData[{
 Cell["\[LeftCeiling]MakeMutable\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"f576826f-fb08-4d5e-8b85-5787faa56015"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{"MakeMutable", "//", "Clear"}], "\n", 
  RowBox[{
-  RowBox[{"MakeMutable", "[", "head_Symbol", "]"}], ":=", "\n", "\t", 
+  RowBox[{"MakeMutable", "[", 
+   RowBox[{"head_Symbol", ",", " ", 
+    RowBox[{"test_:", 
+     RowBox[{"(", 
+      RowBox[{"True", "&"}], ")"}]}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"Module", "[", 
    RowBox[{
     RowBox[{"{", 
      RowBox[{"mutationHandler", ",", " ", "objQ"}], "}"}], ",", "\n", "\t\t", 
     
     RowBox[{
-     RowBox[{
-     "mutationHandler", "~", "SetAttributes", "~", "HoldAllComplete"}], ";", 
-     "\n", "\t\t", 
-     RowBox[{"objQ", "~", "SetAttributes", "~", "HoldAllComplete"}], ";", 
-     "\n", "\t\t", 
-     RowBox[{
-      RowBox[{"objQ", "[", "s_Symbol", "]"}], ":=", 
-      RowBox[{
-       RowBox[{"Head", "[", 
-        RowBox[{"Unevaluated", "@", "s"}], "]"}], "===", "head"}]}], ";", 
-     "\n", "\t\t", 
      RowBox[{"head", "/:", 
       RowBox[{
        RowBox[{"(", 
-        RowBox[{"e", ":", 
-         RowBox[{"head", "[", "___", "]"}]}], ")"}], "[", "k_", "]"}], ":=", 
-      "\n", "\t\t\t", 
+        RowBox[{"e_head", "?", "test"}], ")"}], "[", "k_", "]"}], ":=", "\n", 
+      "\t\t\t", 
       RowBox[{"PropVal", "[", 
        RowBox[{"e", ",", " ", "k"}], "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"head", "/:", 
@@ -387,57 +385,83 @@ Cell[BoxData[
        RowBox[{
         RowBox[{
          RowBox[{"(", 
-          RowBox[{"e", ":", 
-           RowBox[{"head", "[", "___", "]"}]}], ")"}], "[", "k_", "]"}], ",", 
-        " ", "v_"}], "]"}], ":=", "\n", "\t\t\t", 
-      RowBox[{"SetProp", "[", 
-       RowBox[{"e", ",", " ", 
-        RowBox[{"k", "\[Rule]", "v"}]}], "]"}]}], ";", "\n", "\t\t", 
+          RowBox[{"e_head", "?", "test"}], ")"}], "[", "k_", "]"}], ",", " ", 
+        "v_"}], "]"}], ":=", "\n", "\t\t\t", 
+      RowBox[{"(", "\n", "\t\t\t\t", 
+       RowBox[{
+        RowBox[{"SetProp", "[", 
+         RowBox[{"e", ",", " ", 
+          RowBox[{"k", "\[Rule]", "v"}]}], "]"}], ";", "\n", "\t\t\t\t", 
+        "v"}], "\n", "\t\t\t\t", ")"}]}], ";", "\n", "\t\t", 
      RowBox[{"head", "/:", 
       RowBox[{"SetDelayed", "[", 
        RowBox[{
         RowBox[{
          RowBox[{"(", 
-          RowBox[{"e", ":", 
-           RowBox[{"head", "[", "___", "]"}]}], ")"}], "[", "k_", "]"}], ",", 
-        " ", "v_"}], "]"}], ":=", "\n", "\t\t\t", 
+          RowBox[{"e_head", "?", "test"}], ")"}], "[", "k_", "]"}], ",", " ", 
+        "v_"}], "]"}], ":=", "\n", "\t\t\t", 
       RowBox[{"SetProp", "[", 
        RowBox[{"e", ",", " ", 
         RowBox[{"k", ":>", "v"}]}], "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"head", "/:", 
-      RowBox[{"Unset", "[", 
-       RowBox[{
-        RowBox[{"(", 
-         RowBox[{"e", ":", 
-          RowBox[{"head", "[", "___", "]"}]}], ")"}], "[", "k_", "]"}], "]"}],
-       ":=", "\n", "\t\t\t", 
+      RowBox[{"HoldPattern", "[", 
+       RowBox[{"Unset", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"e_head", "?", "test"}], ")"}], "[", "k_", "]"}], "]"}], 
+       "]"}], ":=", "\n", "\t\t\t", 
       RowBox[{"RemoveProp", "[", 
-       RowBox[{"e", ",", " ", "k"}], "]"}]}], ";", "\n", "\t\t", 
+       RowBox[{"e", ",", " ", "k"}], "]"}]}], ";", "\n", "\t\t\t", "\n", 
+     "\t\t", 
+     RowBox[{"objQ", "~", "SetAttributes", "~", "HoldAllComplete"}], ";", 
+     "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"objQ", "[", "s_Symbol", "]"}], ":=", 
+      RowBox[{"MatchQ", "[", 
+       RowBox[{
+        RowBox[{"OwnValues", "[", "s", "]"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"_", "\[RuleDelayed]", 
+          RowBox[{"(", 
+           RowBox[{"_head", "?", "test"}], ")"}]}], "}"}]}], "]"}]}], ";", 
+     "\n", "\t\t", 
+     RowBox[{
+     "mutationHandler", "~", "SetAttributes", "~", "HoldAllComplete"}], ";", 
+     "\n", "\t\t", 
      RowBox[{
       RowBox[{"mutationHandler", "[", 
-       RowBox[{
-        RowBox[{"(", 
-         RowBox[{"h", ":", 
-          RowBox[{"Set", "|", "SetDelayed"}]}], ")"}], "[", 
+       RowBox[{"Set", "[", 
         RowBox[{
          RowBox[{
-          RowBox[{"s_Symbol", "?", "objQ"}], "[", "k_", "]"}], ",", " ", 
-         "v_"}], "]"}], "]"}], ":=", "\n", "\t\t\t", 
+          RowBox[{"(", "s_Symbol", ")"}], "[", "k_", "]"}], ",", " ", "v_"}], 
+        "]"}], "]"}], ":=", "\n", "\t\t\t", 
       RowBox[{"With", "[", 
        RowBox[{
         RowBox[{"{", 
          RowBox[{"e", "=", "s"}], "}"}], ",", " ", 
-        RowBox[{"h", "[", 
+        RowBox[{"Set", "[", 
+         RowBox[{
+          RowBox[{"e", "[", "k", "]"}], ",", " ", "v"}], "]"}]}], "]"}]}], 
+     ";", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"mutationHandler", "[", 
+       RowBox[{"SetDelayed", "[", 
+        RowBox[{
+         RowBox[{"s_Symbol", "[", "k_", "]"}], ",", " ", "v_"}], "]"}], "]"}],
+       ":=", "\n", "\t\t\t", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"e", "=", "s"}], "}"}], ",", " ", 
+        RowBox[{"SetDelayed", "[", 
          RowBox[{
           RowBox[{"e", "[", "k", "]"}], ",", " ", "v"}], "]"}]}], "]"}]}], 
      ";", "\n", "\t\t", 
      RowBox[{
       RowBox[{"mutationHandler", "[", 
        RowBox[{"Unset", "[", 
-        RowBox[{
-         RowBox[{
-          RowBox[{"s_Symbol", "?", "objQ"}], "[", "k_", "]"}], ",", " ", 
-         "v_"}], "]"}], "]"}], ":=", "\n", "\t\t\t", 
+        RowBox[{"s_Symbol", "[", "k_", "]"}], "]"}], "]"}], ":=", "\n", 
+      "\t\t\t", 
       RowBox[{"With", "[", 
        RowBox[{
         RowBox[{"{", 
@@ -445,41 +469,70 @@ Cell[BoxData[
         RowBox[{"Unset", "[", 
          RowBox[{"e", "[", "k", "]"}], "]"}]}], "]"}]}], ";", "\n", "\t\t", 
      RowBox[{
-      RowBox[{"mutationHandler", "[", "___", "]"}], ":=", "\n", "\t\t\t", 
-      "Language`MutationFallthrough"}], ";", "\n", "\t\t", 
+      RowBox[{"mutationHandler", "[", "e___", "]"}], ":=", "\n", "\t\t\t", 
+      RowBox[{
+      "(", "\n", "\t\t\t\t", "Language`MutationFallthrough", "\n", "\t\t\t\t",
+        ")"}]}], ";", "\n", "\t\t", 
      RowBox[{"Language`SetMutationHandler", "[", 
       RowBox[{"head", ",", " ", "mutationHandler"}], "]"}], ";"}]}], "\n", 
-   "\t\t", "]"}]}]], \
-"CodeInput",ExpressionUUID->"d981367b-ddec-4002-809e-04e1a11bcaf0"]
-}, Open  ]],
+   "\t\t", "]"}]}]}], \
+"CodeInput",ExpressionUUID->"e9163f83-c6e6-451c-8eb7-012661e7c91f"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]MakeObject\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"01cc0913-18d1-417e-ab10-77bc547f8e11"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{"MakeObject", "//", "Clear"}], "\n", 
  RowBox[{
-  RowBox[{"MakeObject", "[", "head_Symbol", "]"}], ":=", "\n", "\t", 
-  RowBox[{"(", "\n", "\t\t", 
-   RowBox[{
-    RowBox[{"MakeMutable", "[", "head", "]"}], ";", "\n", "\t\t", 
+  RowBox[{
+   RowBox[{"MakeObject", "[", 
+    RowBox[{"head_Symbol", "[", "a___", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"(", "\n", "\t\t", 
     RowBox[{
-     RowBox[{"e", ":", 
-      RowBox[{"(", 
+     RowBox[{
+      RowBox[{"e", ":", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"head", "[", "a", "]"}], "?", "System`Private`HoldEntryQ"}], 
+        ")"}]}], ":=", "\n", "\t\t\t", 
+      RowBox[{"(", "\n", "\t\t\t\t", 
        RowBox[{
-        RowBox[{"head", "[", "___", "]"}], "?", 
-        "System`Private`HoldNotValidQ"}], ")"}]}], ":=", "\n", "\t\t\t", 
-     RowBox[{"(", "\n", "\t\t\t\t", 
+        RowBox[{"System`Private`HoldSetNoEntry", "[", "e", "]"}], ";", "\n", 
+        "\t\t\t\t", 
+        RowBox[{
+         RowBox[{"e", "[", "\"\<Valid\>\"", "]"}], "=", "True"}], ";", "\n", 
+        "\t\t\t\t", "e"}], "\n", "\t\t\t\t", ")"}]}], ";", "\n", "\t\t", 
+     RowBox[{
       RowBox[{
-       RowBox[{"System`Private`HoldSetValid", "[", "e", "]"}], ";", "\n", 
-       "\t\t\t\t", 
-       RowBox[{
-        RowBox[{"e", "[", "\"\<Valid\>\"", "]"}], "=", "True"}], ";"}], "\n", 
-      "\t\t\t\t", ")"}]}]}], "\n", "\t\t", 
-   ")"}]}]], \
+       RowBox[{"(", 
+        RowBox[{"e_head", "?", "System`Private`HoldNoEntryQ"}], ")"}], "[", 
+       "\"\<Properties\>\"", "]"}], ":=", "\n", "\t\t\t", 
+      RowBox[{"PropList", "[", "e", "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"Format", "[", 
+       RowBox[{"e_head", "?", "System`Private`HoldNoEntryQ"}], "]"}], ":=", 
+      "\n", "\t\t\t", 
+      RowBox[{"RawBoxes", "@", "\n", "\t\t\t\t", 
+       RowBox[{"BoxForm`ArrangeSummaryBox", "[", "\n", "\t\t\t\t\t", 
+        RowBox[{
+        "head", ",", "\n", "\t\t\t\t\t", "e", ",", "\n", "\t\t\t\t\t", "None",
+          ",", "\n", "\t\t\t\t\t", 
+         RowBox[{
+         "{", "\n", "\t\t\t\t\t\t", "\"\<-- Object --\>\"", "\n", 
+          "\t\t\t\t\t\t", "}"}], ",", "\n", "\t\t\t\t\t", 
+         RowBox[{"{", "}"}], ",", "\n", "\t\t\t\t\t", "StandardForm"}], "\n", 
+        "\t\t\t\t\t", "]"}]}]}], ";", "\n", "\t\t", 
+     RowBox[{"MakeMutable", "[", 
+      RowBox[{"head", ",", " ", "System`Private`HoldNoEntryQ"}], "]"}], ";"}],
+     "\n", "\t\t", ")"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"MakeObject", "~", "SetAttributes", "~", "HoldAllComplete"}], 
+  ";"}]}], \
 "CodeInput",ExpressionUUID->"644cdc44-611f-41c2-ba7c-6ea75064f70d"]
-}, Open  ]]
+}, Closed]]
 }, Open  ]],
 
 Cell[BoxData[
@@ -498,205 +551,85 @@ ca5480e08e95"]
 Cell["", "SectionSeparator",ExpressionUUID->"1d01a74e-e48e-4723-bf81-\
 de3e459c540d"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
- RowBox[{"Names", "[", "\"\<System`Private`*Valid*\>\"", "]"}]], "Input",
+ RowBox[{"Language`SetMutationHandler", "[", 
+  RowBox[{"testObj", ",", " ", "Print"}], "]"}]], "Input",
  CellLabel->
-  "In[108]:=",ExpressionUUID->"3e1b1324-84c9-41bc-b3e8-28c3f4a607bb"],
+  "In[253]:=",ExpressionUUID->"1bfc3f34-3903-495c-a18d-fb624d7a8e8c"],
 
 Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"\<\"System`Private`HoldNotValidQ\"\>", 
-   ",", "\<\"System`Private`HoldSetValid\"\>", 
-   ",", "\<\"System`Private`HoldValidQ\"\>", 
-   ",", "\<\"System`Private`MakeValidRoot\"\>", 
-   ",", "\<\"System`Private`NotValidQ\"\>", 
-   ",", "\<\"System`Private`SetValid\"\>", 
-   ",", "\<\"System`Private`ValidMeijerGQ\"\>", 
-   ",", "\<\"System`Private`ValidQ\"\>"}], "}"}]], "Output",
- CellLabel->"Out[108]=",ExpressionUUID->"40920b37-982c-470c-9dc3-d999e03ee6e8"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData["$ContextPath"], "Input",
+ RowBox[{"MakeObject", "[", 
+  RowBox[{"testObj", "[", 
+   RowBox[{"_Association", "?", "AssociationQ"}], "]"}], "]"}]], "Input",
  CellLabel->
-  "In[105]:=",ExpressionUUID->"7d999287-5723-4acb-a08e-028fbe115f20"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"\<\"ChemTools`Spectroscopy`\"\>", ",", "\<\"ChemTools`\"\>", 
-   ",", "\<\"DocumentationSearch`\"\>", ",", "\<\"ResourceLocator`\"\>", 
-   ",", "\<\"WolframAlphaClient`\"\>", ",", "\<\"CloudPublishMenu`\"\>", 
-   ",", "\<\"SystemTools`\"\>", ",", "\<\"StreamingLoader`\"\>", 
-   ",", "\<\"ExternalEvaluateLoader`\"\>", ",", "\<\"PacletManager`\"\>", 
-   ",", "\<\"System`\"\>", ",", "\<\"Global`\"\>"}], "}"}]], "Output",
- CellLabel->"Out[105]=",ExpressionUUID->"f1c7f898-d121-4620-8b26-3bf48237d56d"]
-}, Open  ]],
+  "In[481]:=",ExpressionUUID->"c1636dbc-cdf6-4220-b25f-5e10a9c79b9e"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"MakeMutable", "[", "obj", 
-  "]"}]], "Input",ExpressionUUID->"c1636dbc-cdf6-4220-b25f-5e10a9c79b9e"],
-
-Cell[BoxData[
- RowBox[{"MakeMutable", "[", "obj", "]"}]], "Output",
- CellLabel->"Out[104]=",ExpressionUUID->"88ddb57a-ae6c-422b-9f51-779d2e29bc87"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"myMat", "=", 
-   RowBox[{"RandomReal", "[", 
-    RowBox[{
-     RowBox[{"{", "}"}], ",", " ", 
-     RowBox[{"{", 
-      RowBox[{"100", ",", " ", "100"}], "}"}]}], "]"}]}], ";"}]], "Input",
- CellLabel->"In[1]:=",ExpressionUUID->"2bd70326-72a6-4de5-a24f-45326a0b009c"],
-
-Cell[BoxData[
- RowBox[{"<<", "BTools`All`"}]], "Input",
- CellLabel->"In[9]:=",ExpressionUUID->"14bf8914-841e-43bc-9f33-c85bee9ebfdd"],
-
-Cell[BoxData[
- RowBox[{"ContextRemove", "[", "\"\<Props`\>\"", "]"}]], "Input",
- CellLabel->"In[10]:=",ExpressionUUID->"2c3cd1b4-715a-44e5-9c34-c2e969fd7371"],
-
-Cell[BoxData[
- RowBox[{"Get", "[", 
-  "\"\<https://github.com/b3m2a1/mathematica-tools/raw/master/Props.m\>\"", 
-  "]"}]], "Input",
- CellLabel->"In[11]:=",ExpressionUUID->"5f7dc3ee-38a9-485f-a66c-9b3045e4f049"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"cachedCompute", "[", 
-   RowBox[{"m_", ",", " ", "p_", ",", " ", "fn_"}], "]"}], ":=", 
-  "\[IndentingNewLine]", 
-  RowBox[{"Replace", "[", 
-   RowBox[{
-    RowBox[{"PropVal", "[", 
-     RowBox[{"m", ",", " ", "p"}], "]"}], ",", " ", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"Missing", "[", 
-      RowBox[{"\"\<PropertyAbsent\>\"", ",", " ", "p"}], "]"}], 
-     "\[RuleDelayed]", "\[IndentingNewLine]", 
-     RowBox[{"With", "[", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"val", "=", 
-         RowBox[{"fn", "[", "m", "]"}]}], "}"}], ",", " ", 
-       "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"SetProp", "[", 
-         RowBox[{"m", ",", " ", 
-          RowBox[{"p", "\[Rule]", "val"}]}], "]"}], ";", 
-        "\[IndentingNewLine]", "val"}]}], "\[IndentingNewLine]", "]"}]}]}], 
-   "\[IndentingNewLine]", "]"}]}]], "Input",
- CellLabel->"In[19]:=",ExpressionUUID->"37aaf91c-1afb-49d7-8ae9-e8cb7266dc34"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Module", "[", 
-   RowBox[{
-    RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
-    RowBox[{"(*", " ", 
-     RowBox[{
-     "I", "  ", "do", " ", "this", " ", "to", " ", "avoid", " ", 
-      "$HistoryLength"}], " ", "*)"}], "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"m1", "=", 
-      RowBox[{"MemoryInUse", "[", "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"myMat", "=", 
-      RowBox[{"RandomReal", "[", 
-       RowBox[{
-        RowBox[{"{", "}"}], ",", " ", 
-        RowBox[{"{", 
-         RowBox[{"100", ",", " ", "100"}], "}"}]}], "]"}]}], ";", 
-     "\[IndentingNewLine]", "m1"}]}], "\[IndentingNewLine]", "]"}], 
-  ";"}]], "Input",
- CellLabel->"In[66]:=",ExpressionUUID->"ae4e9b13-6820-4cf2-85a9-c8d719858e24"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"t1", "=", 
-   RowBox[{
-    RowBox[{"RepeatedTiming", "[", 
-     RowBox[{"cachedCompute", "[", 
-      RowBox[{"myMat", ",", " ", "\"\<Inverse\>\"", ",", " ", "Inverse"}], 
-      "]"}], "]"}], "[", 
-    RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"t2", "=", 
-   RowBox[{
-    RowBox[{"RepeatedTiming", "[", 
-     RowBox[{"Inverse", "[", "myMat", "]"}], "]"}], "[", 
-    RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"m2", "=", 
-   RowBox[{"MemoryInUse", "[", "]"}]}], ";"}]}], "Input",
- CellLabel->"In[67]:=",ExpressionUUID->"5c499974-52f6-4287-b4c7-534c4ff3d782"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"t2", "/", "t1"}]], "Input",
- CellLabel->"In[70]:=",ExpressionUUID->"99a7fdc4-78ba-406b-9240-fac26fc378a4"],
-
-Cell[BoxData["54.5590944710491659201`1.6989700043360187"], "Output",
+ RowBox[{"obj", "=", 
+  RowBox[{"testObj", "@", 
+   RowBox[{"<|", "|>"}]}]}]], "Input",
  CellLabel->
-  "Out[70]=",ExpressionUUID->"0694ff70-74b0-42c8-ad88-d8bc01522f07"]
+  "In[482]:=",ExpressionUUID->"906ebbb3-a7a7-4889-a6ae-cd54895592b6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["testObj",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            GridBox[{{
+               TagBox["\"-- Object --\"", "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            GridBox[{{
+               TagBox["\"-- Object --\"", "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  $CellContext`testObj[
+   Association[]],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellLabel->"Out[482]=",ExpressionUUID->"59d87980-2ba3-41b2-a0fb-472cff5f9241"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"m2", "-", "m1"}]], "Input",
- CellLabel->"In[71]:=",ExpressionUUID->"f678e575-2921-4efe-a77a-00cd64113c2b"],
-
-Cell[BoxData["167088"], "Output",
- CellLabel->
-  "Out[71]=",ExpressionUUID->"390a3281-188f-4bb7-aa46-a3fb58fc275c"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"Clear", "@", "myMat"}]], "Input",
- CellLabel->"In[72]:=",ExpressionUUID->"9e3a2011-a9f0-476e-8840-ac174f3675ae"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
  RowBox[{
-  RowBox[{"MemoryInUse", "[", "]"}], "-", "m1"}]], "Input",
- CellLabel->"In[73]:=",ExpressionUUID->"713402f7-c324-4cab-83a7-ee4e1234322a"],
+  RowBox[{"obj", "[", "\"\<Name\>\"", "]"}], "=", 
+  "\"\<My object\>\""}]], \
+"Input",ExpressionUUID->"21ef5d5a-eff5-406d-ae1a-2bdb7d7bae8a"],
 
-Cell[BoxData["10480"], "Output",
- CellLabel->
-  "Out[73]=",ExpressionUUID->"559d74e5-103c-4290-b80a-2aa33d98452f"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Props`Package`keys", "[", "]"}]], "Input",
- CellLabel->"In[38]:=",ExpressionUUID->"ff72c9cf-a4e0-4cca-842f-2ba89b7b5e59"],
-
-Cell[BoxData[
- TemplateBox[{
-  "Language`ExpressionStore","getKeys",
-   "\"-- Message text not found -- \
-(\\!\\(\\*RowBox[{\\\"\\\\\\\"getKeys\\\\\\\"\\\", \\\"[\\\", \\\"]\\\"}]\\))\
-\"",2,38,2,28022665884578591957,"Local","Language`ExpressionStore"},
-  "MessageTemplate2"]], "Message", "MSG",
- CellLabel->
-  "During evaluation of \
-In[38]:=",ExpressionUUID->"721004e3-ce42-4d5d-a89a-47c279fedf53"],
-
-Cell[BoxData["$Failed"], "Output",
- CellLabel->
-  "Out[38]=",ExpressionUUID->"73c449e4-ab3a-4893-870b-e5181d136f40"]
+Cell[BoxData["2"], "Output",
+ CellLabel->"Out[483]=",ExpressionUUID->"036bc30c-4b97-49a5-b1de-cb6b5260be0d"]
 }, Open  ]]
 },
 WindowSize->{808, 755},
