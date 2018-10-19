@@ -231,8 +231,11 @@ HashTableKeys[HashTable[ht_System`Utilities`HashTable]]:=
 
 
 
-HashTableMapAt[f_, h:HashTable[ht_System`Utilities`HashTable], s__]:=
-  (HashTableMapAt[f, ht, s]; h);
+HashTableMapAt[f_, h:HashTable[ht_System`Utilities`HashTable], s_]:=
+  Scan[
+    System`Utilities`HashTableMapAt[ht, #, f]&,
+    Flatten@{s}
+    ]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -578,7 +581,7 @@ ht_HashTable?HashTableQ["Clone"[]]:=
 
 
 
-ht_HashTable?HashTableQ["Mutate"[fn_, k__]]:=
+ht_HashTable?HashTableQ["MapAt"[fn_, k__]]:=
   HashTableMapAt[fn, ht, k];
 
 

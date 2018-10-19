@@ -473,19 +473,22 @@ Cell["\[LeftCeiling]MapAt\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"HashTableMapAt", "[", 
-    RowBox[{"f_", ",", " ", 
-     RowBox[{"h", ":", 
-      RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}]}], ",",
-      " ", "s__"}], "]"}], ":=", "\n", "\t", 
-   RowBox[{"(", 
+  RowBox[{"HashTableMapAt", "[", 
+   RowBox[{"f_", ",", " ", 
+    RowBox[{"h", ":", 
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}]}], ",", 
+    " ", "s_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"Scan", "[", "\n", "\t\t", 
+   RowBox[{
     RowBox[{
-     RowBox[{"HashTableMapAt", "[", 
-      RowBox[{"f", ",", " ", "ht", ",", " ", "s"}], "]"}], ";", " ", "h"}], 
-    ")"}]}], ";"}]], \
+     RowBox[{"System`Utilities`HashTableMapAt", "[", 
+      RowBox[{"ht", ",", " ", "#", ",", " ", "f"}], "]"}], "&"}], ",", "\n", 
+    "\t\t", 
+    RowBox[{"Flatten", "@", 
+     RowBox[{"{", "s", "}"}]}]}], "\n", "\t\t", 
+   "]"}]}]], \
 "CodeInput",ExpressionUUID->"e13b8fd7-efeb-4f68-a054-807cbea1371a"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1157,7 +1160,7 @@ Cell[BoxData[
   RowBox[{
    RowBox[{
     RowBox[{"ht_HashTable", "?", "HashTableQ"}], "[", 
-    RowBox[{"\"\<Mutate\>\"", "[", 
+    RowBox[{"\"\<MapAt\>\"", "[", 
      RowBox[{"fn_", ",", " ", "k__"}], "]"}], "]"}], ":=", "\n", "\t", 
    RowBox[{"HashTableMapAt", "[", 
     RowBox[{"fn", ",", " ", "ht", ",", " ", "k"}], "]"}]}], 
@@ -1211,7 +1214,7 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"b37e21aa-6f87-4098-8322-2a3b849f6317"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1722,6 +1725,19 @@ Cell[BoxData[
    RowBox[{"1", "\[Rule]", "3"}]}], "\[RightAssociation]"}]], "Output",
  CellLabel->
   "Out[40]=",ExpressionUUID->"d1280c34-5a25-4e2d-a652-d4c5e126ac85"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ht", "[", "\"\<sampleKey\>\"", "]"}], "=", 
+  RowBox[{"RandomReal", "[", "]"}]}]], "Input",
+ CellLabel->"In[41]:=",ExpressionUUID->"704330c5-eded-4c33-aab7-383334510c0e"],
+
+Cell[BoxData["0.7515943459993164`"], "Output",
+ CellLabel->
+  "Out[41]=",ExpressionUUID->"bd73ef1a-93f8-4915-a507-c60dc420d2a7"]
 }, Open  ]]
 },
 WindowSize->{808, 755},
