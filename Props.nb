@@ -12,12 +12,16 @@ Cell[BoxData[
   ";"}]], "InputSection",ExpressionUUID->"77b270fa-e0d7-48bf-bf97-\
 3e4de5826436"],
 
-Cell[BoxData[
+Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"MakeMutable", "::", "usage"}], "=", 
-   "\"\<Makes a Head mutable\>\""}], 
-  ";"}]], "CodeInput",ExpressionUUID->"8744e6f7-d723-4c76-bbaf-78b1eaca4b47"],
+   "\"\<Makes a Head mutable\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"MakeObject", "::", "usage"}], "=", 
+   "\"\<Makes a Head an Object\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"8744e6f7-d723-4c76-bbaf-78b1eaca4b47"],
 
 Cell[BoxData[{
  RowBox[{
@@ -345,6 +349,11 @@ Cell[CellGroupData[{
 Cell["\[LeftCeiling]Mutability\[RightFloor]", "CodeSubsection",
  Evaluatable->True,ExpressionUUID->"67bea640-1687-4c0a-97bd-30cef48d31fa"],
 
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]MakeMutable\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"f576826f-fb08-4d5e-8b85-5787faa56015"],
+
 Cell[BoxData[
  RowBox[{
   RowBox[{"MakeMutable", "[", "head_Symbol", "]"}], ":=", "\n", "\t", 
@@ -434,9 +443,43 @@ Cell[BoxData[
         RowBox[{"{", 
          RowBox[{"e", "=", "s"}], "}"}], ",", " ", 
         RowBox[{"Unset", "[", 
-         RowBox[{"e", "[", "k", "]"}], "]"}]}], "]"}]}], ";"}]}], "\n", 
+         RowBox[{"e", "[", "k", "]"}], "]"}]}], "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"mutationHandler", "[", "___", "]"}], ":=", "\n", "\t\t\t", 
+      "Language`MutationFallthrough"}], ";", "\n", "\t\t", 
+     RowBox[{"Language`SetMutationHandler", "[", 
+      RowBox[{"head", ",", " ", "mutationHandler"}], "]"}], ";"}]}], "\n", 
    "\t\t", "]"}]}]], \
 "CodeInput",ExpressionUUID->"d981367b-ddec-4002-809e-04e1a11bcaf0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]MakeObject\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"01cc0913-18d1-417e-ab10-77bc547f8e11"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MakeObject", "[", "head_Symbol", "]"}], ":=", "\n", "\t", 
+  RowBox[{"(", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"MakeMutable", "[", "head", "]"}], ";", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"e", ":", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"head", "[", "___", "]"}], "?", 
+        "System`Private`HoldNotValidQ"}], ")"}]}], ":=", "\n", "\t\t\t", 
+     RowBox[{"(", "\n", "\t\t\t\t", 
+      RowBox[{
+       RowBox[{"System`Private`HoldSetValid", "[", "e", "]"}], ";", "\n", 
+       "\t\t\t\t", 
+       RowBox[{
+        RowBox[{"e", "[", "\"\<Valid\>\"", "]"}], "=", "True"}], ";"}], "\n", 
+      "\t\t\t\t", ")"}]}]}], "\n", "\t\t", 
+   ")"}]}]], \
+"CodeInput",ExpressionUUID->"644cdc44-611f-41c2-ba7c-6ea75064f70d"]
+}, Open  ]]
 }, Open  ]],
 
 Cell[BoxData[
@@ -454,6 +497,26 @@ ca5480e08e95"]
 
 Cell["", "SectionSeparator",ExpressionUUID->"1d01a74e-e48e-4723-bf81-\
 de3e459c540d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Names", "[", "\"\<System`Private`*Valid*\>\"", "]"}]], "Input",
+ CellLabel->
+  "In[108]:=",ExpressionUUID->"3e1b1324-84c9-41bc-b3e8-28c3f4a607bb"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"System`Private`HoldNotValidQ\"\>", 
+   ",", "\<\"System`Private`HoldSetValid\"\>", 
+   ",", "\<\"System`Private`HoldValidQ\"\>", 
+   ",", "\<\"System`Private`MakeValidRoot\"\>", 
+   ",", "\<\"System`Private`NotValidQ\"\>", 
+   ",", "\<\"System`Private`SetValid\"\>", 
+   ",", "\<\"System`Private`ValidMeijerGQ\"\>", 
+   ",", "\<\"System`Private`ValidQ\"\>"}], "}"}]], "Output",
+ CellLabel->"Out[108]=",ExpressionUUID->"40920b37-982c-470c-9dc3-d999e03ee6e8"]
+}, Open  ]],
 
 Cell[CellGroupData[{
 

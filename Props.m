@@ -6,6 +6,7 @@ BeginPackage["Props`"];
 
 
 MakeMutable::usage="Makes a Head mutable";
+MakeObject::usage="Makes a Head an Object";
 
 
 SetProp::usage="SetProperty but works on anything";
@@ -169,6 +170,11 @@ RemoveProp[x_][p_]:=
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*MakeMutable*)
+
+
+
 MakeMutable[head_Symbol]:=
   Module[{mutationHandler, objQ},
     mutationHandler~SetAttributes~HoldAllComplete;
@@ -186,7 +192,26 @@ MakeMutable[head_Symbol]:=
       With[{e=s}, h[e[k], v]];
     mutationHandler[Unset[s_Symbol?objQ[k_], v_]]:=
       With[{e=s}, Unset[e[k]]];
+    mutationHandler[___]:=
+      Language`MutationFallthrough;
+    Language`SetMutationHandler[head, mutationHandler];
     ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*MakeObject*)
+
+
+
+MakeObject[head_Symbol]:=
+  (
+    MakeMutable[head];
+    e:(head[___]?System`Private`HoldNotValidQ):=
+      (
+        System`Private`HoldSetValid[e];
+        e["Valid"]=True;
+        )
+    )
 
 
 End[];
