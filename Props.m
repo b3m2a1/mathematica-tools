@@ -5,6 +5,9 @@
 BeginPackage["Props`"];
 
 
+MakeMutable::usage="Makes a Head mutable";
+
+
 SetProp::usage="SetProperty but works on anything";
 PropVal::usage="SetProperty but works on anything";
 RemoveProp::usage="SetProperty but works on anything";
@@ -159,6 +162,31 @@ PropVal[x_][p_]:=
   PropVal[x, p];
 RemoveProp[x_][p_]:=
   RemoveProp[x, p];
+
+
+(* ::Subsection:: *)
+(*Mutability*)
+
+
+
+MakeMutable[head_Symbol]:=
+  Module[{mutationHandler, objQ},
+    mutationHandler~SetAttributes~HoldAllComplete;
+    objQ~SetAttributes~HoldAllComplete;
+    objQ[s_Symbol]:=Head[Unevaluated@s]===head;
+    head/:(e:head[___])[k_]:=
+      PropVal[e, k];
+    head/:Set[(e:head[___])[k_], v_]:=
+      SetProp[e, k->v];
+    head/:SetDelayed[(e:head[___])[k_], v_]:=
+      SetProp[e, k:>v];
+    head/:Unset[(e:head[___])[k_]]:=
+      RemoveProp[e, k];
+    mutationHandler[(h:Set|SetDelayed)[s_Symbol?objQ[k_], v_]]:=
+      With[{e=s}, h[e[k], v]];
+    mutationHandler[Unset[s_Symbol?objQ[k_], v_]]:=
+      With[{e=s}, Unset[e[k]]];
+    ]
 
 
 End[];
