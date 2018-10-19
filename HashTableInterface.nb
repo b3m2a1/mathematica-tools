@@ -70,12 +70,16 @@ Cell[BoxData[{
    RowBox[{"HashTableValues", "::", "usage"}], "=", "\"\<\>\""}], 
   ";"}]}], "CodeInput",ExpressionUUID->"37eae6bb-587f-4263-931f-7f74892e77ef"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableFromAssociation", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Creates a HashTable from an Association\>\""}], ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"HashTableKeyCopy", "::", "usage"}], "=", "\n", "\t", 
    "\"\<Copies values from one HashTable to another by key\>\""}], 
-  ";"}]], "CodeInput",ExpressionUUID->"3cc41ed5-a577-4aa5-afc5-92d10407c2aa"],
+  ";"}]}], "CodeInput",ExpressionUUID->"c42af108-ddbc-4d35-8cd2-6c210ba06940"],
 
 Cell[BoxData[
  RowBox[{
@@ -659,6 +663,60 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["\[LeftCeiling]FromAssociation\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"5c810c07-192d-4aff-ae61-e4722aebf307"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HashTableFromAssociation", "[", "\n", "\t", 
+   RowBox[{"ht_System`Utilities`HashTable", ",", "\n", "\t", 
+    RowBox[{"a_Association", "?", "AssociationQ"}]}], "\n", "\t", "]"}], ":=",
+   "\n", "\t", 
+  RowBox[{"KeyValueMap", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"System`Utilities`HashTableSet", "[", 
+      RowBox[{"ht", ",", " ", "##"}], "]"}], "&"}], ",", "\n", "\t\t", "a"}], 
+   "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"1849a1d9-790c-4f5f-90de-6df1eb88d04e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HashTableFromAssociation", "[", "\n", "\t", 
+   RowBox[{"a_Association", "?", "AssociationQ"}], "\n", "\t", "]"}], ":=", 
+  "\n", "\t", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"ht", "=", 
+      RowBox[{"System`Utilities`HashTable", "[", "]"}]}], "}"}], ",", "\n", 
+    "\t\t", 
+    RowBox[{"KeyValueMap", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"System`Utilities`HashTableAdd", "[", 
+        RowBox[{"ht", ",", " ", "##"}], "]"}], "&"}], ",", "\n", "\t\t\t", 
+      "a"}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"f8fdcae1-0ec7-4ebe-8f93-788431cdfb7d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableFromAssociation", "[", "\n", "\t", 
+    RowBox[{
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+     " ", "\n", "\t", 
+     RowBox[{"a_Association", "?", "AssociationQ"}]}], "\n", "\t", "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"HashTableFromAssociation", "[", 
+    RowBox[{"ht", ",", " ", "a"}], "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"775e59d8-ab44-480f-bf07-ab4cf8b7adbc"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["\[LeftCeiling]KeySelect\[RightFloor]", "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"bb3ae094-321b-47f5-92cf-0b32cc2099a8"],
 
@@ -1067,7 +1125,7 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"10a781e0-9dad-4113-bea0-ea1761201cd0"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1528,6 +1586,12 @@ Cell[BoxData[
  RowBox[{"<<", "HashTableInterface`"}]], "Input",
  CellLabel->"In[18]:=",ExpressionUUID->"d0886ef4-41ba-43a8-954b-96748130adc2"],
 
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  "\"\<https://github.com/b3m2a1/mathematica-tools/raw/master/\
+HashTableInterface.m\>\"", 
+  "]"}]], "Input",ExpressionUUID->"60d8b325-cb58-4073-bbc1-923cdf349da1"],
+
 Cell[CellGroupData[{
 
 Cell[BoxData[
@@ -1661,7 +1725,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{808, 755},
-WindowMargins->{{163, Automatic}, {Automatic, 0}},
+WindowMargins->{{Automatic, 274}, {Automatic, 0}},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 

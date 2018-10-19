@@ -24,6 +24,8 @@ HashTableToAssociation::usage="";
 HashTableValues::usage="";
 
 
+HashTableFromAssociation::usage=
+  "Creates a HashTable from an Association";
 HashTableKeyCopy::usage=
   "Copies values from one HashTable to another by key";
 
@@ -328,6 +330,39 @@ HashTableKeyCopy[
   HashTable[ht2_System`Utilities`HashTable], 
   k_]:=
   HashTableKeyCopy[ht, ht2, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*FromAssociation*)
+
+
+
+HashTableFromAssociation[
+  ht_System`Utilities`HashTable,
+  a_Association?AssociationQ
+  ]:=
+  KeyValueMap[
+    System`Utilities`HashTableSet[ht, ##]&,
+    a
+    ]
+
+
+HashTableFromAssociation[
+  a_Association?AssociationQ
+  ]:=
+  Module[{ht=System`Utilities`HashTable[]},
+    KeyValueMap[
+      System`Utilities`HashTableAdd[ht, ##]&,
+      a
+      ]
+    ]
+
+
+HashTableFromAssociation[
+  HashTable[ht_System`Utilities`HashTable], 
+  a_Association?AssociationQ
+  ]:=
+  HashTableFromAssociation[ht, a];
 
 
 (* ::Subsubsubsection::Closed:: *)
