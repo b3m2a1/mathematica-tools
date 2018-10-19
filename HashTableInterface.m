@@ -24,13 +24,55 @@ HashTableToAssociation::usage="";
 HashTableValues::usage="";
 
 
+HashTableKeyCopy::usage=
+  "Copies values from one HashTable to another by key";
+
+
+HashTableLookup::usage=
+  "Implementation of Lookup for HashTable objects";
+
+
+HashTableKeyValueMap::usage=
+  "Implementation of AssociateTo for HashTable objects";
+HashTableAssociateTo::usage=
+  "Implementation of AssociateTo for HashTable objects";
+HashTableKeyDropFrom::usage=
+  "Implementation of KeyDropFrom for HashTable objects";
+HashTableKeySelect::usage=
+  "Implementation of KeySelect for HashTable objects";
+HashTableKeyDrop::usage=
+  "Implementation of KeyDrop for HashTable objects";
+HashTableKeyTake::usage=
+  "Implementation of KeyTake for HashTable objects";
+
+
+HashTableSelect::usage=
+  "Implementation of Select for HashTable objects";
+HashTableMapMap::usage=
+  "Implementation of Map for HashTable objects";
+HashTableJoin::usage=
+  "Implementation of Join for HashTable objects";
+
+
+HashTableMap::usage=
+  "Implementation of AssociationMap for HashTable objects";
+HashTableThread::usage=
+  "Implementation of AssociationThread for HashTable objects";
+
+
+HashTableMMap::usage=
+  "Mutating Map for HashTable objects";
+HashTableMJoin::usage=
+  "Mutating Join for HashTable objects";
+
+
 EndPackage[];
 
 
 Begin["`Private`"];
 
 
-HashTable//ClearAll;
+HashTable//Clear;
 
 
 (* ::Subsubsection::Closed:: *)
@@ -81,12 +123,38 @@ Format[ht_HashTable?HashTableQ]:=
 
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*Add*)
+
+
+
 HashTableAdd[HashTable[ht_System`Utilities`HashTable], k_, v_]:=
   System`Utilities`HashTableAdd[ht, k, v];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Clone*)
+
+
+
 HashTableClone[HashTable[ht_System`Utilities`HashTable]]:=
   HashTable@System`Utilities`HashTableClone[ht];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*ContainsQ*)
+
+
+
 HashTableContainsQ[HashTable[ht_System`Utilities`HashTable], k_]:=
   System`Utilities`HashTableContainsQ[ht, k];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Get*)
+
+
+
 HashTableGet[HashTable[ht_System`Utilities`HashTable], k_]:=
   Quiet[
     Check[
@@ -95,51 +163,570 @@ HashTableGet[HashTable[ht_System`Utilities`HashTable], k_]:=
       System`Utilities`HashTableGet::noget
       ],
     System`Utilities`HashTableGet::noget
-    ]
+    ];
+HashTableGet[HashTable[ht_System`Utilities`HashTable], k_, def_]:=
+  Quiet[
+    Check[
+      System`Utilities`HashTableGet[ht, k],
+      def,
+      System`Utilities`HashTableGet::noget
+      ],
+    System`Utilities`HashTableGet::noget
+    ];
+HashTableGet~SetAttributes~HoldFirst;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Lookup*)
+
+
+
+HashTableVGet[HashTable[ht_System`Utilities`HashTable], k_]:=
+  Quiet[
+    Check[
+      System`Utilities`HashTableGet[ht, #],
+      Missing["KeyAbsent", #],
+      System`Utilities`HashTableGet::noget
+      ]&/@k,
+    System`Utilities`HashTableGet::noget
+    ];
+HashTableVGet[HashTable[ht_System`Utilities`HashTable], k_, def_]:=
+  Quiet[
+    Check[
+      System`Utilities`HashTableGet[ht, #],
+      def,
+      System`Utilities`HashTableGet::noget
+      ]&/@k,
+    System`Utilities`HashTableGet::noget
+    ];
+HashTableVGet~SetAttributes~HoldRest
+
+
+HashTableLookup[h:HashTable[_System`Utilities`HashTable], k_]:=
+  If[ListQ@k, 
+    HashTableVGet[h, k],
+    HashTableGet[h, k]
+    ];
+HashTableLookup[h:HashTable[_System`Utilities`HashTable], k_, def_]:=
+  If[ListQ@k, 
+    HashTableVGet[h, k, def],
+    HashTableGet[h, k, def]
+    ];
+HashTableLookup~SetAttributes~HoldRest
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Keys*)
+
+
+
 HashTableKeys[HashTable[ht_System`Utilities`HashTable]]:=
   System`Utilities`HashTableKeys[ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MapAt*)
+
+
+
 HashTableMapAt[f_, h:HashTable[ht_System`Utilities`HashTable], s__]:=
   (HashTableMapAt[f, ht, s]; h);
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Remove*)
+
+
+
 HashTableRemove[HashTable[ht_System`Utilities`HashTable], k_]:=
   Quiet[HashTableRemove[ht, k], System`Utilities`HashTableRemove::norem];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Set*)
+
+
+
 HashTableSet[HashTable[ht_System`Utilities`HashTable], k_, v_]:=
   (
     System`Utilities`HashTableSet[ht, k, v];
     v
     );
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*ToAssociation*)
+
+
+
 HashTableToAssociation[HashTable[ht_System`Utilities`HashTable]]:=
   System`Utilities`HashTableToAssociation[ht];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Values*)
+
+
+
 HashTableValues[HashTable[ht_System`Utilities`HashTable]]:=
   System`Utilities`HashTableValues[ht];
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*KeyValueMap*)
+
+
+
+HashTableKeyValueMap[fn_, HashTable[ht_System`Utilities`HashTable]]:=
+  Map[
+    fn[#, System`Utilities`HashTableGet[ht, #]]&, 
+    System`Utilities`HashTableKeys[ht]
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*AssociateTo*)
+
+
+
+HashTableAssociateTo[HashTable[ht_System`Utilities`HashTable], k_]:=
+  KeyValueMap[
+    System`Utilities`HashTableSet[ht, ##]&,
+    Association[k]
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyDropFrom*)
+
+
+
+HashTableKeyDropFrom[HashTable[ht_System`Utilities`HashTable], k_]:=
+  Scan[System`Utilities`HashTableRemove[ht, #]&, Flatten@{k}];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyCopy*)
+
+
+
+HashTableKeyCopy[
+  ht_System`Utilities`HashTable, 
+  ht2_System`Utilities`HashTable, 
+  k_
+  ]:=
+  Scan[
+    System`Utilities`HashTableAdd[ht2, #, 
+      System`Utilities`HashTableGet[ht, #]
+      ]&,
+    k
+    ]
+
+
+HashTableKeyCopy[
+  HashTable[ht_System`Utilities`HashTable], 
+  HashTable[ht2_System`Utilities`HashTable], 
+  k_]:=
+  HashTableKeyCopy[ht, ht2, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeySelect*)
+
+
+
+HashTableKeySelect[h:HashTable[ht_System`Utilities`HashTable], test_]:=
+  Module[{ht2=HashTable[]},
+    HashTableKeyCopy[h, ht2, Select[System`Utilities`HashTableKeys[ht], test]];
+    ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyTake*)
+
+
+
+HashTableKeyTake[h:HashTable[ht_System`Utilities`HashTable], k_]:=
+  Module[{ht2=HashTable[]},
+    HashTableKeyCopy[h, ht2, 
+      Intersection[System`Utilities`HashTableKeys[ht], Flatten@{k}]
+      ];
+    ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyDrop*)
+
+
+
+HashTableKeyDrop[h:HashTable[ht_System`Utilities`HashTable], k_]:=
+  Module[{ht2=HashTable[]},
+    HashTableKeyCopy[h, ht2, 
+      Complement[System`Utilities`HashTableKeys[ht], Flatten@{k}]
+      ];
+    ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyIntersection*)
+
+
+
+HashTableKeyIntersection[
+  h:{HashTable[_System`Utilities`HashTable]..}
+  ]:=
+  Module[{ht3=HashTable[]},
+    HashTableKeyCopy[h[[1]], ht3, 
+      Apply[Intersection, Keys/@h]
+      ];
+    ht3
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyComplement*)
+
+
+
+HashTableKeyComplement[
+  h:{HashTable[_System`Utilities`HashTable]..}
+  ]:=
+  Module[{ht3=HashTable[], klist},
+    klist=Keys/@h;
+    Do[
+      HashTableKeyCopy[h[[i]], ht3, 
+        Complement[klist[[i]], Delete[klist, i]]
+        ], 
+      {i, Length@klist}
+      ];
+    ht3
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Thread*)
+
+
+
+HashTableThread[keys_, vals_]:=
+  Module[{ht=System`Utilities`HashTable[]},
+    MapThread[
+      System`Utilities`HashTableAdd[ht, ##]&,
+      {
+        keys,
+        vals
+        }
+      ];
+    HashTable@ht
+    ];
+HashTableThread[keys_->vals_]:=
+  HashTableThread[keys, vals];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Map*)
+
+
+
+HashTableMap[fn_, HashTable[h_System`Utilities`HashTable]]:=
+  Module[{ht=System`Utilities`HashTable[]},
+    Scan[
+      System`Utilities`HashTableAdd[ht, 
+        Sequence@@fn[#->System`Utilities`HashTableGet[h, #]]
+        ]&,
+      System`Utilities`HashTableKeys[h]
+      ];
+    HashTable@ht
+    ];
+HashTableMap[fn_, x_]:=
+  Module[{ht=System`Utilities`HashTable[]},
+    Scan[
+      System`Utilities`HashTableAdd[ht, #, fn[#]]&,
+      x
+      ];
+    HashTable@ht
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MapMap*)
+
+
+
+HashTableMapMap[fn_, h:HashTable[ht_System`Utilities`HashTable]]:=
+  Module[{ht2=System`Utilities`HashTable[]},
+    Scan[
+      System`Utilities`HashTableAdd[ht2, #,
+        fn@System`Utilities`HashTableGet[h, #] 
+        ]&, 
+      System`Utilities`HashTableKeys[ht]
+      ];
+    HashTable@ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Select*)
+
+
+
+HashTableSelect[h:HashTable[ht_System`Utilities`HashTable], fn_]:=
+  Module[{ht2=System`Utilities`HashTable[], res},
+    Scan[
+      If[fn[res=System`Utilities`HashTableGet[h, #]],
+        System`Utilities`HashTableAdd[ht2, #, res]
+        ]&, 
+      System`Utilities`HashTableKeys[ht]
+      ];
+    HashTable@ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Join*)
+
+
+
+HashTableJoin[
+  h1:HashTable[ht_System`Utilities`HashTable], 
+  h__HashTable
+  ]:=
+  Module[{ht2=HashTableClone[h1]},
+    Scan[HashTableKeyCopy[#, ht2]&, {h}];
+    HashTable@ht2
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MMap*)
+
+
+
+HashTableMMap[fn_, h:HashTable[ht_System`Utilities`HashTable]]:=
+  Scan[
+    System`Utilities`HashTableSet[ht, #, fn@System`Utilities`HashTableGet[ht, #]]&,
+    System`Utilities`HashTableKeys[ht]
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MJoin*)
+
+
+
+HashTableMJoin[
+  h1:HashTable[ht_System`Utilities`HashTable], 
+  h__HashTable
+  ]:=
+  Scan[HashTableKeyCopy[#, h1]&, {h}]
+
+
 (* ::Subsubsection::Closed:: *)
-(*Overrides*)
+(*DownValues*)
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Clone*)
+
+
+
+ht_HashTable?HashTableQ["Clone"[]]:=
+  HashTableClone[ht];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MapAt*)
+
+
+
+ht_HashTable?HashTableQ["Mutate"[fn_, k__]]:=
+  HashTableMapAt[fn, ht, k];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MMap*)
+
+
+
+ht_HashTable?HashTableQ["Map"[fn_]]:=
+  HashTableMMap[fn, ht];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*MJoin*)
+
+
+
+ht_HashTable?HashTableQ["Join"[h__]]:=
+  HashTableMJoin[ht, h];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Get*)
 
 
 
 ht_HashTable?HashTableQ[k_]:=
   HashTableGet[ht, k]
-ht_HashTable?HashTableQ["Clone"[]]:=
-  HashTableClone[ht];
+
+
+(* ::Subsubsection::Closed:: *)
+(*UpValues*)
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Set*)
+
+
+
 HashTable/:
   Set[ht_HashTable?HashTableQ[k_], v_]:=
     HashTableSet[ht, k, v]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Unset*)
+
+
+
 HashTable/:
   Unset[ht_HashTable?HashTableQ[k_]]:=
     HashTableRemove[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Keys*)
+
+
+
 HashTable/:
   Keys[ht_HashTable?HashTableQ]:=
     HashTableKeys[ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Values*)
+
+
+
 HashTable/:
   Values[ht_HashTable?HashTableQ]:=
     HashTableValues[ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyExistsQ*)
+
+
+
 HashTable/:
   KeyExistsQ[ht_HashTable?HashTableQ, k_]:=
     HashTableContainsQ[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Normal*)
+
+
+
 HashTable/:
   (Normal|Association)[ht_HashTable?HashTableQ]:=
     HashTableToAssociation[ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Map*)
+
+
+
+HashTable/:
+  Map[fn_, ht_HashTable?HashTableQ]:=
+    HashTableMap[fn, ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Join*)
+
+
+
+HashTable/:
+  Join[ht__HashTable?HashTableQ]:=
+    HashTableJoin[ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyValueMap*)
+
+
+
+HashTable/:
+  KeyValueMap[fn_, ht_HashTable?HashTableQ]:=
+    HashTableKeyValueMap[fn, ht]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*AssociateTo*)
+
+
+
+HashTable/:
+  AssociateTo[ht_HashTable?HashTableQ, k_]:=
+    HashTableAssociateTo[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyDropFrom*)
+
+
+
+HashTable/:
+  KeyDropFrom[ht_HashTable?HashTableQ, k_]:=
+    HashTableKeyDropFrom[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeySelect*)
+
+
+
+HashTable/:
+  KeySelect[ht_HashTable?HashTableQ, k_]:=
+    HashTableKeySelect[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyTake*)
+
+
+
+HashTable/:
+  KeyTake[ht_HashTable?HashTableQ, k_]:=
+    HashTableKeyTake[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*KeyDrop*)
+
+
+
+HashTable/:
+  KeyDrop[ht_HashTable?HashTableQ, k_]:=
+    HashTableKeyDrop[ht, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*AssociationMap*)
+
+
+
+HashTable/:
+  AssociationMap[fn_, ht_HashTable?HashTableQ]:=
+    HashTableMap[fn, ht]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -162,6 +749,24 @@ HashTableMutationHandler[
   ]:=
   With[{ht=s},
     HashTableRemove[s, k]
+    ];
+HashTableMutationHandler[
+  AssociateTo[s_Symbol?htQ, k_]
+  ]:=
+  With[{ht=s},
+    HashTableAssociateTo[ht, k]
+    ];
+HashTableMutationHandler[
+  KeyDropFrom[s_Symbol?htQ, k_]
+  ]:=
+  With[{ht=s},
+    HashTableKeyDropFrom[ht, k]
+    ];
+HashTableMutationHandler[
+  AppendTo[s_Symbol?htQ, k_]
+  ]:=
+  With[{ht=s},
+    HashTableAssociateTo[ht, k]
     ];
 Language`SetMutationHandler[HashTable, HashTableMutationHandler];
 
