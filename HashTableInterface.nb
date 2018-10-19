@@ -1,0 +1,650 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["HashTableInterface", \
+"CodeSection",ExpressionUUID->"7e5eddf0-7009-45c2-9478-0b5dfc1ae235"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<HashTableInterface`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"3c82d297-dd00-4ad1-8f1e-\
+58c09cfa6f20"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTable", "::", "usage"}], "=", 
+   "\"\<Interface wrapper to a HashTable\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableQ", "::", "usage"}], "=", 
+   "\"\<Tests whether object is proper HashTable\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"b76684b5-65cf-4e86-ac6e-2542198fbb35"]\
+
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<`Package`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"61796a64-0cb6-4381-a34f-\
+1d9c4dd16b1d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableAdd", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableClone", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableContainsQ", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableGet", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableKeys", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableMapAt", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableRemove", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableSet", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableToAssociation", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableValues", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], \
+"CodeInput",ExpressionUUID->"37eae6bb-587f-4263-931f-7f74892e77ef"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"dcb677bf-0b5b-420d-8657-\
+73cd34cc788f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"5ac478d8-208d-4092-86ad-\
+66858c8a0200"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"HashTable", "//", "ClearAll"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"712d862d-2bd3-4acb-a7c2-b27ee296895e"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Constructor\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"2449d946-bbbb-428e-9530-0e80e909772b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTable", "[", "\n", "\t", 
+    RowBox[{
+    "ht_System`Utilities`HashTable", "?", "System`Utilities`HashTableQ"}], 
+    "\n", "\t", "]"}], "?", 
+   RowBox[{"(", "System`Private`HoldEntryQ", ")"}]}], ":=", "\n", "\t", 
+  RowBox[{"System`Private`HoldSetNoEntry", "@", 
+   RowBox[{"HashTable", "[", "ht", "]"}]}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"HashTable", "[", "a___", "]"}], "?", 
+    RowBox[{"(", "System`Private`HoldEntryQ", ")"}]}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"ass", "=", 
+       RowBox[{"Association", "[", "a", "]"}]}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"ht", "=", 
+          RowBox[{"System`Utilities`HashTable", "[", "]"}]}], "}"}], ",", 
+        "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"KeyValueMap", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"System`Utilities`HashTableAdd", "[", 
+             RowBox[{"ht", ",", " ", "##"}], "]"}], "&"}], ",", " ", "ass"}], 
+          "]"}], ";", "\n", "\t\t\t", 
+         RowBox[{"System`Private`HoldSetNoEntry", "@", 
+          RowBox[{"HashTable", "[", "ht", "]"}]}]}]}], "\n", "\t\t\t", "]"}], 
+      "/;", 
+      RowBox[{"AssociationQ", "@", "ass"}]}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"HashTableQ", "[", 
+   RowBox[{
+    RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], "?", 
+    "System`Private`HoldNoEntryQ"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+  "System`Utilities`HashTableQ", "@", 
+   "ht"}]}]}], \
+"CodeInput",ExpressionUUID->"6779e46c-f812-42a0-8a52-dfdc1f1c04dd"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Format\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"2b3e3809-6b5e-46fe-8c4f-361d42865a38"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Format", "[", 
+   RowBox[{"ht_HashTable", "?", "HashTableQ"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"RawBoxes", "@", "\n", "\t\t", 
+   RowBox[{"BoxForm`ArrangeSummaryBox", "[", "\n", "\t\t\t", 
+    RowBox[{
+    "\"\<HashTable\>\"", ",", "\n", "\t\t\t", "ht", ",", "\n", "\t\t\t", 
+     "None", ",", "\n", "\t\t\t", 
+     RowBox[{"{", "\n", "\t\t\t\t", 
+      RowBox[{"BoxForm`MakeSummaryItem", "[", "\n", "\t\t\t\t\t", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"\"\<Item Count: \>\"", ",", " ", 
+          RowBox[{"Length", "@", 
+           RowBox[{"Keys", "[", "ht", "]"}]}]}], "}"}], ",", "\n", 
+        "\t\t\t\t\t", "StandardForm"}], "\n", "\t\t\t\t\t", "]"}], "\n", 
+      "\t\t\t\t", "}"}], ",", "\n", "\t\t\t", 
+     RowBox[{"{", "\n", "\t\t\t\t", "}"}], ",", "\n", "\t\t\t", 
+     "StandardForm"}], "\n", "\t\t\t", 
+    "]"}]}]}]], \
+"CodeInput",ExpressionUUID->"780bc8cc-eef5-4703-b211-39351957873e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Package Functions\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"be6e3171-fa6d-45c3-ba5a-309dc4e29485"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableAdd", "[", 
+    RowBox[{
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+     " ", "k_", ",", " ", "v_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"System`Utilities`HashTableAdd", "[", 
+    RowBox[{"ht", ",", " ", "k", ",", " ", "v"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableClone", "[", 
+    RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"HashTable", "@", 
+    RowBox[{"System`Utilities`HashTableClone", "[", "ht", "]"}]}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableContainsQ", "[", 
+    RowBox[{
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+     " ", "k_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"System`Utilities`HashTableContainsQ", "[", 
+    RowBox[{"ht", ",", " ", "k"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"HashTableGet", "[", 
+   RowBox[{
+    RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+    " ", "k_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"Quiet", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"Check", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"System`Utilities`HashTableGet", "[", 
+       RowBox[{"ht", ",", " ", "k"}], "]"}], ",", "\n", "\t\t\t", 
+      RowBox[{"Missing", "[", 
+       RowBox[{"\"\<KeyAbsent\>\"", ",", " ", "k"}], "]"}], ",", "\n", 
+      "\t\t\t", 
+      RowBox[{"System`Utilities`HashTableGet", "::", "noget"}]}], "\n", 
+     "\t\t\t", "]"}], ",", "\n", "\t\t", 
+    RowBox[{"System`Utilities`HashTableGet", "::", "noget"}]}], "\n", "\t\t", 
+   "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"HashTableKeys", "[", 
+   RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], "]"}], ":=",
+   "\n", "\t", 
+  RowBox[{"System`Utilities`HashTableKeys", "[", "ht", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableMapAt", "[", 
+    RowBox[{"f_", ",", " ", 
+     RowBox[{"h", ":", 
+      RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}]}], ",",
+      " ", "s__"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"HashTableMapAt", "[", 
+      RowBox[{"f", ",", " ", "ht", ",", " ", "s"}], "]"}], ";", " ", "h"}], 
+    ")"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableRemove", "[", 
+    RowBox[{
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+     " ", "k_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Quiet", "[", 
+    RowBox[{
+     RowBox[{"HashTableRemove", "[", 
+      RowBox[{"ht", ",", " ", "k"}], "]"}], ",", " ", 
+     RowBox[{"System`Utilities`HashTableRemove", "::", "norem"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableSet", "[", 
+    RowBox[{
+     RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], ",", 
+     " ", "k_", ",", " ", "v_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"(", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"System`Utilities`HashTableSet", "[", 
+      RowBox[{"ht", ",", " ", "k", ",", " ", "v"}], "]"}], ";", "\n", "\t\t", 
+     "v"}], "\n", "\t\t", ")"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableToAssociation", "[", 
+    RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"System`Utilities`HashTableToAssociation", "[", "ht", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableValues", "[", 
+    RowBox[{"HashTable", "[", "ht_System`Utilities`HashTable", "]"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"System`Utilities`HashTableValues", "[", "ht", "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"972908df-5a69-44ed-a045-7c21019803a1"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Overrides\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"ca340bf0-ff70-4970-82d2-70a622a335cb"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ht_HashTable", "?", "HashTableQ"}], "[", "k_", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"HashTableGet", "[", 
+   RowBox[{"ht", ",", " ", "k"}], "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ht_HashTable", "?", "HashTableQ"}], "[", 
+    RowBox[{"\"\<Clone\>\"", "[", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"HashTableClone", "[", "ht", "]"}]}], ";"}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{"Set", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ht_HashTable", "?", "HashTableQ"}], "[", "k_", "]"}], ",", " ", 
+    "v_"}], "]"}], ":=", "\n", "\t\t", 
+  RowBox[{"HashTableSet", "[", 
+   RowBox[{"ht", ",", " ", "k", ",", " ", "v"}], "]"}]}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{"Unset", "[", 
+   RowBox[{
+    RowBox[{"ht_HashTable", "?", "HashTableQ"}], "[", "k_", "]"}], "]"}], ":=",
+   "\n", "\t\t", 
+  RowBox[{"HashTableRemove", "[", 
+   RowBox[{"ht", ",", " ", "k"}], "]"}]}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{"Keys", "[", 
+   RowBox[{"ht_HashTable", "?", "HashTableQ"}], "]"}], ":=", "\n", "\t\t", 
+  RowBox[{"HashTableKeys", "[", "ht", "]"}]}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{"Values", "[", 
+   RowBox[{"ht_HashTable", "?", "HashTableQ"}], "]"}], ":=", "\n", "\t\t", 
+  RowBox[{"HashTableValues", "[", "ht", "]"}]}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{"KeyExistsQ", "[", 
+   RowBox[{
+    RowBox[{"ht_HashTable", "?", "HashTableQ"}], ",", " ", "k_"}], "]"}], ":=",
+   "\n", "\t\t", 
+  RowBox[{"HashTableContainsQ", "[", 
+   RowBox[{"ht", ",", " ", "k"}], "]"}]}], "\n", 
+ RowBox[{"HashTable", "/:", "\n", "\t", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"Normal", "|", "Association"}], ")"}], "[", 
+   RowBox[{"ht_HashTable", "?", "HashTableQ"}], "]"}], ":=", "\n", "\t\t", 
+  RowBox[{
+  "HashTableToAssociation", "[", "ht", 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"d6b131d9-6e5c-411d-83fd-9551ef899419"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Mutation\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"7a4fa2b0-aea4-48eb-91a5-3dbf9de737a6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"htQ", "[", "s_Symbol", "]"}], ":=", "\n", "\t", 
+   RowBox[{"MatchQ", "[", 
+    RowBox[{
+     RowBox[{"OwnValues", "[", "s", "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"_", "\[RuleDelayed]", 
+       RowBox[{"_HashTable", "?", "HashTableQ"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{"htQ", "~", "SetAttributes", "~", "HoldFirst"}], "\n", 
+ RowBox[{"HashTableMutationHandler", "~", "SetAttributes", "~", 
+  "HoldAllComplete"}], "\n", 
+ RowBox[{
+  RowBox[{"HashTableMutationHandler", "[", "\n", "\t", 
+   RowBox[{"Set", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "htQ"}], "[", "k_", "]"}], ",", " ", "v_"}], 
+    "]"}], "\n", "\t", "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"ht", "=", "s"}], "}"}], ",", "\n", "\t\t", 
+    RowBox[{"HashTableSet", "[", 
+     RowBox[{"ht", ",", " ", "k", ",", " ", "v"}], "]"}]}], "\n", "\t\t", 
+   "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HashTableMutationHandler", "[", "\n", "\t", 
+    RowBox[{"Unset", "[", 
+     RowBox[{
+      RowBox[{"s_Symbol", "?", "htQ"}], "[", "k_", "]"}], "]"}], "\n", "\t", 
+    "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"ht", "=", "s"}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{"HashTableRemove", "[", 
+      RowBox[{"s", ",", " ", "k"}], "]"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Language`SetMutationHandler", "[", 
+   RowBox[{"HashTable", ",", " ", "HashTableMutationHandler"}], "]"}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"918442fc-9dcf-4e05-a7bc-8bec46419e1d"]\
+
+}, Closed]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"1bcdff0b-858e-4540-a08f-\
+6bb534263927"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"b6de9972-e4a5-44b7-86c1-\
+24e48845ea92"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"8f500a54-32b0-486a-9dc2-\
+93d2ed0b030a"],
+
+Cell[BoxData[
+ RowBox[{"<<", "HashTableInterface`"}]], "Input",
+ CellLabel->
+  "In[576]:=",ExpressionUUID->"d0886ef4-41ba-43a8-954b-96748130adc2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ht", "=", 
+  RowBox[{"HashTable", "[", "]"}]}]], "Input",
+ CellLabel->
+  "In[602]:=",ExpressionUUID->"4b9db369-f716-4f34-8b1c-9b3bf5005a69"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["HashTable",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["0", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["0", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  HashTableInterface`HashTable[
+   System`Utilities`HashTable[1, {}]],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellLabel->"Out[602]=",ExpressionUUID->"a7eb9005-a524-476c-b228-2eaae17089f4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ht", "[", "1", "]"}], "=", "2"}]], "Input",
+ CellLabel->
+  "In[604]:=",ExpressionUUID->"93428e69-d2ab-4080-9963-68ef00fe1785"],
+
+Cell[BoxData["2"], "Output",
+ CellLabel->"Out[604]=",ExpressionUUID->"c697375e-4fc1-4e47-bb8e-cfc1d73cba58"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"HashTable", "//", "SubValues"}]], "Input",
+ CellLabel->
+  "In[605]:=",ExpressionUUID->"91ae2744-03e1-41f9-9aa9-c6205fc9f12c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["ht"], "Input",
+ CellLabel->
+  "In[606]:=",ExpressionUUID->"c782695c-5a74-4c1e-8eeb-f4e4bdc26109"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["HashTable",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["1", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["1", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  HashTableInterface`HashTable[
+   System`Utilities`HashTable[1, {{1, 2}}]],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellLabel->"Out[606]=",ExpressionUUID->"98ae1bd8-9e37-47d1-a9b7-f472d5c9191e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"h", "=", "ht"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"h", "[", "2", "]"}], "=", "3"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellLabel->
+  "In[607]:=",ExpressionUUID->"e463a51b-8cd7-4f03-b2a1-b63dd0f422c8"],
+
+Cell[BoxData["3"], "Output",
+ CellLabel->"Out[607]=",ExpressionUUID->"a6c9c540-efc9-4e66-81d8-e1f8f095652c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["ht"], "Input",
+ CellLabel->
+  "In[608]:=",ExpressionUUID->"fe6ad9d9-0d09-4348-9281-cd47c9161f47"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["HashTable",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["2", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            GridBox[{{
+               RowBox[{
+                 TagBox["\"Item Count: \"", "SummaryItemAnnotation"], 
+                 "\[InvisibleSpace]", 
+                 TagBox["2", "SummaryItem"]}]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  HashTableInterface`HashTable[
+   System`Utilities`HashTable[1, {{2, 3}, {1, 2}}]],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellLabel->"Out[608]=",ExpressionUUID->"5e1b1f0b-1e2a-4e83-b686-c8cdc75406b5"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ht", "[", "1", "]"}], "=", "1"}]], "Input",
+ CellLabel->
+  "In[609]:=",ExpressionUUID->"cd271e58-50bc-45e9-a3f5-3e7457f9bfab"],
+
+Cell[BoxData["1"], "Output",
+ CellLabel->"Out[609]=",ExpressionUUID->"c0b17b20-764e-4733-ad0b-b0b090a4ff7e"]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{92, Automatic}, {-4, Automatic}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+
