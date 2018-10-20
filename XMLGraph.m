@@ -371,6 +371,15 @@ x_XMLGraph?XMLGraphQ["Meta"[n_]]:=
 
 
 (* ::Subsubsubsection::Closed:: *)
+(*Parent*)
+
+
+
+x_XMLGraph?XMLGraphQ["Parent"[n_]]:=
+  NodeData[x, n, "Parent"]
+
+
+(* ::Subsubsubsection::Closed:: *)
 (*Children*)
 
 
