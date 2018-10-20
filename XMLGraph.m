@@ -357,8 +357,26 @@ x_XMLGraph?XMLGraphQ["Select"[fn_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Data"[n_]]:=
+x_XMLGraph?XMLGraphQ["Data"[n__]]:=
   NodeData[x, n]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Meta*)
+
+
+
+x_XMLGraph?XMLGraphQ["Meta"[n_]]:=
+  NodeData[x, n, "Meta"]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Children*)
+
+
+
+x_XMLGraph?XMLGraphQ["Children"[n_]]:=
+  NodeData[x, n, "Children"]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -638,13 +656,13 @@ SelectNodes[x_XMLGraph, test:Except[_String]]:=
 
 
 
-NodeData[x_XMLGraph, n_String]:=
+NodeData[x_XMLGraph, n_String, Optional[All, All]]:=
   x["Data"][n];
-NodeData[x_XMLGraph, n:{__String}]:=
-  Lookup[x["Data"], n];
-NodeData[x_XMLGraph, n_String]:=
-  x["Data"][n];
-NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span]:=
+NodeData[x_XMLGraph, n_String, part:_String|{__String}]:=
+  x["Data"][[n, part]];
+NodeData[x_XMLGraph, n:{__String}, parts:_String|{__String}|All:All]:=
+  Lookup[x["Data"], n][[All, parts]];
+NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:All]:=
   NodeData[x, VertexList[x["Graph"]][[i]]]
 
 

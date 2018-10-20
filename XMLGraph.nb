@@ -744,12 +744,44 @@ Cell[BoxData[
  RowBox[{
   RowBox[{
    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Data\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"\"\<Data\>\"", "[", "n__", "]"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n"}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"ed0acc01-3e84-408e-9cb4-b33c2e3df3c7"]
-}, Closed]],
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Meta\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"2c44d77b-2df9-46b6-b011-366f8e204c3f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
+   RowBox[{"\"\<Meta\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeData", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Meta\>\""}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"759cddee-a57f-402a-805f-4f60e42d230f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Children\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"9c5e8e31-c3fd-464b-af12-55a11f09cbda"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
+   RowBox[{"\"\<Children\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeData", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Children\>\""}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"5505037c-2f39-4eda-b2c6-b1e9add9de77"]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1308,32 +1340,48 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"NodeData", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", "n_String"}], "]"}], ":=", "\n", "\t", 
+    RowBox[{"x_XMLGraph", ",", " ", "n_String", ",", " ", 
+     RowBox[{"Optional", "[", 
+      RowBox[{"All", ",", " ", "All"}], "]"}]}], "]"}], ":=", "\n", "\t", 
    RowBox[{
     RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", "n", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"NodeData", "[", 
+    RowBox[{"x_XMLGraph", ",", " ", "n_String", ",", " ", 
+     RowBox[{"part", ":", 
+      RowBox[{"_String", "|", 
+       RowBox[{"{", "__String", "}"}]}]}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{
+    RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"n", ",", " ", "part"}], "]"}], "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"NodeData", "[", 
     RowBox[{"x_XMLGraph", ",", " ", 
      RowBox[{"n", ":", 
-      RowBox[{"{", "__String", "}"}]}]}], "]"}], ":=", "\n", "\t", 
-   RowBox[{"Lookup", "[", 
-    RowBox[{
-     RowBox[{"x", "[", "\"\<Data\>\"", "]"}], ",", " ", "n"}], "]"}]}], 
-  ";"}], "\n", 
- RowBox[{
-  RowBox[{
-   RowBox[{"NodeData", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", "n_String"}], "]"}], ":=", "\n", "\t", 
+      RowBox[{"{", "__String", "}"}]}], ",", " ", 
+     RowBox[{"parts", ":", 
+      RowBox[{"_String", "|", 
+       RowBox[{"{", "__String", "}"}], "|", "All"}], ":", "All"}]}], "]"}], ":=",
+    "\n", "\t", 
    RowBox[{
-    RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", "n", "]"}]}], ";"}], "\n", 
+    RowBox[{"Lookup", "[", 
+     RowBox[{
+      RowBox[{"x", "[", "\"\<Data\>\"", "]"}], ",", " ", "n"}], "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"All", ",", " ", "parts"}], "]"}], "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"NodeData", "[", 
    RowBox[{"x_XMLGraph", ",", " ", 
     RowBox[{"i", ":", 
      RowBox[{"_Integer", "|", 
-      RowBox[{"{", "__Integer", "}"}], "|", "_Span"}]}]}], "]"}], ":=", "\n", 
-  "\t", 
+      RowBox[{"{", "__Integer", "}"}], "|", "_Span"}]}], ",", " ", 
+    RowBox[{"parts", ":", 
+     RowBox[{"_String", "|", 
+      RowBox[{"{", "__String", "}"}], "|", "All"}], ":", "All"}]}], "]"}], ":=",
+   "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", 
     RowBox[{
@@ -3021,6 +3069,7 @@ request-errors/"},
          "Scopes let you specify exactly what type of access you need. Scopes \
 ", 
           XMLGraph`Package`Node["em:01768723-8380-4d68-84a7-8ff11fa0adaa"], 
+          
           " access for OAuth tokens. They do not grant any additional \
 permission beyond that which the user already has."}], 
       "div:998d2362-1568-4b2d-a480-1f3147d00924" -> 
@@ -5381,16 +5430,37 @@ ga');\n\n  ga('create', 'UA-3769691-37', 'github.com');\n  ga('send', \
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"blech", "@", 
-  RowBox[{"\"\<Data\>\"", "[", 
+ RowBox[{
+  RowBox[{
    RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", "\"\<td\>\"", "]"}]}], "]"}]}]], "Input",
+    RowBox[{"\"\<Children\>\"", "[", 
+     RowBox[{"blech", "@", 
+      RowBox[{"\"\<Select\>\"", "[", "\"\<td\>\"", "]"}]}], "]"}]}], "//", 
+   "RepeatedTiming"}], "//", "First"}]], "Input",
  CellLabel->
-  "In[111]:=",ExpressionUUID->"6c63d4aa-a53d-4cfe-9641-35a2b7318b53"],
+  "In[121]:=",ExpressionUUID->"6c63d4aa-a53d-4cfe-9641-35a2b7318b53"],
+
+Cell[BoxData["0.0005093256302521009`2."], "Output",
+ CellLabel->"Out[121]=",ExpressionUUID->"21fe1e6c-acb6-41f0-abd0-fa7ed1eaffa8"]
+}, Open  ]],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"{", "}"}]], "Output",
- CellLabel->"Out[111]=",ExpressionUUID->"80d75e11-6a9a-49fd-bd38-e9c547491150"]
+ RowBox[{
+  RowBox[{
+   RowBox[{"Cases", "[", 
+    RowBox[{"test", ",", " ", 
+     RowBox[{
+      RowBox[{"XMLElement", "[", 
+       RowBox[{"\"\<td\>\"", ",", " ", "d_", ",", " ", "n_"}], "]"}], 
+      "\[RuleDelayed]", "n"}], ",", " ", "\[Infinity]"}], "]"}], "//", 
+   "RepeatedTiming"}], "//", "First"}]], "Input",
+ CellLabel->
+  "In[123]:=",ExpressionUUID->"171f149b-616b-4752-af7e-31115802ca53"],
+
+Cell[BoxData["0.0001615535947712418`2."], "Output",
+ CellLabel->"Out[123]=",ExpressionUUID->"c19cd9de-80fd-4862-aa00-a333144dd0a4"]
 }, Open  ]]
 },
 WindowSize->{808, 755},
