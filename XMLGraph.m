@@ -348,8 +348,8 @@ x_XMLGraph?XMLGraphQ["Nodes"]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Select"[fn_]]:=
-  SelectNodes[x, fn]
+x_XMLGraph?XMLGraphQ["Select"[fn_, n___]]:=
+  SelectNodes[x, fn, n]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -386,6 +386,33 @@ x_XMLGraph?XMLGraphQ["Children"[n_]]:=
 
 x_XMLGraph?XMLGraphQ["Sort"[]]:=
   XMLGraphSort[x]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Subgraph*)
+
+
+
+x_XMLGraph?XMLGraphQ["Subgraph"[k_]]:=
+  XMLSubgraph[x, k]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*XML*)
+
+
+
+x_XMLGraph?XMLGraphQ["XML"]:=
+  ToXMLObject[x]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Association*)
+
+
+
+x_XMLGraph?XMLGraphQ["Association"]:=
+  ToXMLAssociation[x]
 
 
 (* ::Subsection:: *)
@@ -649,6 +676,10 @@ SelectNodes[x_XMLGraph, test_String]:=
   Keys@Select[x["Data"][[All, "Type"]], #==test&];
 SelectNodes[x_XMLGraph, test:Except[_String]]:=
   Keys@Select[x["Data"], test];
+SelectNodes[x_XMLGraph, test_String, n_]:=
+  Keys@Select[x["Data"][[All, "Type"]], #==test&, n];
+SelectNodes[x_XMLGraph, test:Except[_String], n_]:=
+  Keys@Select[x["Data"], test, n];
 
 
 (* ::Subsubsection::Closed:: *)
