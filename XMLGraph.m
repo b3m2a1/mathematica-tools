@@ -181,10 +181,10 @@ ConstructXMLGraph//Clear;
 
 validateGraphData[a_]:=
   Module[{g=a["Graph"], d=a["Data"]},
-    Replace[EdgeList[g, "Root"\[UndirectedEdge]_],
-        el:{"Root"\[UndirectedEdge]n_}:>
+    Replace[EdgeList[g, "Root"\[DirectedEdge]_],
+        el:{"Root"\[DirectedEdge]n_}:>
           Set[a["Graph"], 
-            EdgeAdd[EdgeDelete[g, el], "Root"\[DirectedEdge]n]
+            EdgeAdd[EdgeDelete[g, el], "Root"\[UndirectedEdge]n]
             ]
         ];
       If[Length@d>0&&!AssociationQ[d[[1, "Meta"]]],
@@ -363,6 +363,15 @@ x_XMLGraph?XMLGraphQ["FormattedGraph"[o___]]:=
 
 x_XMLGraph?XMLGraphQ["Nodes"]:=
   NodeList[x]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Root*)
+
+
+
+x_XMLGraph?XMLGraphQ["Root"]:=
+  RootNode[x]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1080,13 +1089,17 @@ CompileCSSSelector[selector_]:=
 
 
 
-prepVertex[(UndirectedEdge|DirectedEdge)[u_, v_]]:=
+BreadthFirstScan
+
+
+prepVertex[u_, v_, d_]:=
   With[{prevActive=Lookup[$akids, v, Nothing]},
     $ancestors[u]=
       Append[Lookup[$ancestors, v, {None}], v];
     $priors[u]=
       Append[Lookup[$priors, prevActive, {}], prevActive];
     $akids[v]=u;
+    If[StringStartsQ[u, "table:"], {{u, v, d}, $ancestors[u], $priors[u]}]
     ];
 
 
@@ -1106,7 +1119,9 @@ CSSBFSelect[x_XMLGraph, vertexFunc_]:=
       $data=x["Data"]
       },
     Reap[
-      BreadthFirstScan[x["Graph"],
+      BreadthFirstScan[
+        x["Graph"],
+        RootNode[x],
         "DiscoverVertex"->discoverVertexFunc[vertexFunc]
         ]
       ][[2]]~Flatten~1
@@ -1170,7 +1185,7 @@ XMLSubgraph[x_XMLGraph, node_]:=
     XMLGraph@
       <|
         "Data"->AssociationThread[verts, Lookup[d, verts]],
-        "Graph"->EdgeAdd[Subgraph[g, verts], "Root"->node]
+        "Graph"->EdgeAdd[Subgraph[g, verts], "Root"\[UndirectedEdge]node]
         |>
     ]
 
@@ -1214,7 +1229,8 @@ FormattedXMLGraph[x_XMLGraph, ops:OptionsPattern[]]:=
     Graph[
       g,
       VertexStyle->vs,
-      GraphLayout->"LayeredEmbedding",
+      GraphLayout->
+        {"LayeredDigraphEmbedding", "RootVertex"->r},
       ops
       ]
     ]
