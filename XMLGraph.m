@@ -90,6 +90,21 @@ XMLGraphSort::usage="Sorts the XMLGraph by distance from the \"Root\" node";
 EndPackage[];
 
 
+BeginPackage["`CSSSelectors`"];
+
+
+ParseCSSSelector::usage="";
+CSSSelector::usage="";
+CSSCombinator::usage="";
+CompileCSSSelector::usage="";
+
+
+CSSSelect::usage="";
+
+
+EndPackage[];
+
+
 Begin["`Private`"];
 
 
@@ -164,6 +179,22 @@ $XMLGraphDefaults=
 ConstructXMLGraph//Clear;
 
 
+validateGraphData[a_]:=
+  Module[{g=a["Graph"], d=a["Data"]},
+    Replace[EdgeList[g, "Root"\[UndirectedEdge]_],
+        el:{"Root"\[UndirectedEdge]n_}:>
+          Set[a["Graph"], 
+            EdgeAdd[EdgeDelete[g, el], "Root"\[DirectedEdge]n]
+            ]
+        ];
+      If[Length@d>0&&!AssociationQ[d[[1, "Meta"]]],
+        a["Data"]=
+          MapAt[Association, d, {All, "Meta"}];
+        ]
+    ];
+validateGraphData~SetAttributes~HoldFirst
+
+
 ConstructXMLGraph[a_Association]:=
   If[Length@a>0&&AssociationQ@a[[1]]&&
     AllTrue[{"Type", "Meta", "Children"}, KeyExistsQ[a[[1]], #]&],
@@ -176,12 +207,7 @@ ConstructXMLGraph[a_Association]:=
             KeyTake[a, {"Version", "Graph", "Data"}]
             ]
         },
-      Replace[EdgeList[assoc["Graph"], "Root"\[UndirectedEdge]_],
-        el:{"Root"\[UndirectedEdge]n_}:>
-          Set[assoc["Graph"], 
-            EdgeAdd[EdgeDelete[assoc["Graph"], el], "Root"\[DirectedEdge]n]
-            ]
-        ];
+      validateGraphData[assoc];
       With[{d=assoc},
         System`Private`HoldSetValid@XMLGraph[d]
         ]
@@ -200,13 +226,9 @@ ConstructXMLGraph[e_]:=
             ]&,
           $XMLGraphDefaults
           ];
-        If[!XMLGraphQ[e], $Failed, 
-          Replace[EdgeList[e["Graph"], "Root"\[UndirectedEdge]_],
-            el:{"Root"\[UndirectedEdge]n_}:>
-              Set[e["Graph"], 
-                EdgeAdd[EdgeDelete[e["Graph"], el], "Root"\[DirectedEdge]n]
-                ]
-            ];
+        If[!XMLGraphQ[e], 
+          $Failed, 
+          validateGraphData[e];
           System`Private`HoldSetValid@XMLGraph[e]
           ],
         $Failed
@@ -353,12 +375,30 @@ x_XMLGraph?XMLGraphQ["Select"[fn_, n___]]:=
 
 
 (* ::Subsubsubsection::Closed:: *)
+(*Locate*)
+
+
+
+x_XMLGraph?XMLGraphQ["Locate"[id_]]:=
+  Append[SelectNodes[x, "id"->id, 1], None][[1]]
+
+
+(* ::Subsubsubsection::Closed:: *)
 (*Data*)
 
 
 
-x_XMLGraph?XMLGraphQ["Data"[n__]]:=
-  NodeData[x, n]
+x_XMLGraph?XMLGraphQ["Data"[n_:All, p_:All]]:=
+  NodeData[x, n, p];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Type*)
+
+
+
+x_XMLGraph?XMLGraphQ["Type"[n_:All]]:=
+  NodeData[x, n, "Type"]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -366,7 +406,7 @@ x_XMLGraph?XMLGraphQ["Data"[n__]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Meta"[n_]]:=
+x_XMLGraph?XMLGraphQ["Meta"[n_:All]]:=
   NodeData[x, n, "Meta"]
 
 
@@ -375,7 +415,7 @@ x_XMLGraph?XMLGraphQ["Meta"[n_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Parent"[n_]]:=
+x_XMLGraph?XMLGraphQ["Parent"[n_:All]]:=
   NodeData[x, n, "Parent"]
 
 
@@ -384,7 +424,7 @@ x_XMLGraph?XMLGraphQ["Parent"[n_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Children"[n_]]:=
+x_XMLGraph?XMLGraphQ["Children"[n_:All]]:=
   NodeData[x, n, "Children"]
 
 
@@ -682,8 +722,12 @@ NodeList[x_XMLGraph]:=
 
 
 SelectNodes[x_XMLGraph, test_String]:=
-  Keys@Select[x["Data"][[All, "Type"]], #==test&];
-SelectNodes[x_XMLGraph, test:Except[_String]]:=
+  CSSSelect[x, test]
+
+
+SelectNodes[x_XMLGraph, prop_String->test_]:=
+  Keys@Select[x["Data"][[All, "Meta", prop]], #==test&];
+SelectNodes[x_XMLGraph, test:Except[_String|_String->_]]:=
   Keys@Select[x["Data"], test];
 SelectNodes[x_XMLGraph, test_String, n_]:=
   Keys@Select[x["Data"][[All, "Type"]], #==test&, n];
@@ -696,14 +740,393 @@ SelectNodes[x_XMLGraph, test:Except[_String], n_]:=
 
 
 
-NodeData[x_XMLGraph, n_String, Optional[All, All]]:=
-  x["Data"][n];
-NodeData[x_XMLGraph, n_String, part:_String|{__String}]:=
+NodeData[x_XMLGraph, n:_String|{__String}|All, part:(_String|{__String}|All):All]:=
   x["Data"][[n, part]];
-NodeData[x_XMLGraph, n:{__String}, parts:_String|{__String}|All:All]:=
-  Lookup[x["Data"], n][[All, parts]];
 NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:All]:=
   NodeData[x, VertexList[x["Graph"]][[i]]]
+
+
+(* ::Subsection:: *)
+(*CSS Selectors*)
+
+
+
+(* ::Text:: *)
+(*
+	I may want a BFS selection procedure over the Graph representation? This would make things like ~ more intuitive and linear time, but might also be a bit more of a pain.
+*)
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*Parse*)
+
+
+
+cssSelectorPatterns=
+  {
+    "\*"->CSSSelector[All],
+    "."~~cls:Except[WhitespaceCharacter]..:>
+      CSSSelector["Class"][cls],
+    "#"~~id:Except[WhitespaceCharacter]..:>
+      CSSSelector["ID"][id],
+    (Whitespace|"")~~","~~(Whitespace|"")->CSSCombinator["Or"],
+    (Whitespace|"")~~"+"~~(Whitespace|"")->CSSCombinator["Next"],
+    (Whitespace|"")~~"~"~~(Whitespace|"")->CSSCombinator["Follows"],
+    (Whitespace|"")~~">"~~(Whitespace|"")->CSSCombinator["Child"],
+    (el:(LetterCharacter~~Except[WhitespaceCharacter|","|"+"|"~"|">"]...))~~
+      ("["~~attr:Except[WhitespaceCharacter|"]"]..~~"]"):>
+        CSSCombinator["And"][
+          CSSSelector["Element"][el],
+          cssAttributeSelector[attr]
+          ],
+    "["~~attr:Except[WhitespaceCharacter|"]"]..~~"]":>
+      cssAttributeSelector[attr],
+    el:(LetterCharacter~~Except[WhitespaceCharacter|","|"+"|"~"|">"]...):>
+      CSSSelector["Element"][el]
+    }
+
+
+cssAttributeSelector[s_String]:=
+  Module[
+    {
+      split,
+      attr,
+      token,
+      val
+      },
+    split=StringSplit[StringTrim[s], "=", 2];
+    If[Length@split==2,
+      {attr, val}=split;
+      token=StringTake[s, {-1}];
+      attr=StringDrop[s, -1];
+      CSSSelector["Attribute"][token, attr, val],
+      CSSSelector["Attribute"][split[[1]]]
+      ]
+    ]
+
+
+cssSelectorPostProcess=
+  {
+    " "->CSSCombinator["Descendant"]
+    };
+
+
+normalizeWhiteSpace[s_String]:=
+  StringReplace[s, Whitespace->" "]
+
+
+ParseCSSSelector[s_String]:=
+  Module[
+    {
+      split,
+      map,
+      i=1,
+      tag
+      },
+    split=List@@StringReplace[normalizeWhiteSpace@s, cssSelectorPatterns];
+    map=<||>;
+    split=
+      Flatten[
+        Replace[
+          StringReplace[
+            If[!StringQ@#, tag=ToString[i++];map[tag]=#;tag, #]&/@split,
+            cssSelectorPostProcess
+            ],
+          map,
+          1
+          ],
+        1,
+        StringExpression
+        ];
+    Replace[{
+      {sel_}:>sel,
+      _->$Failed
+      }]@
+    Fold[
+      FixedPoint[
+        Replace[
+          {start___, a_, j:CSSCombinator[#2], b_, end___}:>
+            {start, j[a, b], end}
+          ],
+        #
+        ]&,
+      split,
+      {
+        "Or",
+        "Descendant",
+        _
+        }
+      ]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Compile*)
+
+
+
+(* ::Text:: *)
+(*
+	This should map to BFS rules and then those may be compiled down to a single Select if possible
+*)
+
+
+
+cssSelectorCompile//Clear
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Or*)
+
+
+
+cssSelectorCompile[CSSCombinator["Or"][a_, b_]]:=
+  With[
+    {
+      c1=cssSelectorCompile[a],
+      c2=cssSelectorCompile[b]
+      },
+    Or[c1[#, #2, #3], c2[#, #2, #3]]&
+    ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Child*)
+
+
+
+cssSelectorCompile[CSSCombinator["Child"][a_, b_]]:=
+  With[
+    {
+      c1=cssSelectorCompile[b],
+      c2=cssSelectorCompile[a][#2, $ancestors[#2][[-1]], #3-1]
+      },
+    And[c1[#, #2, #3], c2]&
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Descendant*)
+
+
+
+cssSelectorCompile[CSSCombinator["Descendant"][a_, b_]]:=
+  With[
+    {
+      c1=cssSelectorCompile[b],
+      c2=cssSelectorCompile[a][#, $ancestors[#][[-1]], None]
+      },
+    And[c1[#, #2, #3], AnyTrue[$ancestors[#], c2&]]&
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Next*)
+
+
+
+cssSelectorCompile[CSSCombinator["Next"][a_, b_]]:=
+  With[
+    {
+      c1=cssSelectorCompile[b],
+      c2=cssSelectorCompile[a][#, $ancestors[#][[-1]], None]
+      },
+    And[
+      c1[#, #2, #3], 
+      AnyTrue[
+        Take[$priors[#], UpTo[1]],
+        c2&
+        ]
+      ]&
+    ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Follows*)
+
+
+
+cssSelectorCompile[CSSCombinator["Follows"][a_, b_]]:=
+  With[
+    {
+      c1=cssSelectorCompile[b],
+      c2=cssSelectorCompile[a][#, $ancestors[#][[-1]], None]
+      },
+    Or[
+      c1[#, #2, #3], 
+      AnyTrue[$priors[#], c2&]
+      ]&
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*ID*)
+
+
+
+cssSelectorCompile[CSSSelector["ID"][a_]]:=
+  $data[#, "Meta", "id"]==a&
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Class*)
+
+
+
+cssSelectorCompile[CSSSelector["Class"][a_]]:=
+  StringContainsQ[$data[#, "Meta", "class"], a~~(" "|EndOfString)]&
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Element*)
+
+
+
+cssSelectorCompile[CSSSelector["Element"][a_]]:=
+  $data[#, "Type"]==a&
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Attribute*)
+
+
+
+cssSelectorCompile[CSSSelector["Attribute"][attr_]]:=
+  KeyExistsQ[$data[#, "Meta"], attr]&
+
+
+cssSelectorCompile[CSSSelector["Attribute"]["~"|"*", attr_, val_]]:=
+  StringContainsQ[$data[#, "Meta", attr], val]&
+
+
+cssSelectorCompile[CSSSelector["Attribute"]["|"|"^", attr_, val_]]:=
+  StringStartsQ[$data[#, "Meta", attr], val]&
+
+
+cssSelectorCompile[CSSSelector["Attribute"][oops_, attr_, val_]]:=
+  $data[#, "Meta", attr<>oops]==val&
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*condenseNodeFuncs*)
+
+
+
+(* ::Text:: *)
+(*Originally this was gonna be more complex, but we\[CloseCurlyQuote]ll leave it as is*)
+
+
+
+condenseNodeFuncs//Clear
+
+
+condenseNodeFuncs[
+  f:Function[b_]
+  ]:=
+  Function[{node,parent,depth}, Evaluate@f[node,parent,depth]]
+  
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*downconvertNodeFunc*)
+
+
+
+downconvertNodeFunc[sel_]:=
+  Block[
+    {
+      node, parent, depth,
+      $ancestors, $priors,
+      $akids, $data,
+      Part, And, Or,
+      Equal, Take, AnyTrue,
+      StringContainsQ, StringStartsQ,
+      StringEndsQ
+      },
+    Function[{node}, 
+      Evaluate[sel[node, node["Parent"], None]/.
+        {
+          $data[node, x__]:>node[x]
+          }
+        ]
+      ]
+    ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*CompileCSSSelector*)
+
+
+
+CompileCSSSelector[selector_]:=
+  Block[
+    {
+      node, parent, depth,
+      $ancestors, $priors,
+      $akids, $data,
+      Part, And, Or,
+      Equal, Take, AnyTrue,
+      StringContainsQ, StringStartsQ,
+      StringEndsQ
+      },
+    condenseNodeFuncs@
+      cssSelectorCompile[selector]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*BFSelect*)
+
+
+
+prepVertex[(UndirectedEdge|DirectedEdge)[u_, v_]]:=
+  With[{prevActive=Lookup[$akids, v, Nothing]},
+    $ancestors[u]=
+      Append[Lookup[$ancestors, v, {None}], v];
+    $priors[u]=
+      Append[Lookup[$priors, prevActive, {}], prevActive];
+    $akids[v]=u;
+    ];
+
+
+discoverVertexFunc[nf_]:=
+  Function[
+    prepVertex[##];
+    If[nf[##], Sow[#]]
+    ]
+
+
+CSSBFSelect[x_XMLGraph, vertexFunc_]:=
+  Block[
+    {
+      $ancestors=<||>,
+      $akids=<||>,
+      $priors=<||>,
+      $data=x["Data"]
+      },
+    Reap[
+      BreadthFirstScan[x["Graph"],
+        "DiscoverVertex"->discoverVertexFunc[vertexFunc]
+        ]
+      ][[2]]~Flatten~1
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*CSSSelect*)
+
+
+
+CSSSelect[x_, selector_]:=
+  With[{sel=CompileCSSSelector@ParseCSSSelector[selector]},
+    If[FreeQ[sel, $ancestors|$priors],
+      Block[{$data=x["Data"]},
+        Keys@Select[$data, downconvertNodeFunc@sel]
+        ],
+      CSSBFSelect[x, sel]
+      ]
+    ];
 
 
 (* ::Subsection:: *)

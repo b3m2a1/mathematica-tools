@@ -98,7 +98,7 @@ Cell[BoxData[{
    "\"\<Selects nodes by some criterion\>\""}], 
   ";"}]}], "CodeInput",ExpressionUUID->"def51c9b-9d1e-4e59-8c45-9a70e2e5c0f0"]\
 
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -174,13 +174,50 @@ Cell[BoxData[{
   ";"}]}], "CodeInput",ExpressionUUID->"839bc02a-30e2-4271-977a-b4b4395fb040"]\
 
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"EndPackage", "[", "]"}], 
   ";"}]], "InputSection",ExpressionUUID->"6141fdb9-45b9-4996-99b6-\
 b5e9d136ff13"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<`CSSSelectors`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"1b9d2c4e-2447-42e8-897c-\
+62d59bfa0797"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ParseCSSSelector", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CSSSelector", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CSSCombinator", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CompileCSSSelector", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"a9c0c13d-1f09-4161-b560-fa0533905a98"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CSSSelect", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"95d121c4-010d-45c7-a2cc-8794a73d0b76"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"6693714f-67b4-48fb-b2b8-\
+f996c7ea0c7f"],
 
 Cell[BoxData[
  RowBox[{
@@ -330,6 +367,65 @@ Cell[BoxData[
 Cell[BoxData[{
  RowBox[{
   RowBox[{
+   RowBox[{"validateGraphData", "[", "a_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"g", "=", 
+        RowBox[{"a", "[", "\"\<Graph\>\"", "]"}]}], ",", " ", 
+       RowBox[{"d", "=", 
+        RowBox[{"a", "[", "\"\<Data\>\"", "]"}]}]}], "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"Replace", "[", 
+       RowBox[{
+        RowBox[{"EdgeList", "[", 
+         RowBox[{"g", ",", " ", 
+          RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "_"}]}], "]"}], ",", 
+        "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"el", ":", 
+          RowBox[{"{", 
+           RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "n_"}], "}"}]}], ":>",
+          "\n", "\t\t\t\t\t", 
+         RowBox[{"Set", "[", 
+          RowBox[{
+           RowBox[{"a", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\n", "\t", 
+           "\t\t\t\t\t", 
+           RowBox[{"EdgeAdd", "[", 
+            RowBox[{
+             RowBox[{"EdgeDelete", "[", 
+              RowBox[{"g", ",", " ", "el"}], "]"}], ",", " ", 
+             RowBox[{"\"\<Root\>\"", "\[DirectedEdge]", "n"}]}], "]"}]}], 
+          "\n", "\t", "\t\t\t\t\t", "]"}]}]}], "\n", "\t\t\t\t", "]"}], ";", 
+      "\n", "\t\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Length", "@", "d"}], ">", "0"}], "&&", 
+         RowBox[{"!", 
+          RowBox[{"AssociationQ", "[", 
+           RowBox[{"d", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", " ", "\"\<Meta\>\""}], "]"}], "]"}], "]"}]}]}],
+         ",", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"a", "[", "\"\<Data\>\"", "]"}], "=", "\n", "\t\t\t\t\t", 
+          RowBox[{"MapAt", "[", 
+           RowBox[{"Association", ",", " ", "d", ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"All", ",", " ", "\"\<Meta\>\""}], "}"}]}], "]"}]}], 
+         ";"}]}], "\n", "\t\t\t\t", "]"}]}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{"validateGraphData", "~", "SetAttributes", "~", 
+  "HoldFirst"}]}], \
+"CodeInput",ExpressionUUID->"b9893592-67bf-419a-8a8a-4209073b5fdc"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
    RowBox[{"ConstructXMLGraph", "[", "a_Association", "]"}], ":=", "\n", "\t", 
    RowBox[{"If", "[", 
     RowBox[{
@@ -364,33 +460,9 @@ Cell[BoxData[{
               RowBox[{
               "\"\<Version\>\"", ",", " ", "\"\<Graph\>\"", ",", " ", 
                "\"\<Data\>\""}], "}"}]}], "]"}]}], "\n", "\t", "\t\t\t\t\t", 
-          "]"}]}], "\n", "\t", "\t\t\t", "}"}], ",", "\n", "\t", "\t\t", 
+          "]"}]}], "\n", "\t", "\t\t\t", "}"}], ",", "\n", "\t\t\t", 
        RowBox[{
-        RowBox[{"Replace", "[", 
-         RowBox[{
-          RowBox[{"EdgeList", "[", 
-           RowBox[{
-            RowBox[{"assoc", "[", "\"\<Graph\>\"", "]"}], ",", " ", 
-            RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "_"}]}], "]"}], ",", 
-          "\n", "\t", "\t\t\t", 
-          RowBox[{
-           RowBox[{"el", ":", 
-            RowBox[{"{", 
-             RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "n_"}], "}"}]}], ":>",
-            "\n", "\t", "\t\t\t\t", 
-           RowBox[{"Set", "[", 
-            RowBox[{
-             RowBox[{"assoc", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\n", 
-             "\t", "\t\t\t\t\t", 
-             RowBox[{"EdgeAdd", "[", 
-              RowBox[{
-               RowBox[{"EdgeDelete", "[", 
-                RowBox[{
-                 RowBox[{"assoc", "[", "\"\<Graph\>\"", "]"}], ",", " ", 
-                 "el"}], "]"}], ",", " ", 
-               RowBox[{"\"\<Root\>\"", "\[DirectedEdge]", "n"}]}], "]"}]}], 
-            "\n", "\t", "\t\t\t\t\t", "]"}]}]}], "\n", "\t", "\t\t\t", "]"}], 
-        ";", "\n", "\t", "\t\t", 
+        RowBox[{"validateGraphData", "[", "assoc", "]"}], ";", "\n", "\t\t\t", 
         RowBox[{"With", "[", 
          RowBox[{
           RowBox[{"{", 
@@ -448,34 +520,11 @@ Cell[BoxData[{
          RowBox[{"If", "[", 
           RowBox[{
            RowBox[{"!", 
-            RowBox[{"XMLGraphQ", "[", "e", "]"}]}], ",", " ", "$Failed", ",", 
-           " ", "\n", "\t", "\t", "\t\t\t", 
+            RowBox[{"XMLGraphQ", "[", "e", "]"}]}], ",", " ", "\n", 
+           "\t\t\t\t\t", "$Failed", ",", " ", "\n", "\t\t\t\t\t", 
            RowBox[{
-            RowBox[{"Replace", "[", 
-             RowBox[{
-              RowBox[{"EdgeList", "[", 
-               RowBox[{
-                RowBox[{"e", "[", "\"\<Graph\>\"", "]"}], ",", " ", 
-                RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "_"}]}], "]"}], 
-              ",", "\n", "\t", "\t", "\t\t\t\t", 
-              RowBox[{
-               RowBox[{"el", ":", 
-                RowBox[{"{", 
-                 RowBox[{"\"\<Root\>\"", "\[UndirectedEdge]", "n_"}], "}"}]}],
-                ":>", "\n", "\t", "\t", "\t\t\t\t\t", 
-               RowBox[{"Set", "[", 
-                RowBox[{
-                 RowBox[{"e", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\n", 
-                 "\t", "\t", "\t", "\t\t\t\t\t", 
-                 RowBox[{"EdgeAdd", "[", 
-                  RowBox[{
-                   RowBox[{"EdgeDelete", "[", 
-                    RowBox[{
-                    RowBox[{"e", "[", "\"\<Graph\>\"", "]"}], ",", " ", 
-                    "el"}], "]"}], ",", " ", 
-                   RowBox[{"\"\<Root\>\"", "\[DirectedEdge]", "n"}]}], 
-                  "]"}]}], "\n", "\t", "\t", "\t\t\t\t\t\t", "]"}]}]}], "\n", 
-             "\t", "\t", "\t\t\t\t", "]"}], ";", "\n", "\t", "\t", "\t\t\t", 
+            RowBox[{"validateGraphData", "[", "e", "]"}], ";", "\n", 
+            "\t\t\t\t\t", 
             RowBox[{"System`Private`HoldSetValid", "@", 
              RowBox[{"XMLGraph", "[", "e", "]"}]}]}]}], "\n", "\t", "\t", 
           "\t\t\t", "]"}]}], ",", "\n", "\t\t\t\t", "$Failed"}], "\n", 
@@ -738,18 +787,60 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["\[LeftCeiling]Locate\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"99fe85ae-20bc-41c2-9298-ed695db86ab8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
+   RowBox[{"\"\<Locate\>\"", "[", "id_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"Append", "[", 
+    RowBox[{
+     RowBox[{"SelectNodes", "[", 
+      RowBox[{"x", ",", " ", 
+       RowBox[{"\"\<id\>\"", "\[Rule]", "id"}], ",", " ", "1"}], "]"}], ",", 
+     " ", "None"}], "]"}], "[", 
+   RowBox[{"[", "1", "]"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"4b15c118-0663-449d-b10c-0c3976e9da3f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["\[LeftCeiling]Data\[RightFloor]", "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"e4b1a840-5fac-4db4-b2dd-1f0dbad3ed38"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{
+   RowBox[{
+    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
+    RowBox[{"\"\<Data\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", 
+      RowBox[{"p_:", "All"}]}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"NodeData", "[", 
+    RowBox[{"x", ",", " ", "n", ",", " ", "p"}], "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"ed0acc01-3e84-408e-9cb4-b33c2e3df3c7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Type\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"e8d4894b-992e-463c-aed4-62ecea1473c0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Data\>\"", "[", "n__", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"\"\<Type\>\"", "[", 
+    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
-   RowBox[{"x", ",", " ", "n"}], 
+   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Type\>\""}], 
    "]"}]}]], \
-"CodeInput",ExpressionUUID->"ed0acc01-3e84-408e-9cb4-b33c2e3df3c7"]
+"CodeInput",ExpressionUUID->"e69e4d68-342a-476b-b2ff-01d93760fe39"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -761,7 +852,8 @@ Cell[BoxData[
  RowBox[{
   RowBox[{
    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Meta\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"\"\<Meta\>\"", "[", 
+    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Meta\>\""}], 
    "]"}]}]], \
@@ -777,7 +869,8 @@ Cell[BoxData[
  RowBox[{
   RowBox[{
    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Parent\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"\"\<Parent\>\"", "[", 
+    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Parent\>\""}], 
    "]"}]}]], \
@@ -793,7 +886,8 @@ Cell[BoxData[
  RowBox[{
   RowBox[{
    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Children\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"\"\<Children\>\"", "[", 
+    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Children\>\""}], 
    "]"}]}]], \
@@ -864,7 +958,7 @@ Cell[BoxData[
 "CodeInput",ExpressionUUID->"cc37eab0-3407-4350-aea3-05751574fc19"]
 }, Closed]]
 }, Open  ]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -1367,19 +1461,29 @@ Cell[CellGroupData[{
 Cell["\[LeftCeiling]SelectNodes\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"7caf900b-1a15-488a-8e0b-9eab2e0b4fa4"],
 
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SelectNodes", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "test_String"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"CSSSelect", "[", 
+   RowBox[{"x", ",", " ", "test"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"f91e0ce0-a3ac-45c6-90ba-c4f6ceeb2481"],
+
 Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"SelectNodes", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", "test_String"}], "]"}], ":=", "\n", "\t", 
-   
+    RowBox[{"x_XMLGraph", ",", " ", 
+     RowBox[{"prop_String", "->", "test_"}]}], "]"}], ":=", "\n", "\t", 
    RowBox[{"Keys", "@", 
     RowBox[{"Select", "[", 
      RowBox[{
       RowBox[{
        RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", 
        RowBox[{"[", 
-        RowBox[{"All", ",", " ", "\"\<Type\>\""}], "]"}], "]"}], ",", " ", 
+        RowBox[{"All", ",", " ", "\"\<Meta\>\"", ",", " ", "prop"}], "]"}], 
+       "]"}], ",", " ", 
       RowBox[{
        RowBox[{"#", "\[Equal]", "test"}], "&"}]}], "]"}]}]}], ";"}], "\n", 
  RowBox[{
@@ -1387,7 +1491,10 @@ Cell[BoxData[{
    RowBox[{"SelectNodes", "[", 
     RowBox[{"x_XMLGraph", ",", " ", 
      RowBox[{"test", ":", 
-      RowBox[{"Except", "[", "_String", "]"}]}]}], "]"}], ":=", "\n", "\t", 
+      RowBox[{"Except", "[", 
+       RowBox[{
+        RowBox[{"_String", "|", "_String"}], "\[Rule]", "_"}], "]"}]}]}], 
+    "]"}], ":=", "\n", "\t", 
    RowBox[{"Keys", "@", 
     RowBox[{"Select", "[", 
      RowBox[{
@@ -1433,38 +1540,19 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"NodeData", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", "n_String", ",", " ", 
-     RowBox[{"Optional", "[", 
-      RowBox[{"All", ",", " ", "All"}], "]"}]}], "]"}], ":=", "\n", "\t", 
-   RowBox[{
-    RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", "n", "]"}]}], ";"}], "\n", 
- RowBox[{
-  RowBox[{
-   RowBox[{"NodeData", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", "n_String", ",", " ", 
-     RowBox[{"part", ":", 
+    RowBox[{"x_XMLGraph", ",", " ", 
+     RowBox[{"n", ":", 
       RowBox[{"_String", "|", 
-       RowBox[{"{", "__String", "}"}]}]}]}], "]"}], ":=", "\n", "\t", 
+       RowBox[{"{", "__String", "}"}], "|", "All"}]}], ",", " ", 
+     RowBox[{"part", ":", 
+      RowBox[{"(", 
+       RowBox[{"_String", "|", 
+        RowBox[{"{", "__String", "}"}], "|", "All"}], ")"}], ":", "All"}]}], 
+    "]"}], ":=", "\n", "\t", 
    RowBox[{
     RowBox[{"x", "[", "\"\<Data\>\"", "]"}], "[", 
     RowBox[{"[", 
      RowBox[{"n", ",", " ", "part"}], "]"}], "]"}]}], ";"}], "\n", 
- RowBox[{
-  RowBox[{
-   RowBox[{"NodeData", "[", 
-    RowBox[{"x_XMLGraph", ",", " ", 
-     RowBox[{"n", ":", 
-      RowBox[{"{", "__String", "}"}]}], ",", " ", 
-     RowBox[{"parts", ":", 
-      RowBox[{"_String", "|", 
-       RowBox[{"{", "__String", "}"}], "|", "All"}], ":", "All"}]}], "]"}], ":=",
-    "\n", "\t", 
-   RowBox[{
-    RowBox[{"Lookup", "[", 
-     RowBox[{
-      RowBox[{"x", "[", "\"\<Data\>\"", "]"}], ",", " ", "n"}], "]"}], "[", 
-    RowBox[{"[", 
-     RowBox[{"All", ",", " ", "parts"}], "]"}], "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"NodeData", "[", 
    RowBox[{"x_XMLGraph", ",", " ", 
@@ -1484,6 +1572,844 @@ Cell[BoxData[{
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"dcc00aa4-7cf1-4e2a-93ab-69a6f99d7145"]
 }, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]CSS Selectors\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"c7770b33-dbd3-464b-a231-0da4bda8e679"],
+
+Cell["\<\
+\[LeftCeiling]
+\tI may want a BFS selection procedure over the Graph representation? This \
+would make things like ~ more intuitive and linear time, but might also be a \
+bit more of a pain.
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->True,ExpressionUUID->"186bae2a-c934-451e-8482-92c8e2399a8f"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Parse\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"81091bdc-eadd-4314-a4f5-54b02b4182bd"],
+
+Cell[BoxData[
+ RowBox[{"cssSelectorPatterns", "=", "\n", "\t", 
+  RowBox[{"{", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"\"\<\\*\>\"", "\[Rule]", 
+     RowBox[{"CSSSelector", "[", "All", "]"}]}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<.\>\"", "~~", 
+      RowBox[{"cls", ":", 
+       RowBox[{
+        RowBox[{"Except", "[", "WhitespaceCharacter", "]"}], ".."}]}]}], ":>",
+      "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"CSSSelector", "[", "\"\<Class\>\"", "]"}], "[", "cls", "]"}]}],
+     ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<#\>\"", "~~", 
+      RowBox[{"id", ":", 
+       RowBox[{
+        RowBox[{"Except", "[", "WhitespaceCharacter", "]"}], ".."}]}]}], ":>",
+      "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"CSSSelector", "[", "\"\<ID\>\"", "]"}], "[", "id", "]"}]}], 
+    ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}], "~~", "\"\<,\>\"", "~~", 
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}]}], "\[Rule]", 
+     RowBox[{"CSSCombinator", "[", "\"\<Or\>\"", "]"}]}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}], "~~", "\"\<+\>\"", "~~", 
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}]}], "\[Rule]", 
+     RowBox[{"CSSCombinator", "[", "\"\<Next\>\"", "]"}]}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}], "~~", "\"\<~\>\"", "~~", 
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}]}], "\[Rule]", 
+     RowBox[{"CSSCombinator", "[", "\"\<Follows\>\"", "]"}]}], ",", "\n", 
+    "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}], "~~", "\"\<>\>\"", "~~", 
+      RowBox[{"(", 
+       RowBox[{"Whitespace", "|", "\"\<\>\""}], ")"}]}], "\[Rule]", 
+     RowBox[{"CSSCombinator", "[", "\"\<Child\>\"", "]"}]}], ",", "\n", 
+    "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"el", ":", 
+        RowBox[{"(", 
+         RowBox[{"LetterCharacter", "~~", 
+          RowBox[{
+           RowBox[{"Except", "[", 
+            RowBox[{
+            "WhitespaceCharacter", "|", "\"\<,\>\"", "|", "\"\<+\>\"", "|", 
+             "\"\<~\>\"", "|", "\"\<>\>\""}], "]"}], "..."}]}], ")"}]}], 
+       ")"}], "~~", "\n", "\t\t\t", 
+      RowBox[{"(", 
+       RowBox[{"\"\<[\>\"", "~~", 
+        RowBox[{"attr", ":", 
+         RowBox[{
+          RowBox[{"Except", "[", 
+           RowBox[{"WhitespaceCharacter", "|", "\"\<]\>\""}], "]"}], ".."}]}],
+         "~~", "\"\<]\>\""}], ")"}]}], ":>", "\n", "\t\t\t\t", 
+     RowBox[{
+      RowBox[{"CSSCombinator", "[", "\"\<And\>\"", "]"}], "[", "\n", 
+      "\t\t\t\t\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"CSSSelector", "[", "\"\<Element\>\"", "]"}], "[", "el", 
+        "]"}], ",", "\n", "\t\t\t\t\t", 
+       RowBox[{"cssAttributeSelector", "[", "attr", "]"}]}], "\n", 
+      "\t\t\t\t\t", "]"}]}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<[\>\"", "~~", 
+      RowBox[{"attr", ":", 
+       RowBox[{
+        RowBox[{"Except", "[", 
+         RowBox[{"WhitespaceCharacter", "|", "\"\<]\>\""}], "]"}], ".."}]}], 
+      "~~", "\"\<]\>\""}], ":>", "\n", "\t\t\t", 
+     RowBox[{"cssAttributeSelector", "[", "attr", "]"}]}], ",", "\n", "\t\t", 
+    
+    RowBox[{
+     RowBox[{"el", ":", 
+      RowBox[{"(", 
+       RowBox[{"LetterCharacter", "~~", 
+        RowBox[{
+         RowBox[{"Except", "[", 
+          RowBox[{
+          "WhitespaceCharacter", "|", "\"\<,\>\"", "|", "\"\<+\>\"", "|", 
+           "\"\<~\>\"", "|", "\"\<>\>\""}], "]"}], "..."}]}], ")"}]}], 
+     "\[RuleDelayed]", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"CSSSelector", "[", "\"\<Element\>\"", "]"}], "[", "el", 
+      "]"}]}]}], "\n", "\t\t", 
+   "}"}]}]], \
+"CodeInput",ExpressionUUID->"71deaa4e-dcbf-49e2-b25c-1e9fa7101415"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssAttributeSelector", "[", "s_String", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Module", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+     "split", ",", "\n", "\t\t\t", "attr", ",", "\n", "\t\t\t", "token", ",", 
+      "\n", "\t\t\t", "val"}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"split", "=", 
+      RowBox[{"StringSplit", "[", 
+       RowBox[{
+        RowBox[{"StringTrim", "[", "s", "]"}], ",", " ", "\"\<=\>\"", ",", 
+        " ", "2"}], "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "@", "split"}], "\[Equal]", "2"}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"attr", ",", " ", "val"}], "}"}], "=", "split"}], ";", "\n",
+         "\t\t\t", 
+        RowBox[{"token", "=", 
+         RowBox[{"StringTake", "[", 
+          RowBox[{"s", ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"-", "1"}], "}"}]}], "]"}]}], ";", "\n", "\t", "\t\t", 
+        RowBox[{"attr", "=", 
+         RowBox[{"StringDrop", "[", 
+          RowBox[{"s", ",", " ", 
+           RowBox[{"-", "1"}]}], "]"}]}], ";", "\n", "\t", "\t\t", 
+        RowBox[{
+         RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", 
+         RowBox[{"token", ",", " ", "attr", ",", " ", "val"}], "]"}]}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", 
+        RowBox[{"split", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "\n", "\t\t\t", "]"}]}]}], 
+   "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"1c7d5b14-ca6e-47cb-b1d5-6e05227db679"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorPostProcess", "=", "\n", "\t", 
+   RowBox[{"{", "\n", "\t\t", 
+    RowBox[{"\"\< \>\"", "\[Rule]", 
+     RowBox[{"CSSCombinator", "[", "\"\<Descendant\>\"", "]"}]}], "\n", 
+    "\t\t", "}"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"48bac8f4-ad66-4b3a-ab0c-9fe61eb88cfc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"normalizeWhiteSpace", "[", "s_String", "]"}], ":=", "\n", "\t", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{"s", ",", " ", 
+    RowBox[{"Whitespace", "\[Rule]", "\"\< \>\""}]}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"4f56898c-79c5-4754-9da8-6dd19f474aa8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ParseCSSSelector", "[", "s_String", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Module", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{"split", ",", "\n", "\t\t\t", "map", ",", "\n", "\t\t\t", 
+      RowBox[{"i", "=", "1"}], ",", "\n", "\t\t\t", "tag"}], "\n", "\t\t\t", 
+     "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"split", "=", 
+      RowBox[{"List", "@@", 
+       RowBox[{"StringReplace", "[", 
+        RowBox[{
+         RowBox[{"normalizeWhiteSpace", "@", "s"}], ",", " ", 
+         "cssSelectorPatterns"}], "]"}]}]}], ";", "\n", "\t\t", 
+     RowBox[{"map", "=", 
+      RowBox[{"<|", "|>"}]}], ";", "\n", "\t\t", 
+     RowBox[{"split", "=", "\n", "\t\t\t", 
+      RowBox[{"Flatten", "[", "\n", "\t\t\t\t", 
+       RowBox[{
+        RowBox[{"Replace", "[", "\n", "\t\t\t\t\t", 
+         RowBox[{
+          RowBox[{"StringReplace", "[", "\n", "\t", "\t\t\t\t\t", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"!", 
+                 RowBox[{"StringQ", "@", "#"}]}], ",", " ", 
+                RowBox[{
+                 RowBox[{"tag", "=", 
+                  RowBox[{"ToString", "[", 
+                   RowBox[{"i", "++"}], "]"}]}], ";", 
+                 RowBox[{
+                  RowBox[{"map", "[", "tag", "]"}], "=", "#"}], ";", "tag"}], 
+                ",", " ", "#"}], "]"}], "&"}], "/@", "split"}], ",", "\n", 
+            "\t", "\t\t\t\t\t", "cssSelectorPostProcess"}], "\n", "\t", 
+           "\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t\t\t\t", "map", ",", "\n",
+           "\t\t\t\t\t", "1"}], "\n", "\t\t\t\t\t", "]"}], ",", "\n", 
+        "\t\t\t\t", "1", ",", "\n", "\t\t\t\t", "StringExpression"}], "\n", 
+       "\t\t\t\t", "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"Replace", "[", 
+       RowBox[{"{", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", "sel_", "}"}], "\[RuleDelayed]", "sel"}], ",", "\n", 
+         "\t\t\t", 
+         RowBox[{"_", "\[Rule]", "$Failed"}]}], "\n", "\t\t\t", "}"}], "]"}], 
+      "@", "\n", "\t\t", 
+      RowBox[{"Fold", "[", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"FixedPoint", "[", "\n", "\t\t\t\t", 
+          RowBox[{
+           RowBox[{"Replace", "[", "\n", "\t", "\t\t\t\t", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"start___", ",", " ", "a_", ",", " ", 
+               RowBox[{"j", ":", 
+                RowBox[{"CSSCombinator", "[", "#2", "]"}]}], ",", " ", "b_", 
+               ",", " ", "end___"}], "}"}], ":>", "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{"{", 
+              RowBox[{"start", ",", " ", 
+               RowBox[{"j", "[", 
+                RowBox[{"a", ",", " ", "b"}], "]"}], ",", " ", "end"}], 
+              "}"}]}], "\n", "\t", "\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", 
+           "#"}], "\n", "\t\t\t\t", "]"}], "&"}], ",", "\n", "\t\t\t", 
+        "split", ",", "\n", "\t\t\t", 
+        RowBox[{"{", "\n", "\t\t\t\t", 
+         RowBox[{
+         "\"\<Or\>\"", ",", "\n", "\t\t\t\t", "\"\<Descendant\>\"", ",", "\n",
+           "\t\t\t\t", "_"}], "\n", "\t\t\t\t", "}"}]}], "\n", "\t\t\t", 
+       "]"}]}]}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"1a4a9cae-5695-4321-a32f-4c54c6423144"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Compile\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a0c473c7-bb31-4c05-9b84-2b9857b39ea4"],
+
+Cell["\<\
+\[LeftCeiling]
+\tThis should map to BFS rules and then those may be compiled down to a \
+single Select if possible
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->True,ExpressionUUID->"56a0e4f0-8b47-4d3b-a0b1-43ba8518c8c8"],
+
+Cell[BoxData[
+ RowBox[{"cssSelectorCompile", "//", 
+  "Clear"}]], \
+"CodeInput",ExpressionUUID->"391ceb0e-b1d0-4ba1-83ec-697e98680e53"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Or\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"9fbf43ce-9c95-420c-b8f3-e14264269fb8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"cssSelectorCompile", "[", 
+    RowBox[{
+     RowBox[{"CSSCombinator", "[", "\"\<Or\>\"", "]"}], "[", 
+     RowBox[{"a_", ",", " ", "b_"}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"c1", "=", 
+        RowBox[{"cssSelectorCompile", "[", "a", "]"}]}], ",", "\n", "\t\t\t", 
+       
+       RowBox[{"c2", "=", 
+        RowBox[{"cssSelectorCompile", "[", "b", "]"}]}]}], "\n", "\t\t\t", 
+      "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"Or", "[", 
+       RowBox[{
+        RowBox[{"c1", "[", 
+         RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}], ",", " ", 
+        RowBox[{"c2", "[", 
+         RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}]}], "]"}], 
+      "&"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"618ba419-8d8f-42ab-92e0-f011a33bf7b2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Child\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"5c12ad18-5568-456c-b3c6-c00bbf08fc9a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSCombinator", "[", "\"\<Child\>\"", "]"}], "[", 
+    RowBox[{"a_", ",", " ", "b_"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"c1", "=", 
+       RowBox[{"cssSelectorCompile", "[", "b", "]"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"c2", "=", 
+       RowBox[{
+        RowBox[{"cssSelectorCompile", "[", "a", "]"}], "[", 
+        RowBox[{"#2", ",", " ", 
+         RowBox[{
+          RowBox[{"$ancestors", "[", "#2", "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"-", "1"}], "]"}], "]"}], ",", " ", 
+         RowBox[{"#3", "-", "1"}]}], "]"}]}]}], "\n", "\t\t\t", "}"}], ",", 
+    "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"And", "[", 
+      RowBox[{
+       RowBox[{"c1", "[", 
+        RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}], ",", " ", 
+       "c2"}], "]"}], "&"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"4734d568-53b7-4bd9-a331-492d7dbc5346"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Descendant\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"1957f502-366a-4c1e-bc0e-8abdcf92db93"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSCombinator", "[", "\"\<Descendant\>\"", "]"}], "[", 
+    RowBox[{"a_", ",", " ", "b_"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"c1", "=", 
+       RowBox[{"cssSelectorCompile", "[", "b", "]"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"c2", "=", 
+       RowBox[{
+        RowBox[{"cssSelectorCompile", "[", "a", "]"}], "[", 
+        RowBox[{"#", ",", " ", 
+         RowBox[{
+          RowBox[{"$ancestors", "[", "#", "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"-", "1"}], "]"}], "]"}], ",", " ", "None"}], "]"}]}]}], 
+     "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"And", "[", 
+      RowBox[{
+       RowBox[{"c1", "[", 
+        RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}], ",", " ", 
+       RowBox[{"AnyTrue", "[", 
+        RowBox[{
+         RowBox[{"$ancestors", "[", "#", "]"}], ",", " ", 
+         RowBox[{"c2", "&"}]}], "]"}]}], "]"}], "&"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"23f95221-f0fe-477a-8b1a-4ec673249d99"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Next\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"15ce3465-526c-4251-a41a-96057547545f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"cssSelectorCompile", "[", 
+    RowBox[{
+     RowBox[{"CSSCombinator", "[", "\"\<Next\>\"", "]"}], "[", 
+     RowBox[{"a_", ",", " ", "b_"}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"c1", "=", 
+        RowBox[{"cssSelectorCompile", "[", "b", "]"}]}], ",", "\n", "\t\t\t", 
+       
+       RowBox[{"c2", "=", 
+        RowBox[{
+         RowBox[{"cssSelectorCompile", "[", "a", "]"}], "[", 
+         RowBox[{"#", ",", " ", 
+          RowBox[{
+           RowBox[{"$ancestors", "[", "#", "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"-", "1"}], "]"}], "]"}], ",", " ", "None"}], "]"}]}]}], 
+      "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"And", "[", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"c1", "[", 
+         RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}], ",", " ", "\n",
+         "\t\t\t", 
+        RowBox[{"AnyTrue", "[", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"Take", "[", 
+           RowBox[{
+            RowBox[{"$priors", "[", "#", "]"}], ",", " ", 
+            RowBox[{"UpTo", "[", "1", "]"}]}], "]"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"c2", "&"}]}], "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", 
+       "]"}], "&"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"b884e8ee-f6cf-4dc2-8f0d-ef02cf8bbf68"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Follows\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"d53f9d82-537b-48bd-8753-cc19c9fe0ed4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSCombinator", "[", "\"\<Follows\>\"", "]"}], "[", 
+    RowBox[{"a_", ",", " ", "b_"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"c1", "=", 
+       RowBox[{"cssSelectorCompile", "[", "b", "]"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"c2", "=", 
+       RowBox[{
+        RowBox[{"cssSelectorCompile", "[", "a", "]"}], "[", 
+        RowBox[{"#", ",", " ", 
+         RowBox[{
+          RowBox[{"$ancestors", "[", "#", "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"-", "1"}], "]"}], "]"}], ",", " ", "None"}], "]"}]}]}], 
+     "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"Or", "[", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"c1", "[", 
+        RowBox[{"#", ",", " ", "#2", ",", " ", "#3"}], "]"}], ",", " ", "\n", 
+       "\t\t\t", 
+       RowBox[{"AnyTrue", "[", 
+        RowBox[{
+         RowBox[{"$priors", "[", "#", "]"}], ",", " ", 
+         RowBox[{"c2", "&"}]}], "]"}]}], "\n", "\t\t\t", "]"}], "&"}]}], "\n",
+    "\t\t", "]"}]}]], \
+"CodeInput",ExpressionUUID->"9096e681-7b72-4fea-8bc5-cb636439d1a4"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]ID\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"aa958915-0fca-45c4-bd40-91c9d0cbbe82"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<ID\>\"", "]"}], "[", "a_", "]"}], "]"}], 
+  ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$data", "[", 
+     RowBox[{"#", ",", " ", "\"\<Meta\>\"", ",", " ", "\"\<id\>\""}], "]"}], 
+    "\[Equal]", "a"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"d7bf16fd-5cf0-4da9-90aa-43670551bdba"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Class\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"885480d4-0a16-4def-8035-3df44c1c1cc2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Class\>\"", "]"}], "[", "a_", "]"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"StringContainsQ", "[", 
+    RowBox[{
+     RowBox[{"$data", "[", 
+      RowBox[{"#", ",", " ", "\"\<Meta\>\"", ",", " ", "\"\<class\>\""}], 
+      "]"}], ",", " ", 
+     RowBox[{"a", "~~", 
+      RowBox[{"(", 
+       RowBox[{"\"\< \>\"", "|", "EndOfString"}], ")"}]}]}], "]"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"2ee24d4b-fb33-4b03-861b-8de9f506028a"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Element\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"f57ee52a-7165-4499-9a8b-6e0239b55949"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Element\>\"", "]"}], "[", "a_", "]"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$data", "[", 
+     RowBox[{"#", ",", " ", "\"\<Type\>\""}], "]"}], "\[Equal]", "a"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"bdcccfcf-10a1-41b0-9a22-06765a653333"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Attribute\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"c387a6ce-fb14-4b93-8f51-acd0a7e28ea9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", "attr_", 
+    "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"KeyExistsQ", "[", 
+    RowBox[{
+     RowBox[{"$data", "[", 
+      RowBox[{"#", ",", " ", "\"\<Meta\>\""}], "]"}], ",", " ", "attr"}], 
+    "]"}], "&"}]}]], \
+"CodeInput",ExpressionUUID->"9c0ce94d-d56d-4d0c-8f84-775fb4a70b6e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", 
+    RowBox[{
+     RowBox[{"\"\<~\>\"", "|", "\"\<*\>\""}], ",", " ", "attr_", ",", " ", 
+     "val_"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"StringContainsQ", "[", 
+    RowBox[{
+     RowBox[{"$data", "[", 
+      RowBox[{"#", ",", " ", "\"\<Meta\>\"", ",", " ", "attr"}], "]"}], ",", 
+     " ", "val"}], "]"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"2657bae2-e430-4a81-acfd-826526027fa9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", 
+    RowBox[{
+     RowBox[{"\"\<|\>\"", "|", "\"\<^\>\""}], ",", " ", "attr_", ",", " ", 
+     "val_"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+   RowBox[{"StringStartsQ", "[", 
+    RowBox[{
+     RowBox[{"$data", "[", 
+      RowBox[{"#", ",", " ", "\"\<Meta\>\"", ",", " ", "attr"}], "]"}], ",", 
+     " ", "val"}], "]"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"acd136f7-cc31-43d9-9054-646ecb73890e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cssSelectorCompile", "[", 
+   RowBox[{
+    RowBox[{"CSSSelector", "[", "\"\<Attribute\>\"", "]"}], "[", 
+    RowBox[{"oops_", ",", " ", "attr_", ",", " ", "val_"}], "]"}], "]"}], ":=",
+   "\n", "\t", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$data", "[", 
+     RowBox[{"#", ",", " ", "\"\<Meta\>\"", ",", " ", 
+      RowBox[{"attr", "<>", "oops"}]}], "]"}], "==", "val"}], 
+   "&"}]}]], \
+"CodeInput",ExpressionUUID->"c90a61d3-c541-4a16-9c44-3fdb2b2ee9b7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]condenseNodeFuncs\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"e8bba73c-f198-4115-a5ce-e3d36bea15f6"],
+
+Cell["\<\
+\[LeftCeiling]Originally this was gonna be more complex, but we\
+\[CloseCurlyQuote]ll leave it as is\[RightFloor]\
+\>", "Text",
+ Evaluatable->True,ExpressionUUID->"fb6a10bf-48c9-4784-9590-c93b7f481a96"],
+
+Cell[BoxData[
+ RowBox[{"condenseNodeFuncs", "//", 
+  "Clear"}]], \
+"CodeInput",ExpressionUUID->"30d0dbb7-7da3-4768-b074-512e087402ca"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"condenseNodeFuncs", "[", "\n", "\t", 
+   RowBox[{"f", ":", 
+    RowBox[{"Function", "[", "b_", "]"}]}], "\n", "\t", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"Function", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"node", ",", "parent", ",", "depth"}], "}"}], ",", " ", 
+    RowBox[{"Evaluate", "@", 
+     RowBox[{"f", "[", 
+      RowBox[{"node", ",", "parent", ",", "depth"}], "]"}]}]}], "]"}]}], "\n", 
+ RowBox[{"\t"}]}], \
+"CodeInput",ExpressionUUID->"25a79e8c-6216-4bc6-91e2-58421641c8f6"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]downconvertNodeFunc\[RightFloor]", "CodeSubsubsubsection",
+ 
+ Evaluatable->True,ExpressionUUID->"04d46bf9-833f-4a21-8480-e5c43e1f0195"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"downconvertNodeFunc", "[", "sel_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Block", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+     "node", ",", " ", "parent", ",", " ", "depth", ",", "\n", "\t\t\t", 
+      "$ancestors", ",", " ", "$priors", ",", "\n", "\t\t\t", "$akids", ",", 
+      " ", "$data", ",", "\n", "\t\t\t", "Part", ",", " ", "And", ",", " ", 
+      "Or", ",", "\n", "\t\t\t", "Equal", ",", " ", "Take", ",", " ", 
+      "AnyTrue", ",", "\n", "\t\t\t", "StringContainsQ", ",", " ", 
+      "StringStartsQ", ",", "\n", "\t\t\t", "StringEndsQ"}], "\n", "\t\t\t", 
+     "}"}], ",", "\n", "\t\t", 
+    RowBox[{"Function", "[", 
+     RowBox[{
+      RowBox[{"{", "node", "}"}], ",", " ", "\n", "\t\t\t", 
+      RowBox[{"Evaluate", "[", 
+       RowBox[{
+        RowBox[{"sel", "[", 
+         RowBox[{"node", ",", " ", 
+          RowBox[{"node", "[", "\"\<Parent\>\"", "]"}], ",", " ", "None"}], 
+         "]"}], "/.", "\n", "\t\t\t\t", 
+        RowBox[{"{", "\n", "\t\t\t\t\t", 
+         RowBox[{
+          RowBox[{"$data", "[", 
+           RowBox[{"node", ",", " ", "x__"}], "]"}], ":>", 
+          RowBox[{"node", "[", "x", "]"}]}], "\n", "\t\t\t\t\t", "}"}]}], 
+       "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"4965b4d2-d3a9-4122-8e69-a30104be1707"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]CompileCSSSelector\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"6c1bcd85-6fb4-4140-ba01-73b613a7030c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CompileCSSSelector", "[", "selector_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Block", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+     "node", ",", " ", "parent", ",", " ", "depth", ",", "\n", "\t\t\t", 
+      "$ancestors", ",", " ", "$priors", ",", "\n", "\t\t\t", "$akids", ",", 
+      " ", "$data", ",", "\n", "\t\t\t", "Part", ",", " ", "And", ",", " ", 
+      "Or", ",", "\n", "\t\t\t", "Equal", ",", " ", "Take", ",", " ", 
+      "AnyTrue", ",", "\n", "\t\t\t", "StringContainsQ", ",", " ", 
+      "StringStartsQ", ",", "\n", "\t\t\t", "StringEndsQ"}], "\n", "\t\t\t", 
+     "}"}], ",", "\n", "\t\t", 
+    RowBox[{"condenseNodeFuncs", "@", "\n", "\t\t\t", 
+     RowBox[{"cssSelectorCompile", "[", "selector", "]"}]}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"892e495d-6f0b-421a-8b5b-468cc76657d6"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BFSelect\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"db855833-e373-4d63-8c40-c643c17f2e97"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"prepVertex", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"UndirectedEdge", "|", "DirectedEdge"}], ")"}], "[", 
+     RowBox[{"u_", ",", " ", "v_"}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"prevActive", "=", 
+       RowBox[{"Lookup", "[", 
+        RowBox[{"$akids", ",", " ", "v", ",", " ", "Nothing"}], "]"}]}], 
+      "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"$ancestors", "[", "u", "]"}], "=", "\n", "\t\t\t", 
+       RowBox[{"Append", "[", 
+        RowBox[{
+         RowBox[{"Lookup", "[", 
+          RowBox[{"$ancestors", ",", " ", "v", ",", " ", 
+           RowBox[{"{", "None", "}"}]}], "]"}], ",", " ", "v"}], "]"}]}], ";",
+       "\n", "\t\t", 
+      RowBox[{
+       RowBox[{"$priors", "[", "u", "]"}], "=", "\n", "\t\t\t", 
+       RowBox[{"Append", "[", 
+        RowBox[{
+         RowBox[{"Lookup", "[", 
+          RowBox[{"$priors", ",", " ", "prevActive", ",", " ", 
+           RowBox[{"{", "}"}]}], "]"}], ",", " ", "prevActive"}], "]"}]}], 
+      ";", "\n", "\t\t", 
+      RowBox[{
+       RowBox[{"$akids", "[", "v", "]"}], "=", "u"}], ";"}]}], "\n", "\t\t", 
+    "]"}]}], ";"}]], \
+"CodeInput",ExpressionUUID->"a7e808db-7cbb-457b-b8bf-434398d79710"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"discoverVertexFunc", "[", "nf_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"Function", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"prepVertex", "[", "##", "]"}], ";", "\n", "\t\t", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"nf", "[", "##", "]"}], ",", " ", 
+      RowBox[{"Sow", "[", "#", "]"}]}], "]"}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"b71bb1ec-33d3-4b74-88f4-a9540f395842"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CSSBFSelect", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "vertexFunc_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"Block", "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"$ancestors", "=", 
+       RowBox[{"<|", "|>"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"$akids", "=", 
+       RowBox[{"<|", "|>"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"$priors", "=", 
+       RowBox[{"<|", "|>"}]}], ",", "\n", "\t\t\t", 
+      RowBox[{"$data", "=", 
+       RowBox[{"x", "[", "\"\<Data\>\"", "]"}]}]}], "\n", "\t\t\t", "}"}], 
+    ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Reap", "[", "\n", "\t\t\t", 
+       RowBox[{"BreadthFirstScan", "[", 
+        RowBox[{
+         RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], ",", "\n", "\t\t\t\t", 
+         RowBox[{"\"\<DiscoverVertex\>\"", "->", 
+          RowBox[{"discoverVertexFunc", "[", "vertexFunc", "]"}]}]}], "\n", 
+        "\t\t\t\t", "]"}], "\n", "\t\t\t", "]"}], "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "~", "Flatten", "~", "1"}]}], "\n", 
+   "\t\t", "]"}]}]], \
+"CodeInput",ExpressionUUID->"4e77d2b5-5acf-4793-9c7f-2e27214bde75"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]CSSSelect\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"9871e5eb-3bd2-4f9a-8d49-1083a1d945e0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CSSSelect", "[", 
+    RowBox[{"x_", ",", " ", "selector_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"sel", "=", 
+       RowBox[{"CompileCSSSelector", "@", 
+        RowBox[{"ParseCSSSelector", "[", "selector", "]"}]}]}], "}"}], ",", 
+     "\n", "\t\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"FreeQ", "[", 
+        RowBox[{"sel", ",", " ", 
+         RowBox[{"$ancestors", "|", "$priors"}]}], "]"}], ",", "\n", "\t\t\t", 
+       RowBox[{"Block", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"$data", "=", 
+           RowBox[{"x", "[", "\"\<Data\>\"", "]"}]}], "}"}], ",", "\n", 
+         "\t\t\t\t", 
+         RowBox[{"Keys", "@", 
+          RowBox[{"Select", "[", 
+           RowBox[{"$data", ",", " ", 
+            RowBox[{"downconvertNodeFunc", "@", "sel"}]}], "]"}]}]}], "\n", 
+        "\t\t\t\t", "]"}], ",", "\n", "\t\t\t", 
+       RowBox[{"CSSBFSelect", "[", 
+        RowBox[{"x", ",", " ", "sel"}], "]"}]}], "\n", "\t\t\t", "]"}]}], 
+    "\n", "\t\t", "]"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"6f7aa287-392e-402a-98b5-d39d59b3263b"]
+}, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2070,7 +2996,7 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"5c0c5bae-4ba8-44d0-bc9a-47ae2d0c7998"]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[BoxData[
  RowBox[{
@@ -2081,8 +3007,8 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   RowBox[{"EndPackage", "[", "]"}], 
-  ";"}]], "InputSection",ExpressionUUID->"acc9d489-f0b1-47cd-a8c0-\
-e469063eb3cc"]
+  ";"}]], \
+"InputSection",ExpressionUUID->"acc9d489-f0b1-47cd-a8c0-e469063eb3cc"]
 }, Open  ]],
 
 Cell["", "SectionSeparator",ExpressionUUID->"4beedad2-ba75-4bf0-b3ff-\
@@ -2177,145 +3103,534 @@ scopes-for-oauth-apps/#available-scopes\>\"", ",", "\[IndentingNewLine]",
      RowBox[{"{", 
       RowBox[{"\"\<HTML\>\"", ",", " ", "\"\<XMLObject\>\""}], "}"}]}], 
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
- CellLabel->"In[95]:=",ExpressionUUID->"566da8a8-9290-4d6d-81a0-496855eac5e0"],
+ CellLabel->
+  "In[299]:=",ExpressionUUID->"566da8a8-9290-4d6d-81a0-496855eac5e0"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"blech", "=", 
    RowBox[{"XMLGraph", "@", "test"}]}], ";"}]], "Input",
  CellLabel->
-  "In[136]:=",ExpressionUUID->"42979413-7510-45ba-954d-bfde3ae2dbfc"],
+  "In[197]:=",ExpressionUUID->"42979413-7510-45ba-954d-bfde3ae2dbfc"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Children\>\"", "[", 
-     RowBox[{"blech", "@", 
-      RowBox[{"\"\<Select\>\"", "[", "\"\<td\>\"", "]"}]}], "]"}]}], "//", 
-   "RepeatedTiming"}], "//", "First"}]], "Input",
+ RowBox[{"blech", "@", 
+  RowBox[{"\"\<Select\>\"", "[", "\"\<.content > table\>\"", "]"}]}]], "Input",
  CellLabel->
-  "In[121]:=",ExpressionUUID->"6c63d4aa-a53d-4cfe-9641-35a2b7318b53"],
-
-Cell[BoxData["0.0005093256302521009`2."], "Output",
- CellLabel->"Out[121]=",ExpressionUUID->"21fe1e6c-acb6-41f0-abd0-fa7ed1eaffa8"]
-}, Open  ]],
-
-Cell[CellGroupData[{
+  "In[336]:=",ExpressionUUID->"fc4195b1-191f-423c-9d3e-fcffdc00c809"],
 
 Cell[BoxData[
- RowBox[{
+ RowBox[{"Function", "[", 
   RowBox[{
-   RowBox[{"Cases", "[", 
-    RowBox[{"test", ",", " ", 
+   RowBox[{"{", "XMLGraph`Private`node$", "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"XMLGraph`Private`node$", "[", "\<\"Type\"\>", "]"}], 
+     "\[Equal]", "\<\"table\"\>"}], "&&", 
+    RowBox[{"StringContainsQ", "[", 
      RowBox[{
-      RowBox[{"XMLElement", "[", 
-       RowBox[{"\"\<td\>\"", ",", " ", "d_", ",", " ", "n_"}], "]"}], 
-      "\[RuleDelayed]", "n"}], ",", " ", "\[Infinity]"}], "]"}], "//", 
-   "RepeatedTiming"}], "//", "First"}]], "Input",
- CellLabel->
-  "In[123]:=",ExpressionUUID->"171f149b-616b-4752-af7e-31115802ca53"],
+      RowBox[{"XMLGraph`Private`$data", "[", 
+       RowBox[{
+        RowBox[{"XMLGraph`Private`node$", "[", "\<\"Parent\"\>", "]"}], 
+        ",", "\<\"Meta\"\>", ",", "\<\"class\"\>"}], "]"}], ",", 
+      RowBox[{"\<\"content\"\>", "~~", 
+       RowBox[{"\<\" \"\>", "|", "EndOfString"}]}]}], "]"}]}]}], 
+  "]"}]], "Echo",ExpressionUUID->"6473e266-4059-4506-afed-a1c7584dfb90"],
 
-Cell[BoxData["0.0001615535947712418`2."], "Output",
- CellLabel->"Out[123]=",ExpressionUUID->"c19cd9de-80fd-4862-aa00-a333144dd0a4"]
+Cell[BoxData[
+ RowBox[{"{", "\<\"table:41429e40-c39b-4234-837e-141dce7d04a3\"\>", 
+  "}"}]], "Output",
+ CellLabel->"Out[336]=",ExpressionUUID->"afa060f1-c832-479a-aa9d-00438167720e"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"tableNode", "=", 
-  RowBox[{"First", "@", 
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", 
-     RowBox[{"\"\<table\>\"", ",", " ", "1"}], "]"}]}]}]}]], "Input",
+ RowBox[{"blech", "@", 
+  RowBox[{
+  "\"\<Data\>\"", "[", "\"\<div:0d7cf5c0-e4fe-4777-857f-62ab2d0090fb\>\"", 
+   "]"}]}]], "Input",
  CellLabel->
-  "In[144]:=",ExpressionUUID->"79024191-7095-463d-a35d-4b28a2a715ed"],
-
-Cell[BoxData["\<\"table:d197c128-e3b3-4895-acde-bba715366beb\"\>"], "Output",
- CellLabel->"Out[144]=",ExpressionUUID->"46b639bc-0c8b-4ff4-bcd1-41c1edb53a3c"]
-}, Open  ]],
-
-Cell[CellGroupData[{
+  "In[334]:=",ExpressionUUID->"b73ea1a5-3d46-4235-bd3e-cf8010150ec1"],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"blech", "@", 
-   RowBox[{"\"\<Subgraph\>\"", "[", "tableNode", "]"}]}], "//", 
-  "Rasterize"}]], "Input",
- CellLabel->
-  "In[146]:=",ExpressionUUID->"5ecd6be4-5f5c-4e12-ad0d-108912821244"],
-
-Cell[BoxData[
- GraphicsBox[
-  TagBox[RasterBox[CompressedData["
-1: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
-r1D/AwZNOtE=
-    "], {{0, 45}, {150, 0}}, {0, 255},
-    ColorFunction->RGBColor],
-   BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
-   Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{150, 45},
-  PlotRange->{{0, 150}, {0, 45}}]], "Output",
- CellLabel->"Out[146]=",ExpressionUUID->"adebfaaf-ca0b-4e90-9758-ce7410ec1cf5"]
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"Parent\"\>", 
+    "\[Rule]", "\<\"div:809d52a7-a9ff-4b82-9adf-8b4014d05072\"\>"}], ",", 
+   RowBox[{"\<\"Type\"\>", "\[Rule]", "\<\"div\"\>"}], ",", 
+   RowBox[{"\<\"Name\"\>", 
+    "\[Rule]", "\<\"div:0d7cf5c0-e4fe-4777-857f-62ab2d0090fb\"\>"}], ",", 
+   RowBox[{"\<\"Meta\"\>", "\[Rule]", 
+    RowBox[{"\[LeftAssociation]", 
+     RowBox[{"\<\"class\"\>", "\[Rule]", "\<\"content col-md-8\"\>"}], 
+     "\[RightAssociation]"}]}], ",", 
+   RowBox[{"\<\"Children\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\<\"\\n        \"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"h1:8b8e833a-7675-4f96-b072-3baf411f0ef3\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["h1:8b8e833a-7675-4f96-b072-3baf411f0ef3"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"div:dfa12b13-f3f4-4243-a00e-1b12c3cb84b0\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["div:dfa12b13-f3f4-4243-a00e-1b12c3cb84b0"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"ul:9c54e0f8-4699-482e-a5fb-0eb069a314be\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["ul:9c54e0f8-4699-482e-a5fb-0eb069a314be"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:2652b4f6-2ef3-4937-b183-29ca989d0a55\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:2652b4f6-2ef3-4937-b183-29ca989d0a55"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:0a8a8fcc-e6a1-4766-86b6-53636248fd50\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:0a8a8fcc-e6a1-4766-86b6-53636248fd50"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"pre:777612bb-88a7-43f2-8dd2-3a6ea661127d\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["pre:777612bb-88a7-43f2-8dd2-3a6ea661127d"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"ul:4487b7e0-e689-450d-b78d-0f2fb50ef7ef\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["ul:4487b7e0-e689-450d-b78d-0f2fb50ef7ef"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"h2:0029d6a7-b448-4a2c-b37b-48cdd629f374\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["h2:0029d6a7-b448-4a2c-b37b-48cdd629f374"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"table:41429e40-c39b-4234-837e-141dce7d04a3\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["table:41429e40-c39b-4234-837e-141dce7d04a3"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"div:f91d2347-3cb9-4cc8-82eb-ef49a9d776c1\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["div:f91d2347-3cb9-4cc8-82eb-ef49a9d776c1"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"h2:2db68336-dd7a-4dec-af4b-1547ee8ea0c2\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["h2:2db68336-dd7a-4dec-af4b-1547ee8ea0c2"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:187f1d19-bdc4-47c9-9675-41f5544e712f\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:187f1d19-bdc4-47c9-9675-41f5544e712f"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:d243bbf0-f422-4ddb-9e2b-17e6dfee7b39\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:d243bbf0-f422-4ddb-9e2b-17e6dfee7b39"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:d5c5e2d8-fabb-4104-9a21-f78407f8d2c4\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:d5c5e2d8-fabb-4104-9a21-f78407f8d2c4"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:41b8c6f9-d4cb-42f9-86e6-8167f5068955\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:41b8c6f9-d4cb-42f9-86e6-8167f5068955"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"h2:cbc9381c-1509-41cc-a588-ad99cec63dc9\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["h2:cbc9381c-1509-41cc-a588-ad99cec63dc9"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n\\n\"\>", ",", 
+      InterpretationBox[
+       RowBox[{
+        TagBox["Node",
+         "SummaryHead"], "[", 
+        TemplateBox[{GridBox[{{
+             GridBox[{{
+                TagBox[
+                "\"p:f1c0296a-e0d8-4b34-afee-8743b9084807\"", 
+                 "SummaryItem"]}}, 
+              GridBoxAlignment -> {
+               "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+              False, GridBoxItemSize -> {
+               "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+              GridBoxSpacings -> {
+               "Columns" -> {{2}}, "Rows" -> {{Automatic}}}, 
+              BaseStyle -> {
+               ShowStringCharacters -> False, NumberMarks -> False, 
+                PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+           GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+           GridBoxItemSize -> {
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+           BaselinePosition -> {1, 1}]},
+         "SummaryPanel"], "]"}],
+       XMLGraph`Package`Node["p:f1c0296a-e0d8-4b34-afee-8743b9084807"],
+       Editable->False,
+       SelectWithContents->True,
+       Selectable->False], ",", "\<\"\\n      \"\>"}], "}"}]}]}], 
+  "\[RightAssociation]"}]], "Output",
+ CellLabel->"Out[334]=",ExpressionUUID->"422104bd-9e98-42df-8049-2e59ca485796"]
 }, Open  ]]
 },
 WindowSize->{808, 755},
