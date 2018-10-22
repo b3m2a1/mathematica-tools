@@ -49,6 +49,8 @@ NodeList::usage=
   "Lists the nodes on the Graph";
 NodeData::usage=
   "Gets a set of nodes off the graph";
+NodeAttributes::usage=
+  "Pulls node attributes off the graph";
 SelectNodes::usage=
   "Selects nodes by some criterion";
 
@@ -477,7 +479,7 @@ bindMethod[x_XMLGraph, "Meta"[n_:All]]:=
 
 
 bindMethod[x_XMLGraph, "Attribute"[n_:All, attr_]]:=
-  NodeData[x, n, "Meta", attr]
+  NodeAttributes[x, n, attr]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -539,7 +541,7 @@ bindMethod[x_XMLGraph, "Subgraph"[k_]]:=
 
 
 
-bindMethod[x_XMLGraph, "XML"]:=
+bindAttribute[x_XMLGraph, "XML"]:=
   ToXMLObject[x]
 
 
@@ -548,8 +550,25 @@ bindMethod[x_XMLGraph, "XML"]:=
 
 
 
-bindMethod[x_XMLGraph, "Association"]:=
+bindAttribute[x_XMLGraph, "Association"]:=
   ToXMLAssociation[x]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Fallthrough*)
+
+
+
+x_XMLGraph?XMLGraphQ[h_[s_String?($$objData["Attributes", #]&)]]:=
+  With[{g=x[h]},
+    g[s]/;XMLGraphQ[g]
+    ]
+
+
+x_XMLGraph?XMLGraphQ[h_[s_String?($$objData["Methods", #]&)[a___]]]:=
+  With[{g=x[h]},
+    g[s[a]]/;XMLGraphQ[g]
+    ]
 
 
 (* ::Subsection:: *)
@@ -833,6 +852,21 @@ NodeData[x_XMLGraph, n:_String|{__String}|All, part:(_String|{__String}|All):All
 NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:All]:=
   NodeData[x, VertexList[x["Graph"]][[i]]];
 NodeData[x_XMLGraph, {}, part:(_String|{__String}|All):All]:=
+  {}
+
+
+(* ::Subsubsection::Closed:: *)
+(*NodeAttributes*)
+
+
+
+NodeAttributes[x_XMLGraph, 
+  n:_String|{__String}|All, 
+  part:(_String|{__String}|All):All]:=
+  x["Data"][[n, "Meta", part]];
+NodeAttributes[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:All]:=
+  NodeAttributes[x, VertexList[x["Graph"]][[i]]];
+NodeAttributes[x_XMLGraph, {}, part:(_String|{__String}|All):All]:=
   {}
 
 
