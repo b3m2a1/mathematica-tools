@@ -647,7 +647,7 @@ createNode[parent_->kid_Association]:=
       children
       },
     data["Type"]=Lookup[kid, "Type", $NodeDefaults["Type"]];
-    data["Name"]=CreateUUID[data["Type"]<>":"];
+    data["Name"]=StringSplit[CreateUUID[data["Type"]<>":"], "-", 2][[1]];
     data["Meta"]=Lookup[kid, "Meta", $NodeDefaults["Meta"]];
     data["Children"]=
       createNode[
@@ -1400,7 +1400,11 @@ XMLGraphDFS[x_XMLGraph,
 
 
 fromAssoc[p_, a_]:=
-  With[{name=Lookup[a, "Name", CreateUUID[a["Type"]<>":"]]},
+  With[
+    {
+      name=
+        Lookup[a, "Name", StringSplit[CreateUUID[a["Type"]<>":"], "-", 2][[1]]]
+      },
     Sow@
       Join[
         <|
