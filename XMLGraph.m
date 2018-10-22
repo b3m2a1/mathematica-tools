@@ -308,12 +308,13 @@ Format[x_XMLGraph?XMLGraphQ]:=
   RawBoxes@
     With[
       {
-        g=VertexCount@x["Graph"]-1,
-        r=Replace[RootNode[x], s:Except[None]:>x["Data"][s, "Type"]]
+        g=Length@x["Nodes"]-1,
+        r=Replace[x["Root"], s:Except[None]:>x["Data"][s, "Type"]],
+        be=x["Backend"]
         },
       BoxForm`ArrangeSummaryBox[
         XMLGraph,
-        x,
+        Unevaluated[XMLGraph@@{be}],
         None,
         {
           BoxForm`MakeSummaryItem[{"Root: ", r}, StandardForm],
@@ -828,17 +829,20 @@ NodeList[x_XMLGraph]:=
 
 
 
-SelectNodes[x_XMLGraph, test_String]:=
-  CSSSelect[x, test]
+SelectNodes//Clear
+
+
+SelectNodes[x_XMLGraph, test_String, n_:All]:=
+  CSSSelect[x, test, n]
 
 
 SelectNodes[x_XMLGraph, prop_String->test_]:=
   Keys@Select[x["Data"][[All, "Meta", prop]], #==test&];
 SelectNodes[x_XMLGraph, test:Except[_String|_String->_]]:=
   Keys@Select[x["Data"], test];
-SelectNodes[x_XMLGraph, test_String, n_]:=
-  Keys@Select[x["Data"][[All, "Type"]], #==test&, n];
-SelectNodes[x_XMLGraph, test:Except[_String], n_]:=
+SelectNodes[x_XMLGraph, prop_String->test_, n_]:=
+  Keys@Select[x["Data"][[All, "Meta", prop]], #==test&, n];
+SelectNodes[x_XMLGraph, test:Except[_String|_String->_], n_]:=
   Keys@Select[x["Data"], test, n];
 
 
@@ -1125,7 +1129,9 @@ cssSelectorCompile[CSSSelector["ID"][a_]]:=
 
 
 cssSelectorCompile[CSSSelector["Class"][a_]]:=
-  StringContainsQ[$data[#, "Meta", "class"], a~~(" "|EndOfString)]&
+  StringQ[#]&&StringContainsQ[#, a~~(" "|EndOfString)]&[
+    $data[#, "Meta", "class"]
+    ]&
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1147,11 +1153,15 @@ cssSelectorCompile[CSSSelector["Attribute"][attr_]]:=
 
 
 cssSelectorCompile[CSSSelector["Attribute"]["~"|"*", attr_, val_]]:=
-  StringContainsQ[$data[#, "Meta", attr], val]&
+  StringQ[#]&&StringContainsQ[#, val]&[$data[#, "Meta", attr]]&
 
 
 cssSelectorCompile[CSSSelector["Attribute"]["|"|"^", attr_, val_]]:=
-  StringStartsQ[$data[#, "Meta", attr], val]&
+  StringQ[#]&&StringStartsQ[#, val]&[$data[#, "Meta", attr]]&
+
+
+cssSelectorCompile[CSSSelector["Attribute"]["$", attr_, val_]]:=
+  StringQ[#]&&StringEndsQ[#, val]&[$data[#, "Meta", attr]]&
 
 
 cssSelectorCompile[CSSSelector["Attribute"][oops_, attr_, val_]]:=
@@ -1192,7 +1202,7 @@ downconvertNodeFunc[sel_]:=
       Part, And, Or,
       Equal, Take, AnyTrue,
       StringContainsQ, StringStartsQ,
-      StringEndsQ
+      StringEndsQ, StringQ
       },
     Function[{node}, 
       Evaluate[sel[node, node["Parent"], None]/.
@@ -1218,7 +1228,7 @@ CompileCSSSelector[selector_]:=
       Part, And, Or,
       Equal, Take, AnyTrue,
       StringContainsQ, StringStartsQ,
-      StringEndsQ
+      StringEndsQ, StringQ
       },
     condenseNodeFuncs@
       cssSelectorCompile[selector]
@@ -1243,25 +1253,32 @@ prepVertex[u_, v_, d_]:=
 
 discoverVertexFunc[nf_]:=
   Function[
+    If[sown==toTake, Throw["Done"]];
     prepVertex[##];
-    If[nf[##], Sow[#]]
+    If[nf[##], Sow[#];sown++;If[sown==toTake, Throw["Done"]]]
     ]
 
 
-CSSDFSelect[x_XMLGraph, vertexFunc_]:=
+CSSDFSelect//Clear
+
+
+CSSDFSelect[x_XMLGraph, vertexFunc_, take_:All]:=
   Block[
     {
       $ancestors=<||>,
       $akids=<||>,
       $priors=<||>,
-      $data=x["Data"]
+      $data=x["Data"],
+      toTake=take,
+      sown=0
       },
     Reap[
-      DepthFirstScan[
-        x["Graph"],
-        RootNode[x],
-        "DiscoverVertex"->discoverVertexFunc[vertexFunc]
-        ]
+      Catch@
+        DepthFirstScan[
+          VertexDelete[x["Graph"], "Root"],
+          RootNode[x],
+          "DiscoverVertex"->discoverVertexFunc[vertexFunc]
+          ];
       ][[2]]~Flatten~1
     ]
 
@@ -1271,13 +1288,20 @@ CSSDFSelect[x_XMLGraph, vertexFunc_]:=
 
 
 
-CSSSelect[x_, selector_]:=
+CSSSelect//Clear
+
+
+CSSSelect[x_, selector_, n_:All]:=
   With[{sel=CompileCSSSelector@ParseCSSSelector[selector]},
     If[FreeQ[sel, $ancestors|$priors],
       Block[{$data=x["Data"]},
-        Keys@Select[$data, downconvertNodeFunc@sel]
+        Keys@
+          If[IntegerQ@n&&n>0,
+            Select[$data, downconvertNodeFunc@sel, n],
+            Select[$data, downconvertNodeFunc@sel]
+            ]
         ],
-      CSSDFSelect[x, sel]
+      CSSDFSelect[x, sel, n]
       ]
     ];
 
