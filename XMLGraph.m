@@ -53,6 +53,10 @@ SelectNodes::usage=
   "Selects nodes by some criterion";
 
 
+NodeChildren::usage="";
+NodeParents::usage="";
+
+
 (* ::Subsubsection::Closed:: *)
 (*Object Stuff*)
 
@@ -85,6 +89,10 @@ ToXMLObject::usage="";
 XMLSubgraph::usage="Extracts a subgraph starting from a head node";
 FormattedXMLGraph::usage="Returns the Graph with nice formatting";
 XMLGraphSort::usage="Sorts the XMLGraph by distance from the \"Root\" node";
+
+
+XMLGraphBFS::usage="Applies BreadthFirstScan to the Graph";
+XMLGraphDFS::usage="Applies DepthFirstScan to the Graph";
 
 
 EndPackage[];
@@ -316,8 +324,34 @@ Format[x_XMLGraph?XMLGraphQ]:=
 
 
 (* ::Subsubsection::Closed:: *)
-(*Attributes*)
+(*Methods/Attributes*)
 
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Bind*)
+
+
+
+$$objData=<|
+  "Methods"-><||>,
+  "Attributes"-><||>
+  |>;
+
+
+bindMethod/:(bindMethod[graph_, name_[pat___]]:=def_):=
+  (
+    $$objData["Methods", name]=True;
+    XMLGraph/:graph?XMLGraphQ[name[pat]]:=def;
+    XMLGraph/:graph?XMLGraphQ[name][pat]:=def;
+    )
+
+
+bindAttribute/:(bindAttribute[graph_, name_]:=def_):=
+  (
+    $$objData["Attributes", name]=True;
+    XMLGraph/:graph?XMLGraphQ[name]:=def;
+    )
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -325,7 +359,7 @@ Format[x_XMLGraph?XMLGraphQ]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Insert"[n_]]:=
+bindMethod[x_XMLGraph, "Insert"[n_]]:=
   InsertNodes[x, n]
 
 
@@ -334,7 +368,7 @@ x_XMLGraph?XMLGraphQ["Insert"[n_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Delete"[n_]]:=
+bindMethod[x_XMLGraph, "Delete"[n_]]:=
   DeleteNodes[x, n]
 
 
@@ -343,7 +377,7 @@ x_XMLGraph?XMLGraphQ["Delete"[n_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["ModifyNodes"[n_]]:=
+bindMethod[x_XMLGraph, "ModifyNodes"[n_]]:=
   ModifyNodes[x, n]
 
 
@@ -352,7 +386,7 @@ x_XMLGraph?XMLGraphQ["ModifyNodes"[n_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["FormattedGraph"[o___]]:=
+bindMethod[x_XMLGraph, "FormattedGraph"[o___]]:=
   FormattedXMLGraph[x, o];
 
 
@@ -361,7 +395,7 @@ x_XMLGraph?XMLGraphQ["FormattedGraph"[o___]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Nodes"]:=
+bindAttribute[x_XMLGraph, "Nodes"]:=
   NodeList[x]
 
 
@@ -370,7 +404,7 @@ x_XMLGraph?XMLGraphQ["Nodes"]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Root"]:=
+bindAttribute[x_XMLGraph, "Root"]:=
   RootNode[x]
 
 
@@ -379,7 +413,7 @@ x_XMLGraph?XMLGraphQ["Root"]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Select"[fn_, n___]]:=
+bindMethod[x_XMLGraph, "Select"[fn_, n___]]:=
   SelectNodes[x, fn, n]
 
 
@@ -388,8 +422,26 @@ x_XMLGraph?XMLGraphQ["Select"[fn_, n___]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Locate"[id_]]:=
+bindMethod[x_XMLGraph, "Locate"[id_]]:=
   Append[SelectNodes[x, "id"->id, 1], None][[1]]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*BFS*)
+
+
+
+bindMethod[x_XMLGraph, "BFS"[arg__]]:=
+  XMLGraphBFS[x, arg]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*DFS*)
+
+
+
+bindMethod[x_XMLGraph, "DFS"[arg__]]:=
+  XMLGraphDFS[x, arg]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -397,7 +449,7 @@ x_XMLGraph?XMLGraphQ["Locate"[id_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Data"[n_:All, p_:All]]:=
+bindMethod[x_XMLGraph, "Data"[n_:All, p_:All]]:=
   NodeData[x, n, p];
 
 
@@ -406,7 +458,7 @@ x_XMLGraph?XMLGraphQ["Data"[n_:All, p_:All]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Type"[n_:All]]:=
+bindMethod[x_XMLGraph, "Type"[n_:All]]:=
   NodeData[x, n, "Type"]
 
 
@@ -415,8 +467,17 @@ x_XMLGraph?XMLGraphQ["Type"[n_:All]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Meta"[n_:All]]:=
+bindMethod[x_XMLGraph, "Meta"[n_:All]]:=
   NodeData[x, n, "Meta"]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Attribute*)
+
+
+
+bindMethod[x_XMLGraph, "Attribute"[n_:All, attr_]]:=
+  NodeData[x, n, "Meta", attr]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -424,8 +485,17 @@ x_XMLGraph?XMLGraphQ["Meta"[n_:All]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Parent"[n_:All]]:=
-  NodeData[x, n, "Parent"]
+bindMethod[x_XMLGraph, "Parent"[n_:All, depth_:1]]:=
+  NodeParents[x, n, depth]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*FullParents*)
+
+
+
+bindMethod[x_XMLGraph, "FullParents"[n_:All, depth_:1]]:=
+  NodeParents[x, n, depth, True]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -433,8 +503,17 @@ x_XMLGraph?XMLGraphQ["Parent"[n_:All]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Children"[n_:All]]:=
-  NodeData[x, n, "Children"]
+bindMethod[x_XMLGraph, "Children"[n_:All, depth_:1]]:=
+  NodeChildren[x, n, depth]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*FullChildren*)
+
+
+
+bindMethod[x_XMLGraph, "FullChildren"[n_:All, depth_:1]]:=
+  NodeChildren[x, n, depth, True]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -442,7 +521,7 @@ x_XMLGraph?XMLGraphQ["Children"[n_:All]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Sort"[]]:=
+bindMethod[x_XMLGraph, "Sort"[]]:=
   XMLGraphSort[x]
 
 
@@ -451,7 +530,7 @@ x_XMLGraph?XMLGraphQ["Sort"[]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Subgraph"[k_]]:=
+bindMethod[x_XMLGraph, "Subgraph"[k_]]:=
   XMLSubgraph[x, k]
 
 
@@ -460,7 +539,7 @@ x_XMLGraph?XMLGraphQ["Subgraph"[k_]]:=
 
 
 
-x_XMLGraph?XMLGraphQ["XML"]:=
+bindMethod[x_XMLGraph, "XML"]:=
   ToXMLObject[x]
 
 
@@ -469,7 +548,7 @@ x_XMLGraph?XMLGraphQ["XML"]:=
 
 
 
-x_XMLGraph?XMLGraphQ["Association"]:=
+bindMethod[x_XMLGraph, "Association"]:=
   ToXMLAssociation[x]
 
 
@@ -752,7 +831,35 @@ SelectNodes[x_XMLGraph, test:Except[_String], n_]:=
 NodeData[x_XMLGraph, n:_String|{__String}|All, part:(_String|{__String}|All):All]:=
   x["Data"][[n, part]];
 NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:All]:=
-  NodeData[x, VertexList[x["Graph"]][[i]]]
+  NodeData[x, VertexList[x["Graph"]][[i]]];
+NodeData[x_XMLGraph, {}, part:(_String|{__String}|All):All]:=
+  {}
+
+
+(* ::Subsubsection::Closed:: *)
+(*NodeChildren*)
+
+
+
+NodeChildren[x_XMLGraph, n_, depth_:1, full:True|False:False]:=
+  If[full, Rest[NestList][##]&, Nest][
+    NodeData[x, Cases[#, Node[s_]:>s, {0, 1}], "Children"]&,
+    Thread[Node[n]],
+    depth
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*NodeParents*)
+
+
+
+NodeParents[x_XMLGraph, n_, depth_:1, full:True|False:False]:=
+  If[full, Rest[NestList][##]&, Nest][
+    NodeData[x, #, "Parent"]&, 
+    n, 
+    depth
+    ]
 
 
 (* ::Subsection:: *)
@@ -762,7 +869,7 @@ NodeData[x_XMLGraph, i:_Integer|{__Integer}|_Span, parts:_String|{__String}|All:
 
 (* ::Text:: *)
 (*
-	I may want a BFS selection procedure over the Graph representation? This would make things like ~ more intuitive and linear time, but might also be a bit more of a pain.
+	I may want a DFS selection procedure over the Graph representation? This would make things like ~ more intuitive and linear time, but might also be a bit more of a pain.
 *)
 
 
@@ -1085,11 +1192,8 @@ CompileCSSSelector[selector_]:=
 
 
 (* ::Subsubsection::Closed:: *)
-(*BFSelect*)
+(*DFSelect*)
 
-
-
-BreadthFirstScan
 
 
 prepVertex[u_, v_, d_]:=
@@ -1110,7 +1214,7 @@ discoverVertexFunc[nf_]:=
     ]
 
 
-CSSBFSelect[x_XMLGraph, vertexFunc_]:=
+CSSDFSelect[x_XMLGraph, vertexFunc_]:=
   Block[
     {
       $ancestors=<||>,
@@ -1119,7 +1223,7 @@ CSSBFSelect[x_XMLGraph, vertexFunc_]:=
       $data=x["Data"]
       },
     Reap[
-      BreadthFirstScan[
+      DepthFirstScan[
         x["Graph"],
         RootNode[x],
         "DiscoverVertex"->discoverVertexFunc[vertexFunc]
@@ -1139,7 +1243,7 @@ CSSSelect[x_, selector_]:=
       Block[{$data=x["Data"]},
         Keys@Select[$data, downconvertNodeFunc@sel]
         ],
-      CSSBFSelect[x, sel]
+      CSSDFSelect[x, sel]
       ]
     ];
 
@@ -1254,6 +1358,29 @@ XMLGraphSort[x_XMLGraph]:=
     vo=Ordering@GraphDistance[graph, "Root"];
     a["Graph"]=Graph[VertexList[a][[vo]], EdgeList[a]];
     If[MutableGraphQ@x, x, XMLGraph[a]]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Scans*)
+
+
+
+XMLGraphBFS[x_XMLGraph, 
+  rootNode:_String|Automatic:Automatic, 
+  events_?OptionQ, e___
+  ]:=
+  With[{g=VertexDelete[x["Graph"], "Root"], r=x["Root"]},
+    BreadthFirstScan[g, r, events, e]
+    ]
+
+
+XMLGraphDFS[x_XMLGraph, 
+  rootNode:_String|Automatic:Automatic, 
+  events_?OptionQ, e___
+  ]:=
+  With[{g=VertexDelete[x["Graph"], "Root"], r=x["Root"]},
+    DepthFirstScan[g, r, events, e]
     ]
 
 

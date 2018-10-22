@@ -96,7 +96,16 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"SelectNodes", "::", "usage"}], "=", "\n", "\t", 
    "\"\<Selects nodes by some criterion\>\""}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"def51c9b-9d1e-4e59-8c45-9a70e2e5c0f0"]\
+  ";"}]}], "CodeInput",ExpressionUUID->"def51c9b-9d1e-4e59-8c45-9a70e2e5c0f0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"NodeChildren", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"NodeParents", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"0084a622-e63d-4063-b6f8-06fd8f5eaba3"]\
 
 }, Closed]],
 
@@ -171,10 +180,21 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"XMLGraphSort", "::", "usage"}], "=", 
    "\"\<Sorts the XMLGraph by distance from the \\\"Root\\\" node\>\""}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"839bc02a-30e2-4271-977a-b4b4395fb040"]\
+  ";"}]}], "CodeInput",ExpressionUUID->"839bc02a-30e2-4271-977a-b4b4395fb040"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"XMLGraphBFS", "::", "usage"}], "=", 
+   "\"\<Applies BreadthFirstScan to the Graph\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"XMLGraphDFS", "::", "usage"}], "=", 
+   "\"\<Applies DepthFirstScan to the Graph\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"e67422c8-e708-431c-a9a0-80ea63abbc78"]\
 
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -531,7 +551,7 @@ Cell[BoxData[{
        "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"d18087e9-7684-4591-9c01-86a825e0b179"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -684,8 +704,72 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["\[LeftCeiling]Attributes\[RightFloor]", "CodeSubsubsection",
+Cell["\[LeftCeiling]Methods/Attributes\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"45ad7919-762f-44d1-8396-11ae8be72d04"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Bind\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"411e6571-18ec-4328-b0e5-5e75e163379c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$$objData", "=", 
+   RowBox[{"<|", "\n", "\t", 
+    RowBox[{
+     RowBox[{"\"\<Methods\>\"", "\[Rule]", 
+      RowBox[{"<|", "|>"}]}], ",", "\n", "\t", 
+     RowBox[{"\"\<Attributes\>\"", "\[Rule]", 
+      RowBox[{"<|", "|>"}]}]}], "\n", "\t", "|>"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"773220be-4fdc-4daa-a519-5c23b98acf67"],
+
+Cell[BoxData[
+ RowBox[{"bindMethod", "/:", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"bindMethod", "[", 
+     RowBox[{"graph_", ",", " ", 
+      RowBox[{"name_", "[", "pat___", "]"}]}], "]"}], ":=", "def_"}], ")"}], ":=",
+   "\n", "\t", 
+  RowBox[{"(", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"$$objData", "[", 
+      RowBox[{"\"\<Methods\>\"", ",", " ", "name"}], "]"}], "=", "True"}], 
+    ";", "\n", "\t\t", 
+    RowBox[{"XMLGraph", "/:", 
+     RowBox[{
+      RowBox[{"graph", "?", "XMLGraphQ"}], "[", 
+      RowBox[{"name", "[", "pat", "]"}], "]"}], ":=", "def"}], ";", "\n", 
+    "\t\t", 
+    RowBox[{"XMLGraph", "/:", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"graph", "?", "XMLGraphQ"}], "[", "name", "]"}], "[", "pat", 
+      "]"}], ":=", "def"}], ";"}], "\n", "\t\t", 
+   ")"}]}]], \
+"CodeInput",ExpressionUUID->"df3cd303-2974-4815-92d3-6be24c8c4185"],
+
+Cell[BoxData[
+ RowBox[{"bindAttribute", "/:", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"bindAttribute", "[", 
+     RowBox[{"graph_", ",", " ", "name_"}], "]"}], ":=", "def_"}], ")"}], ":=",
+   "\n", "\t", 
+  RowBox[{"(", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"$$objData", "[", 
+      RowBox[{"\"\<Attributes\>\"", ",", " ", "name"}], "]"}], "=", "True"}], 
+    ";", "\n", "\t\t", 
+    RowBox[{"XMLGraph", "/:", 
+     RowBox[{
+      RowBox[{"graph", "?", "XMLGraphQ"}], "[", "name", "]"}], ":=", "def"}], 
+    ";"}], "\n", "\t\t", 
+   ")"}]}]], \
+"CodeInput",ExpressionUUID->"96a82a56-229d-4ce4-9634-46cdba86087e"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -694,9 +778,9 @@ Cell["\[LeftCeiling]Insert\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Insert\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Insert\>\"", "[", "n_", "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"InsertNodes", "[", 
    RowBox[{"x", ",", " ", "n"}], 
    "]"}]}]], \
@@ -710,9 +794,9 @@ Cell["\[LeftCeiling]Delete\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Delete\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Delete\>\"", "[", "n_", "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"DeleteNodes", "[", 
    RowBox[{"x", ",", " ", "n"}], 
    "]"}]}]], \
@@ -726,9 +810,10 @@ Cell["\[LeftCeiling]Modify\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<ModifyNodes\>\"", "[", "n_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<ModifyNodes\>\"", "[", "n_", "]"}]}], "]"}], ":=", "\n", 
+  "\t", 
   RowBox[{"ModifyNodes", "[", 
    RowBox[{"x", ",", " ", "n"}], 
    "]"}]}]], \
@@ -743,10 +828,10 @@ Cell["\[LeftCeiling]FormattedGraph\[RightFloor]", "CodeSubsubsubsection",
 Cell[BoxData[
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-    RowBox[{"\"\<FormattedGraph\>\"", "[", "o___", "]"}], "]"}], ":=", "\n", 
-   "\t", 
+   RowBox[{"bindMethod", "[", 
+    RowBox[{"x_XMLGraph", ",", " ", 
+     RowBox[{"\"\<FormattedGraph\>\"", "[", "o___", "]"}]}], "]"}], ":=", 
+   "\n", "\t", 
    RowBox[{"FormattedXMLGraph", "[", 
     RowBox[{"x", ",", " ", "o"}], "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"9cd480e9-3006-48c3-9971-d179ef17ad59"]
@@ -759,9 +844,8 @@ Cell["\[LeftCeiling]Nodes\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", "\"\<Nodes\>\"", "]"}], ":=",
-   "\n", "\t", 
+  RowBox[{"bindAttribute", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\"\<Nodes\>\""}], "]"}], ":=", "\n", "\t", 
   RowBox[{
   "NodeList", "[", "x", 
    "]"}]}]], \
@@ -775,14 +859,14 @@ Cell["\[LeftCeiling]Root\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", "\"\<Root\>\"", "]"}], ":=",
-   "\n", "\t", 
+  RowBox[{"bindAttribute", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\"\<Root\>\""}], "]"}], ":=", "\n", "\t", 
+  
   RowBox[{
   "RootNode", "[", "x", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"1dc6b077-6491-41bc-ac71-86432bff55f7"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -791,10 +875,10 @@ Cell["\[LeftCeiling]Select\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Select\>\"", "[", 
-    RowBox[{"fn_", ",", " ", "n___"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Select\>\"", "[", 
+     RowBox[{"fn_", ",", " ", "n___"}], "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"SelectNodes", "[", 
    RowBox[{"x", ",", " ", "fn", ",", " ", "n"}], 
    "]"}]}]], \
@@ -808,9 +892,9 @@ Cell["\[LeftCeiling]Locate\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Locate\>\"", "[", "id_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Locate\>\"", "[", "id_", "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{
    RowBox[{"Append", "[", 
     RowBox[{
@@ -825,18 +909,50 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["\[LeftCeiling]BFS\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"fa95fd20-7b43-4e0e-a963-4957cc695bc9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<BFS\>\"", "[", "arg__", "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"XMLGraphBFS", "[", 
+   RowBox[{"x", ",", " ", "arg"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"8d47f2e2-86dd-4b86-992a-88fb534df773"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]DFS\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"34214e42-204c-42ad-b791-c850bbac7d0f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<DFS\>\"", "[", "arg__", "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"XMLGraphDFS", "[", 
+   RowBox[{"x", ",", " ", "arg"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"712f237d-ec33-4559-965f-c4a9afcc90e4"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["\[LeftCeiling]Data\[RightFloor]", "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"e4b1a840-5fac-4db4-b2dd-1f0dbad3ed38"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-    RowBox[{"\"\<Data\>\"", "[", 
-     RowBox[{
-      RowBox[{"n_:", "All"}], ",", " ", 
-      RowBox[{"p_:", "All"}]}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"bindMethod", "[", 
+    RowBox[{"x_XMLGraph", ",", " ", 
+     RowBox[{"\"\<Data\>\"", "[", 
+      RowBox[{
+       RowBox[{"n_:", "All"}], ",", " ", 
+       RowBox[{"p_:", "All"}]}], "]"}]}], "]"}], ":=", "\n", "\t", 
    RowBox[{"NodeData", "[", 
     RowBox[{"x", ",", " ", "n", ",", " ", "p"}], "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"ed0acc01-3e84-408e-9cb4-b33c2e3df3c7"]
@@ -849,10 +965,10 @@ Cell["\[LeftCeiling]Type\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Type\>\"", "[", 
-    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Type\>\"", "[", 
+     RowBox[{"n_:", "All"}], "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Type\>\""}], 
    "]"}]}]], \
@@ -866,14 +982,33 @@ Cell["\[LeftCeiling]Meta\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Meta\>\"", "[", 
-    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Meta\>\"", "[", 
+     RowBox[{"n_:", "All"}], "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"NodeData", "[", 
    RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Meta\>\""}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"759cddee-a57f-402a-805f-4f60e42d230f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Attribute\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"299cb282-86e6-45b6-8eca-f15657b8b12e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Attribute\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", "attr_"}], "]"}]}], "]"}], ":=", "\n",
+   "\t", 
+  RowBox[{"NodeData", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Meta\>\"", ",", " ", "attr"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"ac8abb8e-a9eb-4af8-b626-5bc1dde56a18"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -883,14 +1018,35 @@ Cell["\[LeftCeiling]Parent\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Parent\>\"", "[", 
-    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
-  RowBox[{"NodeData", "[", 
-   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Parent\>\""}], 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Parent\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", 
+      RowBox[{"depth_:", "1"}]}], "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeParents", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "depth"}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"f42de4a7-a319-4469-9dc2-b223226caf5b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]FullParents\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"20689d21-5a21-40f2-a944-1630302c8e03"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<FullParents\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", 
+      RowBox[{"depth_:", "1"}]}], "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeParents", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "depth", ",", " ", "True"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"232dacb7-814c-47d7-bc95-b566f3b34fc5"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -900,14 +1056,35 @@ Cell["\[LeftCeiling]Children\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Children\>\"", "[", 
-    RowBox[{"n_:", "All"}], "]"}], "]"}], ":=", "\n", "\t", 
-  RowBox[{"NodeData", "[", 
-   RowBox[{"x", ",", " ", "n", ",", " ", "\"\<Children\>\""}], 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Children\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", 
+      RowBox[{"depth_:", "1"}]}], "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeChildren", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "depth"}], 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"5505037c-2f39-4eda-b2c6-b1e9add9de77"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]FullChildren\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"c374105b-d126-4e1a-88ef-d333fd28d0b8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<FullChildren\>\"", "[", 
+     RowBox[{
+      RowBox[{"n_:", "All"}], ",", " ", 
+      RowBox[{"depth_:", "1"}]}], "]"}]}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"NodeChildren", "[", 
+   RowBox[{"x", ",", " ", "n", ",", " ", "depth", ",", " ", "True"}], 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"bcad22a2-3be5-43fb-a93d-eecabcc5813e"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -917,9 +1094,9 @@ Cell["\[LeftCeiling]Sort\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Sort\>\"", "[", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Sort\>\"", "[", "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{
   "XMLGraphSort", "[", "x", 
    "]"}]}]], \
@@ -933,9 +1110,9 @@ Cell["\[LeftCeiling]Subgraph\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", 
-   RowBox[{"\"\<Subgraph\>\"", "[", "k_", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", 
+    RowBox[{"\"\<Subgraph\>\"", "[", "k_", "]"}]}], "]"}], ":=", "\n", "\t", 
   RowBox[{"XMLSubgraph", "[", 
    RowBox[{"x", ",", " ", "k"}], 
    "]"}]}]], \
@@ -949,9 +1126,8 @@ Cell["\[LeftCeiling]XML\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", "\"\<XML\>\"", "]"}], ":=", 
-  "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\"\<XML\>\""}], "]"}], ":=", "\n", "\t", 
   RowBox[{
   "ToXMLObject", "[", "x", 
    "]"}]}]], \
@@ -965,15 +1141,15 @@ Cell["\[LeftCeiling]Association\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{
-   RowBox[{"x_XMLGraph", "?", "XMLGraphQ"}], "[", "\"\<Association\>\"", 
-   "]"}], ":=", "\n", "\t", 
+  RowBox[{"bindMethod", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\"\<Association\>\""}], "]"}], ":=", "\n",
+   "\t", 
   RowBox[{
   "ToXMLAssociation", "[", "x", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"cc37eab0-3407-4350-aea3-05751574fc19"]
 }, Closed]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1455,7 +1631,7 @@ Cell[BoxData[
      RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\"\<Root\>\""}], 
     "]"}]}]}]], \
 "CodeInput",ExpressionUUID->"a2a83f45-d5c6-44c6-98a9-06cce1502780"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -1570,25 +1746,103 @@ Cell[BoxData[{
     RowBox[{"[", 
      RowBox[{"n", ",", " ", "part"}], "]"}], "]"}]}], ";"}], "\n", 
  RowBox[{
+  RowBox[{
+   RowBox[{"NodeData", "[", 
+    RowBox[{"x_XMLGraph", ",", " ", 
+     RowBox[{"i", ":", 
+      RowBox[{"_Integer", "|", 
+       RowBox[{"{", "__Integer", "}"}], "|", "_Span"}]}], ",", " ", 
+     RowBox[{"parts", ":", 
+      RowBox[{"_String", "|", 
+       RowBox[{"{", "__String", "}"}], "|", "All"}], ":", "All"}]}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"NodeData", "[", 
+    RowBox[{"x", ",", " ", 
+     RowBox[{
+      RowBox[{"VertexList", "[", 
+       RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], "]"}], "[", 
+      RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
   RowBox[{"NodeData", "[", 
    RowBox[{"x_XMLGraph", ",", " ", 
-    RowBox[{"i", ":", 
-     RowBox[{"_Integer", "|", 
-      RowBox[{"{", "__Integer", "}"}], "|", "_Span"}]}], ",", " ", 
-    RowBox[{"parts", ":", 
-     RowBox[{"_String", "|", 
-      RowBox[{"{", "__String", "}"}], "|", "All"}], ":", "All"}]}], "]"}], ":=",
-   "\n", "\t", 
-  RowBox[{"NodeData", "[", 
-   RowBox[{"x", ",", " ", 
-    RowBox[{
-     RowBox[{"VertexList", "[", 
-      RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], "]"}], "[", 
-     RowBox[{"[", "i", "]"}], "]"}]}], 
-   "]"}]}]}], \
+    RowBox[{"{", "}"}], ",", " ", 
+    RowBox[{"part", ":", 
+     RowBox[{"(", 
+      RowBox[{"_String", "|", 
+       RowBox[{"{", "__String", "}"}], "|", "All"}], ")"}], ":", "All"}]}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{
+  "{", "}"}]}]}], \
 "CodeInput",ExpressionUUID->"dcc00aa4-7cf1-4e2a-93ab-69a6f99d7145"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]NodeChildren\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"8082ad54-f7b5-406c-92c0-c346b0db675a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"NodeChildren", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "n_", ",", " ", 
+    RowBox[{"depth_:", "1"}], ",", " ", 
+    RowBox[{"full", ":", 
+     RowBox[{"True", "|", "False"}], ":", "False"}]}], "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{
+   RowBox[{"If", "[", 
+    RowBox[{"full", ",", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Rest", "[", "NestList", "]"}], "[", "##", "]"}], "&"}], ",", 
+     " ", "Nest"}], "]"}], "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"NodeData", "[", 
+      RowBox[{"x", ",", " ", 
+       RowBox[{"Cases", "[", 
+        RowBox[{"#", ",", " ", 
+         RowBox[{
+          RowBox[{"Node", "[", "s_", "]"}], "\[RuleDelayed]", "s"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", "1"}], "}"}]}], "]"}], ",", " ", 
+       "\"\<Children\>\""}], "]"}], "&"}], ",", "\n", "\t\t", 
+    RowBox[{"Thread", "[", 
+     RowBox[{"Node", "[", "n", "]"}], "]"}], ",", "\n", "\t\t", "depth"}], 
+   "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"996b10eb-8f90-4163-b718-86ae7cdaadc1"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]NodeParents\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"5aea2bc6-4353-4edc-a97e-0d17963e2499"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"NodeParents", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "n_", ",", " ", 
+    RowBox[{"depth_:", "1"}], ",", " ", 
+    RowBox[{"full", ":", 
+     RowBox[{"True", "|", "False"}], ":", "False"}]}], "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{
+   RowBox[{"If", "[", 
+    RowBox[{"full", ",", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Rest", "[", "NestList", "]"}], "[", "##", "]"}], "&"}], ",", 
+     " ", "Nest"}], "]"}], "[", "\n", "\t\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"NodeData", "[", 
+      RowBox[{"x", ",", " ", "#", ",", " ", "\"\<Parent\>\""}], "]"}], "&"}], 
+    ",", " ", "\n", "\t\t", "n", ",", " ", "\n", "\t\t", "depth"}], "\n", 
+   "\t\t", "]"}]}]], \
+"CodeInput",ExpressionUUID->"69425795-0d19-41e1-aae3-73166518ee51"]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -1597,7 +1851,7 @@ Cell["\[LeftCeiling]CSS Selectors\[RightFloor]", "CodeSubsection",
 
 Cell["\<\
 \[LeftCeiling]
-\tI may want a BFS selection procedure over the Graph representation? This \
+\tI may want a DFS selection procedure over the Graph representation? This \
 would make things like ~ more intuitive and linear time, but might also be a \
 bit more of a pain.
 \[RightFloor]\
@@ -1985,7 +2239,7 @@ Cell[BoxData[
          RowBox[{"c2", "&"}]}], "]"}]}], "]"}], "&"}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"23f95221-f0fe-477a-8b1a-4ec673249d99"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -2151,7 +2405,8 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"$data", "[", 
       RowBox[{"#", ",", " ", "\"\<Meta\>\""}], "]"}], ",", " ", "attr"}], 
-    "]"}], "&"}]}]], \
+    "]"}], 
+   "&"}]}]], \
 "CodeInput",ExpressionUUID->"9c0ce94d-d56d-4d0c-8f84-775fb4a70b6e"],
 
 Cell[BoxData[
@@ -2300,15 +2555,12 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"892e495d-6f0b-421a-8b5b-468cc76657d6"]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["\[LeftCeiling]BFSelect\[RightFloor]", "CodeSubsubsection",
+Cell["\[LeftCeiling]DFSelect\[RightFloor]", "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"db855833-e373-4d63-8c40-c643c17f2e97"],
-
-Cell[BoxData["BreadthFirstScan"], \
-"CodeInput",ExpressionUUID->"3c952f4b-4cf6-4b65-ab61-6e68638fdc2b"],
 
 Cell[BoxData[
  RowBox[{
@@ -2369,7 +2621,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"CSSBFSelect", "[", 
+  RowBox[{"CSSDFSelect", "[", 
    RowBox[{"x_XMLGraph", ",", " ", "vertexFunc_"}], "]"}], ":=", "\n", "\t", 
   RowBox[{"Block", "[", "\n", "\t\t", 
    RowBox[{
@@ -2387,7 +2639,7 @@ Cell[BoxData[
     RowBox[{
      RowBox[{
       RowBox[{"Reap", "[", "\n", "\t\t\t", 
-       RowBox[{"BreadthFirstScan", "[", "\n", "\t\t\t\t", 
+       RowBox[{"DepthFirstScan", "[", "\n", "\t\t\t\t", 
         RowBox[{
          RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], ",", "\n", "\t\t\t\t", 
          RowBox[{"RootNode", "[", "x", "]"}], ",", "\n", "\t\t\t\t", 
@@ -2432,7 +2684,7 @@ Cell[BoxData[
            RowBox[{"$data", ",", " ", 
             RowBox[{"downconvertNodeFunc", "@", "sel"}]}], "]"}]}]}], "\n", 
         "\t\t\t\t", "]"}], ",", "\n", "\t\t\t", 
-       RowBox[{"CSSBFSelect", "[", 
+       RowBox[{"CSSDFSelect", "[", 
         RowBox[{"x", ",", " ", "sel"}], "]"}]}], "\n", "\t\t\t", "]"}]}], 
     "\n", "\t\t", "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"6f7aa287-392e-402a-98b5-d39d59b3263b"]
@@ -2661,7 +2913,67 @@ Cell[BoxData[
        RowBox[{"XMLGraph", "[", "a", "]"}]}], "]"}]}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"b86f5306-a58d-4813-a36b-055fced6b260"]
-}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Scans\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"08469ad7-99b5-4b1a-80b9-759b393bcd3a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"XMLGraphBFS", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\n", "\t", 
+    RowBox[{"rootNode", ":", 
+     RowBox[{"_String", "|", 
+      RowBox[{"Automatic", ":", "Automatic"}]}]}], ",", " ", "\n", "\t", 
+    RowBox[{"events_", "?", "OptionQ"}], ",", " ", "e___"}], "\n", "\t", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"g", "=", 
+       RowBox[{"VertexDelete", "[", 
+        RowBox[{
+         RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\"\<Root\>\""}],
+         "]"}]}], ",", " ", 
+      RowBox[{"r", "=", 
+       RowBox[{"x", "[", "\"\<Root\>\"", "]"}]}]}], "}"}], ",", "\n", "\t\t", 
+    
+    RowBox[{"BreadthFirstScan", "[", 
+     RowBox[{"g", ",", " ", "r", ",", " ", "events", ",", " ", "e"}], "]"}]}],
+    "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"60f391cc-7419-48ef-972e-f0a22fc36d40"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"XMLGraphDFS", "[", 
+   RowBox[{"x_XMLGraph", ",", " ", "\n", "\t", 
+    RowBox[{"rootNode", ":", 
+     RowBox[{"_String", "|", 
+      RowBox[{"Automatic", ":", "Automatic"}]}]}], ",", " ", "\n", "\t", 
+    RowBox[{"events_", "?", "OptionQ"}], ",", " ", "e___"}], "\n", "\t", 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"g", "=", 
+       RowBox[{"VertexDelete", "[", 
+        RowBox[{
+         RowBox[{"x", "[", "\"\<Graph\>\"", "]"}], ",", " ", "\"\<Root\>\""}],
+         "]"}]}], ",", " ", 
+      RowBox[{"r", "=", 
+       RowBox[{"x", "[", "\"\<Root\>\"", "]"}]}]}], "}"}], ",", "\n", "\t\t", 
+    
+    RowBox[{"DepthFirstScan", "[", 
+     RowBox[{"g", ",", " ", "r", ",", " ", "events", ",", " ", "e"}], "]"}]}],
+    "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"755181fe-08c0-4a1a-95ec-0f8fe8996265"]
+}, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -3026,7 +3338,7 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"5c0c5bae-4ba8-44d0-bc9a-47ae2d0c7998"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -3051,252 +3363,13 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"<<", "XMLGraph`"}]], "Input",
- CellLabel->"In[92]:=",ExpressionUUID->"89d01cc7-3ca8-4123-b89e-9f5ee60ce202"],
-
-Cell[CellGroupData[{
+ CellLabel->"In[6]:=",ExpressionUUID->"89d01cc7-3ca8-4123-b89e-9f5ee60ce202"],
 
 Cell[BoxData[
- RowBox[{"g", "=", 
-  RowBox[{"XMLGraph", "[", 
-   RowBox[{"{", "}"}], "]"}]}]], "Input",
- CellLabel->"In[2]:=",ExpressionUUID->"f0d96a82-e43e-4b17-9294-5f7ea3a540a3"],
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   TagBox["XMLGraph",
-    "SummaryHead"], "[", 
-   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
-    
-    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["None", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["0", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}], True -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["None", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["0", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}]}, 
-       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
-     "SummaryPanel"],
-    DynamicModuleValues:>{}], "]"}],
-  XMLGraph`XMLGraph[
-   Association[
-   "Version" -> 1, "Graph" -> Graph[{"Root"}, {}], "Data" -> Association[]]],
-  Editable->False,
-  SelectWithContents->True,
-  Selectable->False]], "Output",
- CellLabel->"Out[2]=",ExpressionUUID->"52770f39-1eee-40bb-b946-df2e110ae1c1"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"blech", "@", "\"\<Root\>\""}]], "Input",
- CellLabel->
-  "In[352]:=",ExpressionUUID->"bf1bec5d-7753-474c-acaa-983c5d8d8eef"],
-
-Cell[BoxData["\<\"html:cf041408-6d5c-495a-868f-a6daa9b051a4\"\>"], "Output",
- CellLabel->"Out[352]=",ExpressionUUID->"e1053a0b-6d33-404f-87df-6b55a790e915"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"blech", "@", "\"\<Graph\>\""}]], "Input",
- CellLabel->
-  "In[356]:=",ExpressionUUID->"74b9e95b-2ab2-4678-b9ba-c5880f5a96d4"],
-
-Cell[BoxData[""], \
-"Input",ExpressionUUID->"a69108df-0b4f-429f-a262-5a8195dc51e9"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"ConnectedComponents", "[", 
-    RowBox[{"VertexDelete", "[", 
-     RowBox[{
-      RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-     "]"}], "]"}], "[", 
-   RowBox[{"[", "1", "]"}], "]"}], "//", "Length"}]], "Input",
- CellLabel->
-  "In[367]:=",ExpressionUUID->"025026c0-3c6b-48e3-bba6-35013c32c23f"],
-
-Cell[BoxData["381"], "Output",
- CellLabel->"Out[367]=",ExpressionUUID->"300db69d-5265-4c03-af2c-6927d879f163"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Graph", "[", 
-   RowBox[{"DirectedEdge", "@@@", 
-    RowBox[{"EdgeList", "@", 
-     RowBox[{"VertexDelete", "[", 
-      RowBox[{
-       RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-      "]"}]}]}], "]"}], "//", "GraphQ"}]], "Input",
- CellLabel->
-  "In[378]:=",ExpressionUUID->"a8875b2a-3105-4dce-b1c5-2420c13383b9"],
-
-Cell[BoxData["True"], "Output",
- CellLabel->"Out[378]=",ExpressionUUID->"7cb17af7-ef0e-4210-b98f-28c10a32c8d2"]
-}, Open  ]],
-
-Cell[BoxData[""], \
-"Input",ExpressionUUID->"4e1f73cc-59b1-497c-940c-9ae047e12318"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Reap", "[", "\[IndentingNewLine]", 
-   RowBox[{"BreadthFirstScan", "[", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"Graph", "[", 
-      RowBox[{"EdgeList", "@", 
-       RowBox[{"VertexDelete", "[", 
-        RowBox[{
-         RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-        "]"}]}], "]"}], ",", " ", "\[IndentingNewLine]", 
-     RowBox[{"blech", "@", "\"\<Root\>\""}], ",", " ", "\[IndentingNewLine]", 
-     
-     RowBox[{"{", 
-      RowBox[{"\"\<PrevisitVertex\>\"", "\[Rule]", "Sow"}], "}"}]}], 
-    "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "]"}], "[", 
-  RowBox[{"[", "2", "]"}], "]"}]], "Input",
- CellLabel->
-  "In[385]:=",ExpressionUUID->"85ee7f66-2028-43ff-9d12-f3ee97d033e0"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"BreadthFirstScan", "[", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Graph", "[", 
-     RowBox[{"DirectedEdge", "@@@", 
-      RowBox[{"EdgeList", "@", 
-       RowBox[{"VertexDelete", "[", 
-        RowBox[{
-         RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-        "]"}]}]}], "]"}], ",", " ", "\[IndentingNewLine]", 
-    RowBox[{"blech", "@", "\"\<Root\>\""}], ",", " ", "\[IndentingNewLine]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<PrevisitVertex\>\"", "\[Rule]", "Print"}], "}"}]}], 
-   "\[IndentingNewLine]", "]"}], ";"}]], "Input",
- CellLabel->
-  "In[379]:=",ExpressionUUID->"16bffd40-dee8-43c6-a2b7-d382d4463978"],
-
-Cell[BoxData[
- RowBox[{"DirectedEdge", 
-  "@"}]], "Input",ExpressionUUID->"cd1e9898-67eb-4f2c-91fc-fef8c3b891f6"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Thread", "[", "\[IndentingNewLine]", 
-   RowBox[{"{", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"BreadthFirstScan", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"VertexDelete", "[", 
-        RowBox[{
-         RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-        "]"}], ",", " ", "\[IndentingNewLine]", 
-       RowBox[{"blech", "@", "\"\<Root\>\""}], ",", " ", 
-       "\[IndentingNewLine]", 
-       RowBox[{"\"\<PrevisitVertex\>\"", "\[Rule]", "Print"}]}], 
-      "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
-     RowBox[{"VertexList", "[", 
-      RowBox[{"VertexDelete", "[", 
-       RowBox[{
-        RowBox[{"blech", "@", "\"\<Graph\>\""}], ",", " ", "\"\<Root\>\""}], 
-       "]"}], "]"}]}], "\[IndentingNewLine]", "}"}], "\[IndentingNewLine]", 
-   "]"}], "//", 
-  RowBox[{
-   RowBox[{"Cases", "[", 
-    RowBox[{"#", ",", " ", 
-     RowBox[{
-      RowBox[{"e", ":", 
-       RowBox[{"Except", "[", 
-        RowBox[{"{", 
-         RowBox[{"a_", ",", " ", "a_"}], "}"}], "]"}]}], "\[RuleDelayed]", 
-      "e"}]}], "]"}], "&"}]}]], "Input",
- CellLabel->
-  "In[370]:=",ExpressionUUID->"9f736351-5fdd-4c8e-9ef1-42a88bda4d82"],
-
-Cell[BoxData[
- RowBox[{"{", "}"}]], "Output",
- CellLabel->
-  "Out[370]=",ExpressionUUID->"de0f8d63-0666-421a-a8d7-db2ab13dd107"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData["\<\"html:cf041408-6d5c-495a-868f-a6daa9b051a4\"\>"], \
-"Echo",ExpressionUUID->"96a752eb-f506-40fd-921a-8e94c72c180f"],
-
-Cell[BoxData[
- RowBox[{"Function", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-    "XMLGraph`Private`node$", ",", "XMLGraph`Private`parent$", ",", 
-     "XMLGraph`Private`depth$"}], "}"}], ",", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"XMLGraph`Private`$data", "[", 
-      RowBox[{"XMLGraph`Private`node$", ",", "\<\"Type\"\>"}], "]"}], 
-     "\[Equal]", "\<\"table\"\>"}], "&&", 
-    RowBox[{"AnyTrue", "[", 
-     RowBox[{
-      RowBox[{
-      "XMLGraph`Private`$ancestors", "[", "XMLGraph`Private`node$", "]"}], 
-      ",", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"XMLGraph`Private`$data", "[", 
-         RowBox[{"#1", ",", "\<\"Type\"\>"}], "]"}], 
-        "\[Equal]", "\<\"div\"\>"}], "&"}]}], "]"}]}]}], 
-  "]"}]], "Echo",ExpressionUUID->"07cd5793-060a-405f-a110-b02ee150c1d3"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"{", "}"}]], "Output",
- CellLabel->"Out[348]=",ExpressionUUID->"f634d373-c1af-4154-8d46-9ed20afbe931"]
-}, Open  ]],
+ RowBox[{"\"\<https://developer.github.com/apps/building-oauth-apps/\
+understanding-scopes-for-oauth-apps/#available-scopes\>\"", "//", 
+  "SystemOpen"}]], "Input",
+ CellLabel->"In[11]:=",ExpressionUUID->"128e462c-c7d0-4b4a-9338-c19b575a0255"],
 
 Cell[BoxData[
  RowBox[{
@@ -3308,136 +3381,55 @@ scopes-for-oauth-apps/#available-scopes\>\"", ",", "\[IndentingNewLine]",
      RowBox[{"{", 
       RowBox[{"\"\<HTML\>\"", ",", " ", "\"\<XMLObject\>\""}], "}"}]}], 
     "\[IndentingNewLine]", "]"}]}], ";"}]], "Input",
- CellLabel->
-  "In[392]:=",ExpressionUUID->"566da8a8-9290-4d6d-81a0-496855eac5e0"],
+ CellLabel->"In[7]:=",ExpressionUUID->"566da8a8-9290-4d6d-81a0-496855eac5e0"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"XMLGraph", "@", "test"}]}]], "Input",
+ CellLabel->"In[10]:=",ExpressionUUID->"57effd4a-3753-421b-962f-6c8e9e7338f6"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"blech", "=", 
-   RowBox[{"XMLGraph", "@", "test"}]}], ";"}]], "Input",
- CellLabel->
-  "In[393]:=",ExpressionUUID->"42979413-7510-45ba-954d-bfde3ae2dbfc"],
+  RowBox[{"Reap", "[", 
+   RowBox[{"g", "@", 
+    RowBox[{"\"\<BFS\>\"", "[", 
+     RowBox[{"\"\<PrevisitVertex\>\"", "\[Rule]", "Sow"}], "]"}]}], "]"}], 
+  "[", 
+  RowBox[{"[", 
+   RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]], "Input",
+ CellLabel->"In[80]:=",ExpressionUUID->"a30d1779-599b-4fb7-a180-e3837937bead"],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"blech", "@", 
-  RowBox[{"\"\<Select\>\"", "[", "\"\<.content > table\>\"", "]"}]}]], "Input",
- CellLabel->
-  "In[394]:=",ExpressionUUID->"53d81943-60f7-43ef-8875-4cc7eb7581df"],
-
-Cell[BoxData[
- RowBox[{"{", "\<\"table:8e33a882-c795-4d73-b49c-c35eff60abac\"\>", 
-  "}"}]], "Output",
- CellLabel->"Out[394]=",ExpressionUUID->"4b040519-59b0-4bc9-a60b-309188109fb9"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"blech", "@", 
-  RowBox[{"\"\<Parent\>\"", "[", 
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", "\"\<code\>\"", "]"}]}], "]"}]}]], "Input",
- 
- CellLabel->
-  "In[406]:=",ExpressionUUID->"fc4195b1-191f-423c-9d3e-fcffdc00c809"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"blech", "@", 
-   RowBox[{"\"\<Type\>\"", "[", "]"}]}], "//", "Counts"}]], "Input",
- CellLabel->
-  "In[401]:=",ExpressionUUID->"f027984f-8729-4f7e-bbf8-b699cff25e66"],
-
-Cell[BoxData[
- RowBox[{"\[LeftAssociation]", 
-  RowBox[{
-   RowBox[{"\<\"head\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"input\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"label\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"div\"\>", "\[Rule]", "12"}], ",", 
-   RowBox[{"\<\"ul\"\>", "\[Rule]", "9"}], ",", 
-   RowBox[{"\<\"form\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"a\"\>", "\[Rule]", "51"}], ",", 
-   RowBox[{"\<\"h2\"\>", "\[Rule]", "4"}], ",", 
-   RowBox[{"\<\"li\"\>", "\[Rule]", "38"}], ",", 
-   RowBox[{"\<\"option\"\>", "\[Rule]", "62"}], ",", 
-   RowBox[{"\<\"optgroup\"\>", "\[Rule]", "18"}], ",", 
-   RowBox[{"\<\"select\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"section\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"span\"\>", "\[Rule]", "7"}], ",", 
-   RowBox[{"\<\"h1\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"em\"\>", "\[Rule]", "4"}], ",", 
-   RowBox[{"\<\"p\"\>", "\[Rule]", "9"}], ",", 
-   RowBox[{"\<\"pre\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"code\"\>", "\[Rule]", "40"}], ",", 
-   RowBox[{"\<\"th\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"tr\"\>", "\[Rule]", "29"}], ",", 
-   RowBox[{"\<\"thead\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"strong\"\>", "\[Rule]", "14"}], ",", 
-   RowBox[{"\<\"td\"\>", "\[Rule]", "56"}], ",", 
-   RowBox[{"\<\"tbody\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"table\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"h3\"\>", "\[Rule]", "8"}], ",", 
-   RowBox[{"\<\"footer\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"nav\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"script\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"body\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"html\"\>", "\[Rule]", "1"}]}], 
-  "\[RightAssociation]"}]], "Output",
- CellLabel->"Out[401]=",ExpressionUUID->"4b4a1fdc-9260-4df3-921b-aa1a732a0d85"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", "\"\<code\>\"", "]"}]}], "//", "Length"}], 
-  "//", "RepeatedTiming"}]], "Input",
- CellLabel->
-  "In[411]:=",ExpressionUUID->"4a881e68-38bd-4019-b847-9fe0232855fc"],
+ RowBox[{"First", "/@", 
+  RowBox[{"Values", "@", "\[IndentingNewLine]", 
+   RowBox[{"g", "@", 
+    RowBox[{"\"\<Children\>\"", "[", 
+     RowBox[{"g", "@", 
+      RowBox[{"\"\<Select\>\"", "[", "\"\<td code\>\"", "]"}]}], 
+     "]"}]}]}]}]], "Input",
+ CellLabel->"In[81]:=",ExpressionUUID->"4d211929-9de1-48d4-aea2-b6848cdd3910"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.0009724777777777775`1.", ",", "40"}], "}"}]], "Output",
- CellLabel->"Out[411]=",ExpressionUUID->"d6a74ab7-4128-4a09-8eb2-473549b21fd5"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", "\"\<td code\>\"", "]"}]}], "//", 
-   "Length"}], "//", "RepeatedTiming"}]], "Input",
+  RowBox[{"\<\"(no scope)\"\>", ",", "\<\"repo\"\>", 
+   ",", "\<\"repo:status\"\>", ",", "\<\"repo_deployment\"\>", 
+   ",", "\<\"public_repo\"\>", ",", "\<\"repo:invite\"\>", 
+   ",", "\<\"admin:org\"\>", ",", "\<\"write:org\"\>", 
+   ",", "\<\"read:org\"\>", ",", "\<\"admin:public_key\"\>", 
+   ",", "\<\"write:public_key\"\>", ",", "\<\"read:public_key\"\>", 
+   ",", "\<\"admin:repo_hook\"\>", ",", "\<\"write:repo_hook\"\>", 
+   ",", "\<\"read:repo_hook\"\>", ",", "\<\"admin:org_hook\"\>", 
+   ",", "\<\"gist\"\>", ",", "\<\"notifications\"\>", ",", "\<\"repo\"\>", 
+   ",", "\<\"user\"\>", ",", "\<\"user:email\"\>", ",", "\<\"user:follow\"\>",
+    ",", "\<\"read:user\"\>", ",", "\<\"user:email\"\>", 
+   ",", "\<\"user:follow\"\>", ",", "\<\"delete_repo\"\>", 
+   ",", "\<\"write:discussion\"\>", ",", "\<\"read:discussion\"\>", 
+   ",", "\<\"admin:gpg_key\"\>", ",", "\<\"write:gpg_key\"\>", 
+   ",", "\<\"read:gpg_key\"\>"}], "}"}]], "Output",
  CellLabel->
-  "In[415]:=",ExpressionUUID->"df82e5dd-6dee-46dc-94df-8b613caa6bc6"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"0.0084777586206896561`2.", ",", "31"}], "}"}]], "Output",
- CellLabel->"Out[415]=",ExpressionUUID->"d82fdd4c-c246-4c3d-b51b-69e85ca586c8"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"blech", "@", 
-    RowBox[{"\"\<Select\>\"", "[", "\"\<li code\>\"", "]"}]}], "//", 
-   "Length"}], "//", "RepeatedTiming"}]], "Input",
- CellLabel->
-  "In[414]:=",ExpressionUUID->"11a23a28-c494-443c-bd6a-ec5c32e5f1cf"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"0.0084761206896551717`2.", ",", "2"}], "}"}]], "Output",
- CellLabel->"Out[414]=",ExpressionUUID->"eb16463b-21f1-49db-9fa0-95f966ac1476"]
+  "Out[81]=",ExpressionUUID->"88bb072e-eb72-4927-8fc2-3a4c01902935"]
 }, Open  ]]
 },
 WindowSize->{808, 755},
