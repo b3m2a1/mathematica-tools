@@ -1,0 +1,789 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["BagInterface", \
+"CodeSection",ExpressionUUID->"acf90b3d-2343-417d-b6ad-5e718654a4dc"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<BagInterface`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"e3535d7a-0a40-4d3b-9e6f-\
+a26f263b36a8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ExprBag", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Top-level interface to Bag\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"2db55475-ebb8-416b-80ad-6ce7b6c10e48"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BeginPackage", "[", "\"\<`Package`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"93b75372-9ff1-4470-9620-\
+d823ec6681ba"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConstructExprBag", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"313690fc-6e6a-4127-9851-93622eb47026"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ExprBagQ", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]], "CodeInput",ExpressionUUID->"bb8e6d5c-68c9-4d0f-88d1-bf80f31aeeca"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagAppendTo", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagLength", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagPart", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"9546b0b6-48de-4b8c-8088-9f9796e2e8b1"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagSetPart", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagMap", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagCopy", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagToList", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagExtend", "::", "usage"}], "=", "\"\<\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagTake", "::", "usage"}], "=", "\"\<\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"2dd8409b-e8b1-4463-a68b-f2b81c58b0b9"]\
+
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"5c43aedf-4dfe-42c2-a31f-\
+f6bfc42ff67d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"2d164bd6-9206-4016-b133-\
+c94a605fd965"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Object\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"50a87298-b053-430e-a81d-0fe686c2dae3"],
+
+Cell[BoxData[
+ RowBox[{"ExprBag", "//", 
+  "Clear"}]], \
+"CodeInput",ExpressionUUID->"dd57e810-6f42-4afa-8c20-4f3557e081e0"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagQ\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"2adcb26a-3895-48a8-918d-f3b885de281b"],
+
+Cell[BoxData[
+ RowBox[{"ExprBagQ", "//", 
+  "Clear"}]], \
+"CodeInput",ExpressionUUID->"2b877b28-6d6d-4233-a771-29541e6ab90f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ExprBagQ", "[", 
+    RowBox[{"e_ExprBag", "?", "System`Private`HoldNoEntryQ"}], "]"}], ":=", 
+   "True"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBagQ", "[", "e_", "]"}], ":=", 
+  "False"}]}], \
+"CodeInput",ExpressionUUID->"20d20bf9-c4d9-4156-ae88-c75d74535a44"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Constructor\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"b8a897a9-60a3-4a7f-9700-6d52c9df2f9d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "?", 
+    "System`Private`HoldEntryQ"}], ":=", "\n", "\t", 
+   RowBox[{"ConstructExprBag", "[", "bag", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ExprBag", "[", "e_List", "]"}], ":=", "\n", "\t", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"res", "=", 
+       RowBox[{"ConstructExprBag", "[", "e", "]"}]}], "}"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"res", "/;", 
+      RowBox[{"ExprBagQ", "[", "res", "]"}]}]}], "\n", "\t\t", "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ExprBag", "[", "]"}], ":=", "\n", "\t", 
+   RowBox[{"ConstructExprBag", "@", 
+    RowBox[{"Internal`Bag", "[", "]"}]}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"9674c3c4-f9a1-4b48-adc4-a56aa56bc689"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConstructExprBag", "[", "bag_Internal`Bag", "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"System`Private`HoldSetNoEntry", "[", 
+    RowBox[{"ExprBag", "[", "bag", "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ConstructExprBag", "[", "e_List", "]"}], ":=", "\n", "\t", 
+  RowBox[{"ConstructExprBag", "@", 
+   RowBox[{
+   "Internal`Bag", "[", "e", 
+    "]"}]}]}]}], \
+"CodeInput",ExpressionUUID->"478373b1-f86d-4479-95cc-710c82690fda"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Format\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"72bb9c2a-4d74-4b02-8743-55d4e8a5da10"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Format", "[", 
+   RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"RawBoxes", "@", "\n", "\t\t", 
+   RowBox[{"BoxForm`ArrangeSummaryBox", "[", "\n", "\t\t\t", 
+    RowBox[{
+    "ExprBag", ",", "\n", "\t\t\t", "e", ",", "\n", "\t\t\t", "None", ",", 
+     "\n", "\t\t\t", 
+     RowBox[{"{", "\n", "\t\t\t\t", 
+      RowBox[{"BoxForm`MakeSummaryItem", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"\"\<Items: \>\"", ",", " ", 
+          RowBox[{"Length", "@", "e"}]}], "}"}], ",", " ", "StandardForm"}], 
+       "]"}], "\n", "\t\t\t\t", "}"}], ",", "\n", "\t\t\t", 
+     RowBox[{"{", "}"}], ",", "\n", "\t\t\t", "StandardForm"}], "\n", 
+    "\t\t\t", 
+    "]"}]}]}]], \
+"CodeInput",ExpressionUUID->"efa85c3a-b055-4e0e-accb-fa7921bec6d9"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Package Functions\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"2b448544-d0c1-4921-b0ca-a9cbe0e470d2"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagAppendTo\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"d8164f23-0c57-449e-8bac-480f6a276df0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagAppendTo", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "o_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`StuffBag", "[", 
+    RowBox[{"bag", ",", " ", "o"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagAppendTo", "[", 
+   RowBox[{
+    RowBox[{"e", ":", 
+     RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}]}], ",", " ", "o_"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"BagAppendTo", "[", 
+     RowBox[{"bag", ",", " ", "o"}], "]"}], ";", "e"}], 
+   ")"}]}]}], \
+"CodeInput",ExpressionUUID->"e26c04d3-e96b-4e8f-938b-c65fedc3f51e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagLength\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"b00ad58e-585c-435b-975b-0665b74cee10"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagLength", "[", "bag_Internal`Bag", "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagLength", "[", "bag", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagLength", "[", 
+   RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{
+  "BagLength", "[", "bag", 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"972166de-8140-4293-bf4e-b4c503f83c5b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagPart\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"c64edd51-219f-4f8e-9689-242c651e8007"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagPart", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "p_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", "p"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagPart", "[", 
+   RowBox[{
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], ",", " ", "p_"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"BagPart", "[", 
+   RowBox[{"bag", ",", " ", "p"}], 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"e1db9f16-d275-4c7a-a093-30499ac44b1e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagSetPart\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a30a64a7-8c9e-4946-8800-645070d0e3fd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagSetPart", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "p_", ",", " ", "v_"}], "]"}], ":=",
+    "\n", "\t", 
+   RowBox[{"Set", "[", 
+    RowBox[{
+     RowBox[{"Internal`BagPart", "[", 
+      RowBox[{"bag", ",", " ", "p"}], "]"}], ",", " ", "v"}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagSetPart", "[", 
+   RowBox[{
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], ",", " ", "p_", ",", 
+    " ", "v_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"BagSetPart", "[", 
+   RowBox[{"bag", ",", " ", "p", ",", " ", "v"}], 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"ad6c4484-61f9-48c9-b1e6-cd1c8875c932"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagCopy\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"e1a5d6cc-c647-4171-8365-160c4e1acffb"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagCopy", "[", "bag_Internal`Bag", "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`Bag", "@", "\n", "\t\t", 
+    RowBox[{"Internal`BagPart", "[", 
+     RowBox[{"bag", ",", " ", "All"}], "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagCopy", "[", 
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"ExprBag", "[", 
+    RowBox[{"BagCopy", "[", "bag", "]"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"f17a9609-d98c-4855-af28-8ed4e4bb3306"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagMap\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"a3d3d115-1ad5-466e-bf89-bdde49c6e415"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagMap", "[", 
+    RowBox[{"f_", ",", " ", "bag_Internal`Bag"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Do", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Internal`BagPart", "[", 
+       RowBox[{"bag", ",", " ", "i"}], "]"}], "=", 
+      RowBox[{"f", "[", 
+       RowBox[{"Internal`BagPart", "[", 
+        RowBox[{"bag", ",", " ", "i"}], "]"}], "]"}]}], ",", " ", "\n", 
+     "\t\t", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", " ", 
+       RowBox[{"Internal`BagLength", "[", "bag", "]"}]}], "}"}]}], "\n", 
+    "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagMap", "[", 
+   RowBox[{"f_", ",", " ", 
+    RowBox[{"e", ":", 
+     RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}]}]}], "]"}], ":=", "\n",
+   "\t", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"BagMap", "[", 
+     RowBox[{"f", ",", " ", "bag"}], "]"}], ";", "e"}], 
+   ")"}]}]}], \
+"CodeInput",ExpressionUUID->"5482510f-3639-4526-b66d-8db6c4f1ce37"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagToList\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"ef725013-96df-49d8-9d64-e27a37949a79"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagToList", "[", "bag_Internal`Bag", "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", "All"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagToList", "[", 
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", "All"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"9b62ca11-7ad2-4690-a323-5ff25d14d4c2"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagExtend\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"8f109f7c-5c23-4763-94eb-38a741c9d196"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagExtend", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "iterable_"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Scan", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Internal`StuffBag", "[", 
+       RowBox[{"bag", ",", " ", "#"}], "]"}], "&"}], ",", " ", "iterable"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagExtend", "[", 
+   RowBox[{
+    RowBox[{"e", ":", 
+     RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}]}], ",", " ", 
+    "iterable_"}], "]"}], ":=", "\n", "\t", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"BagExtend", "[", 
+     RowBox[{"bag", ",", " ", "iterable"}], "]"}], ";", "e"}], 
+   ")"}]}]}], \
+"CodeInput",ExpressionUUID->"98b2d268-da22-4239-8806-b6a571e0c9b1"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]BagTake\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"4d3106b4-9d7f-461a-949a-795abf8c066e"],
+
+Cell[BoxData[
+ RowBox[{"BagTake", "//", 
+  "Clear"}]], \
+"CodeInput",ExpressionUUID->"4853a3d5-74d5-4b9e-8b51-d252f32ac428"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"iBagTake", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", 
+     RowBox[{"{", "i_Integer", "}"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", "i"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"iBagTake", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "i_Integer"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", 
+     RowBox[{";;", "i"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"iBagTake", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"i_Integer", ",", " ", "e_Integer"}], "}"}]}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", 
+     RowBox[{"i", ";;", "e"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"iBagTake", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"i_Integer", ",", " ", "e_Integer", ",", " ", "s_Integer"}], 
+      "}"}]}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", 
+     RowBox[{"i", ";;", "e", ";;", "s"}]}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"26a6979f-edc5-4ff9-b151-f2cdae623811"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagTake", "[", 
+    RowBox[{"bag_Internal`Bag", ",", " ", "r_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Module", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"e", "=", 
+        RowBox[{"r", "/.", 
+         RowBox[{
+          RowBox[{"UpTo", "[", "n_", "]"}], "\[RuleDelayed]", 
+          RowBox[{"Min", "@", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", " ", 
+             RowBox[{"Internal`BagLength", "[", "bag", "]"}]}], "}"}]}]}]}]}],
+        ",", "\n", "\t\t\t", "res"}], "\n", "\t\t\t", "}"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{
+      RowBox[{"res", "=", 
+       RowBox[{"iBagTake", "[", 
+        RowBox[{"bag", ",", " ", "e"}], "]"}]}], ";", "\n", "\t\t", 
+      RowBox[{"res", "/;", 
+       RowBox[{
+        RowBox[{"Head", "[", "res", "]"}], "=!=", "iBagTake"}]}]}]}], "\n", 
+    "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagTake", "[", 
+   RowBox[{
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], ",", " ", "r_"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"b", "=", 
+      RowBox[{"BagTake", "[", 
+       RowBox[{"bag", ",", " ", "r"}], "]"}]}], "}"}], ",", "\n", "\t\t", 
+    RowBox[{"b", "/;", 
+     RowBox[{
+      RowBox[{"Head", "[", "b", "]"}], "=!=", "BagTake"}]}]}], "\n", "\t\t", 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"c9b1e150-cb65-407f-9f30-e93e8d511e6f"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Overrides\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"fc6b3e14-ef6f-447c-9db4-7b027bc30e22"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]UpValues\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"cfe4666d-0b48-4517-a707-8afeb3d70fe7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Length", "[", 
+    RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagLength", "[", "e", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Normal", "[", 
+    RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagToList", "[", "e", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Part", "[", 
+    RowBox[{
+     RowBox[{"e_ExprBag", "?", "ExprBagQ"}], ",", " ", "i_"}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"BagPart", "[", 
+    RowBox[{"e", ",", " ", "i"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Take", "[", 
+    RowBox[{
+     RowBox[{"e_ExprBag", "?", "ExprBagQ"}], ",", " ", "s_"}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"BagTake", "[", 
+    RowBox[{"e", ",", " ", "s"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"689f6036-d724-48d2-a04e-1c8560d8827a"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "?", "ExprBagQ"}], 
+     ",", " ", "b_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`BagPart", "[", 
+    RowBox[{"bag", ",", " ", "b"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"ExprBag", "/:", 
+  RowBox[{"Internal`BagLength", "[", 
+   RowBox[{
+    RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "?", "ExprBagQ"}], 
+   "]"}], ":=", "\n", "\t", 
+  RowBox[{"Internal`BagLength", "[", "bag", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{"Internal`StuffBag", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ExprBag", "[", "bag_Internal`Bag", "]"}], "?", "ExprBagQ"}], 
+     ",", " ", "b_"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Internal`StuffBag", "[", 
+    RowBox[{"bag", ",", " ", "b"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"548c5a24-e436-477c-880b-3401a705a2d7"]\
+
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Methods\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"5402585b-58ab-45d5-872d-14354aa640f7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{
+    RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "[", 
+    RowBox[{"\"\<Map\>\"", "[", "f_", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagMap", "[", "f", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{
+    RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "[", 
+    RowBox[{"\"\<Copy\>\"", "[", "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagCopy", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ExprBag", "/:", 
+   RowBox[{
+    RowBox[{"e_ExprBag", "?", "ExprBagQ"}], "[", 
+    RowBox[{"\"\<Extend\>\"", "[", "iterable_", "]"}], "]"}], ":=", "\n", 
+   "\t", 
+   RowBox[{"BagCopy", "[", "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"e47ce3e5-97b4-4ecb-a1e9-96870916f44d"]\
+
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Mutations\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"e058625a-a9c2-46de-975f-42a8633af5b9"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"bagSymQ", "[", "s_", "]"}], ":=", "\n", "\t", 
+   RowBox[{"MatchQ", "[", 
+    RowBox[{
+     RowBox[{"OwnValues", "[", "s", "]"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"_", "\[RuleDelayed]", 
+       RowBox[{"_ExprBag", "?", "ExprBagQ"}]}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"bagSymQ", "~", "SetAttributes", "~", "HoldFirst"}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"78a599a8-0096-456c-aa6e-e9787c4db24e"],
+
+Cell[BoxData[{
+ RowBox[{"BagMutationHandler", "//", "ClearAll"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "BagMutationHandler", "~", "SetAttributes", "~", "HoldAllComplete"}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagMutationHandler", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"Set", "|", "SetDelayed"}], ")"}], "[", 
+     RowBox[{
+      RowBox[{"Part", "[", 
+       RowBox[{
+        RowBox[{"s", ":", 
+         RowBox[{
+          RowBox[{"_ExprBag", "?", "ExprBagQ"}], "|", 
+          RowBox[{"_Symbol", "?", "bagSymQ"}]}]}], ",", " ", "p_"}], "]"}], 
+      ",", " ", "v_"}], "]"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagSetPart", "[", 
+    RowBox[{"s", ",", " ", "p", ",", " ", "v"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"BagMutationHandler", "[", 
+    RowBox[{"AppendTo", "[", 
+     RowBox[{
+      RowBox[{"s", ":", 
+       RowBox[{
+        RowBox[{"_ExprBag", "?", "ExprBagQ"}], "|", 
+        RowBox[{"_Symbol", "?", "bagSymQ"}]}]}], ",", " ", "v_"}], "]"}], 
+    "]"}], ":=", "\n", "\t", 
+   RowBox[{"BagAppendTo", "[", 
+    RowBox[{"s", ",", " ", "v"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"BagMutationHandler", "[", "___", "]"}], ":=", "\n", "\t", 
+  "Language`MutationFallthrough"}], "\n", 
+ RowBox[{
+  RowBox[{"Language`SetMutationHandler", "[", 
+   RowBox[{"ExprBag", ",", " ", "BagMutationHandler"}], "]"}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"3532c1ce-80ef-44f8-8ab0-3faebf31b6ae"]\
+
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"25b192a3-e5fe-437d-87e4-\
+1d78e648b44e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], 
+  ";"}]], "InputSection",ExpressionUUID->"bb0c4439-08e9-48bd-8ab5-\
+664b33ecfd63"]
+}, Open  ]],
+
+Cell["", "SectionSeparator",ExpressionUUID->"714fad94-a129-44bf-b0bd-\
+ef5d8fc4e5cf"],
+
+Cell[BoxData[
+ RowBox[{"<<", "BagInterface`"}]], "Input",
+ CellLabel->
+  "In[380]:=",ExpressionUUID->"037a2eb3-f8dc-44da-9c2e-d8f48ea5e90f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"eb", "=", 
+   RowBox[{"ExprBag", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Length", "@", "eb"}]}], "Input",
+ CellLabel->
+  "In[420]:=",ExpressionUUID->"2f5db3bb-840b-4fe6-8cf7-5e8b9d6582dd"],
+
+Cell[BoxData["0"], "Output",
+ CellLabel->"Out[421]=",ExpressionUUID->"b629e2c9-b27c-41b6-9887-f555234daf93"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"AppendTo", "[", 
+    RowBox[{"eb", ",", " ", "1"}], "]"}], ";"}], "//", 
+  "RepeatedTiming"}]], "Input",
+ CellLabel->
+  "In[422]:=",ExpressionUUID->"261ff008-ea5b-4178-8561-6cbc12d58dce"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.0000103797071129707`3.", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[422]=",ExpressionUUID->"ccd9e573-c070-4792-b7c9-ef9116d5f912"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Length", "@", "eb"}]], "Input",
+ CellLabel->
+  "In[423]:=",ExpressionUUID->"7c5947d0-4c29-4b3d-bedd-bbb28e4eb929"],
+
+Cell[BoxData["5733"], "Output",
+ CellLabel->"Out[423]=",ExpressionUUID->"1269615d-ec1a-4f41-8c67-dcc71621d5b6"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"b", "=", 
+   RowBox[{"ExprBag", "@", 
+    RowBox[{"Take", "[", 
+     RowBox[{"eb", ",", " ", 
+      RowBox[{"UpTo", "[", "25", "]"}]}], "]"}]}]}], ";"}]], "Input",
+ CellLabel->
+  "In[425]:=",ExpressionUUID->"581a4fe3-cce4-4d9a-8ef0-37135cf0fc97"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Take", "[", 
+   RowBox[{"b", ",", " ", 
+    RowBox[{"UpTo", "[", "26", "]"}]}], "]"}], "//", "Length"}]], "Input",
+ CellLabel->
+  "In[426]:=",ExpressionUUID->"d458acdb-5fb2-436e-92fc-64250de9832b"],
+
+Cell[BoxData["25"], "Output",
+ CellLabel->"Out[426]=",ExpressionUUID->"cf89ffaa-bc79-472c-99fb-2a77f96a5a5e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"b", "[", 
+   RowBox[{"[", "5", "]"}], "]"}], "=", "5"}]], "Input",
+ CellLabel->
+  "In[427]:=",ExpressionUUID->"9e9de761-5d4f-4d98-a365-3a7aa234ec9d"],
+
+Cell[BoxData["5"], "Output",
+ CellLabel->"Out[427]=",ExpressionUUID->"410bb780-6a60-496d-ae72-f2f28e3a4f32"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Normal", "@", "b"}]], "Input",
+ CellLabel->
+  "In[428]:=",ExpressionUUID->"08e85162-391e-49d9-b6db-1af2441b1909"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1", ",", "1", ",", "1", ",", "1", ",", "5", ",", "1", ",", "1", ",", "1", 
+   ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", 
+   "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", ",", "1", 
+   ",", "1", ",", "1"}], "}"}]], "Output",
+ CellLabel->"Out[428]=",ExpressionUUID->"8e73c8ff-bf43-4c7c-8b7a-4649efeeab64"]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{20, Automatic}, {Automatic, 44}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+
