@@ -266,6 +266,7 @@ ExprBag/:e_ExprBag?ExprBagQ["Copy"[]]:=
   BagCopy[];
 ExprBag/:e_ExprBag?ExprBagQ["Extend"[iterable_]]:=
   BagCopy[];
+ExprBag/:(ExprBag[bag_]?ExprBagQ)["Bag"]:=bag
 
 
 (* ::Subsubsection::Closed:: *)
