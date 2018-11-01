@@ -655,6 +655,10 @@ CreateNode[d_]:=
 
 
 
+createNode[parent_->XMLObject[_][_, el_, ___]]:=
+  createNode[
+    parent->el
+    ]
 createNode[parent_->XMLElement[d_, c_, b_]]:=
   createNode[
     parent->
@@ -1590,7 +1594,7 @@ FromXMLObject[x_XMLElement]:=
     nodes=Flatten[nodes[[2]], 1];
     data=AssociationThread[Lookup[nodes, "Name"], nodes];
     edges=
-      Thread@
+      DeleteDuplicates@Thread@
         UndirectedEdge[Lookup[nodes, "Parent"], Lookup[nodes, "Name"]];
     graph=TreeGraph[edges];
     ConstructXMLGraph@

@@ -1335,6 +1335,15 @@ Cell["\[LeftCeiling]createNode\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[{
  RowBox[{
+  RowBox[{"createNode", "[", 
+   RowBox[{"parent_", "\[Rule]", 
+    RowBox[{
+     RowBox[{"XMLObject", "[", "_", "]"}], "[", 
+     RowBox[{"_", ",", " ", "el_", ",", " ", "___"}], "]"}]}], "]"}], ":=", 
+  "\n", "\t", 
+  RowBox[{"createNode", "[", "\n", "\t\t", 
+   RowBox[{"parent", "->", "el"}], "\n", "\t\t", "]"}]}], "\n", 
+ RowBox[{
   RowBox[{
    RowBox[{"createNode", "[", 
     RowBox[{"parent_", "\[Rule]", 
@@ -1412,8 +1421,8 @@ Cell[BoxData[{
    RowBox[{"parent_", "\[Rule]", "kid_"}], "]"}], ":=", "\n", "\t", 
   "kid"}]}], \
 "CodeInput",ExpressionUUID->"a961653d-f309-41e3-b8e3-95dd4969b431"]
-}, Closed]]
-}, Closed]],
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3472,13 +3481,14 @@ Cell[BoxData[{
          RowBox[{"nodes", ",", " ", "\"\<Name\>\""}], "]"}], ",", " ", 
         "nodes"}], "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"edges", "=", "\n", "\t\t\t", 
-      RowBox[{"Thread", "@", "\n", "\t\t\t\t", 
-       RowBox[{"UndirectedEdge", "[", 
-        RowBox[{
-         RowBox[{"Lookup", "[", 
-          RowBox[{"nodes", ",", " ", "\"\<Parent\>\""}], "]"}], ",", " ", 
-         RowBox[{"Lookup", "[", 
-          RowBox[{"nodes", ",", " ", "\"\<Name\>\""}], "]"}]}], "]"}]}]}], 
+      RowBox[{"DeleteDuplicates", "@", 
+       RowBox[{"Thread", "@", "\n", "\t\t\t\t", 
+        RowBox[{"UndirectedEdge", "[", 
+         RowBox[{
+          RowBox[{"Lookup", "[", 
+           RowBox[{"nodes", ",", " ", "\"\<Parent\>\""}], "]"}], ",", " ", 
+          RowBox[{"Lookup", "[", 
+           RowBox[{"nodes", ",", " ", "\"\<Name\>\""}], "]"}]}], "]"}]}]}]}], 
      ";", "\n", "\t\t", 
      RowBox[{"graph", "=", 
       RowBox[{"TreeGraph", "[", "edges", "]"}]}], ";", "\n", "\t\t", 
@@ -3491,7 +3501,7 @@ Cell[BoxData[{
        "|>"}]}]}]}], "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"692f5bff-182e-4f1d-9cb7-13eebaf16c90"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3541,7 +3551,7 @@ Cell[BoxData[
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"5c0c5bae-4ba8-44d0-bc9a-47ae2d0c7998"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -3603,51 +3613,6 @@ Cell[BoxData[
  CellLabel->
   "In[193]:=",ExpressionUUID->"533a7b1a-64dd-474f-bf16-689d5ce9bbb1"],
 
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"wsg", "@", 
-   RowBox[{"\"\<Type\>\"", "[", "]"}]}], "//", "Counts"}]], "Input",
- CellLabel->
-  "In[194]:=",ExpressionUUID->"eb1ac200-8991-487f-8dfd-c98928a0a680"],
-
-Cell[BoxData[
- RowBox[{"\[LeftAssociation]", 
-  RowBox[{
-   RowBox[{"\<\"title\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"meta\"\>", "\[Rule]", "149"}], ",", 
-   RowBox[{"\<\"link\"\>", "\[Rule]", "15"}], ",", 
-   RowBox[{"\<\"script\"\>", "\[Rule]", "23"}], ",", 
-   RowBox[{"\<\"head\"\>", "\[Rule]", "63"}], ",", 
-   RowBox[{"\<\"noscript\"\>", "\[Rule]", "19"}], ",", 
-   RowBox[{"\<\"body\"\>", "\[Rule]", "64"}], ",", 
-   RowBox[{"\<\"strong\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"span\"\>", "\[Rule]", "115"}], ",", 
-   RowBox[{"\<\"a\"\>", "\[Rule]", "430"}], ",", 
-   RowBox[{"\<\"p\"\>", "\[Rule]", "44"}], ",", 
-   RowBox[{"\<\"div\"\>", "\[Rule]", "711"}], ",", 
-   RowBox[{"\<\"li\"\>", "\[Rule]", "310"}], ",", 
-   RowBox[{"\<\"ul\"\>", "\[Rule]", "54"}], ",", 
-   RowBox[{"\<\"header\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"nav\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"input\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"i\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"button\"\>", "\[Rule]", "6"}], ",", 
-   RowBox[{"\<\"form\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"style\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"h4\"\>", "\[Rule]", "43"}], ",", 
-   RowBox[{"\<\"h3\"\>", "\[Rule]", "110"}], ",", 
-   RowBox[{"\<\"img\"\>", "\[Rule]", "16"}], ",", 
-   RowBox[{"\<\"iframe\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"ol\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"footer\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"menu\"\>", "\[Rule]", "10"}], ",", 
-   RowBox[{"\<\"html\"\>", "\[Rule]", "1"}]}], 
-  "\[RightAssociation]"}]], "Output",
- CellLabel->"Out[194]=",ExpressionUUID->"bbeb1f23-02a1-40b2-bb67-90f4905d37e9"]
-}, Open  ]],
-
 Cell[BoxData[
  RowBox[{"wsg", "[", "\"\<Graph\>\"", "]"}]], "Input",
  CellLabel->
@@ -3675,463 +3640,10 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"seg", "=", 
    RowBox[{"XMLGraph", "@", "seXML"}]}], ";"}]], "Input",
- CellLabel->
-  "In[209]:=",ExpressionUUID->"37667024-1478-42a8-8853-25f572f545d4"],
-
-Cell[BoxData[
- RowBox[{"seg", "[", "\"\<Graph\>\"", "]"}]], "Input",
- CellLabel->
-  "In[210]:=",ExpressionUUID->"d5e316e1-f6ee-4fe2-b567-fe4a8b9306bc"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"seg", "@", 
-   RowBox[{"\"\<Type\>\"", "[", "]"}]}], "//", "Counts"}]], "Input",
- CellLabel->
-  "In[211]:=",ExpressionUUID->"e7844729-8360-43a5-9dc4-df67dd158a46"],
-
-Cell[BoxData[
- RowBox[{"\[LeftAssociation]", 
-  RowBox[{
-   RowBox[{"\<\"title\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"link\"\>", "\[Rule]", "6"}], ",", 
-   RowBox[{"\<\"meta\"\>", "\[Rule]", "11"}], ",", 
-   RowBox[{"\<\"script\"\>", "\[Rule]", "13"}], ",", 
-   RowBox[{"\<\"head\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"style\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"noscript\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"body\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"div\"\>", "\[Rule]", "292"}], ",", 
-   RowBox[{"\<\"header\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"svg\"\>", "\[Rule]", "11"}], ",", 
-   RowBox[{"\<\"g\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"path\"\>", "\[Rule]", "16"}], ",", 
-   RowBox[{"\<\"a\"\>", "\[Rule]", "265"}], ",", 
-   RowBox[{"\<\"h4\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"p\"\>", "\[Rule]", "3"}], ",", 
-   RowBox[{"\<\"nav\"\>", "\[Rule]", "2"}], ",", 
-   RowBox[{"\<\"ol\"\>", "\[Rule]", "3"}], ",", 
-   RowBox[{"\<\"input\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"button\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"form\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"li\"\>", "\[Rule]", "151"}], ",", 
-   RowBox[{"\<\"span\"\>", "\[Rule]", "82"}], ",", 
-   RowBox[{"\<\"h3\"\>", "\[Rule]", "17"}], ",", 
-   RowBox[{"\<\"ul\"\>", "\[Rule]", "22"}], ",", 
-   RowBox[{"\<\"br\"\>", "\[Rule]", "4"}], ",", 
-   RowBox[{"\<\"b\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"h1\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"footer\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"h5\"\>", "\[Rule]", "3"}], ",", 
-   RowBox[{"\<\"strong\"\>", "\[Rule]", "4"}], ",", 
-   RowBox[{"\<\"img\"\>", "\[Rule]", "1"}], ",", 
-   RowBox[{"\<\"html\"\>", "\[Rule]", "1"}]}], 
-  "\[RightAssociation]"}]], "Output",
- CellLabel->"Out[211]=",ExpressionUUID->"f5681d03-0bc6-4985-b9ba-38462801ac84"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"seg", "=", 
-   RowBox[{"XMLGraph", "@", 
-    RowBox[{"Import", "[", 
-     RowBox[{
-     "\"\<https://mathematica.stackexchange.com/\>\"", ",", " ", 
-      "\"\<XMLObject\>\""}], "]"}]}]}], ";"}]], "Input",
- CellLabel->
-  "In[258]:=",ExpressionUUID->"355c952a-18c4-4249-ae4b-696533c2cb5a"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"nodes", "=", 
-  RowBox[{"seg", "@", 
-   RowBox[{"\"\<Select\>\"", "[", 
-    RowBox[{"\"\<.summary h3 a\>\"", ",", " ", "2"}], "]"}]}]}]], "Input",
- CellLabel->
-  "In[261]:=",ExpressionUUID->"1c9eea5d-8a1a-4527-99ae-0ea5721e6cab"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"\<\"a:aa6a457e\"\>", ",", "\<\"a:7243db38\"\>"}], "}"}]], "Output",
- 
- CellLabel->"Out[261]=",ExpressionUUID->"b643c385-317d-4be2-828e-aa43cd8a8804"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"AssociationThread", "@@", 
-  RowBox[{
-   RowBox[{"Flatten", "@*", "Values"}], "/@", "\[IndentingNewLine]", 
-   RowBox[{"Through", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"seg", "@", 
-         RowBox[{"\"\<Attribute\>\"", "[", 
-          RowBox[{"#", ",", " ", "\"\<href\>\""}], "]"}]}], "&"}], ",", " ", 
-       RowBox[{"seg", "@", "\"\<Children\>\""}]}], "}"}], "@", "nodes"}], 
-    "]"}]}]}]], "Input",
- CellLabel->
-  "In[264]:=",ExpressionUUID->"6f2d5a0b-c920-4e45-b232-3a1d38f4bf1f"],
-
-Cell[BoxData[
- RowBox[{"\[LeftAssociation]", 
-  RowBox[{
-   RowBox[{"\<\"/questions/184388/unable-to-implement-bisection-method-using-\
-recursion\"\>", 
-    "\[Rule]", "\<\"Unable to implement bisection method using \
-recursion\"\>"}], ",", 
-   RowBox[{"\<\"/questions/184399/appending-numericq-automatically-to-every-\
-variable-of-a-function-in-the-defini\"\>", 
-    "\[Rule]", "\<\"Appending _?NumericQ automatically to every variable of a \
-function in the definition\"\>"}]}], "\[RightAssociation]"}]], "Output",
- CellLabel->"Out[264]=",ExpressionUUID->"26050f59-0f95-4014-a83a-72caa9b254f6"]
-}, Open  ]],
-
-Cell[BoxData["seg"], "Input",
- CellLabel->
-  "In[268]:=",ExpressionUUID->"22bc88c5-72df-4beb-b301-c73a2e40bd9b"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   TagBox["XMLGraph",
-    "SummaryHead"], "[", 
-   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
-    
-    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["\"html\"", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["923", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}], True -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["\"html\"", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["923", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}]}, 
-       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
-     "SummaryPanel"],
-    DynamicModuleValues:>{}], "]"}],
-  "???",
-  Editable->False,
-  SelectWithContents->True,
-  Selectable->False]], "Input",
- CellChangeTimes->{3.7492238434891253`*^9},
- CellLabel->
-  "In[269]:=",ExpressionUUID->"f8550479-977e-4ccf-ba56-942c981baa74"],
-
-Cell[BoxData["\<\"???\"\>"], "Output",
- CellLabel->"Out[269]=",ExpressionUUID->"1348af34-1b26-4eb9-9d4c-bb1b08596e17"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"seg", "[", "\"\<Nodes\>\"", "]"}], "[", 
-  RowBox[{"[", "100", "]"}], "]"}]], "Input",
- CellLabel->
-  "In[275]:=",ExpressionUUID->"13ed1617-05ae-4f9a-bf11-d78ea807a42a"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"seg", "[", "\"\<Nodes\>\"", "]"}], "[", 
-  RowBox[{"[", "1", "]"}], "]"}]], "Input",
- CellLabel->
-  "In[282]:=",ExpressionUUID->"36d056f2-759e-48af-b450-e80fd4ad3f33"],
-
-Cell[BoxData["\<\"title:1e7d2772\"\>"], "Output",
- CellLabel->"Out[282]=",ExpressionUUID->"a2f238be-4966-4752-ac1b-6ac6616426fe"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"seg", "@", 
-   RowBox[{"\"\<Select\>\"", "[", "\"\<.summary\>\"", "]"}]}], "//", 
-  "Length"}]], "Input",
- CellLabel->
-  "In[286]:=",ExpressionUUID->"326ef6de-6b06-4826-b764-2a55d3288d73"],
-
-Cell[BoxData["33"], "Output",
- CellLabel->"Out[286]=",ExpressionUUID->"3fc637af-3a28-43d0-9cf7-49fc0a22e2e8"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"sg", "=", 
-  RowBox[{"seg", "@", 
-   RowBox[{"\"\<Subgraph\>\"", "[", 
-    RowBox[{"Last", "@", 
-     RowBox[{"seg", "@", 
-      RowBox[{"\"\<Select\>\"", "[", "\"\<.summary\>\"", "]"}]}]}], 
-    "]"}]}]}]], "Input",
- CellLabel->
-  "In[297]:=",ExpressionUUID->"011765a5-718a-4624-8902-8754c0eab1ed"],
-
-Cell[BoxData[
- InterpretationBox[
-  RowBox[{
-   TagBox["XMLGraph",
-    "SummaryHead"], "[", 
-   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
-    
-    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["\"div\"", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["24", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}], True -> GridBox[{{
-            GridBox[{{
-               RowBox[{
-                 TagBox["\"Root: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["\"div\"", "SummaryItem"]}]}, {
-               RowBox[{
-                 TagBox["\"Nodes: \"", "SummaryItemAnnotation"], 
-                 "\[InvisibleSpace]", 
-                 TagBox["24", "SummaryItem"]}]}}, 
-             GridBoxAlignment -> {
-              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
-             False, GridBoxItemSize -> {
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
-              BaseStyle -> {
-              ShowStringCharacters -> False, NumberMarks -> False, 
-               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
-          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
-          GridBoxItemSize -> {
-           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
-          BaselinePosition -> {1, 1}]}, 
-       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
-     "SummaryPanel"],
-    DynamicModuleValues:>{}], "]"}],
-  Apply[XMLGraph`XMLGraph, {
-    Association[
-    "Version" -> 1, "Graph" -> 
-     Graph[{"div:7f55b261", "span:969942ac", "div:9c1827d0", "div:007881b4", 
-        "div:00bd6e13", "div:cf4cee74", "div:4482f79c", "div:a52a7a4c", 
-        "div:424c8997", "div:5a065db5", "div:6b290de4", "div:cbb1ffbd", 
-        "div:0835fb75", "span:8690204c", "span:89ba5e72", "h3:a1ce0e6c", 
-        "div:e2d5db05", "div:e4ebb0e4", "a:9d2cafcc", "a:5b1d2e3b", 
-        "a:d643430d", "a:099e522d", "a:b58e3479", "span:65bb0e80", 
-        "span:50e434bd", "Root"}, {
-       Null, {{1, 2}, {3, 1}, {3, 4}, {5, 3}, {5, 6}, {5, 7}, {8, 5}, {6, 
-        9}, {6, 10}, {7, 11}, {7, 12}, {8, 13}, {9, 14}, {11, 15}, {13, 16}, {
-        13, 17}, {13, 18}, {16, 19}, {17, 20}, {17, 21}, {18, 22}, {18, 23}, {
-        18, 24}, {22, 25}, {26, 8}}}], "Data" -> 
-     Association[
-      "div:7f55b261" -> 
-       Association[
-        "Parent" -> "div:9c1827d0", "Type" -> "div", "Name" -> "div:7f55b261",
-          "Meta" -> Association["class" -> "mini-counts"], "Children" -> {
-           XMLGraph`Package`Node["span:969942ac"]}], "span:969942ac" -> 
-       Association[
-        "Parent" -> "div:7f55b261", "Type" -> "span", "Name" -> 
-         "span:969942ac", "Meta" -> Association["title" -> "320 views"], 
-         "Children" -> {"320"}], "div:9c1827d0" -> 
-       Association[
-        "Parent" -> "div:00bd6e13", "Type" -> "div", "Name" -> "div:9c1827d0",
-          "Meta" -> Association["class" -> "views"], 
-         "Children" -> {"\n            ", 
-           XMLGraph`Package`Node["div:7f55b261"], "\n            ", 
-           XMLGraph`Package`Node["div:007881b4"], "\n        "}], 
-       "div:007881b4" -> 
-       Association[
-        "Parent" -> "div:9c1827d0", "Type" -> "div", "Name" -> "div:007881b4",
-          "Meta" -> Association[], "Children" -> {"views"}], "div:00bd6e13" -> 
-       Association[
-        "Parent" -> "div:a52a7a4c", "Type" -> "div", "Name" -> "div:00bd6e13",
-          "Meta" -> Association[
-          "class" -> "cp", "onclick" -> 
-           "window.location.href='/questions/184324/computing-the-twin-prime-\
-constant-with-mathematica'"], "Children" -> {"\n        ", 
-           XMLGraph`Package`Node["div:cf4cee74"], "\n        ", 
-           XMLGraph`Package`Node["div:4482f79c"], "\n        ", 
-           XMLGraph`Package`Node["div:9c1827d0"], "\n    "}], "div:cf4cee74" -> 
-       Association[
-        "Parent" -> "div:00bd6e13", "Type" -> "div", "Name" -> "div:cf4cee74",
-          "Meta" -> Association["class" -> "votes"], 
-         "Children" -> {"\n            ", 
-           XMLGraph`Package`Node["div:424c8997"], "\n            ", 
-           XMLGraph`Package`Node["div:5a065db5"], "\n        "}], 
-       "div:4482f79c" -> 
-       Association[
-        "Parent" -> "div:00bd6e13", "Type" -> "div", "Name" -> "div:4482f79c",
-          "Meta" -> Association[
-          "class" -> "status answered-accepted", "title" -> 
-           "one of the answers was accepted as the correct answer"], 
-         "Children" -> {"\n            ", 
-           XMLGraph`Package`Node["div:6b290de4"], "\n            ", 
-           XMLGraph`Package`Node["div:cbb1ffbd"], "\n        "}], 
-       "div:a52a7a4c" -> 
-       Association[
-        "Parent" -> "div:258dbf00", "Type" -> "div", "Name" -> "div:a52a7a4c",
-          "Meta" -> Association[
-          "class" -> "question-summary narrow", "id" -> 
-           "question-summary-184324"], "Children" -> {"\n    ", 
-           XMLGraph`Package`Node["div:00bd6e13"], "\n    ", 
-           XMLGraph`Package`Node["div:0835fb75"], "\n"}], "div:424c8997" -> 
-       Association[
-        "Parent" -> "div:cf4cee74", "Type" -> "div", "Name" -> "div:424c8997",
-          "Meta" -> Association["class" -> "mini-counts"], "Children" -> {
-           XMLGraph`Package`Node["span:8690204c"]}], "div:5a065db5" -> 
-       Association[
-        "Parent" -> "div:cf4cee74", "Type" -> "div", "Name" -> "div:5a065db5",
-          "Meta" -> Association[], "Children" -> {"votes"}], "div:6b290de4" -> 
-       Association[
-        "Parent" -> "div:4482f79c", "Type" -> "div", "Name" -> "div:6b290de4",
-          "Meta" -> Association["class" -> "mini-counts"], "Children" -> {
-           XMLGraph`Package`Node["span:89ba5e72"]}], "div:cbb1ffbd" -> 
-       Association[
-        "Parent" -> "div:4482f79c", "Type" -> "div", "Name" -> "div:cbb1ffbd",
-          "Meta" -> Association[], "Children" -> {"answers"}], "div:0835fb75" -> 
-       Association[
-        "Parent" -> "div:a52a7a4c", "Type" -> "div", "Name" -> "div:0835fb75",
-          "Meta" -> Association["class" -> "summary"], 
-         "Children" -> {"\n        \n        \n        ", 
-           XMLGraph`Package`Node["h3:a1ce0e6c"], "\n        ", 
-           XMLGraph`Package`Node["div:e2d5db05"], "\n        ", 
-           XMLGraph`Package`Node["div:e4ebb0e4"], "\n    "}], "span:8690204c" -> 
-       Association[
-        "Parent" -> "div:424c8997", "Type" -> "span", "Name" -> 
-         "span:8690204c", "Meta" -> Association["title" -> "6 votes"], 
-         "Children" -> {"6"}], "span:89ba5e72" -> 
-       Association[
-        "Parent" -> "div:6b290de4", "Type" -> "span", "Name" -> 
-         "span:89ba5e72", "Meta" -> Association["title" -> "3 answers"], 
-         "Children" -> {"3"}], "h3:a1ce0e6c" -> 
-       Association[
-        "Parent" -> "div:0835fb75", "Type" -> "h3", "Name" -> "h3:a1ce0e6c", 
-         "Meta" -> Association[], "Children" -> {
-           XMLGraph`Package`Node["a:9d2cafcc"]}], "div:e2d5db05" -> 
-       Association[
-        "Parent" -> "div:0835fb75", "Type" -> "div", "Name" -> "div:e2d5db05",
-          "Meta" -> Association[
-          "class" -> "tags t-code-review t-prime-numbers"], 
-         "Children" -> {"\n            ", 
-           XMLGraph`Package`Node["a:5b1d2e3b"], " ", 
-           XMLGraph`Package`Node["a:d643430d"], " \n        "}], 
-       "div:e4ebb0e4" -> 
-       Association[
-        "Parent" -> "div:0835fb75", "Type" -> "div", "Name" -> "div:e4ebb0e4",
-          "Meta" -> Association["class" -> "started"], 
-         "Children" -> {"\n            ", 
-           XMLGraph`Package`Node["a:099e522d"], "\n            ", 
-           XMLGraph`Package`Node["a:b58e3479"], " ", 
-           XMLGraph`Package`Node["span:65bb0e80"], "\n        "}], 
-       "a:9d2cafcc" -> 
-       Association[
-        "Parent" -> "h3:a1ce0e6c", "Type" -> "a", "Name" -> "a:9d2cafcc", 
-         "Meta" -> Association[
-          "shape" -> "rect", "class" -> "question-hyperlink", "href" -> 
-           "/questions/184324/computing-the-twin-prime-constant-with-\
-mathematica"], 
-         "Children" -> {
-          "Computing the twin prime constant with Mathematica"}], 
-       "a:5b1d2e3b" -> 
-       Association[
-        "Parent" -> "div:e2d5db05", "Type" -> "a", "Name" -> "a:5b1d2e3b", 
-         "Meta" -> Association[
-          "shape" -> "rect", "class" -> "post-tag", "href" -> 
-           "/questions/tagged/code-review", "title" -> 
-           "show questions tagged 'code-review'", "rel" -> "tag"], 
-         "Children" -> {"code-review"}], "a:d643430d" -> 
-       Association[
-        "Parent" -> "div:e2d5db05", "Type" -> "a", "Name" -> "a:d643430d", 
-         "Meta" -> Association[
-          "shape" -> "rect", "class" -> "post-tag", "href" -> 
-           "/questions/tagged/prime-numbers", "title" -> 
-           "show questions tagged 'prime-numbers'", "rel" -> "tag"], 
-         "Children" -> {"prime-numbers"}], "a:099e522d" -> 
-       Association[
-        "Parent" -> "div:e4ebb0e4", "Type" -> "a", "Name" -> "a:099e522d", 
-         "Meta" -> Association[
-          "shape" -> "rect", "class" -> "started-link", "href" -> 
-           "/questions/184324/computing-the-twin-prime-constant-with-\
-mathematica/?lastactivity"], "Children" -> {"answered ", 
-           XMLGraph`Package`Node["span:50e434bd"]}], "a:b58e3479" -> 
-       Association[
-        "Parent" -> "div:e4ebb0e4", "Type" -> "a", "Name" -> "a:b58e3479", 
-         "Meta" -> Association[
-          "shape" -> "rect", "href" -> 
-           "/users/41267/gilmar-rodriguez-pierluissi"], 
-         "Children" -> {"Gilmar Rodriguez Pierluissi"}], "span:65bb0e80" -> 
-       Association[
-        "Parent" -> "div:e4ebb0e4", "Type" -> "span", "Name" -> 
-         "span:65bb0e80", "Meta" -> 
-         Association[
-          "class" -> "reputation-score", "dir" -> "ltr", "title" -> 
-           "reputation score "], "Children" -> {"523"}], "span:50e434bd" -> 
-       Association[
-        "Parent" -> "a:099e522d", "Type" -> "span", "Name" -> "span:50e434bd",
-          "Meta" -> Association[
-          "class" -> "relativetime", "title" -> "2018-10-22 14:24:46Z"], 
-         "Children" -> {"4 hours ago"}]]]}],
-  Editable->False,
-  SelectWithContents->True,
-  Selectable->False]], "Input",
- CellChangeTimes->{3.7492242858971243`*^9},
- CellLabel->"In[298]:=",ExpressionUUID->"e5d95d2e-82b7-4d87-9cc3-af3dbab90af0"]
+ CellLabel->"In[209]:=",ExpressionUUID->"37667024-1478-42a8-8853-25f572f545d4"]
 },
 WindowSize->{808, 755},
-WindowMargins->{{58, Automatic}, {Automatic, 10}},
+WindowMargins->{{283, Automatic}, {Automatic, 0}},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 
