@@ -318,187 +318,41 @@ boilerplate
 
 Cell[CellGroupData[{
 
-Cell["\[LeftCeiling]RegisterInterface\[RightFloor]", "CodeSubsubsection",
- Evaluatable->True,ExpressionUUID->"28093089-000a-4669-abf8-bf52649530fd"],
+Cell["\[LeftCeiling]Defaults\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"4afe5f7a-e2ea-41b4-86f8-c4e6dddc84ee"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]defaultConstructorFailureFunction\[RightFloor]", \
+"CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"3d45814b-8150-486e-862d-2d6b29d346fc"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"Options", "[", "RegisterInterface", "]"}], "=", "\n", "\t", 
-   RowBox[{"{", "\n", "\t\t", 
-    RowBox[{
-     RowBox[{"\"\<Version\>\"", "\[Rule]", "1"}], ",", "\n", "\t\t", 
-     RowBox[{"\"\<Atomic\>\"", "\[Rule]", "True"}], ",", "\n", "\t\t", 
-     RowBox[{"\"\<Validator\>\"", "\[Rule]", "Automatic"}], ",", "\n", "\t\t", 
-     RowBox[{"\"\<Constructor\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
-     "\t\t", 
-     RowBox[{"\"\<MutationHandler\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
-     "\t\t", 
-     RowBox[{"\"\<MutationFunctions\>\"", "\[Rule]", "None"}], ",", "\n", 
-     "\t\t", 
-     RowBox[{"\"\<AccessorFunctions\>\"", "\[Rule]", "None"}], ",", "\n", 
-     "\t\t", 
-     RowBox[{"\"\<NormalFunction\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
-     "\t\t", 
-     RowBox[{"\"\<Formatted\>\"", "\[Rule]", "True"}], ",", "\n", "\t\t", 
-     RowBox[{"\"\<Icon\>\"", "\[Rule]", "None"}], ",", "\n", "\t\t", 
-     RowBox[{"\"\<DefaultMethods\>\"", "\[Rule]", 
-      RowBox[{"{", "\n", "\t\t\t", 
+   RowBox[{"defaultConstructorFailureFunction", "[", 
+    RowBox[{"head_", ",", " ", "args__"}], "]"}], ":=", "\n", "\t", 
+   RowBox[{"Failure", "[", 
+    RowBox[{"\"\<BuildFailure\>\"", ",", "\n", "\t\t", 
+     RowBox[{"<|", "\n", "\t\t\t", 
+      RowBox[{
        RowBox[{
-       "Keys", ",", " ", "SetProperty", ",", " ", "PropertyValue", ",", "\n", 
-        "\t\t\t", "RemoveProperty", ",", " ", "PropertyList"}], "\n", 
-       "\t\t\t", "}"}]}]}], "\n", "\t\t", "}"}]}], ";"}], "\n", 
+       "\"\<MessageTemplate\>\"", "\[Rule]", 
+        "\"\<Failed to build `` object from data ``\>\""}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"head", ",", " ", 
+          RowBox[{"HoldForm", "[", 
+           RowBox[{"{", "args", "}"}], "]"}]}], "}"}]}]}], "\n", "\t\t\t", 
+      "|>"}]}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
-   RowBox[{"RegisterInterface", "[", "\n", "\t", 
-    RowBox[{"head_", ",", "\n", "\t", "keys_", ",", "\n", "\t", 
-     RowBox[{"ops", ":", 
-      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "\t", "]"}], ":=", "\n",
-    "\t", 
-   RowBox[{"Module", "[", "\n", "\t\t", 
-    RowBox[{
-     RowBox[{"{", "\n", "\t\t\t", 
-      RowBox[{
-       RowBox[{"entryQ", "=", 
-        RowBox[{"True", "@", 
-         RowBox[{"OptionValue", "[", "\"\<Atomic\>\"", "]"}]}]}], ",", "\n", 
-       "\t\t\t", 
-       RowBox[{"ctor", "=", 
-        RowBox[{"OptionValue", "[", "\"\<Constructor\>\"", "]"}]}], ",", "\n",
-        "\t\t\t", "constructor", ",", "\n", "\t\t\t", 
-       RowBox[{"vdtor", "=", 
-        RowBox[{"OptionValue", "[", "\"\<Validator\>\"", "]"}]}], ",", "\n", 
-       "\t\t\t", "objQ", ",", "\n", "\t\t\t", 
-       RowBox[{"version", "=", 
-        RowBox[{"OptionValue", "[", "\"\<Version\>\"", "]"}]}], ",", "\n", 
-       "\t\t\t", 
-       RowBox[{"muh", "=", 
-        RowBox[{"OptionValue", "[", "\"\<MutationHandler\>\"", "]"}]}], ",", 
-       "\n", "\t\t\t", "mutationHandler", ",", "\n", "\t\t\t", 
-       RowBox[{"mud", "=", 
-        RowBox[{"OptionValue", "[", "\"\<MutationFunctions\>\"", "]"}]}], ",",
-        "\n", "\t\t\t", 
-       RowBox[{"acc", "=", 
-        RowBox[{"OptionValue", "[", "\"\<AccessorFunctions\>\"", "]"}]}], ",",
-        "\n", "\t\t\t", 
-       RowBox[{"norm", "=", "\n", "\t\t\t\t", 
-        RowBox[{"Replace", "[", 
-         RowBox[{
-          RowBox[{"OptionValue", "[", "\"\<NormalFunction\>\"", "]"}], ",", 
-          "\n", "\t\t\t\t\t", 
-          RowBox[{"Automatic", "\[RuleDelayed]", 
-           RowBox[{"(", 
-            RowBox[{
-             RowBox[{"KeyDrop", "[", 
-              RowBox[{"#", ",", " ", "\"\<Version\>\""}], "]"}], "&"}], 
-            ")"}]}]}], "\n", "\t\t\t\t\t", "]"}]}], ",", "\n", "\t\t\t", 
-       RowBox[{"format", "=", 
-        RowBox[{"OptionValue", "[", "\"\<Formatted\>\"", "]"}]}], ",", "\n", 
-       "\t\t\t", 
-       RowBox[{"icon", "=", 
-        RowBox[{"OptionValue", "[", "\"\<Icon\>\"", "]"}]}]}], "\n", "\t\t\t",
-       "}"}], ",", "\n", "\t\t", 
-     RowBox[{
-      RowBox[{"iRegisterInterfaceEntryQ", "[", "\n", "\t\t\t", 
-       RowBox[{"head", ",", "\n", "\t\t\t", 
-        RowBox[{"!", "entryQ"}]}], "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{"vdtor", "===", "Automatic"}], ",", " ", 
-        RowBox[{"vdtor", "=", "objQ"}]}], "]"}], ";", "\n", "\t\t", 
-      RowBox[{"iRegisterInterfaceValidator", "[", 
-       RowBox[{"head", ",", " ", "keys", ",", " ", "vdtor"}], "]"}], ";", 
-      "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{"ctor", "===", "Automatic"}], ",", "\n", "\t\t\t", 
-        RowBox[{
-         RowBox[{"createConstructor", "[", 
-          RowBox[{"constructor", ",", " ", "keys"}], "]"}], ";", "\n", 
-         "\t\t\t", 
-         RowBox[{"ctor", "=", "constructor"}], ";"}]}], "\n", "\t\t\t", "]"}],
-       ";", "\n", "\t\t", 
-      RowBox[{"iRegisterInterfaceConstructor", "[", "\n", "\t\t\t", 
-       RowBox[{
-       "head", ",", "\n", "\t\t\t", "version", ",", "\n", "\t\t\t", "ctor"}], 
-       "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{"mud", "=!=", "None"}], ",", "\n", "\t\t\t", 
-        RowBox[{
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"mud", "===", "Automatic"}], ",", " ", 
-           RowBox[{"mud", "=", 
-            RowBox[{"{", 
-             RowBox[{
-             "\"\<Self\>\"", ",", " ", "\"\<Keys\>\"", ",", " ", 
-              "\"\<Parts\>\""}], "}"}]}]}], "]"}], ";", "\n", "\t\t\t", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"ListQ", "@", "mud"}], ",", "\n", "\t\t\t\t", 
-           RowBox[{
-            RowBox[{"mud", "=", 
-             RowBox[{"createMutationHandlers", "[", 
-              RowBox[{"head", ",", " ", "vdtor", ",", " ", "mud"}], "]"}]}], 
-            ";"}]}], "\n", "\t\t\t\t", "]"}], ";", "\n", "\t\t\t", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"muh", "===", "Automatic"}], ",", "\n", "\t\t\t\t", 
-           RowBox[{"muh", "=", "mutationHandler"}]}], "\n", "\t\t\t\t", "]"}],
-          ";", "\n", "\t\t\t", 
-         RowBox[{"iRegisterInterfaceMutationHandler", "[", "\n", "\t\t\t\t", 
-          RowBox[{
-          "head", ",", "\n", "\t\t\t\t", "mutationHandler", ",", "\n", 
-           "\t\t\t\t", "mud"}], "\n", "\t\t\t\t", "]"}]}]}], "\n", "\t\t\t", 
-       "]"}], ";", "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{"acc", "=!=", "None"}], ",", "\n", "\t\t\t", 
-        RowBox[{"Which", "[", "\n", "\t\t\t\t", 
-         RowBox[{
-          RowBox[{"acc", "===", "Automatic"}], ",", "\n", "\t", "\t\t\t\t", 
-          RowBox[{"iRegisterInterfaceAccessor", "[", 
-           RowBox[{"head", ",", " ", 
-            RowBox[{"createAccessorFunctions", "[", 
-             RowBox[{"head", ",", " ", "vdtor"}], "]"}]}], "]"}], ",", "\n", 
-          "\t\t\t\t", 
-          RowBox[{"acc", "===", "\"\<Keys\>\""}], ",", "\n", "\t\t\t\t\t", 
-          RowBox[{"iRegisterInterfaceAccessor", "[", 
-           RowBox[{"head", ",", " ", "\n", "\t\t\t\t\t\t", 
-            RowBox[{
-             RowBox[{"KeyDrop", "[", "\"\<Parts\>\"", "]"}], "@", 
-             RowBox[{"createAccessorFunctions", "[", 
-              RowBox[{"head", ",", " ", "vdtor"}], "]"}]}]}], "\n", 
-           "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", 
-          RowBox[{"acc", "===", "\"\<Parts\>\""}], ",", "\n", "\t\t\t\t\t", 
-          RowBox[{"iRegisterInterfaceAccessor", "[", 
-           RowBox[{"head", ",", " ", "\n", "\t\t\t\t\t\t", 
-            RowBox[{
-             RowBox[{"KeyDrop", "[", "\"\<Keys\>\"", "]"}], "@", 
-             RowBox[{"createAccessorFunctions", "[", 
-              RowBox[{"head", ",", " ", "vdtor"}], "]"}]}]}], "\n", 
-           "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", "True", ",", "\n", 
-          "\t\t\t\t\t", 
-          RowBox[{"iRegisterInterfaceAccessor", "[", 
-           RowBox[{"head", ",", " ", "acc"}], "]"}]}], "\n", "\t\t\t\t", 
-         "]"}]}], "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{
-        RowBox[{"norm", "=!=", "None"}], ",", "\n", "\t\t\t", 
-        RowBox[{"iRegisterInterfaceNormalForm", "[", 
-         RowBox[{"head", ",", " ", "norm"}], "]"}]}], "\n", "\t\t\t", "]"}], 
-      ";", "\n", "\t\t", 
-      RowBox[{"If", "[", 
-       RowBox[{"format", ",", "\n", "\t\t\t", 
-        RowBox[{"iRegisterInterfaceFormatting", "[", 
-         RowBox[{"head", ",", " ", "icon"}], "]"}]}], "\n", "\t\t\t", "]"}], 
-      ";", "\n", "\t\t", 
-      RowBox[{"iRegisterDefaultInterfaceMethods", "[", 
-       RowBox[{"head", ",", " ", 
-        RowBox[{"OptionValue", "[", "\"\<DefaultMethods\>\"", "]"}]}], "]"}], 
-      ";", "\n", "\t\t", "head"}]}], "\n", "\t\t", "]"}]}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"917db5ae-f053-4963-a98d-525483943366"],
+  "defaultConstructorFailureFunction", "~", "SetAttributes", "~", 
+   "HoldAllComplete"}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"ed453e3f-621d-499e-989e-61af480b8706"]\
+
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -543,7 +397,7 @@ Cell[BoxData[
        RowBox[{"AssociationThread", "::", "idim"}]}], "]"}]}]}], "\n", "\t\t",
     ")"}]}]], \
 "CodeInput",ExpressionUUID->"04deca4c-f7ab-4033-ad3e-a8def6cd45e5"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -740,7 +594,219 @@ Cell[BoxData[{
    "\t\t", "]"}]}], "\n", 
  RowBox[{"\t\t\t"}]}], \
 "CodeInput",ExpressionUUID->"25a82167-a7ef-4535-b6ea-1115ecbe29c9"]
-}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]RegisterInterface\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"28093089-000a-4669-abf8-bf52649530fd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "RegisterInterface", "]"}], "=", "\n", "\t", 
+   RowBox[{"{", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<Version\>\"", "\[Rule]", "1"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Atomic\>\"", "\[Rule]", "True"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Validator\>\"", "\[Rule]", "Automatic"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Constructor\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<MutationHandler\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<MutationFunctions\>\"", "\[Rule]", "None"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<AccessorFunctions\>\"", "\[Rule]", "None"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<NormalFunction\>\"", "\[Rule]", "Automatic"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<Formatted\>\"", "\[Rule]", "True"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Icon\>\"", "\[Rule]", "None"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<DefaultMethods\>\"", "\[Rule]", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+       "Keys", ",", " ", "SetProperty", ",", " ", "PropertyValue", ",", "\n", 
+        "\t\t\t", "RemoveProperty", ",", " ", "PropertyList"}], "\n", 
+       "\t\t\t", "}"}]}]}], "\n", "\t\t", "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"RegisterInterface", "[", "\n", "\t", 
+    RowBox[{"head_", ",", "\n", "\t", "keys_", ",", "\n", "\t", 
+     RowBox[{"ops", ":", 
+      RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "\t", "]"}], ":=", "\n",
+    "\t", 
+   RowBox[{"Module", "[", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"entryQ", "=", 
+        RowBox[{"True", "@", 
+         RowBox[{"OptionValue", "[", "\"\<Atomic\>\"", "]"}]}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{"ctor", "=", 
+        RowBox[{"OptionValue", "[", "\"\<Constructor\>\"", "]"}]}], ",", "\n",
+        "\t\t\t", "constructor", ",", "\n", "\t\t\t", 
+       RowBox[{"ctorFail", "=", "defaultConstructorFailureFunction"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"ctorFailOnUndef", "=", "False"}], ",", "\n", "\t\t\t", 
+       RowBox[{"vdtor", "=", 
+        RowBox[{"OptionValue", "[", "\"\<Validator\>\"", "]"}]}], ",", "\n", 
+       "\t\t\t", "objQ", ",", "\n", "\t\t\t", 
+       RowBox[{"version", "=", 
+        RowBox[{"OptionValue", "[", "\"\<Version\>\"", "]"}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{"muh", "=", 
+        RowBox[{"OptionValue", "[", "\"\<MutationHandler\>\"", "]"}]}], ",", 
+       "\n", "\t\t\t", "mutationHandler", ",", "\n", "\t\t\t", 
+       RowBox[{"mud", "=", 
+        RowBox[{"OptionValue", "[", "\"\<MutationFunctions\>\"", "]"}]}], ",",
+        "\n", "\t\t\t", 
+       RowBox[{"acc", "=", 
+        RowBox[{"OptionValue", "[", "\"\<AccessorFunctions\>\"", "]"}]}], ",",
+        "\n", "\t\t\t", 
+       RowBox[{"norm", "=", "\n", "\t\t\t\t", 
+        RowBox[{"Replace", "[", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<NormalFunction\>\"", "]"}], ",", 
+          "\n", "\t\t\t\t\t", 
+          RowBox[{"Automatic", "\[RuleDelayed]", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"KeyDrop", "[", 
+              RowBox[{"#", ",", " ", "\"\<Version\>\""}], "]"}], "&"}], 
+            ")"}]}]}], "\n", "\t\t\t\t\t", "]"}]}], ",", "\n", "\t\t\t", 
+       RowBox[{"format", "=", 
+        RowBox[{"OptionValue", "[", "\"\<Formatted\>\"", "]"}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{"icon", "=", 
+        RowBox[{"OptionValue", "[", "\"\<Icon\>\"", "]"}]}]}], "\n", "\t\t\t",
+       "}"}], ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"iRegisterInterfaceEntryQ", "[", "\n", "\t\t\t", 
+       RowBox[{"head", ",", "\n", "\t\t\t", 
+        RowBox[{"!", "entryQ"}]}], "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"vdtor", "===", "Automatic"}], ",", " ", 
+        RowBox[{"vdtor", "=", "objQ"}]}], "]"}], ";", "\n", "\t\t", 
+      RowBox[{"iRegisterInterfaceValidator", "[", 
+       RowBox[{"head", ",", " ", "keys", ",", " ", "vdtor"}], "]"}], ";", 
+      "\n", "\t\t", 
+      RowBox[{"Which", "[", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"ctor", "===", "Automatic"}], ",", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"createConstructor", "[", 
+          RowBox[{"constructor", ",", " ", "keys"}], "]"}], ";", "\n", "\t", 
+         "\t\t\t", 
+         RowBox[{"ctor", "=", "constructor"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Head", "[", "ctor", "]"}], "===", "Symbol"}], "&&", 
+         RowBox[{
+          RowBox[{"DownValues", "[", "ctor", "]"}], "\[Equal]", 
+          RowBox[{"{", "}"}]}]}], ",", "\n", "\t\t\t\t", 
+        RowBox[{"createConstructor", "[", 
+         RowBox[{"ctor", ",", " ", "keys"}], "]"}], ",", "\n", "\t\t\t", 
+        RowBox[{"AssociationQ", "@", "ctor"}], ",", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{"ctorFail", "=", "\n", "\t\t\t\t\t", 
+          RowBox[{"Lookup", "[", 
+           RowBox[{
+           "ctor", ",", " ", "\"\<FailureFunction\>\"", ",", " ", 
+            "ctorFail"}], "]"}]}], ";", "\n", "\t\t\t\t", 
+         RowBox[{"ctorFailOnUndef", "=", "\n", "\t\t\t\t\t", 
+          RowBox[{"Lookup", "[", 
+           RowBox[{
+           "ctor", ",", " ", "\"\<FailOnUndefined\>\"", ",", " ", 
+            "ctorFailOnUndef"}], "]"}]}], ";", "\n", "\t\t\t\t", 
+         RowBox[{"ctor", "=", 
+          RowBox[{"ctor", "[", "\"\<Function\>\"", "]"}]}]}]}], "\n", 
+       "\t\t\t", "]"}], ";", "\n", "\t\t", 
+      RowBox[{"iRegisterInterfaceConstructor", "[", "\n", "\t\t\t", 
+       RowBox[{
+       "head", ",", "\n", "\t\t\t", "version", ",", "\n", "\t\t\t", "ctor", 
+        ",", "\n", "\t\t\t", "ctorFail", ",", "\n", "\t\t\t", 
+        "ctorFailOnUndef"}], "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"mud", "=!=", "None"}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"mud", "===", "Automatic"}], ",", " ", 
+           RowBox[{"mud", "=", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<Self\>\"", ",", " ", "\"\<Keys\>\"", ",", " ", 
+              "\"\<Parts\>\""}], "}"}]}]}], "]"}], ";", "\n", "\t\t\t", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"ListQ", "@", "mud"}], ",", "\n", "\t\t\t\t", 
+           RowBox[{
+            RowBox[{"mud", "=", 
+             RowBox[{"createMutationHandlers", "[", 
+              RowBox[{"head", ",", " ", "vdtor", ",", " ", "mud"}], "]"}]}], 
+            ";"}]}], "\n", "\t\t\t\t", "]"}], ";", "\n", "\t\t\t", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"muh", "===", "Automatic"}], ",", "\n", "\t\t\t\t", 
+           RowBox[{"muh", "=", "mutationHandler"}]}], "\n", "\t\t\t\t", "]"}],
+          ";", "\n", "\t\t\t", 
+         RowBox[{"iRegisterInterfaceMutationHandler", "[", "\n", "\t\t\t\t", 
+          RowBox[{
+          "head", ",", "\n", "\t\t\t\t", "mutationHandler", ",", "\n", 
+           "\t\t\t\t", "mud"}], "\n", "\t\t\t\t", "]"}]}]}], "\n", "\t\t\t", 
+       "]"}], ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"acc", "=!=", "None"}], ",", "\n", "\t\t\t", 
+        RowBox[{"Which", "[", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"acc", "===", "Automatic"}], ",", "\n", "\t", "\t\t\t\t", 
+          RowBox[{"iRegisterInterfaceAccessor", "[", 
+           RowBox[{"head", ",", " ", 
+            RowBox[{"createAccessorFunctions", "[", 
+             RowBox[{"head", ",", " ", "vdtor"}], "]"}]}], "]"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"acc", "===", "\"\<Keys\>\""}], ",", "\n", "\t\t\t\t\t", 
+          RowBox[{"iRegisterInterfaceAccessor", "[", 
+           RowBox[{"head", ",", " ", "\n", "\t\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"KeyDrop", "[", "\"\<Parts\>\"", "]"}], "@", 
+             RowBox[{"createAccessorFunctions", "[", 
+              RowBox[{"head", ",", " ", "vdtor"}], "]"}]}]}], "\n", 
+           "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"acc", "===", "\"\<Parts\>\""}], ",", "\n", "\t\t\t\t\t", 
+          RowBox[{"iRegisterInterfaceAccessor", "[", 
+           RowBox[{"head", ",", " ", "\n", "\t\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"KeyDrop", "[", "\"\<Keys\>\"", "]"}], "@", 
+             RowBox[{"createAccessorFunctions", "[", 
+              RowBox[{"head", ",", " ", "vdtor"}], "]"}]}]}], "\n", 
+           "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t", "True", ",", "\n", 
+          "\t\t\t\t\t", 
+          RowBox[{"iRegisterInterfaceAccessor", "[", 
+           RowBox[{"head", ",", " ", "acc"}], "]"}]}], "\n", "\t\t\t\t", 
+         "]"}]}], "\n", "\t\t\t", "]"}], ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"norm", "=!=", "None"}], ",", "\n", "\t\t\t", 
+        RowBox[{"iRegisterInterfaceNormalForm", "[", 
+         RowBox[{"head", ",", " ", "norm"}], "]"}]}], "\n", "\t\t\t", "]"}], 
+      ";", "\n", "\t\t", 
+      RowBox[{"If", "[", 
+       RowBox[{"format", ",", "\n", "\t\t\t", 
+        RowBox[{"iRegisterInterfaceFormatting", "[", 
+         RowBox[{"head", ",", " ", "icon"}], "]"}]}], "\n", "\t\t\t", "]"}], 
+      ";", "\n", "\t\t", 
+      RowBox[{"iRegisterDefaultInterfaceMethods", "[", 
+       RowBox[{"head", ",", " ", 
+        RowBox[{"OptionValue", "[", "\"\<DefaultMethods\>\"", "]"}]}], "]"}], 
+      ";", "\n", "\t\t", "head"}]}], "\n", "\t\t", "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"917db5ae-f053-4963-a98d-525483943366"]\
+
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1062,12 +1128,21 @@ Cell["\[LeftCeiling]iRegisterInterfaceConstructor\[RightFloor]", \
 "CodeSubsubsection",
  Evaluatable->True,ExpressionUUID->"d700e903-0e4c-4904-b0a0-d324c64ec368"],
 
+Cell["\<\
+\[LeftCeiling]
+\tNeed to decide whether it\[CloseCurlyQuote]s best to leave unevaluated if \
+the constructor returns an Association or not...
+\[RightFloor]\
+\>", "Text",
+ Evaluatable->True,ExpressionUUID->"1142e6ad-3ee3-4854-95bc-24562496ba49"],
+
 Cell[BoxData[
  RowBox[{
   RowBox[{"iRegisterInterfaceConstructor", "[", "\n", "\t", 
    RowBox[{
-   "head_", ",", "\n", "\t", "version_", ",", "\n", "\t", "constructor_"}], 
-   "\n", "\t", "]"}], ":=", "\n", "\t", 
+   "head_", ",", "\n", "\t", "version_", ",", "\n", "\t", "constructor_", ",",
+     "\n", "\t", "failureFunction_", ",", "\n", "\t", 
+    "failOnUndefinedArguments_"}], "\n", "\t", "]"}], ":=", "\n", "\t", 
   RowBox[{"With", "[", "\n", "\t\t", 
    RowBox[{
     RowBox[{"{", "\n", "\t\t\t", 
@@ -1103,40 +1178,40 @@ Cell[BoxData[
           RowBox[{"constructor", "[", "args", "]"}]}], "}"}], ",", "\n", 
         "\t\t\t\t", 
         RowBox[{
-         RowBox[{"With", "[", 
+         RowBox[{"If", "[", 
           RowBox[{
-           RowBox[{"{", 
-            RowBox[{"a2", "=", 
-             RowBox[{"Append", "[", 
-              RowBox[{"a", ",", " ", 
-               RowBox[{"\"\<Version\>\"", "\[Rule]", "version"}]}], "]"}]}], 
-            "}"}], ",", "\n", "\t\t\t\t\t", 
-           RowBox[{"If", "[", 
+           RowBox[{"AssociationQ", "@", "a"}], ",", "\n", "\t\t\t\t\t", 
+           RowBox[{"With", "[", 
             RowBox[{
-             RowBox[{"TrueQ", "@", 
-              RowBox[{"validator", "@", "a2"}]}], ",", "\n", "\t\t\t\t\t\t", 
-             RowBox[{"setValid", "@", 
-              RowBox[{"head", "[", "a2", "]"}]}], ",", "\n", "\t\t\t\t\t\t", 
-             RowBox[{"Failure", "[", 
-              RowBox[{"\"\<BuildFailure\>\"", ",", "\n", "\t\t\t\t\t\t\t", 
-               RowBox[{"<|", "\n", "\t\t\t\t\t\t\t\t", 
-                RowBox[{
-                 RowBox[{
-                 "\"\<MessageTemplate\>\"", "\[Rule]", 
-                  "\"\<Failed to build `` object from data ``\>\""}], ",", 
-                 "\n", "\t", "\t", "\t\t\t\t\t\t", 
-                 RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
-                  RowBox[{"{", 
-                   RowBox[{"head", ",", " ", 
-                    RowBox[{"HoldForm", "[", 
-                    RowBox[{"{", "args", "}"}], "]"}]}], "}"}]}]}], "\n", 
-                "\t\t\t\t\t\t\t\t", "|>"}]}], "\n", "\t\t\t\t\t\t\t", "]"}]}],
-             "\n", "\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t", "]"}], "/;", 
-         RowBox[{"AssociationQ", "[", "a", "]"}]}]}], "\n", "\t\t\t\t", 
-       "]"}]}], ";"}]}], "\n", "\t\t", 
+             RowBox[{"{", 
+              RowBox[{"a2", "=", 
+               RowBox[{"Append", "[", 
+                RowBox[{"a", ",", " ", 
+                 RowBox[{"\"\<Version\>\"", "\[Rule]", "version"}]}], "]"}]}],
+               "}"}], ",", "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"TrueQ", "@", 
+                RowBox[{"validator", "@", "a2"}]}], ",", "\n", "\t", 
+               "\t\t\t\t\t\t", 
+               RowBox[{"setValid", "@", 
+                RowBox[{"head", "[", "a2", "]"}]}], ",", "\n", "\t", 
+               "\t\t\t\t\t\t", 
+               RowBox[{"failureFunction", "[", 
+                RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", 
+              "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t", "]"}], ",", 
+           "\n", "\t\t\t\t\t", 
+           RowBox[{"failureFunction", "[", 
+            RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t\t\t\t\t", 
+          "]"}], "/;", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"TrueQ", "[", "failOnUndefinedArguments", "]"}], "||", 
+           RowBox[{"AssociationQ", "[", "a", "]"}]}], ")"}]}]}], "\n", 
+       "\t\t\t\t", "]"}]}], ";"}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"3c6509b4-5906-4d6f-8a1e-37986dcee86c"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1398,7 +1473,7 @@ Cell[BoxData[
       RowBox[{"head", ",", " ", "func"}], "]"}], ";"}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"b6544184-5db7-4a4f-a914-6a8d2612bdff"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -2008,7 +2083,119 @@ Cell[BoxData[
       "\[IndentingNewLine]", "$Failed"}], "\[IndentingNewLine]", "]"}]}], 
    "\[IndentingNewLine]", "]"}]}]], "Input",
  CellLabel->
-  "In[658]:=",ExpressionUUID->"ee30e6ea-46ad-4aca-933c-e16fef1c44f8"],
+  "In[336]:=",ExpressionUUID->"ee30e6ea-46ad-4aca-933c-e16fef1c44f8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"RealValuedNumericArray", "[", "asd", "]"}]], "Input",
+ CellLabel->
+  "In[362]:=",ExpressionUUID->"8670585c-0a7c-4d9b-98af-c161be283549"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   TagBox["Failure",
+    "SummaryHead"], "[", 
+   DynamicModuleBox[{Typeset`open$$ = False, Typeset`embedState$$ = "Ready"}, 
+    
+    TemplateBox[{PaneSelectorBox[{False -> GridBox[{{
+            FrameBox[
+             StyleBox["\"\[WarningSign]\"", 
+              Directive["Message", 35], StripOnInput -> False], 
+             ContentPadding -> False, FrameStyle -> None, 
+             FrameMargins -> {{0, 0}, {0, 0}}, StripOnInput -> False], 
+            GridBox[{{
+               TagBox[
+                GridBox[{{
+                   TagBox["\"Message: \"", "SummaryItemAnnotation"], 
+                   "\[InvisibleSpace]", 
+                   TagBox[
+                   "\"Failed to build \
+\\!\\(\\*TagBox[\\\"RealValuedNumericArray\\\", Function[Short[Slot[1], \
+5]]]\\) object from data \\!\\(\\*TagBox[RowBox[{\\\"{\\\", \\\"asd\\\", \
+\\\"}\\\"}], Function[Short[Slot[1], 5]]]\\)\"", "SummaryItem"]}}, 
+                 GridBoxItemSize -> {"Columns" -> {6.5, All}}, 
+                 GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                 GridBoxSpacings -> {"Columns" -> {{0}}}], "SummaryItem"]}, {
+               TagBox[
+                GridBox[{{
+                   TagBox["\"Tag: \"", "SummaryItemAnnotation"], 
+                   "\[InvisibleSpace]", 
+                   TagBox["\"BuildFailure\"", "SummaryItem"]}}, 
+                 GridBoxItemSize -> {"Columns" -> {6.5, All}}, 
+                 GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                 GridBoxSpacings -> {"Columns" -> {{0}}}], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}], True -> GridBox[{{
+            FrameBox[
+             StyleBox["\"\[WarningSign]\"", 
+              Directive["Message", 35], StripOnInput -> False], 
+             ContentPadding -> False, FrameStyle -> None, 
+             FrameMargins -> {{0, 0}, {0, 0}}, StripOnInput -> False], 
+            GridBox[{{
+               TagBox[
+                GridBox[{{
+                   TagBox["\"Message: \"", "SummaryItemAnnotation"], 
+                   "\[InvisibleSpace]", 
+                   TagBox[
+                   "\"Failed to build \
+\\!\\(\\*TagBox[\\\"RealValuedNumericArray\\\", Function[Short[Slot[1], \
+5]]]\\) object from data \\!\\(\\*TagBox[RowBox[{\\\"{\\\", \\\"asd\\\", \
+\\\"}\\\"}], Function[Short[Slot[1], 5]]]\\)\"", "SummaryItem"]}}, 
+                 GridBoxItemSize -> {"Columns" -> {6.5, All}}, 
+                 GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                 GridBoxSpacings -> {"Columns" -> {{0}}}], "SummaryItem"]}, {
+               TagBox[
+                GridBox[{{
+                   TagBox["\"Tag: \"", "SummaryItemAnnotation"], 
+                   "\[InvisibleSpace]", 
+                   TagBox["\"BuildFailure\"", "SummaryItem"]}}, 
+                 GridBoxItemSize -> {"Columns" -> {6.5, All}}, 
+                 GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                 GridBoxSpacings -> {"Columns" -> {{0}}}], "SummaryItem"]}}, 
+             GridBoxAlignment -> {
+              "Columns" -> {{Left}}, "Rows" -> {{Automatic}}}, AutoDelete -> 
+             False, GridBoxItemSize -> {
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+             GridBoxSpacings -> {"Columns" -> {{2}}, "Rows" -> {{Automatic}}},
+              BaseStyle -> {
+              ShowStringCharacters -> False, NumberMarks -> False, 
+               PrintPrecision -> 3, ShowSyntaxStyles -> False}]}}, 
+          GridBoxAlignment -> {"Rows" -> {{Top}}}, AutoDelete -> False, 
+          GridBoxItemSize -> {
+           "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+          BaselinePosition -> {1, 1}]}, 
+       Dynamic[Typeset`open$$], ImageSize -> Automatic]},
+     "SummaryPanel"],
+    DynamicModuleValues:>{}], "]"}],
+  Failure["BuildFailure", 
+   Association[
+   "MessageTemplate" -> "Failed to build `` object from data ``", 
+    "MessageParameters" -> {$CellContext`RealValuedNumericArray, 
+      HoldForm[{$CellContext`asd}]}]],
+  Editable->False,
+  SelectWithContents->True,
+  Selectable->False]], "Output",
+ CellLabel->"Out[362]=",ExpressionUUID->"6ee17375-43a7-4ac0-afed-9345c4e7e8f1"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"<<", "InterfaceObjects`"}]], "Input",
+ CellLabel->
+  "In[359]:=",ExpressionUUID->"12ab451d-df4b-4b78-9222-041467da2b94"],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{
@@ -2017,10 +2204,18 @@ Cell[BoxData[
     RowBox[{"{", "\"\<Data\>\"", "}"}], ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<Validator\>\"", "\[Rule]", "rvaQ"}], ",", 
     "\[IndentingNewLine]", 
-    RowBox[{"\"\<Constructor\>\"", "\[Rule]", "constructRVNArray"}]}], 
+    RowBox[{"\"\<Constructor\>\"", "\[Rule]", "\[IndentingNewLine]", 
+     RowBox[{"<|", 
+      RowBox[{
+       RowBox[{"\"\<Function\>\"", "->", "constructRVNArray"}], ",", " ", 
+       RowBox[{"\"\<FailOnUndefined\>\"", "\[Rule]", "True"}]}], "|>"}]}]}], 
    "\[IndentingNewLine]", "]"}], ";"}]], "Input",
  CellLabel->
-  "In[692]:=",ExpressionUUID->"7724d14a-3dca-4096-b55c-f37be1cd1dcb"],
+  "In[361]:=",ExpressionUUID->"7724d14a-3dca-4096-b55c-f37be1cd1dcb"],
+
+Cell[BoxData["True"], \
+"Echo",ExpressionUUID->"7327891d-8485-4ed8-a6c9-e41acde57335"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{

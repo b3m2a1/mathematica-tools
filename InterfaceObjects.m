@@ -170,105 +170,23 @@ InterfacePropertyList[spec_]:=
 
 
 (* ::Subsubsection::Closed:: *)
-(*RegisterInterface*)
+(*Defaults*)
 
 
 
-Options[RegisterInterface]=
-  {
-    "Version"->1,
-    "Atomic"->True,
-    "Validator"->Automatic,
-    "Constructor"->Automatic,
-    "MutationHandler"->Automatic,
-    "MutationFunctions"->None,
-    "AccessorFunctions"->None,
-    "NormalFunction"->Automatic,
-    "Formatted"->True,
-    "Icon"->None,
-    "DefaultMethods"->{
-      Keys, SetProperty, PropertyValue,
-      RemoveProperty, PropertyList
-      }
-    };
-RegisterInterface[
-  head_,
-  keys_,
-  ops:OptionsPattern[]
-  ]:=
-  Module[
-    {
-      entryQ=True@OptionValue["Atomic"],
-      ctor=OptionValue["Constructor"],
-      constructor,
-      vdtor=OptionValue["Validator"],
-      objQ,
-      version=OptionValue["Version"],
-      muh=OptionValue["MutationHandler"],
-      mutationHandler,
-      mud=OptionValue["MutationFunctions"],
-      acc=OptionValue["AccessorFunctions"],
-      norm=
-        Replace[OptionValue["NormalFunction"],
-          Automatic:>(KeyDrop[#, "Version"]&)
-          ],
-      format=OptionValue["Formatted"],
-      icon=OptionValue["Icon"]
-      },
-    iRegisterInterfaceEntryQ[
-      head,
-      !entryQ
-      ];
-    If[vdtor===Automatic, vdtor=objQ];
-    iRegisterInterfaceValidator[head, keys, vdtor];
-    If[ctor===Automatic,
-      createConstructor[constructor, keys];
-      ctor=constructor;
-      ];
-    iRegisterInterfaceConstructor[
-      head,
-      version,
-      ctor
-      ];
-    If[mud=!=None,
-      If[mud===Automatic, mud={"Self", "Keys", "Parts"}];
-      If[ListQ@mud,
-        mud=createMutationHandlers[head, vdtor, mud];
-        ];
-      If[muh===Automatic,
-        muh=mutationHandler
-        ];
-      iRegisterInterfaceMutationHandler[
-        head,
-        mutationHandler,
-        mud
-        ]
-      ];
-    If[acc=!=None,
-      Which[
-        acc===Automatic,
-          iRegisterInterfaceAccessor[head, createAccessorFunctions[head, vdtor]],
-        acc==="Keys",
-          iRegisterInterfaceAccessor[head, 
-            KeyDrop["Parts"]@createAccessorFunctions[head, vdtor]
-            ],
-        acc==="Parts",
-          iRegisterInterfaceAccessor[head, 
-            KeyDrop["Keys"]@createAccessorFunctions[head, vdtor]
-            ],
-        True,
-          iRegisterInterfaceAccessor[head, acc]
-        ]
-      ];
-    If[norm=!=None,
-      iRegisterInterfaceNormalForm[head, norm]
-      ];
-    If[format,
-      iRegisterInterfaceFormatting[head, icon]
-      ];
-    iRegisterDefaultInterfaceMethods[head, OptionValue["DefaultMethods"]];
-    head
+(* ::Subsubsubsection::Closed:: *)
+(*defaultConstructorFailureFunction*)
+
+
+
+defaultConstructorFailureFunction[head_, args__]:=
+  Failure["BuildFailure",
+    <|
+      "MessageTemplate"->"Failed to build `` object from data ``",
+      "MessageParameters"->{head, HoldForm[{args}]}
+      |>
     ];
+defaultConstructorFailureFunction~SetAttributes~HoldAllComplete;
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -381,6 +299,121 @@ createMutationHandlers[
     res
     ]
       
+
+
+(* ::Subsubsection::Closed:: *)
+(*RegisterInterface*)
+
+
+
+Options[RegisterInterface]=
+  {
+    "Version"->1,
+    "Atomic"->True,
+    "Validator"->Automatic,
+    "Constructor"->Automatic,
+    "MutationHandler"->Automatic,
+    "MutationFunctions"->None,
+    "AccessorFunctions"->None,
+    "NormalFunction"->Automatic,
+    "Formatted"->True,
+    "Icon"->None,
+    "DefaultMethods"->{
+      Keys, SetProperty, PropertyValue,
+      RemoveProperty, PropertyList
+      }
+    };
+RegisterInterface[
+  head_,
+  keys_,
+  ops:OptionsPattern[]
+  ]:=
+  Module[
+    {
+      entryQ=True@OptionValue["Atomic"],
+      ctor=OptionValue["Constructor"],
+      constructor,
+      ctorFail=defaultConstructorFailureFunction,
+      ctorFailOnUndef=False,
+      vdtor=OptionValue["Validator"],
+      objQ,
+      version=OptionValue["Version"],
+      muh=OptionValue["MutationHandler"],
+      mutationHandler,
+      mud=OptionValue["MutationFunctions"],
+      acc=OptionValue["AccessorFunctions"],
+      norm=
+        Replace[OptionValue["NormalFunction"],
+          Automatic:>(KeyDrop[#, "Version"]&)
+          ],
+      format=OptionValue["Formatted"],
+      icon=OptionValue["Icon"]
+      },
+    iRegisterInterfaceEntryQ[
+      head,
+      !entryQ
+      ];
+    If[vdtor===Automatic, vdtor=objQ];
+    iRegisterInterfaceValidator[head, keys, vdtor];
+    Which[
+      ctor===Automatic,
+        createConstructor[constructor, keys];
+        ctor=constructor,
+      Head[ctor]===Symbol&&DownValues[ctor]=={},
+        createConstructor[ctor, keys],
+      AssociationQ@ctor,
+        ctorFail=
+          Lookup[ctor, "FailureFunction", ctorFail];
+        ctorFailOnUndef=
+          Lookup[ctor, "FailOnUndefined", ctorFailOnUndef];
+        ctor=ctor["Function"]
+      ];
+    iRegisterInterfaceConstructor[
+      head,
+      version,
+      ctor,
+      ctorFail,
+      ctorFailOnUndef
+      ];
+    If[mud=!=None,
+      If[mud===Automatic, mud={"Self", "Keys", "Parts"}];
+      If[ListQ@mud,
+        mud=createMutationHandlers[head, vdtor, mud];
+        ];
+      If[muh===Automatic,
+        muh=mutationHandler
+        ];
+      iRegisterInterfaceMutationHandler[
+        head,
+        mutationHandler,
+        mud
+        ]
+      ];
+    If[acc=!=None,
+      Which[
+        acc===Automatic,
+          iRegisterInterfaceAccessor[head, createAccessorFunctions[head, vdtor]],
+        acc==="Keys",
+          iRegisterInterfaceAccessor[head, 
+            KeyDrop["Parts"]@createAccessorFunctions[head, vdtor]
+            ],
+        acc==="Parts",
+          iRegisterInterfaceAccessor[head, 
+            KeyDrop["Keys"]@createAccessorFunctions[head, vdtor]
+            ],
+        True,
+          iRegisterInterfaceAccessor[head, acc]
+        ]
+      ];
+    If[norm=!=None,
+      iRegisterInterfaceNormalForm[head, norm]
+      ];
+    If[format,
+      iRegisterInterfaceFormatting[head, icon]
+      ];
+    iRegisterDefaultInterfaceMethods[head, OptionValue["DefaultMethods"]];
+    head
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -542,10 +575,19 @@ iRegisterInterfaceValidator[
 
 
 
+(* ::Text:: *)
+(*
+	Need to decide whether it\[CloseCurlyQuote]s best to leave unevaluated if the constructor returns an Association or not...
+*)
+
+
+
 iRegisterInterfaceConstructor[
   head_,
   version_,
-  constructor_
+  constructor_,
+  failureFunction_,
+  failOnUndefinedArguments_
   ]:=
   With[
     {
@@ -559,17 +601,15 @@ iRegisterInterfaceConstructor[
     head~SetAttributes~HoldAllComplete;
     head[args___]?checkInvalid:=
       With[{a=constructor[args]},
-        With[{a2=Append[a, "Version"->version]},
-          If[TrueQ@validator@a2,
-            setValid@head[a2],
-            Failure["BuildFailure",
-              <|
-                "MessageTemplate"->"Failed to build `` object from data ``",
-                "MessageParameters"->{head, HoldForm[{args}]}
-                |>
+        If[AssociationQ@a,
+          With[{a2=Append[a, "Version"->version]},
+            If[TrueQ@validator@a2,
+              setValid@head[a2],
+              failureFunction[head, args]
               ]
-            ]
-          ]/;AssociationQ[a]
+            ],
+          failureFunction[head, args]
+          ]/;(TrueQ[failOnUndefinedArguments]||AssociationQ[a])
         ];
     ]
 
