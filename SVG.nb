@@ -1699,7 +1699,7 @@ Cell[BoxData[{
    "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"768c2284-30fe-4f56-86bc-42ff83c9629f"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1756,7 +1756,7 @@ Cell[BoxData[
      RowBox[{"Style", "\[Rule]", "\"\<style\>\""}]}], "\n", "\t\t", 
     "|>"}]}]}]], \
 "CodeInput",ExpressionUUID->"9e74eff9-47de-4bce-b290-086b85c412ee"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -2501,7 +2501,7 @@ Cell[BoxData[
     RowBox[{"body_", "\[Rule]", "\"\<Body\>\""}]}], "]"}], 
   ";"}]], "CodeInput",ExpressionUUID->"d45ed5fe-a6d6-4fba-9be0-a373139e355d"]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3198,7 +3198,7 @@ Cell[BoxData[
       RowBox[{"o", ":", 
        RowBox[{"opsPat", "[", "]"}]}]}], "]"}]}], ":=", "\n", "\t", "body"}], 
   ";"}]], "CodeInput",ExpressionUUID->"0d8fa1b1-6ce1-4510-a561-130b856c949c"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3288,119 +3288,142 @@ Cell[BoxData[{
  RowBox[{"ToSVG", "//", "Clear"}], "\n", 
  RowBox[{
   RowBox[{"ToSVG", "[", 
-   RowBox[{"g_Graphics", ",", " ", 
+   RowBox[{"g_Graphics", ",", " ", "\n", "\t", 
+    RowBox[{"defaultDirectives", ":", 
+     RowBox[{"Except", "[", 
+      RowBox[{"_", "?", "OptionQ"}], "]"}], ":", "Automatic"}], ",", "\n", 
+    "\t", 
     RowBox[{"ops", ":", 
-     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", "\n", "\t", 
-  RowBox[{"Module", "[", "\n", "\t\t", 
+     RowBox[{"OptionsPattern", "[", "]"}]}]}], "\n", "\t", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"Block", "[", "\n", "\t\t", 
    RowBox[{
     RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{"$defaultDirectives", "=", "\n", "\t\t\t\t", 
+      RowBox[{"Replace", "[", 
+       RowBox[{"defaultDirectives", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"Automatic", "\[RuleDelayed]", "$defaultDirectives"}], 
+         "}"}]}], "]"}]}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+    RowBox[{"Module", "[", "\n", "\t\t\t", 
      RowBox[{
-     "imsize", ",", "\n", "\t\t\t", "viewbox", ",", "\n", "\t\t\t", "pr", ",",
-       "\n", "\t\t\t", "scalingFactors", ",", "\n", "\t\t\t", "g2", ",", "\n",
-       "\t\t\t", "svgBody", ",", "\n", "\t\t\t", "defs"}], "\n", "\t\t\t", 
-     "}"}], ",", "\n", "\t\t", 
-    RowBox[{
-     RowBox[{
-      RowBox[{"{", 
+      RowBox[{"{", "\n", "\t\t\t\t", 
        RowBox[{
-       "pr", ",", " ", "viewbox", ",", " ", "imsize", ",", " ", 
-        "scalingFactors", ",", " ", "g2"}], "}"}], "=", "\n", "\t\t\t", 
-      RowBox[{"prepareSVGGraphics", "[", 
-       RowBox[{"g", ",", " ", "ops"}], "]"}]}], ";", "\n", "\t\t", 
-     RowBox[{"Block", "[", "\n", "\t\t\t", 
+       "imsize", ",", "\n", "\t", "\t\t\t", "viewbox", ",", "\n", "\t", 
+        "\t\t\t", "pr", ",", "\n", "\t", "\t\t\t", "scalingFactors", ",", 
+        "\n", "\t", "\t\t\t", "g2", ",", "\n", "\t", "\t\t\t", "svgBody", ",",
+         "\n", "\t", "\t\t\t", "defs"}], "\n", "\t", "\t\t\t", "}"}], ",", 
+      "\n", "\t", "\t\t", 
       RowBox[{
-       RowBox[{"{", "\n", "\t", "\t\t\t", 
-        RowBox[{
-         RowBox[{"$svgPlotRange", "=", "pr"}], ",", "\n", "\t", "\t\t\t", 
-         RowBox[{"$svgViewBox", "=", "viewbox"}], ",", "\n", "\t\t\t\t", 
-         RowBox[{"$svgViewSize", "=", "imsize"}], ",", "\n", "\t\t\t\t", 
-         RowBox[{"$svgScaling", "=", "scalingFactors"}]}], "\n", "\t\t\t\t", 
-        "}"}], ",", "\n", "\t\t\t", 
        RowBox[{
-        RowBox[{"Quiet", "[", "\n", "\t", "\t\t\t", 
+        RowBox[{"{", 
          RowBox[{
+         "pr", ",", " ", "viewbox", ",", " ", "imsize", ",", " ", 
+          "scalingFactors", ",", " ", "g2"}], "}"}], "=", "\n", "\t", 
+        "\t\t\t", 
+        RowBox[{"prepareSVGGraphics", "[", 
+         RowBox[{"g", ",", " ", "ops"}], "]"}]}], ";", "\n", "\t", "\t\t", 
+       RowBox[{"Block", "[", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{"{", "\n", "\t", "\t", "\t\t\t", 
           RowBox[{
-           RowBox[{"svgBody", "=", 
-            RowBox[{"Reap", "[", 
-             RowBox[{"toXML", "/@", 
-              RowBox[{"Flatten", "@", 
-               RowBox[{"toSVGCore", "[", 
-                RowBox[{
-                 RowBox[{"First", "@", "g2"}], ",", " ", 
-                 RowBox[{"Flatten", "@", 
-                  RowBox[{"{", "ops", "}"}]}]}], "]"}]}]}], "]"}]}], ";", 
-           "\n", "\t\t\t\t", 
-           RowBox[{"defs", "=", 
-            RowBox[{"Flatten", "@", 
-             RowBox[{"svgBody", "[", 
-              RowBox[{"[", "2", "]"}], "]"}]}]}]}], ",", "\n", "\t", "\t\t\t", 
-          RowBox[{"{", "\n", "\t", "\t\t\t\t", 
-           RowBox[{"(*", " ", 
-            RowBox[{
-             RowBox[{"optx", " ", "messages", " ", 
-              RowBox[{"don", "'"}], "t", " ", "matter", " ", "here"}], ",", 
-             " ", 
-             RowBox[{
-             "so", " ", "we", " ", "quiet", " ", "them", " ", "if", " ", 
-              "they", " ", "show", " ", "up"}]}], " ", "*)"}], "\n", "\t", 
+           RowBox[{"$svgPlotRange", "=", "pr"}], ",", "\n", "\t", "\t", 
+           "\t\t\t", 
+           RowBox[{"$svgViewBox", "=", "viewbox"}], ",", "\n", "\t", 
            "\t\t\t\t", 
+           RowBox[{"$svgViewSize", "=", "imsize"}], ",", "\n", "\t", 
+           "\t\t\t\t", 
+           RowBox[{"$svgScaling", "=", "scalingFactors"}]}], "\n", "\t", 
+          "\t\t\t\t", "}"}], ",", "\n", "\t", "\t\t\t", 
+         RowBox[{
+          RowBox[{"Quiet", "[", "\n", "\t", "\t", "\t\t\t", 
            RowBox[{
-            RowBox[{"GraphicsComplex", "::", "optx"}], ",", "\n", "\t", 
-            "\t\t\t\t", 
-            RowBox[{"GraphicsComplex", "::", "optrs"}]}], "\n", "\t", 
-           "\t\t\t\t", "}"}]}], "\n", "\t", "\t\t\t", "]"}], ";", "\n", "\t", 
-        "\t\t", 
-        RowBox[{"XMLElement", "[", 
-         RowBox[{"\"\<svg\>\"", ",", "\n", "\t", "\t", "\t\t", 
-          RowBox[{"Flatten", "@", 
-           RowBox[{"{", "\n", "\t", "\t", "\t\t\t", 
             RowBox[{
-             RowBox[{"Thread", "[", "\n", "\t", "\t", "\t\t\t\t", 
+             RowBox[{"svgBody", "=", 
+              RowBox[{"Reap", "[", 
+               RowBox[{"toXML", "/@", 
+                RowBox[{"Flatten", "@", 
+                 RowBox[{"toSVGCore", "[", 
+                  RowBox[{
+                   RowBox[{"First", "@", "g2"}], ",", " ", 
+                   RowBox[{"Flatten", "@", 
+                    RowBox[{"{", "ops", "}"}]}]}], "]"}]}]}], "]"}]}], ";", 
+             "\n", "\t", "\t\t\t\t", 
+             RowBox[{"defs", "=", 
+              RowBox[{"Flatten", "@", 
+               RowBox[{"svgBody", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}]}]}], ",", "\n", "\t", "\t", 
+            "\t\t\t", 
+            RowBox[{"{", "\n", "\t", "\t", "\t\t\t\t", 
+             RowBox[{"(*", " ", 
               RowBox[{
-               RowBox[{"{", 
-                RowBox[{"\"\<width\>\"", ",", "\"\<height\>\""}], "}"}], "->", 
+               RowBox[{"optx", " ", "messages", " ", 
+                RowBox[{"don", "'"}], "t", " ", "matter", " ", "here"}], ",", 
+               " ", 
                RowBox[{
-                RowBox[{"Map", "[", "toNotStupidString", "]"}], "@", 
-                RowBox[{"Floor", "@", "imsize"}]}]}], "\n", "\t", "\t", 
-              "\t\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t\t\t", 
-             RowBox[{"\"\<viewbox\>\"", "\[Rule]", 
-              RowBox[{"StringRiffle", "@", 
-               RowBox[{
-                RowBox[{"Map", "[", "toNotStupidString", "]"}], "@", 
-                "viewbox"}]}]}], ",", "\n", "\t\t\t\t\t", 
-             RowBox[{"(*", 
+               "so", " ", "we", " ", "quiet", " ", "them", " ", "if", " ", 
+                "they", " ", "show", " ", "up"}]}], " ", "*)"}], "\n", "\t", 
+             "\t", "\t\t\t\t", 
+             RowBox[{
+              RowBox[{"GraphicsComplex", "::", "optx"}], ",", "\n", "\t", 
+              "\t", "\t\t\t\t", 
+              RowBox[{"GraphicsComplex", "::", "optrs"}]}], "\n", "\t", "\t", 
+             "\t\t\t\t", "}"}]}], "\n", "\t", "\t", "\t\t\t", "]"}], ";", 
+          "\n", "\t", "\t", "\t\t", 
+          RowBox[{"XMLElement", "[", 
+           RowBox[{"\"\<svg\>\"", ",", "\n", "\t", "\t", "\t", "\t\t", 
+            RowBox[{"Flatten", "@", 
+             RowBox[{"{", "\n", "\t", "\t", "\t", "\t\t\t", 
               RowBox[{
-               RowBox[{
-               "\"\<preserveAspectRatio\>\"", "\[Rule]", "\"\<none\>\""}], 
-               ","}], "*)"}], "\n", "\t\t\t\t\t", 
-             RowBox[{"\"\<version\>\"", "\[Rule]", "\"\<1.1\>\""}], ",", "\n",
-              "\t", "\t", "\t\t\t", 
-             RowBox[{
-              RowBox[{"{", 
-               RowBox[{
-               "\"\<http://www.w3.org/2000/xmlns/\>\"", ",", 
-                "\"\<xmlns\>\""}], "}"}], "\[Rule]", 
-              "\"\<http://www.w3.org/1999/xhtml\>\""}]}], "\n", "\t", "\t", 
-            "\t\t\t", "}"}]}], ",", "\n", "\t", "\t", "\t\t", 
-          RowBox[{
-           RowBox[{"If", "[", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"Length", "@", "defs"}], ">", "0"}], ",", "\n", "\t", 
-             "\t", "\t\t\t", 
-             RowBox[{"Prepend", "@", 
-              RowBox[{"XMLElement", "[", 
-               RowBox[{"\"\<defs\>\"", ",", "\n", "\t", "\t", "\t\t\t\t", 
-                RowBox[{"{", "}"}], ",", "\n", "\t", "\t", "\t\t\t\t", 
+               RowBox[{"Thread", "[", "\n", "\t", "\t", "\t", "\t\t\t\t", 
                 RowBox[{
-                 RowBox[{"toXML", "@*", "toEl"}], "/@", 
-                 RowBox[{"DeleteDuplicates", "@", "defs"}]}]}], "\n", "\t", 
-               "\t", "\t\t\t\t", "]"}]}], ",", "\n", "\t", "\t", "\t\t\t", 
-             "Identity"}], "\n", "\t", "\t", "\t\t\t", "]"}], "@", "\n", "\t",
-            "\t", "\t\t\t", 
-           RowBox[{"svgBody", "[", 
-            RowBox[{"[", "1", "]"}], "]"}]}]}], "\n", "\t", "\t\t\t", 
-         "]"}]}]}], "\n", "\t", "\t\t", "]"}]}]}], "\n", "\t", "\t", 
+                 RowBox[{"{", 
+                  RowBox[{"\"\<width\>\"", ",", "\"\<height\>\""}], "}"}], "->", 
+                 RowBox[{
+                  RowBox[{"Map", "[", "toNotStupidString", "]"}], "@", 
+                  RowBox[{"Floor", "@", "imsize"}]}]}], "\n", "\t", "\t", 
+                "\t", "\t\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t", 
+               "\t\t\t", 
+               RowBox[{"\"\<viewbox\>\"", "\[Rule]", 
+                RowBox[{"StringRiffle", "@", 
+                 RowBox[{
+                  RowBox[{"Map", "[", "toNotStupidString", "]"}], "@", 
+                  "viewbox"}]}]}], ",", "\n", "\t", "\t\t\t\t\t", 
+               RowBox[{"(*", 
+                RowBox[{
+                 RowBox[{
+                 "\"\<preserveAspectRatio\>\"", "\[Rule]", "\"\<none\>\""}], 
+                 ","}], "*)"}], "\n", "\t", "\t\t\t\t\t", 
+               RowBox[{"\"\<version\>\"", "\[Rule]", "\"\<1.1\>\""}], ",", 
+               "\n", "\t", "\t", "\t", "\t\t\t", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                 "\"\<http://www.w3.org/2000/xmlns/\>\"", ",", 
+                  "\"\<xmlns\>\""}], "}"}], "\[Rule]", 
+                "\"\<http://www.w3.org/1999/xhtml\>\""}]}], "\n", "\t", "\t", 
+              "\t", "\t\t\t", "}"}]}], ",", "\n", "\t", "\t", "\t", "\t\t", 
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "@", "defs"}], ">", "0"}], ",", "\n", "\t", 
+               "\t", "\t", "\t\t\t", 
+               RowBox[{"Prepend", "@", 
+                RowBox[{"XMLElement", "[", 
+                 RowBox[{
+                 "\"\<defs\>\"", ",", "\n", "\t", "\t", "\t", "\t\t\t\t", 
+                  RowBox[{"{", "}"}], ",", "\n", "\t", "\t", "\t", "\t\t\t\t", 
+                  RowBox[{
+                   RowBox[{"toXML", "@*", "toEl"}], "/@", 
+                   RowBox[{"DeleteDuplicates", "@", "defs"}]}]}], "\n", "\t", 
+                 "\t", "\t", "\t\t\t\t", "]"}]}], ",", "\n", "\t", "\t", "\t",
+                "\t\t\t", "Identity"}], "\n", "\t", "\t", "\t", "\t\t\t", 
+              "]"}], "@", "\n", "\t", "\t", "\t", "\t\t\t", 
+             RowBox[{"svgBody", "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}]}], "\n", "\t", "\t", "\t\t\t", 
+           "]"}]}]}], "\n", "\t\t\t\t", "]"}]}]}], "\n", "\t\t\t", "]"}]}], 
+   "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"5f952b1a-b63a-4f7a-976b-2cbb30a25bec"]
 }, Open  ]],
@@ -3549,7 +3572,7 @@ Cell[BoxData[
    "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"edab59ae-2913-4bfd-a41f-23d46c577557"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -4596,7 +4619,7 @@ Cell[BoxData[
    "splitGraphicsList", "[", "e", 
     "]"}]}]}]], \
 "CodeInput",ExpressionUUID->"4ce4013c-015f-4e89-a46d-5acb0135ce3d"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -4637,6 +4660,16 @@ Cell[CellGroupData[{
 Cell["\[LeftCeiling]canonicalizeDirectives\[RightFloor]", \
 "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"88b1ffbb-8bb7-4e2d-9051-00560965d8a3"],
+
+Cell[BoxData[
+ RowBox[{"$basicDirectives", "=", "\n", "\t", 
+  RowBox[{
+  "_RGBColor", "|", "_Hue", "|", "_GrayLevel", "|", "_LABColor", "|", 
+   "_XYZColor", "|", "_Thickness", "|", "_Dashing", "|", "\n", "\t\t", 
+   "_AbsoluteThickness", "|", "_AbsoluteDashing", "|", "_JoinForm", "|", 
+   "_CapForm", "|", "\n", "\t\t", "_PointSize", "|", 
+   "_AbsolutePointSize"}]}]], \
+"CodeInput",ExpressionUUID->"4a9067cb-71c1-4eff-911c-525674a35a46"],
 
 Cell[CellGroupData[{
 
@@ -4685,6 +4718,16 @@ Cell[BoxData[{
             RowBox[{
              RowBox[{
               RowBox[{"e", ":", 
+               RowBox[{"EdgeForm", "[", "_List", "]"}]}], "\[RuleDelayed]", 
+              RowBox[{"Directive", "@@", 
+               RowBox[{"Thread", "[", "e", "]"}]}]}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{"e", ":", 
+               RowBox[{"FaceForm", "[", "_List", "]"}]}], "\[RuleDelayed]", 
+              RowBox[{"Directive", "@@", 
+               RowBox[{"Thread", "[", "e", "]"}]}]}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{
+              RowBox[{"e", ":", 
                RowBox[{"EdgeForm", "[", "__", "]"}]}], "\[RuleDelayed]", 
               RowBox[{"Thread", "[", 
                RowBox[{"e", ",", " ", "Directive"}], "]"}]}], ",", "\n", 
@@ -4701,7 +4744,7 @@ Cell[BoxData[{
          "\t\t\t", "]"}]}]}]}], "\n", "\t\t", "]"}]}], 
   ";"}]}], "CodeInput",ExpressionUUID->"fdcf5169-507f-43ca-9991-84447cb6c0fa"]\
 
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -4709,12 +4752,8 @@ Cell["\[LeftCeiling]canonicalizeDirective\[RightFloor]", \
 "CodeSubsubsubsubsection",
  Evaluatable->True,ExpressionUUID->"c363d121-250e-48a0-a84a-2def3d8a8934"],
 
-Cell[BoxData[
- RowBox[{"canonicalizeDirective", "//", 
-  "ClearAll"}]], \
-"CodeInput",ExpressionUUID->"d11d6d34-aa5f-4093-9625-475532355890"],
-
 Cell[BoxData[{
+ RowBox[{"canonicalizeDirective", "//", "ClearAll"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"canonicalizeDirective", "[", 
@@ -4785,6 +4824,21 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"canonicalizeDirective", "[", 
     RowBox[{
+     RowBox[{"dirs", ":", 
+      RowBox[{"{", 
+       RowBox[{"$basicDirectives", ".."}], "}"}]}], ",", " ", "targ_"}], 
+    "]"}], ":=", "\n", "\t", 
+   RowBox[{"Apply", "[", 
+    RowBox[{"Directive", ",", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"canonicalizeDirective", "[", 
+        RowBox[{"#", ",", " ", "targ"}], "]"}], "&"}], "/@", "dirs"}]}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"canonicalizeDirective", "[", 
+    RowBox[{
      RowBox[{
       RowBox[{"(", 
        RowBox[{"head", ":", 
@@ -4806,9 +4860,9 @@ Cell[BoxData[{
   RowBox[{
   "(", "Nothing", 
    ")"}]}]}], \
-"CodeInput",ExpressionUUID->"1817024a-a432-4d53-be0a-b1de592b7ac0"]
-}, Closed]]
-}, Closed]],
+"CodeInput",ExpressionUUID->"d11d6d34-aa5f-4093-9625-475532355890"]
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -4826,7 +4880,7 @@ Cell[BoxData[
     RowBox[{"FaceForm", "[", "Black", "]"}]}], "\n", "\t\t", 
    "}"}]}]], \
 "CodeInput",ExpressionUUID->"48dcf8f7-ce12-4915-b245-049b08b8aa36"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -4882,7 +4936,7 @@ Cell[BoxData[
        RowBox[{"[", "2", "]"}], "]"}], ",", " ", "1"}], "]"}]}], "\n", "\t\t",
     "]"}]}]], \
 "CodeInput",ExpressionUUID->"f83aea33-449d-4d02-aaf3-c1800ff5478e"]
-}, Closed]]
+}, Open  ]]
 }, Open  ]]
 }, Open  ]],
 
@@ -5947,7 +6001,6 @@ Cell[BoxData[
                     AbsoluteThickness[1.5], 
                     Opacity[0.66]}], {}, {}], 
                     RectangleBox[{4.5, 0.}, {5., 1}, "RoundingRadius" -> 0]},
-                    
                     ImageSizeCache->{
                     35.91900157928467, {6., 9.256000518798828}}], "}"}],
                   StatusArea[#, 1]& ,
@@ -6054,7 +6107,6 @@ Cell[BoxData[
               AbsoluteThickness[1.5], 
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{-3., 0}, {-2.5, 2.}, "RoundingRadius" -> 0]},
-          
           ImageSizeCache->{{26.021493212669682`, 31.49886877828054}, {
            10.066904543638982`, 11.297861779223451`}}],
          StatusArea[#, 2]& ,
@@ -6111,7 +6163,6 @@ Cell[BoxData[
               AbsoluteThickness[1.5], 
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{-1.5, 0}, {-1., 42.}, "RoundingRadius" -> 0]},
-          
           ImageSizeCache->{{40.95361990950226, 
            46.430995475113114`}, {-4.552240168050396, 11.297861779223451`}}],
          StatusArea[#, 42]& ,
@@ -6168,7 +6219,6 @@ Cell[BoxData[
               AbsoluteThickness[1.5], 
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{0., 0}, {0.5, 105.}, "RoundingRadius" -> 0]},
-          
           ImageSizeCache->{{55.885746606334834`, 
            61.36312217194569}, {-27.577393088961166`, 11.297861779223453`}}],
          StatusArea[#, 105]& ,
@@ -6225,7 +6275,6 @@ Cell[BoxData[
               AbsoluteThickness[1.5], 
               Opacity[0.66]}], {}, {}], 
            RectangleBox[{1.5, 0}, {2., 30.}, "RoundingRadius" -> 0]},
-          
           ImageSizeCache->{{70.8178733031674, 
            76.29524886877827}, {-0.16649675454358182`, 11.297861779223451`}}],
          
@@ -6323,7 +6372,7 @@ Cell[BoxData[
  CellLabel->"In[782]:=",ExpressionUUID->"7065ceb9-847b-4b63-b319-b1d396aec67f"]
 },
 WindowSize->{808, 755},
-WindowMargins->{{27, Automatic}, {Automatic, 27}},
+WindowMargins->{{181, Automatic}, {29, Automatic}},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->FrontEnd`FileName[{"BTools"}, "CodePackage.nb", 

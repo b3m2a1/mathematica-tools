@@ -32,7 +32,8 @@ startSubprocessFrontEnd[]:=
     
     $SubprocessFrontEnd=LinkLaunch[launchFECommand];
   
-    MathLink`SetFrontEnd[$SubprocessFrontEnd]
+    MathLink`SetFrontEnd[$SubprocessFrontEnd];
+    MathLink`CreateFrontEndLinks[];
     ];
 
 
@@ -189,6 +190,7 @@ manageKernelConnections[]:=
     newLinks=AssociationMap[LinkConnect, newLinks];
     If[newStdin, AppendTo[newLinks, "STDIN"->OpenRead["!cat", BinaryFormat->True]]];
     $SubprocessLinks=Join[lia, newLinks];
+    logEcho["..."];
     $SubprocessLinks
     ]
 
@@ -409,26 +411,46 @@ subprocessBlockingREPL[]:=
       links,
       packets,
       responses,
-      pollTime:=$SubprocessREPLSettings["PollTime"]
+      pollTime:=$SubprocessREPLSettings["PollTime"],
+      link1Init=False,
+      link2Init=False,
+      n=1
       },
       
     While[True,
+      
+      logEcho[{1, n}];
       links=
         Join[
           manageKernelConnections[], 
           <|
-            FrontEnd->$SubprocessKernel, 
-            PreemptiveLink->MathLink`$PreemptiveLink
+            FrontEnd->$SubprocessKernel(*, 
+            PreemptiveLink:>
+              (
+                If[!link1Init, 
+                  LinkWrite[MathLink`$PreemptiveLink, InputNamePacket["In[1]:="]]
+                  ];
+                MathLink`$PreemptiveLink
+                ),
+            ServiceLink:>
+              (
+                If[!link2Init, 
+                  LinkWrite[MathLink`$ServiceLink, InputNamePacket["In[1]:="]]
+                  ];
+                MathLink`$ServiceLink
+                )*)
             |>
           ];
       
+      logEcho[{2, n}];
       packets=MapIndexed[getNextPacket[#2[[1, 1]], #, .1]&, links];
       responses=MapIndexed[handleLinkPacketResponse[#2[[1, 1]], #]&, packets];
-        
+      logEcho[{3, n}];
       If[TrueQ@$incrementLine, $Line++];
       $incrementLine=False;
-      
-      If[pollTime>0, Pause[pollTime]]
+      logEcho[{4, n}];
+      logEcho[pollTime];
+      If[pollTime>0, Pause[pollTime]];
      ]
    ];
 
