@@ -115,8 +115,9 @@ getBasisFunction["HarmonicOscillator", ops___]:=
     ];
 getBasisFunction[l_List]:=
   getBasisFunction@@l;
-getBasisFunction[___]:=
+getBasisFunction[_String, ___]:=
   $Failed;
+getBasisFunction[e_]:=e;
 
 
 (* ::Subsubsection:: *)
