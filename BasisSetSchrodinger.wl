@@ -41,6 +41,11 @@ shiftScaledWfns::usage="";
 $defaults::usage="";
 
 
+iWavefunctionEigensystem::usage="";
+iWavefunctions::usage="";
+iWavefunctionPlot::usage="";
+
+
 EndPackage[]
 
 
@@ -70,38 +75,43 @@ pib[{l_, min_}]:=
 pib~SetAttributes~HoldRest;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ho*)
 
 
-ho[{omega_, m_, hb_}, x_][n_]:=
-  With[{a=m*omega/hb},
-    (1/Sqrt[(2^n)n!])*Power[a/Pi, 1/4]*Exp[-a/2*x^2]*HermiteH[n, Sqrt[a]*x]
+ho[{omega_, m_, hb_, x0_}, x_][nn_]:=
+  With[{a=m*omega/hb, n=nn-1},
+    (1/Sqrt[(2^n)n!])*Power[a/Pi, 1/4]*Exp[-a/2*(x-x0)^2]*HermiteH[n, Sqrt[a]*(x-x0)]
     ];
-ho[{omega_, m_, hb_}]:=
-  Function[Null, ho[{omega, m, hb}, #], HoldFirst];
+ho[{omega_, m_, hb_, x0_}]:=
+  Function[Null, ho[{omega, m, hb, x0}, #], HoldFirst];
 ho~SetAttributes~HoldRest;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*getBasisFunction*)
 
 
 getBasisFunction//Clear;
 getBasisFunction["ParticleInABox", ops___]:=
-  pib[
-    {
-     Lookup[{ops}, "Length", 1.],
-     Lookup[{ops}, "Minimum", 0.]
-     }
+  With[{oop=Select[{ops}, OptionQ]},
+    pib[
+      {
+       Lookup[oop, "Length", 1.],
+       Lookup[oop, "Minimum", 0.]
+       }
+      ]
     ];
 getBasisFunction["HarmonicOscillator", ops___]:=
-  ho[
-    {
-     Lookup[{ops}, "Frequency", 1.],
-     Lookup[{ops}, "Mass", 1],
-     Lookup[{ops}, "PlanckConstant", 1]
-     }
+  With[{oop=Select[{ops}, OptionQ]},
+    ho[
+      {
+       Lookup[oop, "Frequency", 1.],
+       Lookup[oop, "Mass", 1],
+       Lookup[oop, "PlanckConstant", 1],
+       Lookup[oop, "Center", 0.]
+       }
+      ]
     ];
 getBasisFunction[l_List]:=
   getBasisFunction@@l;
@@ -117,30 +127,53 @@ $integrator=NIntegrate;
 (* I put this here so people can hack it later *)
 
 
-hel[{n_, m_}, bf_, pot_, {hb_, mu_}, {min_, max_}, x_Symbol]:=
-  hel[{n, m}, bf, pot, {hb, mu},{min, max}, x]=
-    With[{psin=bf[x][n], psim=bf[x][m], p=pot[x]},
-      Quiet[
-        $integrator[
-            psin*(
-              -hb/(2mu)*D[psim, {x, 2}]+p*psim
-              ), 
-          {x, min, max}
-          ],
-        {
-          NIntegrate::ncvb,
-          NIntegrate::slwcon
-          }
-        ]
-      ];
+ihel[{n_, m_}, bf_, pot_, {hb_, mu_}, {min_, max_}, x_Symbol]:=
+  With[{psin=bf[x][n], psim=bf[x][m], p=pot[x]},
+    Quiet[
+      $integrator[
+          psin*(
+            -hb/(2mu)*D[psim, {x, 2}]+p*psim
+            ), 
+        {x, min, max}
+        ],
+      {
+        NIntegrate::ncvb,
+        NIntegrate::slwcon
+        }
+      ]
+    ]
 
 
-(* ::Subsubsection::Closed:: *)
+hel[{n_, m_}, bf_, pot_, {hb_, mu_}, {min_, max_}, x_Symbol, useCached_]:=
+  Module[{res},
+    res=ihel[{n, m}, bf, pot, {hb, mu},{min, max}, x];
+    If[NumericQ@res,
+      If[useCached,
+        hel[{n, m}, bf, pot, {hb, mu},{min, max}, x, True]=res,
+        res
+        ],
+      Throw@
+        Failure["BadHam",
+          <|
+            "MessageTemplate"->"Non-numeric Hamiltonian element ``",
+            "MessageParameter"->{res}
+            |>
+          ]
+      ]
+    ]
+
+
+(* ::Subsubsection:: *)
 (*ham*)
 
 
-ham[nT_, bf_, pot_,{hb_, mu_}, {min_, max_},  x_]:=
-  Table[hel[{n ,m}, bf, pot,{hb, mu}, {min, max}, x], {n, 1, nT}, {m, 1, nT}];
+ham//Clear
+ham[nT_, bf_, pot_,{hb_, mu_}, {min_, max_},  x_, useCached_]:=
+  Table[
+    hel[{n ,m}, bf, pot,{hb, mu}, {min, max}, x, useCached], 
+    {n, 1, nT}, 
+    {m, 1, nT}
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -189,9 +222,9 @@ $defaults=
     "PotentialFunction"->
       (
         Piecewise[{
-          {10^4, #<=0},
+          {10^6, #<=0},
           {0, 0<#<1},
-          {10^4, #>=1}
+          {10^6, #>=1}
           }]&
         ),
     "Range"->{0., 1.}
@@ -202,16 +235,17 @@ $defaults=
 (*WavefunctionEigensystem*)
 
 
-Options[WavefunctionEigensystem]=
+Options[iWavefunctionEigensystem]=
   {
     "BasisFunction"->Automatic,
     "PotentialFunction"->Automatic,
     "Range"->Automatic,
     "BasisSize"->Automatic,
     "Mass"->Automatic,
-    "PlanckConstant"->Automatic
+    "PlanckConstant"->Automatic,
+    "UseCachedElements"->False
     };
-WavefunctionEigensystem[ops:OptionsPattern[]]:=
+iWavefunctionEigensystem[ops:OptionsPattern[]]:=
   Module[
     {
       nT=  
@@ -236,10 +270,19 @@ WavefunctionEigensystem[ops:OptionsPattern[]]:=
       es
       },
     bf=getBasisFunction@bf;
-    h=ham[nT, bf, pot, {hb, m}, r,  \[FormalX]];
+    h=ham[nT, bf, pot, {hb, m}, r,  \[FormalX], TrueQ@OptionValue["UseCachedElements"]];
     es=getSolns@h;
     es[[2]]=Threshold[es[[2]], 10^-6];
     es
+    ]
+
+
+WavefunctionEigensystem//ClearAll
+Options[WavefunctionEigensystem]=
+  Options[iWavefunctionEigensystem];
+WavefunctionEigensystem[e___]:=
+  Module[{res=Catch@iWavefunctionEigensystem[e]},
+    res/;Head[res]=!=iWavefunctionEigensystem
     ]
 
 
@@ -247,11 +290,11 @@ WavefunctionEigensystem[ops:OptionsPattern[]]:=
 (*Wavefunctions*)
 
 
-Options[Wavefunctions]=
-  Options[WavefunctionEigensystem];
-Wavefunctions[es:{_List, _List}, bf:Except[_?OptionQ]]:=
+Options[iWavefunctions]=
+  Options[iWavefunctionEigensystem];
+iWavefunctions[es:{_List, _List}, bf:Except[_?OptionQ]]:=
   {es[[1]], expandSoln[{#, bf}, \[FormalX]]&/@es[[2]]};
-Wavefunctions[es:{_List, _List}, ops:OptionsPattern[]]:=
+iWavefunctions[es:{_List, _List}, ops:OptionsPattern[]]:=
   Module[
     {
       bf=
@@ -259,18 +302,27 @@ Wavefunctions[es:{_List, _List}, ops:OptionsPattern[]]:=
           Automatic:>$defaults["BasisFunction"]]
       },
     bf=getBasisFunction@bf;
-    Wavefunctions[es, bf]
+    iWavefunctions[es, bf]
     ];
-Wavefunctions[ops:OptionsPattern[]]:=
-  Wavefunctions[WavefunctionEigensystem[ops], ops]
+iWavefunctions[ops:OptionsPattern[]]:=
+  iWavefunctions[iWavefunctionEigensystem[ops], ops]
 
 
-(* ::Subsubsection:: *)
+Wavefunctions//ClearAll
+Options[Wavefunctions]=
+  Options[iWavefunctions];
+Wavefunctions[e___]:=
+  Module[{res=Catch@iWavefunctions[e]},
+    res/;Head[res]=!=iWavefunctions
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
 (*WavefunctionPlot*)
 
 
-WavefunctionPlot//Clear
-Options[WavefunctionPlot]=
+iWavefunctionPlot//Clear
+Options[iWavefunctionPlot]=
   Join[
     Options[Wavefunctions],
     Options[Plot],
@@ -278,7 +330,7 @@ Options[WavefunctionPlot]=
       "WavefunctionScaling"->1
       }
     ];
-WavefunctionPlot[
+iWavefunctionPlot[
   wfs:{_List, _List?(Not@MatrixQ[#, Internal`RealValuedNumberQ]&)},
   pot_,
   {min_?NumericQ, max_?NumericQ},
@@ -297,7 +349,7 @@ WavefunctionPlot[
       Options[Plot]
       ]
     ];
-WavefunctionPlot[
+iWavefunctionPlot[
   wfs:{_List, _List?(Not@MatrixQ[#, Internal`RealValuedNumberQ]&)},
   ops:OptionsPattern[]
   ]:=
@@ -315,20 +367,29 @@ WavefunctionPlot[
               )
           ]
       },
-    WavefunctionPlot[wfs, pot, range, ops]
+    iWavefunctionPlot[wfs, pot, range, ops]
     ];
-WavefunctionPlot[
+iWavefunctionPlot[
   es:{_List, _List?(MatrixQ[#, Internal`RealValuedNumberQ]&)}, 
   ops:OptionsPattern[]
   ]:=
-  WavefunctionPlot[
-    Wavefunctions[es, FilterRules[{ops}, Options[Wavefunctions]]],
+  iWavefunctionPlot[
+    iWavefunctions[es, FilterRules[{ops}, Options[iWavefunctions]]],
     ops
     ];
-WavefunctionPlot[ops:OptionsPattern[]]:=
-  WavefunctionPlot[
-    Wavefunctions[FilterRules[{ops}, Options[Wavefunctions]]],
+iWavefunctionPlot[ops:OptionsPattern[]]:=
+  iWavefunctionPlot[
+    iWavefunctions[FilterRules[{ops}, Options[iWavefunctions]]],
     ops
+    ]
+
+
+WavefunctionPlot//ClearAll
+Options[WavefunctionPlot]=
+  Options[iWavefunctionPlot];
+WavefunctionPlot[e___]:=
+  Module[{res=Catch@iWavefunctionPlot[e]},
+    res/;Head[res]=!=iWavefunctionPlot
     ]
 
 
