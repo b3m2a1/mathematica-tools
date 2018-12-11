@@ -333,28 +333,46 @@ Cell["\[LeftCeiling]defaultConstructorFailureFunction\[RightFloor]", \
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{
-   RowBox[{"defaultConstructorFailureFunction", "[", 
-    RowBox[{"head_", ",", " ", "args__"}], "]"}], ":=", "\n", "\t", 
-   RowBox[{"Failure", "[", 
-    RowBox[{"\"\<BuildFailure\>\"", ",", "\n", "\t\t", 
-     RowBox[{"<|", "\n", "\t\t\t", 
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Length", "@", 
+      RowBox[{"DownValues", "[", "PackageRaiseException", "]"}]}], ">", "0"}],
+     ",", "\n", "\t", 
+    RowBox[{
+     RowBox[{"defaultConstructorFailureFunction", "[", 
+      RowBox[{"head_", ",", " ", "args__"}], "]"}], ":=", "\n", "\t", "\t", 
+     RowBox[{"PackageRaiseException", "[", 
       RowBox[{
-       RowBox[{
-       "\"\<MessageTemplate\>\"", "\[Rule]", 
-        "\"\<Failed to build `` object from data ``\>\""}], ",", "\n", 
-       "\t\t\t", 
-       RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
-        RowBox[{"{", 
-         RowBox[{"head", ",", " ", 
-          RowBox[{"HoldForm", "[", 
-           RowBox[{"{", "args", "}"}], "]"}]}], "}"}]}]}], "\n", "\t\t\t", 
-      "|>"}]}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
+      "Automatic", ",", "\n", "\t", "\t\t", 
+       "\"\<Failed to build `` object from data ``\>\"", ",", "\n", "\t", 
+       "\t\t", "head", ",", "\n", "\t", "\t\t", 
+       RowBox[{"HoldForm", "[", 
+        RowBox[{"{", "args", "}"}], "]"}]}], "\n", "\t\t\t", "]"}]}], ",", 
+    "\n", "\t", 
+    RowBox[{
+     RowBox[{"defaultConstructorFailureFunction", "[", 
+      RowBox[{"head_", ",", " ", "args__"}], "]"}], ":=", "\n", "\t\t", 
+     RowBox[{"Failure", "[", 
+      RowBox[{"\"\<BuildFailure\>\"", ",", "\n", "\t", "\t\t", 
+       RowBox[{"<|", "\n", "\t", "\t\t\t", 
+        RowBox[{
+         RowBox[{
+         "\"\<MessageTemplate\>\"", "\[Rule]", 
+          "\"\<Failed to build `` object from data ``\>\""}], ",", "\n", "\t",
+          "\t\t\t", 
+         RowBox[{"\"\<MessageParameters\>\"", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"head", ",", " ", 
+            RowBox[{"HoldForm", "[", 
+             RowBox[{"{", "args", "}"}], "]"}]}], "}"}]}]}], "\n", "\t", 
+        "\t\t\t", "|>"}]}], "\n", "\t", "\t\t", "]"}]}]}], "\n", "\t", "]"}], 
+  ";"}], "\n", 
  RowBox[{
   RowBox[{
   "defaultConstructorFailureFunction", "~", "SetAttributes", "~", 
    "HoldAllComplete"}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"ed453e3f-621d-499e-989e-61af480b8706"]\
+  ";"}]}], "CodeInput",ExpressionUUID->"37aa785e-d773-45a1-b311-32d8f74ee67a"]\
 
 }, Closed]],
 
@@ -452,8 +470,7 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"\"\<Keys\>\"", "\[Rule]", "key"}], ",", " ", 
        RowBox[{"\"\<Parts\>\"", "\[Rule]", "part"}]}], "|>"}]}]}], "\n", 
-   "\t\t", 
-   "]"}]}]], \
+   "\t\t", "]"}]}]], \
 "CodeInput",ExpressionUUID->"486de2cf-af62-483d-b7bb-4e22398af045"]
 }, Closed]],
 
@@ -716,7 +733,8 @@ Cell[BoxData[{
          RowBox[{
           RowBox[{"Head", "[", "ctor", "]"}], "===", "Symbol"}], "&&", 
          RowBox[{
-          RowBox[{"DownValues", "[", "ctor", "]"}], "\[Equal]", 
+          RowBox[{"DownValues", "[", 
+           RowBox[{"Evaluate", "@", "ctor"}], "]"}], "\[Equal]", 
           RowBox[{"{", "}"}]}]}], ",", "\n", "\t\t\t\t", 
         RowBox[{"createConstructor", "[", 
          RowBox[{"ctor", ",", " ", "keys"}], "]"}], ",", "\n", "\t\t\t", 
@@ -827,7 +845,7 @@ Cell[BoxData[{
       "head"}]}], "\n", "\t\t", "]"}]}], 
   ";"}]}], "CodeInput",ExpressionUUID->"917db5ae-f053-4963-a98d-525483943366"]\
 
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -954,8 +972,8 @@ Cell[BoxData[{
    RowBox[{"$InterfaceData", "@", 
     RowBox[{"\"\<get\>\"", "[", 
      RowBox[{"head", ",", " ", "\"\<CheckInvalid\>\""}], "]"}]}]}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"2698a235-6c18-4332-a711-a600e9e14ace"]\
-
+  ";"}]}], \
+"CodeInput",ExpressionUUID->"2698a235-6c18-4332-a711-a600e9e14ace"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1012,8 +1030,8 @@ Cell[BoxData[{
     RowBox[{"$InterfaceData", "@", 
      RowBox[{"\"\<get\>\"", "[", 
       RowBox[{"head", ",", " ", "\"\<Methods\>\""}], "]"}]}]}]}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"6b2d8ac0-ac2a-44c3-aed3-c740200cec20"]\
-
+  ";"}]}], \
+"CodeInput",ExpressionUUID->"6b2d8ac0-ac2a-44c3-aed3-c740200cec20"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1188,49 +1206,112 @@ Cell[BoxData[
      RowBox[{"head", "//", "ClearAll"}], ";", "\n", "\t\t", 
      RowBox[{"head", "~", "SetAttributes", "~", "HoldAllComplete"}], ";", 
      "\n", "\t\t", 
-     RowBox[{
+     RowBox[{"If", "[", 
       RowBox[{
-       RowBox[{"head", "[", "args___", "]"}], "?", "checkInvalid"}], ":=", 
-      "\n", "\t\t\t", 
-      RowBox[{"With", "[", 
        RowBox[{
-        RowBox[{"{", 
-         RowBox[{"a", "=", 
-          RowBox[{"constructor", "[", "args", "]"}]}], "}"}], ",", "\n", 
-        "\t\t\t\t", 
+        RowBox[{"Length", "@", 
+         RowBox[{"DownValues", "@", "PackageExceptionBlock"}]}], ">", "0"}], 
+       ",", "\n", "\t\t\t", 
+       RowBox[{"With", "[", 
         RowBox[{
-         RowBox[{"If", "[", 
+         RowBox[{"{", 
+          RowBox[{"tag", "=", 
+           RowBox[{"SymbolName", "[", "head", "]"}]}], "}"}], ",", "\n", 
+         "\t\t\t\t", 
+         RowBox[{
           RowBox[{
-           RowBox[{"AssociationQ", "@", "a"}], ",", "\n", "\t\t\t\t\t", 
+           RowBox[{
+            RowBox[{"head", "[", "args___", "]"}], "?", "checkInvalid"}], ":=",
+            "\n", "\t", "\t", "\t\t\t", 
            RowBox[{"With", "[", 
             RowBox[{
              RowBox[{"{", 
-              RowBox[{"a2", "=", 
-               RowBox[{"Append", "[", 
-                RowBox[{"a", ",", " ", 
-                 RowBox[{"\"\<Version\>\"", "\[Rule]", "version"}]}], "]"}]}],
-               "}"}], ",", "\n", "\t", "\t\t\t\t\t", 
-             RowBox[{"If", "[", 
+              RowBox[{"a", "=", 
+               RowBox[{
+                RowBox[{"PackageExceptionBlock", "[", "tag", "]"}], "@", 
+                RowBox[{"constructor", "[", "args", "]"}]}]}], "}"}], ",", 
+             "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{
               RowBox[{
-               RowBox[{"TrueQ", "@", 
-                RowBox[{"validator", "@", "a2"}]}], ",", "\n", "\t", 
-               "\t\t\t\t\t\t", 
-               RowBox[{"setValid", "@", 
-                RowBox[{"head", "[", "a2", "]"}]}], ",", "\n", "\t", 
-               "\t\t\t\t\t\t", 
-               RowBox[{"failureFunction", "[", 
-                RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", 
-              "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t", "]"}], ",", 
-           "\n", "\t\t\t\t\t", 
-           RowBox[{"failureFunction", "[", 
-            RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t\t\t\t\t", 
-          "]"}], "/;", 
-         RowBox[{"(", 
+               RowBox[{"PackageExceptionBlock", "[", "tag", "]"}], "@", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"AssociationQ", "@", "a"}], ",", "\n", "\t", "\t", 
+                 "\t\t\t\t\t", 
+                 RowBox[{"With", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"a2", "=", 
+                    RowBox[{"Append", "[", 
+                    RowBox[{"a", ",", " ", 
+                    RowBox[{"\"\<Version\>\"", "\[Rule]", "version"}]}], 
+                    "]"}]}], "}"}], ",", "\n", "\t", "\t", "\t", "\t\t\t\t\t", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"TrueQ", "@", 
+                    RowBox[{"validator", "@", "a2"}]}], ",", "\n", "\t", "\t",
+                     "\t", "\t\t\t\t\t\t", 
+                    RowBox[{"setValid", "@", 
+                    RowBox[{"head", "[", "a2", "]"}]}], ",", "\n", "\t", "\t",
+                     "\t", "\t\t\t\t\t\t", 
+                    RowBox[{"failureFunction", "[", 
+                    RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t", 
+                    "\t", "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t", "\t", 
+                  "\t\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t", "\t\t\t\t\t", 
+                 
+                 RowBox[{"failureFunction", "[", 
+                  RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t", 
+                "\t", "\t\t\t\t\t", "]"}]}], "/;", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"TrueQ", "[", "failOnUndefinedArguments", "]"}], "||", 
+                RowBox[{"AssociationQ", "[", "a", "]"}]}], ")"}]}]}], "\n", 
+            "\t", "\t", "\t\t\t\t", "]"}]}], ";"}]}], "\n", "\t", "\t\t\t", 
+        "]"}], ",", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"head", "[", "args___", "]"}], "?", "checkInvalid"}], ":=", 
+        "\n", "\t", "\t\t\t", 
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"a", "=", 
+            RowBox[{"constructor", "[", "args", "]"}]}], "}"}], ",", "\n", 
+          "\t", "\t\t\t\t", 
           RowBox[{
-           RowBox[{"TrueQ", "[", "failOnUndefinedArguments", "]"}], "||", 
-           RowBox[{"AssociationQ", "[", "a", "]"}]}], ")"}]}]}], "\n", 
-       "\t\t\t\t", "]"}]}], ";"}]}], "\n", "\t\t", 
-   "]"}]}]], \
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"AssociationQ", "@", "a"}], ",", "\n", "\t", 
+             "\t\t\t\t\t", 
+             RowBox[{"With", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"a2", "=", 
+                 RowBox[{"Append", "[", 
+                  RowBox[{"a", ",", " ", 
+                   RowBox[{"\"\<Version\>\"", "\[Rule]", "version"}]}], 
+                  "]"}]}], "}"}], ",", "\n", "\t", "\t", "\t\t\t\t\t", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"TrueQ", "@", 
+                  RowBox[{"validator", "@", "a2"}]}], ",", "\n", "\t", "\t", 
+                 "\t\t\t\t\t\t", 
+                 RowBox[{"setValid", "@", 
+                  RowBox[{"head", "[", "a2", "]"}]}], ",", "\n", "\t", "\t", 
+                 "\t\t\t\t\t\t", 
+                 RowBox[{"failureFunction", "[", 
+                  RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t", 
+                "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t", "\t\t\t\t\t\t", "]"}], 
+             ",", "\n", "\t", "\t\t\t\t\t", 
+             RowBox[{"failureFunction", "[", 
+              RowBox[{"head", ",", " ", "args"}], "]"}]}], "\n", "\t", 
+            "\t\t\t\t\t", "]"}], "/;", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"TrueQ", "[", "failOnUndefinedArguments", "]"}], "||", 
+             RowBox[{"AssociationQ", "[", "a", "]"}]}], ")"}]}]}], "\n", 
+         "\t\t\t\t\t", "]"}]}]}], "\n", "\t\t\t", "]"}], ";"}]}], "\n", 
+   "\t\t", "]"}]}]], \
 "CodeInput",ExpressionUUID->"3c6509b4-5906-4d6f-8a1e-37986dcee86c"]
 }, Closed]],
 
@@ -2624,8 +2705,8 @@ a60ab050c12b"],
 Cell[BoxData[
  RowBox[{
   RowBox[{"EndPackage", "[", "]"}], 
-  ";"}]], "InputSection",ExpressionUUID->"19be9dff-976f-4fa9-a22e-\
-56b676803d9d"]
+  ";"}]], \
+"InputSection",ExpressionUUID->"19be9dff-976f-4fa9-a22e-56b676803d9d"]
 }, Open  ]],
 
 Cell["", "SectionSeparator",ExpressionUUID->"7caa748b-78fc-4082-aded-\

@@ -181,13 +181,21 @@ InterfacePropertyList[spec_]:=
 
 
 
-defaultConstructorFailureFunction[head_, args__]:=
-  Failure["BuildFailure",
-    <|
-      "MessageTemplate"->"Failed to build `` object from data ``",
-      "MessageParameters"->{head, HoldForm[{args}]}
-      |>
-    ];
+If[Length@DownValues[PackageRaiseException]>0,
+  defaultConstructorFailureFunction[head_, args__]:=
+    PackageRaiseException[Automatic,
+      "Failed to build `` object from data ``",
+      head,
+      HoldForm[{args}]
+      ],
+  defaultConstructorFailureFunction[head_, args__]:=
+    Failure["BuildFailure",
+      <|
+        "MessageTemplate"->"Failed to build `` object from data ``",
+        "MessageParameters"->{head, HoldForm[{args}]}
+        |>
+      ]
+  ];
 defaultConstructorFailureFunction~SetAttributes~HoldAllComplete;
 
 
@@ -365,7 +373,7 @@ RegisterInterface[
       ctor===Automatic,
         createConstructor[constructor, keys];
         ctor=constructor,
-      Head[ctor]===Symbol&&DownValues[ctor]=={},
+      Head[ctor]===Symbol&&DownValues[Evaluate@ctor]=={},
         createConstructor[ctor, keys],
       AssociationQ@ctor,
         ctorFail=
@@ -608,18 +616,34 @@ iRegisterInterfaceConstructor[
     Unprotect[head];
     head//ClearAll;
     head~SetAttributes~HoldAllComplete;
-    head[args___]?checkInvalid:=
-      With[{a=constructor[args]},
-        If[AssociationQ@a,
-          With[{a2=Append[a, "Version"->version]},
-            If[TrueQ@validator@a2,
-              setValid@head[a2],
+    If[Length@DownValues@PackageExceptionBlock>0,
+      With[{tag=SymbolName[head]},
+        head[args___]?checkInvalid:=
+          With[{a=PackageExceptionBlock[tag]@constructor[args]},
+            PackageExceptionBlock[tag]@If[AssociationQ@a,
+              With[{a2=Append[a, "Version"->version]},
+                If[TrueQ@validator@a2,
+                  setValid@head[a2],
+                  failureFunction[head, args]
+                  ]
+                ],
               failureFunction[head, args]
-              ]
-            ],
-          failureFunction[head, args]
-          ]/;(TrueQ[failOnUndefinedArguments]||AssociationQ[a])
-        ];
+              ]/;(TrueQ[failOnUndefinedArguments]||AssociationQ[a])
+            ];
+        ],
+      head[args___]?checkInvalid:=
+        With[{a=constructor[args]},
+          If[AssociationQ@a,
+            With[{a2=Append[a, "Version"->version]},
+              If[TrueQ@validator@a2,
+                setValid@head[a2],
+                failureFunction[head, args]
+                ]
+              ],
+            failureFunction[head, args]
+            ]/;(TrueQ[failOnUndefinedArguments]||AssociationQ[a])
+          ]
+      ];
     ]
 
 
