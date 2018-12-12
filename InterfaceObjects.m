@@ -159,6 +159,17 @@ InterfacePropertyList[spec_]:=
   propKeys[spec]
 
 
+(* ::Subsubsection::Closed:: *)
+(*CopyProperties*)
+
+
+
+InterfaceCopyProperties[obj1_, obj2_, keys_List]:=
+  copyProps[obj1, obj2, AnyTrue[keys, With[{o=#}, #===o&]&]];
+InterfaceCopyProperties[obj1_, obj2_, e_]:=
+  copyProps[obj1, obj2, e]
+
+
 (* ::Subsection:: *)
 (*RegisterInterface*)
 
@@ -1232,6 +1243,45 @@ iRegisterDefaultInterfaceMethods[head_, fns_]:=
   With[{v=InterfaceValidator[head]},
     Scan[registerDefaultMethod[head, v, #]&, fns]
     ]
+
+
+(* ::Subsection:: *)
+(*Modifications*)
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*InterfaceModify*)
+
+
+
+InterfaceModify[
+  head_, 
+  og:head_[a_], 
+  fn_,
+  copyProperties_:None
+  ]:=
+  Module[{new=fn@a},
+    If[AssociationQ@new, 
+      new=head@a;
+      ];
+    If[TrueQ@InterfaceValidator[head]@new,
+      If[ListQ@copyProperties,
+        InterfaceCopyProperties[og, new, copyProperties]
+        ];
+      new,
+      $Failed (* ... maybe this should return some message ? ... *)
+      ]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*InterfaceAssociation*)
+
+
+
+InterfaceAssociation[head_, head_[a_]]:=
+  a;
 
 
 End[];

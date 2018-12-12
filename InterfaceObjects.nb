@@ -304,6 +304,39 @@ Cell[BoxData[{
   "propKeys", "[", "spec", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"bbf128f0-9487-463b-8172-20f3e4af1692"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]CopyProperties\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"ba9fbe83-8be1-488d-8797-883f56184b37"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"InterfaceCopyProperties", "[", 
+    RowBox[{"obj1_", ",", " ", "obj2_", ",", " ", "keys_List"}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"copyProps", "[", 
+    RowBox[{"obj1", ",", " ", "obj2", ",", " ", 
+     RowBox[{"AnyTrue", "[", 
+      RowBox[{"keys", ",", " ", 
+       RowBox[{
+        RowBox[{"With", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"o", "=", "#"}], "}"}], ",", " ", 
+          RowBox[{
+           RowBox[{"#", "===", "o"}], "&"}]}], "]"}], "&"}]}], "]"}]}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"InterfaceCopyProperties", "[", 
+   RowBox[{"obj1_", ",", " ", "obj2_", ",", " ", "e_"}], "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"copyProps", "[", 
+   RowBox[{"obj1", ",", " ", "obj2", ",", " ", "e"}], 
+   "]"}]}]}], \
+"CodeInput",ExpressionUUID->"146f572c-2922-4ffd-97e5-b732b2930898"]
 }, Closed]]
 }, Open  ]],
 
@@ -845,7 +878,7 @@ Cell[BoxData[{
       "head"}]}], "\n", "\t\t", "]"}]}], 
   ";"}]}], "CodeInput",ExpressionUUID->"917db5ae-f053-4963-a98d-525483943366"]\
 
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -972,8 +1005,8 @@ Cell[BoxData[{
    RowBox[{"$InterfaceData", "@", 
     RowBox[{"\"\<get\>\"", "[", 
      RowBox[{"head", ",", " ", "\"\<CheckInvalid\>\""}], "]"}]}]}], 
-  ";"}]}], \
-"CodeInput",ExpressionUUID->"2698a235-6c18-4332-a711-a600e9e14ace"]
+  ";"}]}], "CodeInput",ExpressionUUID->"2698a235-6c18-4332-a711-a600e9e14ace"]\
+
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -998,8 +1031,8 @@ Cell[BoxData[{
    RowBox[{"$InterfaceData", "@", 
     RowBox[{"\"\<get\>\"", "[", 
      RowBox[{"head", ",", " ", "\"\<SetValid\>\""}], "]"}]}]}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"6ff894fe-d4df-4805-ad7a-5c85acbb77c3"]\
-
+  ";"}]}], \
+"CodeInput",ExpressionUUID->"6ff894fe-d4df-4805-ad7a-5c85acbb77c3"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1030,8 +1063,8 @@ Cell[BoxData[{
     RowBox[{"$InterfaceData", "@", 
      RowBox[{"\"\<get\>\"", "[", 
       RowBox[{"head", ",", " ", "\"\<Methods\>\""}], "]"}]}]}]}], 
-  ";"}]}], \
-"CodeInput",ExpressionUUID->"6b2d8ac0-ac2a-44c3-aed3-c740200cec20"]
+  ";"}]}], "CodeInput",ExpressionUUID->"6b2d8ac0-ac2a-44c3-aed3-c740200cec20"]\
+
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2694,6 +2727,78 @@ Cell[BoxData[
 "CodeInput",ExpressionUUID->"019e7c0f-bfe6-48a9-be66-2687bd71af2a"]
 }, Open  ]]
 }, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]Modifications\[RightFloor]", "CodeSubsection",
+ Evaluatable->True,ExpressionUUID->"b5c960fd-8d0f-4028-8bf4-54a819778951"],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]InterfaceModify\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"afbf591c-70e0-40ea-b657-ede660749854"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"InterfaceModify", "[", "\n", "\t", 
+   RowBox[{"head_", ",", " ", "\n", "\t", 
+    RowBox[{"og", ":", 
+     RowBox[{"head_", "[", "a_", "]"}]}], ",", " ", "\n", "\t", "fn_", ",", 
+    "\n", "\t", 
+    RowBox[{"copyProperties_:", "None"}]}], "\n", "\t", "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"new", "=", 
+      RowBox[{"fn", "@", "a"}]}], "}"}], ",", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"AssociationQ", "@", "new"}], ",", " ", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"new", "=", 
+         RowBox[{"head", "@", "a"}]}], ";"}]}], "\n", "\t\t\t", "]"}], ";", 
+     "\n", "\t\t", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"TrueQ", "@", 
+        RowBox[{
+         RowBox[{"InterfaceValidator", "[", "head", "]"}], "@", "new"}]}], 
+       ",", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"ListQ", "@", "copyProperties"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"InterfaceCopyProperties", "[", 
+           RowBox[{"og", ",", " ", "new", ",", " ", "copyProperties"}], 
+           "]"}]}], "\n", "\t\t\t\t", "]"}], ";", "\n", "\t\t\t", "new"}], 
+       ",", "\n", "\t\t\t", "$Failed"}], " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{
+        "...", " ", "maybe", " ", "this", " ", "should", " ", "return", " ", 
+         "some", " ", 
+         RowBox[{"message", " ", "?"}]}], " ", "..."}], " ", "*)"}], "\n", 
+      "\t\t\t", "]"}]}]}], "\n", "\t\t", 
+   "]"}]}]], \
+"CodeInput",ExpressionUUID->"64d7ee0c-41f4-4730-b4bf-ca68dd94c69d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]InterfaceAssociation\[RightFloor]", "CodeSubsubsection",
+ Evaluatable->True,ExpressionUUID->"23b21489-4c22-469f-96fe-1218fb3bd865"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"InterfaceAssociation", "[", 
+    RowBox[{"head_", ",", " ", 
+     RowBox[{"head_", "[", "a_", "]"}]}], "]"}], ":=", "\n", "\t", "a"}], 
+  ";"}]], "CodeInput",ExpressionUUID->"030ce0dc-08ac-4f12-91f0-c8223ffa0a22"]
+}, Closed]]
 }, Open  ]],
 
 Cell[BoxData[
@@ -2705,8 +2810,8 @@ a60ab050c12b"],
 Cell[BoxData[
  RowBox[{
   RowBox[{"EndPackage", "[", "]"}], 
-  ";"}]], \
-"InputSection",ExpressionUUID->"19be9dff-976f-4fa9-a22e-56b676803d9d"]
+  ";"}]], "InputSection",ExpressionUUID->"19be9dff-976f-4fa9-a22e-\
+56b676803d9d"]
 }, Open  ]],
 
 Cell["", "SectionSeparator",ExpressionUUID->"7caa748b-78fc-4082-aded-\
