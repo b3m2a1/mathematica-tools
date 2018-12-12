@@ -69,7 +69,18 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"InterfaceOverride", "::", "usage"}], "=", "\n", "\t", 
    "\"\<Alias for defining object UpValues\>\""}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"d69d55d9-a789-4ca5-8086-989cbb0fb582"]\
+  ";"}]}], "CodeInput",ExpressionUUID->"d69d55d9-a789-4ca5-8086-989cbb0fb582"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"InterfaceModify", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Replace keys in one interface with new values\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"InterfaceAssociation", "::", "usage"}], "=", "\n", "\t", 
+   "\"\<Extracts the underlying Association from an interface\>\""}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"5941ace4-bf2e-44c0-9f45-e96f94834c6f"]\
 
 }, Open  ]],
 
@@ -1031,8 +1042,8 @@ Cell[BoxData[{
    RowBox[{"$InterfaceData", "@", 
     RowBox[{"\"\<get\>\"", "[", 
      RowBox[{"head", ",", " ", "\"\<SetValid\>\""}], "]"}]}]}], 
-  ";"}]}], \
-"CodeInput",ExpressionUUID->"6ff894fe-d4df-4805-ad7a-5c85acbb77c3"]
+  ";"}]}], "CodeInput",ExpressionUUID->"6ff894fe-d4df-4805-ad7a-5c85acbb77c3"]\
+
 }, Closed]],
 
 Cell[CellGroupData[{

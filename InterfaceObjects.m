@@ -43,6 +43,12 @@ InterfaceOverride::usage=
   "Alias for defining object UpValues";
 
 
+InterfaceModify::usage=
+  "Replace keys in one interface with new values";
+InterfaceAssociation::usage=
+  "Extracts the underlying Association from an interface";
+
+
 Begin["`Private`"];
 
 
