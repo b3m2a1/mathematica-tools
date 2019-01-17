@@ -36,6 +36,7 @@ cellToString[c:Cell[_,s_String, ___]]:=
 
 $fiddleURL="https://www.wolframcloud.com/objects/b3m2a1/WLFiddle";
 $embedURL="https://www.wolframcloud.com/objects/b3m2a1/WLFiddleEmbed";
+$delayedURL="https://www.wolframcloud.com/objects/b3m2a1/WLDelayedFiddle";
 
 
 Options[MakeWLFiddle]=
@@ -55,6 +56,7 @@ MakeWLFiddle[cells:{__Cell}, ops:OptionsPattern[]]:=
       Replace[OptionValue["BaseURL"],
         {
           "Embed":>$embedURL,
+          "Delayed":>$delayedURL,
           Except[_String]:>$fiddleURL
           }
         ];
