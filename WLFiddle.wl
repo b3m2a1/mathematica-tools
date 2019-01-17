@@ -44,7 +44,7 @@ Options[MakeWLFiddle]=
     "BaseURL"->Automatic
     };
 MakeWLFiddle[cells:{__Cell}, ops:OptionsPattern[]]:=
-  With[
+  Module[
     {
       cc=NotebookTools`FlattenCellGroups[cells],
       key=StringJoin[ToString/@RandomInteger[10, 15]],
