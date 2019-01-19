@@ -13,10 +13,12 @@ BeginPackage["WikiDataEntities`"]
 
 WikiData::usage="A message head for playing with WikiData";
 WikiDataDataset::usage="WikiDataDataset[class] returns the dataset for an entity class
-WikiDataDataset[class, pred] returns the dataset for an entity class and special predicate
+WikiDataDataset[class, pred] returns the dataset for an entity class and predicate
 ";
 WikiDataClasses::usage="WikiDataClasses[pred] returns the classes implementing pred";
 WikiDataEntityStore::usage="";
+WikiDataPredicates::usage=
+  "WikiDataPredicates[name] returns the predicates matching name";
 
 
 (* ::Subsubsection::Closed:: *)
@@ -100,8 +102,9 @@ prepQuery[query_, limit_]:=
 (*wikidataQuery*)
 
 
-wikidataQuery[query_, limit_] :=
-  executeRequest@
+wikidataQuery//Clear
+wikidataQuery[query_, limit_, returnTiming_:False] :=
+  If[returnTiming, AbsoluteTiming, Identity]@executeRequest@
     HTTPRequest[
       $wikiDataBase,
       <|
@@ -120,6 +123,26 @@ wikidataQuery[query_, limit_] :=
         "ContentType"-> "application/x-www-form-urlencoded"
         |>
       ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*wikidataQueryVerbose*)
+
+
+wikidataQueryVerbose[query_, limit_]:=
+  Module[
+    {
+      queryResults
+      },
+    queryResults=wikidataQuery[query, limit, True];
+    Print@
+      Internal`LoadingPanel@
+        StringForm[
+          "Query execution took `` seconds",
+          queryResults[[1]]
+          ];
+     queryResults[[2]]
+     ];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -186,7 +209,7 @@ $propertyQueryInner="{
     hint:Query hint:optimizer 'None' .
   {  BIND(?entity AS ?valUrl) .
     BIND(\"N/A\" AS ?propUrl ) .
-    BIND(\"Name\"@`lang` AS ?propLabel ) .
+    BIND(\"Label\"@`lang` AS ?propLabel ) .
        ?entity rdfs:label ?val .
       
         FILTER (LANG(?val) = \"`lang`\") 
@@ -299,15 +322,19 @@ extractEntityIDs[json_]:=
 (*aggregateEntityClassDataset*)
 
 
+$entityPrefix="http://www.wikidata.org/entity/";
+
+
 aggregateEntityClassDataset[res_]:=
   Module[{resDS, resGroups},
     resDS = Global`ugh = Dataset[Join@@res[[All, "results", "bindings"]]];
     resGroups=
       GroupBy[
         resDS, 
-        #["entity", "value"]&,
+        StringTrim[#["entity", "value"], $entityPrefix]&,
         extractPropertyDataset
-        ]
+        ];
+    resGroups
     ]
 
 
@@ -315,11 +342,25 @@ aggregateEntityClassDataset[res_]:=
 (*cleanData*)
 
 
+$xmlDataTypePrefix="http://www.w3.org/2001/XMLSchema#";
+
+
 cleanData//Clear;
-cleanData["http://www.w3.org/2001/XMLSchema#dateTime", val_]:=
+icleanData[$xmlDataTypePrefix<>"dateTime", val_]:=
   DateObject[val];
-cleanData["http://www.w3.org/2001/XMLSchema#decimal", val_]:=
+icleanData[$xmlDataTypePrefix<>"decimal", val_]:=
   Internal`StringToDouble[val];
+icleanData[_, val_]:=
+  val;
+Function[
+  cleanData[k:$xmlDataTypePrefix<>#, val_]:=
+    icleanData[k, val]
+  ]/@{
+  "dateTime",
+  "decimal"
+  };
+cleanData[k_String, val_]:=
+  icleanData[$xmlDataTypePrefix<>k, val];
 cleanData[_, val_]:=
   val;
 
@@ -329,13 +370,15 @@ cleanData[_, val_]:=
 
 
 extractPropertyDataset[resDS_]:=
-  Module[{resPairs},
+  Module[{ resPairs, resMerge },
     resPairs = 
       #propLabel["value"]->cleanData[#val["datatype"], #val["value"]]&/@
         resDS[[All, {"propLabel", "val"}, {"value", "datatype"}]];
-    Merge[resPairs, 
-      If[Length[#]==1, #[[1]], #]&
-      ]
+    resMerge=
+      Merge[resPairs, 
+        If[Length[#]==1, #[[1]], #]&
+        ];
+    KeySortBy[resMerge, #=!="Label"&]
     ]
 
 
@@ -343,23 +386,27 @@ extractPropertyDataset[resDS_]:=
 (*wikidataEntityClassDataset*)
 
 
+$wikiDataChunkSize=15;
+
+
 wikidataEntityClassDataset//Clear
 wikidataEntityClassDataset[
   ids:{__String},
   limit_,
-  lang_
+  lang_,
+  verb_
   ]:=
    Module[
      {
        data,
        chunks,
-       chunkSize=5,
+       chunkSize=$wikiDataChunkSize,
        chunkData
        },
      chunks = Partition[ids, UpTo[chunkSize]];
      data=
-       wikidataQuery[
-         propertyQuery[ids, lang],
+       If[verb, wikidataQueryVerbose, wikidataQuery][
+         propertyQuery[#, lang],
          limit
          ]&/@chunks;
      If[AllTrue[data, AssociationQ],
@@ -391,8 +438,13 @@ wikidataEntityClassDataset[
     ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*$wikiDataProperties*)
+
+
+(* ::Text:: *)
+(*Iteratively scraped off of:*)
+(*  https://www.wikidata.org/wiki/Category:Wikidata:List_of_properties*)
 
 
 $propsURL=
@@ -405,7 +457,11 @@ $wikiDataProperties//Clear
 If[Length@OwnValues[$wikiDataProperties]==0,
 $wikiDataProperties:=
   $wikiDataProperties=
-    Association/@Import[$propsURL]
+    KeyMap[
+      StringRiffle@
+        StringSplit[StringTrim[#, "Wikidata_property"], "_"]&,
+      Association/@Import[$propsURL]
+      ]
 ];
 
 
@@ -419,7 +475,7 @@ wikidataRelatedStuff[baseData_, baseType_, subType_]:=
      With[{tag=#},
        KeyMap[tag<>":"<>#&, #2]
        ]&,
-      KeySelect[
+     KeySelect[
        #,
        StringContainsQ[subType]
        ]&/@KeySelect[baseData, StringContainsQ[baseType]]
@@ -437,7 +493,7 @@ wikidataRelatedStuff[baseData_, query_]:=
    ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*wikidataRelatedProps*)
 
 
@@ -498,7 +554,9 @@ WikiDataDataset//Clear
 Options[WikiDataDataset]=
   {
     "MaxItems"->1000,
-    "Language"->Automatic
+    "Language"->Automatic,
+    "Verbose"->False,
+    "ChunkSize"->15
     };
 WikiDataDataset[class_String, predicate:_String:"P31", ops:OptionsPattern[]]:=
   Module[
@@ -506,14 +564,19 @@ WikiDataDataset[class_String, predicate:_String:"P31", ops:OptionsPattern[]]:=
       limit=OptionValue["MaxItems"],
       lang=OptionValue["Language"],
       pred,
-      cls
+      cls,
+      verb=TrueQ@OptionValue["Verbose"],
+      chunks=OptionValue["ChunkSize"]
       },
     lang=Replace[lang, Automatic:>$Language];
     If[StringLength[lang]>2, lang=LanguageData[lang, "Codes"][[1]]];
     pred=getWikiType[predicate, "P", wikidataRelatedProps];
     cls=getWikiType[predicate, "Q", wikidataRelatedItems];
     If[StringQ[pred]&&StringQ[cls],
-      wikidataEntityClassDataset[cls, pred, limit, lang],
+      Block[
+        {$wikiDataChunkSize=chunks},
+        wikidataEntityClassDataset[cls, pred, limit, lang, verb]
+        ],
       Failure["BadQuery",
         <|
          "MessageTemplate"->"Can't process query for class `` and predicate ``",
@@ -526,22 +589,28 @@ WikiDataDataset[ids:{__String}, ops:OptionsPattern[]]:=
   Module[
     {
       limit=OptionValue["MaxItems"],
-      lang=OptionValue["Language"]
+      lang=OptionValue["Language"],
+      chunks=OptionValue["ChunkSize"],
+      verb=TrueQ@OptionValue["Verbose"]
       },
    lang=Replace[lang, Automatic:>$Language];
     If[StringLength[lang]>2, lang=LanguageData[lang, "Codes"][[1]]];
-    wikidataEntityClassDataset[ids, limit, lang]
+    Block[
+      {$wikiDataChunkSize=chunks},
+      wikidataEntityClassDataset[ids, limit, lang, verb]
+      ]
     ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*WikiDataClasses*)
 
 
 Options[WikiDataClasses]=
   {
     "MaxItems"->1000,
-    "Language"->Automatic
+    "Language"->Automatic,
+    "Verbose"->False
     };
 WikiDataClasses[predicate:_String:"P31", ops:OptionsPattern[]]:=
   Module[
@@ -549,14 +618,19 @@ WikiDataClasses[predicate:_String:"P31", ops:OptionsPattern[]]:=
       limit=OptionValue["MaxItems"],
       lang=OptionValue["Language"],
       pred,
-      cls
+      cls,
+      verb=TrueQ@OptionValue["Verbose"],
+      queryResults
       },
     lang=Replace[lang, Automatic:>$Language];
     If[StringLength[lang]>2, lang=LanguageData[lang, "Codes"][[1]]];
     pred=getWikiType[predicate, "P", wikidataRelatedProps];
     If[StringQ@pred,
       extractEntityIDs@
-        wikidataQuery[entityClassQuery@pred, limit],
+        If[verb,  
+          wikidataQueryVerbose,
+          wikidataQuery
+          ][entityQuery[cls, pred], limit],
       Failure["BadQuery",
         <|
          "MessageTemplate"->"Can't process query for predicate class ``",
@@ -579,7 +653,10 @@ WikiDataClasses[class_String, predicate_String, ops:OptionsPattern[]]:=
     cls=getWikiType[predicate, "Q", wikidataRelatedItems];
     If[StringQ[pred]&&StringQ[cls],
       extractEntityIDs@
-        wikidataQuery[entityQuery[cls, pred], limit],
+        If[verb,  
+          wikidataQueryVerbose,
+          wikidataQuery
+          ][entityQuery[cls, pred], limit],
       Failure["BadQuery",
         <|
          "MessageTemplate"->"Can't process query for class `` and predicate ``",
@@ -588,6 +665,28 @@ WikiDataClasses[class_String, predicate_String, ops:OptionsPattern[]]:=
         ]
       ]
     ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*WikiDataPredicates*)
+
+
+groupPreds[res_]:=
+  GroupBy[
+    Thread[{
+      StringSplit[Keys[res], ":"],
+      Values[res]
+      }],
+    #[[1, 1]]&->(#[[1, 2]]->#[[2]]&),
+    Association
+    ]
+
+
+WikiDataPredicates[pred_String]:=
+  wikidataRelatedProps[pred]
+WikiDataPredicates[baseType_String, pred_String]:=
+  groupPreds@
+    wikidataRelatedProps[baseType, pred]
 
 
 (* ::Subsubsection:: *)
