@@ -439,6 +439,53 @@ wikidataEntityClassDataset[
 
 
 (* ::Subsubsection::Closed:: *)
+(*wikiPropsScraping*)
+
+
+(*baseURL="https://www.wikidata.org/wiki/Category:Wikidata:List_of_properties";
+links:=Import[baseURL, "Hyperlinks"];
+propertyLists:=
+  Pick[
+    #,
+    StringMatchQ[
+      #,
+      "https://www.wikidata.org/wiki/Wikidata:List_of_properties/"~~end:Except["/"]../;end=!="Summary_table"
+      ]
+    ]&@links;
+scrapeProps[link_]:=
+  Module[
+    {
+      xml
+      },
+    xml=Import[link, {"HTML", "XMLObject"}];
+    Cases[
+      xml,
+      XMLElement[
+        "tr",
+        _,
+        {
+          ___,
+          XMLElement["td", _, 
+            {
+              ___,t_String, ___
+              }],
+          XMLElement["td", _, 
+            {___, XMLElement["a", _, {v_}], ___}
+            ],
+          ___
+          }
+        ]\[RuleDelayed]t\[Rule]v,
+      \[Infinity]
+      ]
+    ]
+pullListIDs[lists_]:=
+  AssociationThread[
+    URLParse[lists, "Path"][[All, -1]],
+    scrapeProps/@lists
+    ]*)
+
+
+(* ::Subsubsection::Closed:: *)
 (*$wikiDataProperties*)
 
 
