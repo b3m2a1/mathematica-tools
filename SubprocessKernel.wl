@@ -21,6 +21,8 @@ StartSubprocessREPL::usage="Starts the subprocess REPL";
 QuitSubprocessREPL::usage="Quites the subprocess REPL and closes the FE";
 $SubprocessREPLSettings::usage="Settings for the subprocess REPL";
 $OriginalParentLink::usage="The original parent link for the kernel";
+$UseCustomPreferencesPath::usage=
+  "Whether to set up the kernels via a change to the UserBaseDirectory"
 
 
 (* ::Subsection:: *)
@@ -28,6 +30,117 @@ $OriginalParentLink::usage="The original parent link for the kernel";
 
 
 Begin["`Private`"]
+
+
+$UseCustomPreferencesPath=True;
+
+
+$useCustomPreferencesPath:=TrueQ[$UseCustomPreferencesPath];
+
+
+(* ::Subsubsection::Closed:: *)
+(*createCleanFrontEndInit*)
+
+
+createCleanFrontEndInit[currInit_]:=
+  With[
+    {
+      arg=
+        TemplateApply[
+          "-LinkMode Connect -LinkProtocol SharedMemory -LinkName \"``\" -LinkOptions 256",
+          $SubprocessKernelName<>$SubprocessKernelExtension
+          ],
+      skname=$SubprocessKernelName
+      },
+    Module[
+      {
+        prefsHold
+        },
+      prefsHold=
+        Join[
+          Hold[
+            Evaluator -> skname,
+            EvaluatorNames ->
+             {
+               skname->{
+                 "AutoStartOnLaunch"->False,
+                 "MLOpenArguments"->arg
+                 }
+              }
+            ],
+          currInit,
+          Hold[
+            PreferencesPath->
+              {
+                FrontEnd`FileName[{$UserBaseDirectory,"FrontEnd"}],
+                FrontEnd`FileName[{$BaseDirectory,"FrontEnd"}],
+                FrontEnd`FileName[{$InstallationDirectory,"Configuration","FrontEnd"}],
+                FrontEnd`FileName[{$InstallationDirectory,"SystemFiles","FrontEnd"}]
+                }
+            ]
+          ];
+      Thread[
+        DeleteDuplicatesBy[
+          Function[Null, #[[1, 1]], HoldAllComplete]
+          ]@Apply[List, Hold/@prefsHold],
+        Hold
+        ]
+      ]
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*createCustomPrefs*)
+
+
+createCustomPrefs[fakePrefsDir_]:=
+  With[
+     {
+      currPrefs=
+        Quiet@Block[
+          {  
+            SetOptions=Hold, 
+            $ContextPath={"System`", "FrontEnd`Private`"}, 
+            $Context="FrontEnd`Private`"
+            },
+          Get@FileNameJoin@{$UserBaseDirectory, "FrontEnd", "init.m"}
+          ][[2;;]]
+      },
+    CreateDirectory[FileNameJoin@{fakePrefsDir, "FrontEnd"}];
+    CopyDirectory[
+      FileNameJoin@{$UserBaseDirectory, "Licensing"},
+      FileNameJoin@{fakePrefsDir, "Licensing"}
+      ];
+    Replace[
+      createCleanFrontEndInit[currPrefs],
+      Hold[specs__]:>
+        Put[
+          Unevaluated@
+            SetOptions[
+              $FrontEnd,
+              {
+                specs
+                }
+              ],
+          FileNameJoin@{fakePrefsDir, "FrontEnd", "init.m"}
+          ]
+      ];
+    Import[FileNameJoin@{fakePrefsDir, "FrontEnd", "init.m"}, "Text"];
+    ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*startSubprocessKernel*)
+
+
+startSubprocessKernel[]:= 
+  If[!MatchQ[$SubprocessKernel, _LinkObject?(Quiet[BooleanQ@LinkReadyQ[#]]&)],
+    $subprocessKernelName=
+      $SubprocessKernelName<>$SubprocessKernelExtension;
+    $SubprocessKernel=
+      Quiet@logDebugEcho@LinkCreate[$subprocessKernelName, "LinkMode"->Listen];,
+    $SubprocessKernel
+    ];
 
 
 (* ::Subsubsection::Closed:: *)
@@ -39,24 +152,37 @@ Begin["`Private`"]
 
 
 startSubprocessFrontEnd[]:=
-  If[Quiet[$FrontEnd[[1]]=!=$SubprocessFrontEnd||!BooleanQ@LinkReadyQ[$SubprocessFrontEnd]],
-    
-    Quiet@LinkClose[$SubprocessFrontEnd];
-    UsingFrontEnd;
-    launchFECommand=
-      System`UseFrontEndDump`Command["Server"->False]<>
-        Map[
-          {" ", #1}&, 
-          Join[
-            System`UseFrontEndDump`Flags["Server"->False],
-            {"-wstp", "-nogui"}
-            ]
-          ]//logDebugEcho;
-    
-    $SubprocessFrontEnd=LinkLaunch[launchFECommand];
-    
-    MathLink`SetFrontEnd[$SubprocessFrontEnd];
-    MathLink`CreateFrontEndLinks[];
+  If[Quiet[$FrontEnd[[1]]=!=logDebugEcho@$SubprocessFrontEnd||!BooleanQ@LinkReadyQ[$SubprocessFrontEnd]],
+    Module[
+      {
+        fakePrefsDir=CreateDirectory[]
+        },
+      If[$useCustomPreferencesPath,
+        createCustomPrefs[fakePrefsDir],
+        DeleteDirectory@fakePrefsDir
+        ];
+      Quiet@LinkClose[$SubprocessFrontEnd];
+      UsingFrontEnd;
+      launchFECommand=
+        System`UseFrontEndDump`Command["Server"->False]<>
+          Map[
+            {" ", #1}&, 
+            Join[
+              System`UseFrontEndDump`Flags["Server"->False],
+              {"-wstp", "-nogui", 
+                If[$useCustomPreferencesPath, 
+                  "-preferencesDirectory '"<>fakePrefsDir<>"'",
+                  Nothing
+                  ]
+                }
+              ]
+            ]//logDebugEcho;
+      
+      $SubprocessFrontEnd=LinkLaunch[launchFECommand];
+      
+      MathLink`SetFrontEnd[$SubprocessFrontEnd];
+      MathLink`CreateFrontEndLinks[];
+      ]
     ];
 
 
@@ -75,20 +201,6 @@ If[!StringQ@$SubprocessKernelExtension,
 
 
 (* ::Subsubsection::Closed:: *)
-(*startSubprocessKernel*)
-
-
-startSubprocessKernel[]:= 
-  If[!MatchQ[$SubprocessKernel, _LinkObject?(Quiet[BooleanQ@LinkReadyQ[#]]&)],
-    $subprocessKernelName=
-      $SubprocessKernelName<>$SubprocessKernelExtension;
-    $SubprocessKernel=
-      Quiet@logDebugEcho@LinkCreate[$subprocessKernelName, "LinkMode"->Listen];,
-    $SubprocessKernel
-    ];
-
-
-(* ::Subsubsection::Closed:: *)
 (*configureSubprocessFrontEnd*)
 
 
@@ -97,25 +209,35 @@ startSubprocessKernel[]:=
 
 
 configureSubprocessFrontEnd[]:=
-  MathLink`FrontEndBlock[
-    $cachedKernelConfiguration=
-      logDebugEcho@
-        CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}];
-    CurrentValue[$FrontEndSession, 
-      {EvaluatorNames, "Local", "AutoStartOnLaunch"}
-      ] = False;
-    CurrentValue[$FrontEndSession,  
-      {EvaluatorNames, $SubprocessKernelName}
-      ]=
-     {
-      "AutoStartOnLaunch"->False,
-      "MLOpenArguments"->
+  With[
+    {
+      mlOpen=
         TemplateApply[
-          "-LinkMode Connect -LinkProtocol SharedMemory -LinkName \"``\" -LinkOptions 256",
+          "-LinkMode Connect -LinkProtocol SharedMemory\
+ -LinkName \"``\" -LinkOptions 256",
           $subprocessKernelName
           ]
-      };,
-   $SubprocessFrontEnd
+      },
+    MathLink`FrontEndBlock[
+      $cachedKernelConfiguration=
+        logDebugEcho@
+          CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}];
+      If[
+        CurrentValue[$FrontEndSession, 
+          {EvaluatorNames, "Local", "MLOpenArguments"}]=!=mlOpen//logDebugEcho,
+        FrontEndExecute@FrontEnd`EvaluatorQuit["Local"];
+        CurrentValue[$FrontEndSession, Evaluator] = $SubprocessKernelName;
+        CurrentValue[$FrontEndSession,  
+          {EvaluatorNames, $SubprocessKernelName}
+          ]=
+         {
+          "AutoStartOnLaunch"->False,
+          "MLOpenArguments"->mlOpen
+          };
+         CurrentValue[$FrontEndSession, EvaluatorNames]
+        ],
+     $SubprocessFrontEnd
+     ]
    ]
 
 
@@ -254,7 +376,7 @@ doAsync:=
     ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*manageKernelConnections*)
 
 
@@ -613,7 +735,7 @@ subprocessNonBlockingREPL[]:=
 
 
 (* ::Text:: *)
-(*Starts the REPL based on the settings*)
+(*Starts the REPL based on the settings. Killing the automatically started Local kernel is probably the hardest part of this...*)
 
 
 StartSubprocessREPL[]:=
@@ -633,9 +755,11 @@ StartSubprocessREPL[]:=
         ];
     $Line=1;
     startSubprocessFrontEnd[];
-    logDebugEcho@startSubprocessKernel[];
-    FrontEndExecute@
-      FrontEnd`EvaluatorStart[logEcho@$SubprocessKernelName];
+    startSubprocessKernel[];
+    If[ListQ@CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}],
+      FrontEndExecute@
+        FrontEnd`EvaluatorStart[$SubprocessKernelName]
+      ];
     If[blocking,
       TimeConstrained[
         logDebugEcho@LinkWrite[$SubprocessKernel, InputNamePacket["In[1]:="]],
@@ -687,7 +811,7 @@ OpenSubprocessNotebook[retry:True|False:True]:=
    res=
      CreateDocument[{}, 
       {
-        If[$SubprocessKernelName=!="Local",
+        If[ListQ@CurrentValue[$FrontEndSession, {EvaluatorNames, $SubprocessKernelName}],
           Evaluator->$SubprocessKernelName,
           Nothing
           ]
