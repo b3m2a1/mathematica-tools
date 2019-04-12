@@ -143,7 +143,7 @@ fileNameSplit[f_]:=
    ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Load Data*)
 
 
@@ -466,7 +466,7 @@ clearCachedDocumentationData[key:_String:"SystemDocs", localBase_:Automatic] :=
   Quiet@DeleteFile@cacheFind[key, localBase];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Docs Metadata Dataset*)
 
 
@@ -560,7 +560,7 @@ helpBrowserDS[
      ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Autocomplete*)
 
 
@@ -640,7 +640,7 @@ helpBrowserNameSearch[key:_String:"SystemDocs", browser_, name_, type_:"Symbol"]
     ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PacletLookup*)
 
 
@@ -687,7 +687,7 @@ helpBrowserPacletLookup[key:_String:"SystemDocs", browser_ ,pacletURI_]:=
     ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*HelpLookup*)
 
 
@@ -700,7 +700,7 @@ helpLookup[key:_String:"SystemDocs", s_String, ops___?OptionQ]:=
    s]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*HelpBrowserSearch*)
 
 
@@ -716,7 +716,7 @@ helpBrowserSearch[key:_String:"SystemDocs", browser_, name_, type_:"Symbol"]:=
   ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Styles*)
 
 
@@ -771,7 +771,7 @@ Notebook[{
  ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PanePicker*)
 
 
@@ -959,7 +959,7 @@ helpBrowserSetNotebook[
 helpBrowserSetNotebook~SetAttributes~HoldRest
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Old Set*)
 
 
@@ -1059,7 +1059,7 @@ helpBrowserSetNotebookOld[
 helpBrowserSetNotebookOld~SetAttributes~HoldRest
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*ResizeBar*)
 
 
@@ -1113,7 +1113,7 @@ helpBrowserResizeBar[
 helpBrowserResizeBar~SetAttributes~HoldAll;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*SearchIcon*)
 
 
@@ -1133,7 +1133,7 @@ $helpBrowserSearchIcon=
    }]@ToExpression@FrontEndResource["FEBitmaps","SearchIcon"];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*XIcon*)
 
 
@@ -1148,7 +1148,7 @@ $helpBrowserXIcon=
     };
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Docked Cell*)
 
 
@@ -2026,7 +2026,7 @@ OpenHelpBrowser[
     ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*HelpPagesSearch*)
 
 
