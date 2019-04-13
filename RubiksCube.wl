@@ -28,17 +28,18 @@ InterfaceMethod[RubiksCube]@
     twistRubik[r, theta, axis];
 
 
-constructRubiksCube[ops:OptionsPattern[]]:=
-  Merge[
-    {
-      ops,
-      "Size"->1.,
-      "Origin"->{0., 0., 0.},
-      "Colors"->{Black, Red, Orange, Blue, Green, Yellow, White},
-      "Cuboids"->setupCuboids[]
-      },
-    First
-    ];
+constructRubiksCube//Clear
+constructRubiksCube[ops___]:=
+  Merge[{#, "Cuboids"->setupCuboids[#["Size"]]}, First]&@
+    Merge[
+      {
+        ops,
+        "Size"->3,
+        "Origin"->{0., 0., 0.},
+        "Colors"->{Black, Red, Orange, Blue, Green, Yellow, White}
+        },
+      First
+      ];
 
 
 RegisterInterface[
@@ -54,26 +55,21 @@ cindices=
     {8,4,2,6},{8,6,5,7},{8,7,3,4},
     {4,3,1,2},{1,3,7,5},{2,1,5,6}
     };
-getVertList[spacing_:.05]:=
+getVertList[size_, spacing_:.05]:=
   {
     {-(1/2),-(1/2),-(1/2)},{-(1/2),-(1/2),1/2},{-(1/2),1/2,-(1/2)},
     {-(1/2),1/2,1/2},{1/2,-(1/2),-(1/2)},{1/2,-(1/2),1/2},
     {1/2,1/2,-(1/2)},{1/2,1/2,1/2}
     }*(1-spacing);
-cindices=
-  {
-    {8,4,2,6},{8,6,5,7},{8,7,3,4},
-    {4,3,1,2},{1,3,7,5},{2,1,5,6}
-    };
 makeRubiksCuboid[cols_, center_]:=
   <|
     "Coordinates"->Map[#+center&, getVertList[]],
     "ColorIndices"->cols
     |>;
 makeCuboidGraphic[parent_, cuboid_]:=
-  With[{o=parent@"Origin", size=parent@"Size"},
+  With[{o=parent@"Origin"},
     GraphicsComplex[
-      #+o&/@size*cuboid["Coordinates"],
+      #+o&/@cuboid["Coordinates"],
       MapThread[
         {FaceForm[#1], Polygon[#2]}&,
         {
@@ -89,27 +85,81 @@ InterfaceMethod[RubiksCuboid]@
 
 
 (* handles cube coloring *)
-stickerPos=
+stickerPos//Clear;
+stp[111]={0,0,0,1,5,3}; stp[112]={6,0,0,1,0,3};
+stp[121]={0,0,4,1,5,0}; stp[122]={6,0,4,1,0,0};
+stp[211]={0,2,0,0,5,3}; stp[212]={6,2,0,0,0,3};
+stp[221]={0,2,4,0,5,0}; stp[222]={6,2,4,0,0,0};
+stickerPos[2]=
   {
     (* back: {0,0,0,1,0,0} *)
-    {{{0,0,0,1,5,3},{0,0,0,1,0,3},{6,0,0,1,0,3}},
-    {{0,0,0,1,5,0},{0,0,0,1,0,0},{6,0,0,1,0,0}},
-    {{0,0,4,1,5,0},{0,0,4,1,0,0},{6,0,4,1,0,0}}},
-    (* middle, {0,0,0,0,0,0} *)
-    {{{0,0,0,0,5,3},{0,0,0,0,0,3},{6,0,0,0,0,3}},
-    {{0,0,0,0,5,0},{0,0,0,0,0,0},{6,0,0,0,0,0}},
-    {{0,0,4,0,5,0},{0,0,4,0,0,0},{6,0,4,0,0,0}}},
+    {
+      {stp[111],stp[112]},
+      {stp[121],stp[122]}
+      },
     (* front, {0,2,0,0,0,0} *)
-    {{{0,2,0,0,5,3},{0,2,0,0,0,3},{6,2,0,0,0,3}},
-    {{0,2,0,0,5,0},{0,2,0,0,0,0},{6,2,0,0,0,0}},
-    {{0,2,4,0,5,0},{0,2,4,0,0,0},{6,2,4,0,0,0}}}
+    {
+      {stp[211],stp[212]},
+      {stp[221],stp[222]}
+      }
     };
-originalCenters = Outer[List,{-1,0,1},{-1,0,1},{-1,0,1}];
-setupCuboids[]:=
+stp[113]={0,0,0,1,0,3};
+stp[131]={0,0,0,1,5,0}; stp[132]={0,0,0,1,0,0}; stp[133]={6,0,0,1,0,0};
+stp[123]={0,0,4,1,0,0};
+{
+  {stp[311], stp[312], stp[313]},
+  {stp[321], stp[322], stp[323]},
+  {stp[331], stp[332], stp[333]}
+  } = {
+    {{0,0,0,0,5,3},{0,0,0,0,0,3},{6,0,0,0,0,3}},
+    {{0,0,0,0,5,0},{0,0,0,0,0,0},{6,0,0,0,0,0}},
+    {{0,0,4,0,5,0},{0,0,4,0,0,0},{6,0,4,0,0,0}}
+    };
+stp[213]={0,2,0,0,0,3};
+stp[231]={0,2,0,0,5,0}; stp[232]={0,2,0,0,0,0}; stp[233]={6,2,0,0,0,0};
+stp[223]={0,2,4,0,0,0};
+reep[e_, n_]:=
+  Sequence@@ConstantArray[e, n-2]
+reep[n_][e_]:=
+  reep[e, n];
+stickerPos[n_?(#>2&)]:=
+  {
+    (* back: {0,0,0,1,0,0} *)
+    {
+      {stp[111], stp[113]//reep[n], stp[112]},
+      {stp[131], stp[132]//reep[n], stp[133]}//reep[n],
+      {stp[121], stp[123]//reep[n], stp[122]}
+    },
+    (* middle, {0,0,0,0,0,0} *)
+    {
+      {stp[311], stp[312]//reep[n], stp[313]},
+      {stp[321], stp[322]//reep[n], stp[323]}//reep[n],
+      {stp[331], stp[332]//reep[n], stp[333]}
+      }//reep[n],
+    (* front, {0,2,0,0,0,0} *)
+    {
+      {stp[211], stp[213]//reep[n], stp[212]},
+      {stp[231], stp[232]//reep[n], stp[233]}//reep[n],
+      {stp[221], stp[223]//reep[n], stp[222]}
+    }
+   };
+
+
+originalCenters//Clear;
+originalCenters[n_?(#>1&)] := 
+  Outer[List, #, #, #]&@
+    If[EvenQ[n],
+      Range[-n/2, (n/2)-1]+.5,
+      Range[-Floor[n/2], Floor[n/2]]
+      ];
+
+
+setupCuboids//Clear;
+setupCuboids[size_]:=
   With[
     {
-      stickers = 1+stickerPos, 
-      origins = originalCenters
+      stickers = 1+stickerPos[size], 
+      origins = originalCenters[size]
       },
     MapThread[
       RubiksCuboid[#, #2]&,
@@ -123,7 +173,7 @@ showRubik//Clear
 showRubik[cube_RubiksCube, ops:OptionsPattern[]]:=
   Graphics3D[
     #@"Show"[cube]&/@Flatten[cube["Cuboids"]],
-    PlotRange->cube["Size"]*2+.1,
+    PlotRange->Ceiling[(cube["Size"]/2)]+.1,
     SphericalRegion->True,
     Boxed->False,
     BaseStyle->{12},
@@ -152,16 +202,20 @@ setPos[cub_, pos_]:=
     ]
 
 
-With[{allPositions=Round[Flatten[originalCenters+2, 2]]},
-
-twistRubik[cube_, theta_, face:"Back"|"Front"|"Left"|"Right"|"Down"|"Up"]:=
+twistRubik[cube_, theta_, face_]:=
   Module[
     {
       mp, 
       pos = Map[#["Coordinates"]&, cube["Cuboids"], {3}],
-      module 
+      module,
+      s = cube["Size"],
+      allPositions,
+      numbering
       },
-    mp=Flatten[permList[face],1];
+    allPositions=
+      Round[Flatten[If[EvenQ[s], .5, 1]+originalCenters[s]+Floor[s/2], 2]];
+    numbering=AssociationThread[allPositions, Range[Length[allPositions]]];
+    mp=Flatten[permList[s, face], 1];
     pos=
       Join[
         Extract[pos, Complement[allPositions, mp]],
@@ -169,13 +223,13 @@ twistRubik[cube_, theta_, face:"Back"|"Front"|"Left"|"Right"|"Down"|"Up"]:=
         ];
     pos = 
       ArrayReshape[
-        pos[[Ordering[Join[Complement[allPositions, mp], mp]]]], 
-        {3, 3, 3, 8, 3}
+        pos[[
+          Ordering@Lookup[numbering, Key/@Join[Complement[allPositions, mp], mp]]
+          ]], 
+        {s, s, s, 8, 3}
         ];
     setPos[cube, pos]
     ];
-    
-]
 
 
 (* ::Text:: *)
@@ -183,33 +237,52 @@ twistRubik[cube_, theta_, face:"Back"|"Front"|"Left"|"Right"|"Down"|"Up"]:=
 
 
 (* cube permutation data *)
-perms=
-  <|
-    "Back"->
+perms//Clear
+basePerm[row_, type_, m_, s_]:=
+   {
+    Sequence@@
+      Flatten[
+        Table[
+          Table[
+            With[{s2=s-(n-1), p2=p-n},
+              {
+                {row, p, n}, {row, s2, p}, 
+                {row, (s2-p2), s2}, {row, n, (s2-p2)}
+                }
+              ],
+            {p, n, s-n}
+            ],
+          {n, Floor[s/2]}
+          ],
+        1
+        ][[All, All, RotateRight[{1, 2, 3}, type-1]]],
+    If[OddQ[s], {{1, m, m}}, Nothing]
+    };
+perms[size_]:=
+  perms[size]=
+    Module[
       {
-        {{1,1,1},{1,3,1},{1,3,3},{1,1,3}},
-        {{1,2,1},{1,3,2},{1,2,3},{1,1,2}},
-        {{1,2,2}}
-        },
-    "Left"->
-      {
-        {{1,1,1},{1,1,3},{3,1,3},{3,1,1}},
-        {{2,1,1},{1,1,2},{2,1,3},{3,1,2}},
-        {{2,1,2}}
-        },
-    "Down"->
-      {
-        {{1,1,1},{3,1,1},{3,3,1},{1,3,1}},
-        {{2,1,1},{3,2,1},{2,3,1},{1,2,1}},
-        {{2,2,1}}
-        }
-    |>;
-perms["Front"]=
-  Reverse/@perms["Back"]/.{1,y_,z_}:>{3,y,z};
-perms["Right"]=
-  Reverse/@perms["Left"]/.{x_,1,z_}:>{x,3,z};
-perms["Up"]=
-  Reverse/@perms["Down"]/.{x_,y_,1}:>{x,y,3};
+       m=Ceiling[size/2], s=size,
+       baseAss
+       },
+       baseAss=
+        AssociationMap[
+          basePerm[#[[2]], Replace[#[[1]], {"X"->1, "Y"->2, "Z"->3}], m, s]&,
+          Tuples[
+            {
+              {"X", "Y", "Z"},
+              Range[size]
+              }
+            ]
+          ];
+       baseAss["Back"] = baseAss[{"X", 1}];
+       baseAss["Left"] = baseAss[{"Y", 1}];
+       baseAss["Down"] = baseAss[{"Z", 1}];
+       baseAss["Front"]= Reverse/@baseAss[{"X", size}];
+       baseAss["Right"]= Reverse/@baseAss[{"Y", size}];
+       baseAss["Up"]= Reverse/@baseAss[{"Z", size}];
+       baseAss
+       ];
 
 
 (* cube axis data *)
@@ -224,18 +297,32 @@ axes["Right"]=-axes["Left"];
 axes["Up"]=-axes["Down"];
 
 
+axisVec[k_]:=
+  Lookup[axes, Key[k], None];
+axisVec[{"X", _}]:=
+  axes["Back"];
+axisVec[{"Y", _}]:=
+  axes["Left"];
+axisVec[{"Z", _}]:=
+  axes["Down"];
+
+
 rotMat[key_]:=
-  If[KeyExistsQ[axes, key],
-    RotationMatrix[Pi/2., axes[key]],
-    Identity
+  Replace[axisVec[key],
+    {
+      None:>IdentityMatrix[3],
+      ax_:>RotationMatrix[Pi/2., ax]
+      }
     ];
 rotMat[key_, a_]:=
-  If[KeyExistsQ[axes, key],
-    RotationMatrix[a, axes[key]],
-    Identity
+  Replace[axisVec[key],
+    {
+      None:>IdentityMatrix[3],
+      ax_:>RotationMatrix[a, ax]
+      }
     ];
-permList[key_]:=
-  Lookup[perms, key, {}];
+permList[size_, key_]:=
+  Lookup[perms[size], Key@key, {}];
 
 
 apply[mat_, coords_]:=
@@ -251,8 +338,8 @@ permute[clist_, rot_, tensor_]:=
     tensor,
     clist
     ];
-twist[move_, cube_]:=permute[permList[move], rotMat[move],cube];
-turn[move_, \[Alpha]_, part_]:=apply[rotMat[move, \[Alpha]],#]&/@part;
+twist[move_, cube_]:=permute[permList[cube["Size"], move], rotMat[move],cube];
+turn[move_, \[Alpha]_, part_]:=apply[rotMat[move, \[Alpha]], #]&/@part;
 
 
 End[];
