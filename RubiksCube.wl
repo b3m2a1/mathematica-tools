@@ -173,7 +173,7 @@ showRubik//Clear
 showRubik[cube_RubiksCube, ops:OptionsPattern[]]:=
   Graphics3D[
     #@"Show"[cube]&/@Flatten[cube["Cuboids"]],
-    PlotRange->Ceiling[(cube["Size"]/2)]+.1,
+    PlotRange->Sqrt[2]*Ceiling[(cube["Size"]/2)],
     SphericalRegion->True,
     Boxed->False,
     BaseStyle->{12},
