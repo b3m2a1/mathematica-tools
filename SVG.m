@@ -1491,10 +1491,128 @@ Rotate[g_, q_]:=
 
 
 alias@
-Annotation[a_, d_, ___]:=
+Annotation[a_, d_, e___]:=
   toSVGCore[a,
-    {"AnnotationData"->d}
+    Flatten@{"AnnotationData"->d, e}
     ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*Paths*)
+
+
+
+(* ::Subsubsubsubsection::Closed:: *)
+(*cleanPathCoords*)
+
+
+
+cleanPathCoords//Clear
+cleanPathCoords[d_String, view_, cbs_]:=
+  Module[
+    {
+      vb = 
+        ToExpression@StringSplit@
+          Lookup[view, "viewbox", Lookup[view, "viewBox"]],
+      wh = ToExpression@StringTrim[Lookup[view, {"width", "height"}], "pt"],
+      shifts,
+      scales,
+      crd1 = StringCases[d, NumberString~~" "~~NumberString],
+      crdLists,
+      crd2,
+      crd3,
+      cb2
+      },
+    crdLists = Map[Internal`StringToDouble, StringSplit[crd1], {2}];
+    cb2 = CoordinateBounds[crdLists];
+    shifts = {cb2[[All, 1]], cbs[[All, 1]]};
+    scales = (Subtract@@Transpose[cbs]//Abs)/(Subtract@@Transpose[cb2]//Abs);
+    crd2=
+      adjustCoord@
+        Map[
+          scales*(#-shifts[[1]])+shifts[[2]]&,
+          crdLists
+          ];
+    crd2 = adjustCoordC[crd2, $svgPlotRange, {1, 1}];
+    crd3=
+      Map[
+        #[[1]]<>" "<>#[[2]]&,
+        StringTake[StringPadRight[#, 8, "0"], 8]&/@
+          Map[Internal`DoubleToString, crd2, {2}]
+        ];
+    StringReplace[d, Thread[crd1->crd3]]
+    ]
+
+
+(* ::Subsubsubsubsection::Closed:: *)
+(*parsePathStyles*)
+
+
+
+parsePathStyles//Clear
+parsePathStyles[styles_String]:=
+  "style"->
+    StringRiffle[
+      Replace[
+        Map[StringTrim, StringSplit[StringSplit[styles, ";"], ":"]],
+        {
+          {k:("fill-rule"|"stroke"), r_}:>(k<>":"<>r),
+          _->Nothing
+          },
+        1
+        ],
+      ";"
+      ]<>";";
+parsePathStyles[_]:=Nothing
+
+
+(* ::Subsubsubsubsection::Closed:: *)
+(*Path Elements*)
+
+
+
+alias@
+(h:FilledCurve|BezierCurve|JoinedCurve)[a:Except[_?OptionQ]..., ops:opsPat[]]:=
+  Module[
+    {
+      coordlists=Cases[a, {_?NumericQ, _?NumericQ}, Infinity],
+      cbs,
+      ims
+    },
+    cbs = CoordinateBounds[coordlists];
+    FirstCase[
+      ImportString[
+        ExportString[
+          Graphics[
+            h[a],
+            PlotRange->cbs,
+            ImageSize->(Subtract@@Transpose[cbs]//Abs)
+            ],
+          "SVG"
+          ],
+        "XML"
+        ],
+      XMLElement["svg", view_, p_]:>
+        FirstCase[p,
+          XMLElement["path", data_, _]:>
+            svgPath[
+              cleanPathCoords[
+                Lookup[data, "d"],
+                view,
+                cbs
+                ], 
+              Flatten@{
+                ops,
+                parsePathStyles[Lookup[data, "style"]]
+                }
+              ],
+          Nothing,
+          Infinity
+          ],
+      Nothing,
+      Infinity
+      ]
+    ]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1539,12 +1657,16 @@ ToSVG[g_Graphics,
         scalingFactors,
         g2,
         svgBody,
-        defs
+        defs,
+        opr
         },
-      {pr, viewbox, imsize, scalingFactors, g2}=
+      {pr, viewbox, imsize, scalingFactors, g2,
+        opr
+        }=
         prepareSVGGraphics[g, ops];
       Block[
         {
+          $origPlotRange=opr,
           $svgPlotRange=pr,
           $svgViewBox=viewbox,
           $svgViewSize=imsize,
@@ -1602,11 +1724,13 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       $$,
       asp,
       scalingFactors,
-      gpr
+      gpr,
+      opr, oim
       },
     asp=getAspRat[opp];
     imsize=getImSize[opp, asp];
     gpr=getPlotRange@g;
+    opr=gpr;
     viewbox=Flatten@Transpose@gpr;
     prpad=getPlotRangePad[opp];
     {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
@@ -1622,7 +1746,8 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       gpr, 
       Flatten@{Floor[viewbox[[;;2]]], Ceiling@viewbox[[3;;4]]}, 
       imsize, scalingFactors, 
-      ReplacePart[g, 1->{extra, First@g}]
+      ReplacePart[g, 1->{extra, First@g}],
+      opr
       }
     ]
 
@@ -2035,11 +2160,18 @@ canonicalizeDirective[EdgeForm[x_], targ_]:=
   Block[{$svgLineType=True},
     canonicalizeDirective[x, targ]
     ];
-canonicalizeDirective[r:_Rule|_RuleDelayed, _]:=
+canonicalizeDirective[
+  r:(Rule|RuleDelayed)[op:Except[_FaceForm|_EdgeForm], val_],
+  _
+  ]:=
   If[$svgLineType, 
-    Evaluate[EdgeForm[r[[1]]]->r[[2]]],
-    Evaluate[FaceForm[r[[1]]]->r[[2]]]
+    EdgeForm[op]->val,
+    FaceForm[op]->val
     ];
+canonicalizeDirective[
+  r:(_Rule|_RuleDelayed),
+  _
+  ]:=r
 canonicalizeDirective[dirs:{$basicDirectives..}, targ_]:=
   Apply[Directive, canonicalizeDirective[#, targ]&/@dirs];
 canonicalizeDirective[(head:Except[List])[x_, ___], _]:=
