@@ -1189,13 +1189,13 @@ Currently directives have to be manually passed down but this isn\[CloseCurlyQuo
 
 adjustCoordC=
   Compile[
-    {{xy, _Real, 1}, {pr, _Real, 2}, {scaling, _Real, 1}},
-    {xy[[1]]*scaling[[1]], pr[[2, 2]]-(scaling[[2]]*xy[[2]]-pr[[2, 1]])},
+    {{xy, _Real, 1}, {pr, _Real, 2}, {scaling, _Real, 1}, {shift, _Real, 1}},
+    {xy[[1]]*scaling[[1]], pr[[2, 2]]-(scaling[[2]]*xy[[2]]-pr[[2, 1]])}-shift,
     RuntimeOptions->"Speed",
     RuntimeAttributes->{Listable}
     ];
 adjustCoord[blah_]:=
-  adjustCoordC[blah, $svgPlotRange, $svgScaling]
+  adjustCoordC[blah, $svgPlotRange, $svgScaling, $svgViewShift]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1528,12 +1528,14 @@ cleanPathCoords[d_String, view_, cbs_]:=
     shifts = {cb2[[All, 1]], cbs[[All, 1]]};
     scales = (Subtract@@Transpose[cbs]//Abs)/(Subtract@@Transpose[cb2]//Abs);
     crd2=
-      adjustCoord@
-        Map[
-          scales*(#-shifts[[1]])+shifts[[2]]&,
-          crdLists
-          ];
-    crd2 = adjustCoordC[crd2, $svgPlotRange, {1, 1}];
+      Block[{$svgViewShift={1, -1}*$svgViewShift},
+        adjustCoord@
+          Map[
+            scales*(#-shifts[[1]])+shifts[[2]]&,
+            crdLists
+            ]
+        ];
+    crd2 = adjustCoordC[crd2, $svgPlotRange, {1, 1}, {0, 0}];
     crd3=
       Map[
         #[[1]]<>" "<>#[[2]]&,
@@ -1658,16 +1660,18 @@ ToSVG[g_Graphics,
         g2,
         svgBody,
         defs,
-        opr
+        opr,
+        viewshift
         },
       {pr, viewbox, imsize, scalingFactors, g2,
-        opr
+        opr, viewshift
         }=
         prepareSVGGraphics[g, ops];
       Block[
         {
           $origPlotRange=opr,
           $svgPlotRange=pr,
+          $svgViewShift=viewshift,
           $svgViewBox=viewbox,
           $svgViewSize=imsize,
           $svgScaling=scalingFactors
@@ -1689,7 +1693,7 @@ ToSVG[g_Graphics,
             "viewbox"->StringRiffle@Map[toNotStupidString]@viewbox,
             (*"preserveAspectRatio"\[Rule]"none",*)
             "version"->"1.1",
-            {"http://www.w3.org/2000/xmlns/","xmlns"}->"http://www.w3.org/1999/xhtml"
+            {"http://www.w3.org/2000/xmlns/","xmlns"}->"http://www.w3.org/2000/svg"
             },
           If[Length@defs>0,
             Prepend@XMLElement["defs",
@@ -1715,6 +1719,7 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
     {
       opp=Flatten@{ops, Options[g]},
       imsize,
+      viewboxBase,
       viewbox,
       pr,
       prpad,
@@ -1725,7 +1730,7 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       asp,
       scalingFactors,
       gpr,
-      opr, oim
+      opr, oim, viewshift
       },
     asp=getAspRat[opp];
     imsize=getImSize[opp, asp];
@@ -1740,6 +1745,9 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       {$$, viewbox}=getViewBox[viewbox, {Scaled[.10], Scaled[0]}, imsize];
       ];
     viewbox*=Join[scalingFactors, scalingFactors];
+    viewboxBase=viewbox;
+    viewshift=viewboxBase[[;;2]];
+    viewbox={0, 0, viewbox[[3]], viewbox[[4]]};
     gpr*=scalingFactors;
     imsize=Ceiling@(viewbox[[3;;4]]);
     {
@@ -1747,7 +1755,7 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       Flatten@{Floor[viewbox[[;;2]]], Ceiling@viewbox[[3;;4]]}, 
       imsize, scalingFactors, 
       ReplacePart[g, 1->{extra, First@g}],
-      opr
+      opr, viewshift
       }
     ]
 

@@ -2567,30 +2567,34 @@ Cell[BoxData[{
        RowBox[{"{", 
         RowBox[{"pr", ",", " ", "_Real", ",", " ", "2"}], "}"}], ",", " ", 
        RowBox[{"{", 
-        RowBox[{"scaling", ",", " ", "_Real", ",", " ", "1"}], "}"}]}], "}"}],
-      ",", "\n", "\t\t", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"xy", "[", 
-         RowBox[{"[", "1", "]"}], "]"}], "*", 
-        RowBox[{"scaling", "[", 
-         RowBox[{"[", "1", "]"}], "]"}]}], ",", " ", 
-       RowBox[{
-        RowBox[{"pr", "[", 
-         RowBox[{"[", 
-          RowBox[{"2", ",", " ", "2"}], "]"}], "]"}], "-", 
-        RowBox[{"(", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"scaling", "[", 
-            RowBox[{"[", "2", "]"}], "]"}], "*", 
-           RowBox[{"xy", "[", 
-            RowBox[{"[", "2", "]"}], "]"}]}], "-", 
-          RowBox[{"pr", "[", 
-           RowBox[{"[", 
-            RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], ")"}]}]}], "}"}], 
+        RowBox[{"scaling", ",", " ", "_Real", ",", " ", "1"}], "}"}], ",", 
+       " ", 
+       RowBox[{"{", 
+        RowBox[{"shift", ",", " ", "_Real", ",", " ", "1"}], "}"}]}], "}"}], 
      ",", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"xy", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "*", 
+         RowBox[{"scaling", "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"pr", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", " ", "2"}], "]"}], "]"}], "-", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"scaling", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], "*", 
+            RowBox[{"xy", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], "-", 
+           RowBox[{"pr", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ",", " ", "1"}], "]"}], "]"}]}], ")"}]}]}], "}"}], 
+      "-", "shift"}], ",", "\n", "\t\t", 
      RowBox[{"RuntimeOptions", "\[Rule]", "\"\<Speed\>\""}], ",", "\n", 
      "\t\t", 
      RowBox[{"RuntimeAttributes", "\[Rule]", 
@@ -2599,7 +2603,9 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"adjustCoord", "[", "blah_", "]"}], ":=", "\n", "\t", 
   RowBox[{"adjustCoordC", "[", 
-   RowBox[{"blah", ",", " ", "$svgPlotRange", ",", " ", "$svgScaling"}], 
+   RowBox[{
+   "blah", ",", " ", "$svgPlotRange", ",", " ", "$svgScaling", ",", " ", 
+    "$svgViewShift"}], 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"27212f36-036c-4f32-b689-f62def9ac218"]
 }, Open  ]],
@@ -3384,25 +3390,36 @@ Cell[BoxData[{
           RowBox[{"Transpose", "[", "cb2", "]"}]}], "//", "Abs"}], ")"}]}]}], 
      ";", "\n", "\t\t", 
      RowBox[{"crd2", "=", "\n", "\t\t\t", 
-      RowBox[{"adjustCoord", "@", "\n", "\t\t\t\t", 
-       RowBox[{"Map", "[", "\n", "\t", "\t\t\t\t", 
-        RowBox[{
-         RowBox[{
+      RowBox[{"Block", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"$svgViewShift", "=", 
           RowBox[{
-           RowBox[{"scales", "*", 
-            RowBox[{"(", 
-             RowBox[{"#", "-", 
-              RowBox[{"shifts", "[", 
-               RowBox[{"[", "1", "]"}], "]"}]}], ")"}]}], "+", 
-           RowBox[{"shifts", "[", 
-            RowBox[{"[", "2", "]"}], "]"}]}], "&"}], ",", "\n", "\t", 
-         "\t\t\t\t", "crdLists"}], "\n", "\t\t\t\t\t", "]"}]}]}], ";", "\n", 
-     "\t\t", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}], "*", "$svgViewShift"}]}], "}"}], 
+        ",", "\n", "\t\t\t\t", 
+        RowBox[{"adjustCoord", "@", "\n", "\t\t\t\t\t", 
+         RowBox[{"Map", "[", "\n", "\t", "\t", "\t\t\t\t", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"scales", "*", 
+              RowBox[{"(", 
+               RowBox[{"#", "-", 
+                RowBox[{"shifts", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], ")"}]}], "+", 
+             RowBox[{"shifts", "[", 
+              RowBox[{"[", "2", "]"}], "]"}]}], "&"}], ",", "\n", 
+           "\t\t\t\t\t\t", "crdLists"}], "\n", "\t\t\t\t\t\t", "]"}]}]}], 
+       "\n", "\t\t\t\t", "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"crd2", " ", "=", " ", 
       RowBox[{"adjustCoordC", "[", 
        RowBox[{"crd2", ",", " ", "$svgPlotRange", ",", " ", 
         RowBox[{"{", 
-         RowBox[{"1", ",", " ", "1"}], "}"}]}], "]"}]}], ";", "\n", "\t\t", 
+         RowBox[{"1", ",", " ", "1"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", " ", "0"}], "}"}]}], "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"crd3", "=", "\n", "\t\t\t", 
       RowBox[{"Map", "[", "\n", "\t\t\t\t", 
        RowBox[{
@@ -3622,15 +3639,16 @@ Cell[BoxData[{
        "imsize", ",", "\n", "\t", "\t\t\t", "viewbox", ",", "\n", "\t", 
         "\t\t\t", "pr", ",", "\n", "\t", "\t\t\t", "scalingFactors", ",", 
         "\n", "\t", "\t\t\t", "g2", ",", "\n", "\t", "\t\t\t", "svgBody", ",",
-         "\n", "\t\t\t\t", "defs", ",", "\n", "\t\t\t\t", "opr"}], "\n", 
-       "\t\t\t\t", "}"}], ",", "\n", "\t\t\t", 
+         "\n", "\t\t\t\t", "defs", ",", "\n", "\t\t\t\t", "opr", ",", "\n", 
+        "\t\t\t\t", "viewshift"}], "\n", "\t\t\t\t", "}"}], ",", "\n", 
+      "\t\t\t", 
       RowBox[{
        RowBox[{
         RowBox[{"{", 
          RowBox[{
          "pr", ",", " ", "viewbox", ",", " ", "imsize", ",", " ", 
-          "scalingFactors", ",", " ", "g2", ",", "\n", "\t\t\t\t", "opr"}], 
-         "\n", "\t\t\t\t", "}"}], "=", "\n", "\t\t\t\t", 
+          "scalingFactors", ",", " ", "g2", ",", "\n", "\t\t\t\t", "opr", ",",
+           " ", "viewshift"}], "\n", "\t\t\t\t", "}"}], "=", "\n", "\t\t\t\t", 
         RowBox[{"prepareSVGGraphics", "[", 
          RowBox[{"g", ",", " ", "ops"}], "]"}]}], ";", "\n", "\t", "\t\t", 
        RowBox[{"Block", "[", "\n", "\t\t\t\t", 
@@ -3638,8 +3656,9 @@ Cell[BoxData[{
          RowBox[{"{", "\n", "\t\t\t\t\t", 
           RowBox[{
            RowBox[{"$origPlotRange", "=", "opr"}], ",", "\n", "\t\t\t\t\t", 
-           RowBox[{"$svgPlotRange", "=", "pr"}], ",", "\n", "\t", "\t", 
-           "\t\t\t", 
+           RowBox[{"$svgPlotRange", "=", "pr"}], ",", "\n", "\t\t\t\t\t", 
+           RowBox[{"$svgViewShift", "=", "viewshift"}], ",", "\n", 
+           "\t\t\t\t\t", 
            RowBox[{"$svgViewBox", "=", "viewbox"}], ",", "\n", "\t", 
            "\t\t\t\t", 
            RowBox[{"$svgViewSize", "=", "imsize"}], ",", "\n", "\t", 
@@ -3712,8 +3731,8 @@ Cell[BoxData[{
                  RowBox[{
                  "\"\<http://www.w3.org/2000/xmlns/\>\"", ",", 
                   "\"\<xmlns\>\""}], "}"}], "\[Rule]", 
-                "\"\<http://www.w3.org/1999/xhtml\>\""}]}], "\n", "\t", "\t", 
-              "\t", "\t\t\t", "}"}]}], ",", "\n", "\t", "\t", "\t", "\t\t", 
+                "\"\<http://www.w3.org/2000/svg\>\""}]}], "\n", 
+              "\t\t\t\t\t\t", "}"}]}], ",", "\n", "\t\t\t\t\t", 
             RowBox[{
              RowBox[{"If", "[", 
               RowBox[{
@@ -3737,7 +3756,7 @@ Cell[BoxData[{
    "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"5f952b1a-b63a-4f7a-976b-2cbb30a25bec"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3758,14 +3777,14 @@ Cell[BoxData[
        RowBox[{"Flatten", "@", 
         RowBox[{"{", 
          RowBox[{"ops", ",", " ", 
-          RowBox[{"Options", "[", "g", "]"}]}], "}"}]}]}], ",", "\n", "\t", 
-      "\t\t", "imsize", ",", "\n", "\t", "\t\t", "viewbox", ",", "\n", "\t", 
-      "\t\t", "pr", ",", "\n", "\t", "\t\t", "prpad", ",", "\n", "\t", "\t\t",
-       "svgBody", ",", "\n", "\t", "\t\t", "defs", ",", "\n", "\t\t\t", 
-      "extra", ",", "\n", "\t\t\t", "$$", ",", "\n", "\t\t\t", "asp", ",", 
-      "\n", "\t\t\t", "scalingFactors", ",", "\n", "\t\t\t", "gpr", ",", "\n",
-       "\t\t\t", "opr", ",", " ", "oim"}], "\n", "\t\t\t", "}"}], ",", "\n", 
-    "\t\t", 
+          RowBox[{"Options", "[", "g", "]"}]}], "}"}]}]}], ",", "\n", 
+      "\t\t\t", "imsize", ",", "\n", "\t\t\t", "viewboxBase", ",", "\n", 
+      "\t\t\t", "viewbox", ",", "\n", "\t\t\t", "pr", ",", "\n", "\t", "\t\t",
+       "prpad", ",", "\n", "\t", "\t\t", "svgBody", ",", "\n", "\t", "\t\t", 
+      "defs", ",", "\n", "\t\t\t", "extra", ",", "\n", "\t\t\t", "$$", ",", 
+      "\n", "\t\t\t", "asp", ",", "\n", "\t\t\t", "scalingFactors", ",", "\n",
+       "\t\t\t", "gpr", ",", "\n", "\t\t\t", "opr", ",", " ", "oim", ",", " ",
+       "viewshift"}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
     RowBox[{
      RowBox[{"asp", "=", 
       RowBox[{"getAspRat", "[", "opp", "]"}]}], ";", "\n", "\t\t", 
@@ -3814,6 +3833,18 @@ Cell[BoxData[
       RowBox[{"Join", "[", 
        RowBox[{"scalingFactors", ",", " ", "scalingFactors"}], "]"}]}], ";", 
      "\n", "\t\t", 
+     RowBox[{"viewboxBase", "=", "viewbox"}], ";", "\n", "\t\t", 
+     RowBox[{"viewshift", "=", 
+      RowBox[{"viewboxBase", "[", 
+       RowBox[{"[", 
+        RowBox[{";;", "2"}], "]"}], "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{"viewbox", "=", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", "0", ",", " ", 
+        RowBox[{"viewbox", "[", 
+         RowBox[{"[", "3", "]"}], "]"}], ",", " ", 
+        RowBox[{"viewbox", "[", 
+         RowBox[{"[", "4", "]"}], "]"}]}], "}"}]}], ";", "\n", "\t\t", 
      RowBox[{"gpr", "*=", "scalingFactors"}], ";", "\n", "\t\t", 
      RowBox[{"imsize", "=", 
       RowBox[{"Ceiling", "@", 
@@ -3843,10 +3874,11 @@ Cell[BoxData[
           RowBox[{"{", 
            RowBox[{"extra", ",", " ", 
             RowBox[{"First", "@", "g"}]}], "}"}]}]}], "]"}], ",", "\n", 
-       "\t\t\t", "opr"}], "\n", "\t\t\t", "}"}]}]}], "\n", "\t\t", 
+       "\t\t\t", "opr", ",", " ", "viewshift"}], "\n", "\t\t\t", "}"}]}]}], 
+   "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"edab59ae-2913-4bfd-a41f-23d46c577557"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -5251,7 +5283,7 @@ Cell[BoxData[{
    ")"}]}]}], \
 "CodeInput",ExpressionUUID->"d11d6d34-aa5f-4093-9625-475532355890"]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
