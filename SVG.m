@@ -863,6 +863,14 @@ toSVGProp[key_, val_]:=
 toXML//Clear
 
 
+toXML[svgElement["style", attrs_]]:=
+  XMLElement["style", 
+    {},
+    KeyValueMap[
+      #<>" { "<>CSSGenerate[#2]<>" }"&,
+      Association@attrs["Styles"]
+      ]
+    ]
 toXML[svgElement[head_, attrs_]]:=
   XMLElement[head, 
     DeleteDuplicatesBy[First]@KeyValueMap[toSVGProp,
@@ -1108,6 +1116,14 @@ register[svgMarker, "marker", id_?StringQ->"id", body_->"Body"]
 
 
 register[svgText, "text", body_->"Body", {x_?NumericQ->"x", y_?NumericQ->"y"}]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*style*)
+
+
+
+register[svgStyle, "style", (styles_?OptionQ)->"Styles"]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1394,44 +1410,81 @@ GraphicsComplexBox[a___]:=
 
 
 
+$fontSettings={FontSize, FontWeight, FontSlant, FontFamily};
+
+
+prepTextStyles[bops_]:=
+  With[{asd=Association@bops},
+    {
+      Style->
+        Normal@DeleteCases[None]@
+          Join[
+            <|
+              "font"->
+                StringTrim@StringDelete[
+                  CSSGenerate@Normal@DeleteCases[None]@
+                    AssociationThread[
+                      $fontSettings,
+                      Lookup[asd, $fontSettings, None]
+                      ],
+                  (Except[WhitespaceCharacter]..~~":")|";"
+                  ]
+              |>,
+            KeyDrop[
+              asd,
+              Prepend[$fontSettings, FontColor]
+              ]
+            ],
+      Replace[Lookup[bops, FontColor, Nothing],
+        c_?ColorQ:>(FaceForm[Filling]->c)
+        ]
+      }
+    ]
+
+
 alias@
 Text[body_, coord_, diffs:{_, _}|None:None, o:opsPat[]]:=
   With[
     {
-      bops=If[MatchQ[body, Style], List@@Rest@body, {}],
-      boo=toNotStupidString@If[MatchQ[body, Style], First@body, body]
+      bops=If[MatchQ[body, _Style], List@@Rest@body, {}],
+      boo=toNotStupidString@If[MatchQ[body, _Style], First@body, body],
+      id=ToString@RandomInteger[{100, 999}],
+      pos=
+        Sequence@@If[diffs===None, 
+          {},
+          {
+            Which[
+              diffs[[1]]>=.5,
+                "text-anchor"->"end",
+              diffs[[1]]<=-.5,
+                "text-anchor"->"start",
+              True,
+                "text-anchor"->"middle"
+              ],
+            Which[
+              diffs[[2]]>=.5,
+                "dominant-baseline"->"hanging",
+              diffs[[2]]<=-.5,
+                "dominant-baseline"->"baseline",
+              True,
+                "dominant-baseline"->"middle"
+              ]
+            }
+          ]
       },
     svgText[
-      boo, adjustCoord@coord, 
-      Sequence@@If[diffs===None, 
-        {},
-        {
-          Which[
-            diffs[[1]]>=.5,
-              "text-anchor"->"end",
-            diffs[[1]]<=-.5,
-              "text-anchor"->"start",
-            True,
-              "text-anchor"->"middle"
-            ],
-          Which[
-            diffs[[2]]>=.5,
-              "dominant-baseline"->"hanging",
-            diffs[[2]]<=-.5,
-              "dominant-baseline"->"baseline",
-            True,
-              "dominant-baseline"->"middle"
-            ]
-          }
-        ], 
-      DeleteCases[
-        Flatten@{
-          o,
-          Style->bops
-          },
-        EdgeForm[Thickness]->_
+        boo, 
+        adjustCoord@coord, 
+        pos, 
+        DeleteCases[
+          Flatten@
+            {
+              o, 
+              prepTextStyles@bops
+              },
+          EdgeForm[Thickness]->_
+          ]
         ]
-      ]
     ]
 
 
@@ -1716,6 +1769,9 @@ ToSVG[g_Graphics,
 
 
 
+$viewCorner={0, 0};
+
+
 prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
   Module[
     {
@@ -1732,8 +1788,12 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       asp,
       scalingFactors,
       gpr,
-      opr, oim, viewshift
+      opr, oim, viewshift,
+      corner
       },
+    corner=
+      Lookup[{ops}, "ViewBoxCorner", $viewCorner];
+    opp=FilterRules[{opp}, Options[Graphics]];
     asp=getAspRat[opp];
     imsize=getImSize[opp, asp];
     gpr=getPlotRange@g;
@@ -1748,8 +1808,8 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       ];
     viewbox*=Join[scalingFactors, scalingFactors];
     viewboxBase=viewbox;
-    viewshift=viewboxBase[[;;2]];
-    viewbox={0, 0, viewbox[[3]], viewbox[[4]]};
+    viewshift=viewboxBase[[;;2]]-corner;
+    viewbox={corner[[1]], corner[[2]], viewbox[[3]], viewbox[[4]]};
     gpr*=scalingFactors;
     imsize=Ceiling@(viewbox[[3;;4]]);
     {

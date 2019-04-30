@@ -1914,7 +1914,24 @@ Cell[BoxData[
   "Clear"}]], \
 "CodeInput",ExpressionUUID->"d80bb86f-b3ab-4d4d-962f-fe365666e061"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"toXML", "[", 
+   RowBox[{"svgElement", "[", 
+    RowBox[{"\"\<style\>\"", ",", " ", "attrs_"}], "]"}], "]"}], ":=", "\n", 
+  "\t", 
+  RowBox[{"XMLElement", "[", 
+   RowBox[{"\"\<style\>\"", ",", " ", "\n", "\t\t", 
+    RowBox[{"{", "}"}], ",", "\n", "\t\t", 
+    RowBox[{"KeyValueMap", "[", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"#", "<>", "\"\< { \>\"", "<>", 
+        RowBox[{"CSSGenerate", "[", "#2", "]"}], "<>", "\"\< }\>\""}], "&"}], 
+      ",", "\n", "\t\t\t", 
+      RowBox[{"Association", "@", 
+       RowBox[{"attrs", "[", "\"\<Styles\>\"", "]"}]}]}], "\n", "\t\t\t", 
+     "]"}]}], "\n", "\t\t", "]"}]}], "\n", 
  RowBox[{
   RowBox[{"toXML", "[", 
    RowBox[{"svgElement", "[", 
@@ -1950,9 +1967,9 @@ Cell[BoxData[
          RowBox[{"toXML", "@", 
           RowBox[{"toEl", "[", "s", "]"}]}]}]}], "\n", "\t\t\t", "]"}]}]}]}], 
    "\n", "\t\t", 
-   "]"}]}]], \
+   "]"}]}]}], \
 "CodeInput",ExpressionUUID->"3f17de62-c8a5-44f8-aafb-a3bf23140272"]
-}, Closed]]
+}, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2441,6 +2458,21 @@ Cell[BoxData[
       RowBox[{"y_", "?", "NumericQ"}], "\[Rule]", "\"\<y\>\""}]}], "}"}]}], 
   "]"}]], "CodeInput",ExpressionUUID->"5487fcb1-b8e4-4df3-b6b0-617e1a4bd30a"]
 }, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\[LeftCeiling]style\[RightFloor]", "CodeSubsubsubsection",
+ Evaluatable->True,ExpressionUUID->"06dd1428-9905-4f25-a4f0-4d04fd0a6fd2"],
+
+Cell[BoxData[
+ RowBox[{"register", "[", 
+  RowBox[{"svgStyle", ",", " ", "\"\<style\>\"", ",", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"styles_", "?", "OptionQ"}], ")"}], "\[Rule]", 
+    "\"\<Styles\>\""}]}], 
+  "]"}]], "CodeInput",ExpressionUUID->"b54b8bc1-0be0-4fb2-83ae-afd9c0e8ce81"]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3126,6 +3158,82 @@ Cell["\[LeftCeiling]Text\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
+  RowBox[{"$fontSettings", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "FontSize", ",", " ", "FontWeight", ",", " ", "FontSlant", ",", " ", 
+     "FontFamily"}], "}"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"d23b8bf3-309c-44aa-83ee-5595e66c9889"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"prepTextStyles", "[", "bops_", "]"}], ":=", "\n", "\t", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"asd", "=", 
+      RowBox[{"Association", "@", "bops"}]}], "}"}], ",", "\n", "\t\t", 
+    RowBox[{"{", "\n", "\t\t\t", 
+     RowBox[{
+      RowBox[{"Style", "->", "\n", "\t\t\t\t", 
+       RowBox[{"Normal", "@", 
+        RowBox[{
+         RowBox[{"DeleteCases", "[", "None", "]"}], "@", "\n", "\t", "\t", 
+         "\t\t\t", 
+         RowBox[{"Join", "[", "\n", "\t", "\t", "\t\t\t\t", 
+          RowBox[{
+           RowBox[{"<|", "\n", "\t", "\t", "\t\t\t\t\t", 
+            RowBox[{
+            "\"\<font\>\"", "\[Rule]", "\n", "\t", "\t", "\t\t\t\t\t\t", 
+             RowBox[{"StringTrim", "@", 
+              RowBox[{"StringDelete", "[", "\n", "\t", "\t", "\t\t\t\t\t\t\t", 
+               RowBox[{
+                RowBox[{"CSSGenerate", "@", 
+                 RowBox[{"Normal", "@", 
+                  RowBox[{
+                   RowBox[{"DeleteCases", "[", "None", "]"}], "@", "\n", "\t",
+                    "\t", "\t\t\t\t\t\t\t\t", 
+                   RowBox[{
+                   "AssociationThread", "[", "\n", "\t", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{
+                    "$fontSettings", ",", "\n", "\t", "\t", 
+                    "\t\t\t\t\t\t\t\t\t", 
+                    RowBox[{"Lookup", "[", 
+                    RowBox[{
+                    "asd", ",", " ", "$fontSettings", ",", " ", "None"}], 
+                    "]"}]}], "\n", "\t", "\t", "\t\t\t\t\t\t\t\t\t", 
+                    "]"}]}]}]}], ",", "\n", "\t", "\t", "\t\t\t\t\t\t\t", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"Except", "[", "WhitespaceCharacter", "]"}], 
+                    ".."}], "~~", "\"\<:\>\""}], ")"}], "|", "\"\<;\>\""}]}], 
+               "\n", "\t", "\t", "\t\t\t\t\t\t\t", "]"}]}]}], "\n", "\t", 
+            "\t", "\t\t\t\t\t", "|>"}], ",", "\n", "\t", "\t", "\t\t\t\t", 
+           RowBox[{"KeyDrop", "[", "\n", "\t", "\t", "\t\t\t\t\t", 
+            RowBox[{"asd", ",", "\n", "\t", "\t", "\t\t\t\t\t", 
+             RowBox[{"Prepend", "[", 
+              RowBox[{"$fontSettings", ",", " ", "FontColor"}], "]"}]}], "\n",
+             "\t\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t\t", "]"}]}]}]}], 
+      ",", "\n", "\t\t\t", 
+      RowBox[{"Replace", "[", 
+       RowBox[{
+        RowBox[{"Lookup", "[", 
+         RowBox[{"bops", ",", " ", "FontColor", ",", " ", "Nothing"}], "]"}], 
+        ",", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{"c_", "?", "ColorQ"}], ":>", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"FaceForm", "[", "Filling", "]"}], "\[Rule]", "c"}], 
+          ")"}]}]}], "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "}"}]}], "\n",
+    "\t\t", "]"}]}]], \
+"CodeInput",ExpressionUUID->"dfd0f068-2335-4514-93c0-b4d3ba03bf63"],
+
+Cell[BoxData[
+ RowBox[{
   RowBox[{"alias", "@", "\n", 
    RowBox[{"Text", "[", 
     RowBox[{"body_", ",", " ", "coord_", ",", " ", 
@@ -3144,7 +3252,7 @@ Cell[BoxData[
        RowBox[{"If", "[", 
         RowBox[{
          RowBox[{"MatchQ", "[", 
-          RowBox[{"body", ",", " ", "Style"}], "]"}], ",", " ", 
+          RowBox[{"body", ",", " ", "_Style"}], "]"}], ",", " ", 
          RowBox[{"List", "@@", 
           RowBox[{"Rest", "@", "body"}]}], ",", " ", 
          RowBox[{"{", "}"}]}], "]"}]}], ",", "\n", "\t\t\t", 
@@ -3153,68 +3261,80 @@ Cell[BoxData[
         RowBox[{"If", "[", 
          RowBox[{
           RowBox[{"MatchQ", "[", 
-           RowBox[{"body", ",", " ", "Style"}], "]"}], ",", " ", 
-          RowBox[{"First", "@", "body"}], ",", " ", "body"}], "]"}]}]}]}], 
-     "\n", "\t", "\t\t", "}"}], ",", "\n", "\t", "\t", 
-    RowBox[{"svgText", "[", "\n", "\t\t\t", 
-     RowBox[{"boo", ",", " ", 
-      RowBox[{"adjustCoord", "@", "coord"}], ",", " ", "\n", "\t\t\t", 
-      RowBox[{"Sequence", "@@", 
-       RowBox[{"If", "[", 
-        RowBox[{
-         RowBox[{"diffs", "===", "None"}], ",", " ", "\n", "\t\t\t\t", 
-         RowBox[{"{", "}"}], ",", "\n", "\t\t\t\t", 
-         RowBox[{"{", "\n", "\t\t\t\t\t", 
-          RowBox[{
-           RowBox[{"Which", "[", "\n", "\t\t\t\t\t\t", 
-            RowBox[{
+           RowBox[{"body", ",", " ", "_Style"}], "]"}], ",", " ", 
+          RowBox[{"First", "@", "body"}], ",", " ", "body"}], "]"}]}]}], ",", 
+      "\n", "\t\t\t", 
+      RowBox[{"id", "=", 
+       RowBox[{"ToString", "@", 
+        RowBox[{"RandomInteger", "[", 
+         RowBox[{"{", 
+          RowBox[{"100", ",", " ", "999"}], "}"}], "]"}]}]}], ",", "\n", 
+      "\t\t\t", 
+      RowBox[{"pos", "=", "\n", "\t\t\t\t", 
+       RowBox[{"Sequence", "@@", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"diffs", "===", "None"}], ",", " ", "\n", "\t", "\t\t\t\t", 
+          
+          RowBox[{"{", "}"}], ",", "\n", "\t", "\t\t\t\t", 
+          RowBox[{"{", "\n", "\t", "\t\t\t\t\t", 
+           RowBox[{
+            RowBox[{"Which", "[", "\n", "\t", "\t\t\t\t\t\t", 
              RowBox[{
-              RowBox[{"diffs", "[", 
-               RowBox[{"[", "1", "]"}], "]"}], ">=", ".5"}], ",", "\n", 
-             "\t\t\t\t\t\t\t", 
-             RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<end\>\""}], ",", 
-             "\n", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"diffs", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ">=", ".5"}], ",", "\n", "\t",
+               "\t\t\t\t\t\t\t", 
+              RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<end\>\""}], ",", 
+              "\n", "\t", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"diffs", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "<=", 
+               RowBox[{"-", ".5"}]}], ",", "\n", "\t", "\t\t\t\t\t\t\t", 
+              RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<start\>\""}], 
+              ",", "\n", "\t", "\t\t\t\t\t\t", "True", ",", "\n", "\t", 
+              "\t\t\t\t\t\t\t", 
+              RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<middle\>\""}]}], 
+             "\n", "\t", "\t\t\t\t\t\t", "]"}], ",", "\n", "\t", "\t\t\t\t\t", 
+            RowBox[{"Which", "[", "\n", "\t", "\t\t\t\t\t\t", 
              RowBox[{
-              RowBox[{"diffs", "[", 
-               RowBox[{"[", "1", "]"}], "]"}], "<=", 
-              RowBox[{"-", ".5"}]}], ",", "\n", "\t\t\t\t\t\t\t", 
-             RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<start\>\""}], ",",
-              "\n", "\t\t\t\t\t\t", "True", ",", "\n", "\t\t\t\t\t\t\t", 
-             RowBox[{"\"\<text-anchor\>\"", "\[Rule]", "\"\<middle\>\""}]}], 
-            "\n", "\t\t\t\t\t\t", "]"}], ",", "\n", "\t\t\t\t\t", 
-           RowBox[{"Which", "[", "\n", "\t\t\t\t\t\t", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"diffs", "[", 
-               RowBox[{"[", "2", "]"}], "]"}], ">=", ".5"}], ",", "\n", 
-             "\t\t\t\t\t\t\t", 
-             RowBox[{
-             "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<hanging\>\""}], ",",
-              "\n", "\t\t\t\t\t\t", 
-             RowBox[{
-              RowBox[{"diffs", "[", 
-               RowBox[{"[", "2", "]"}], "]"}], "<=", 
-              RowBox[{"-", ".5"}]}], ",", "\n", "\t\t\t\t\t\t\t", 
-             RowBox[{
-             "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<baseline\>\""}], 
-             ",", "\n", "\t\t\t\t\t\t", "True", ",", "\n", "\t\t\t\t\t\t\t", 
-             RowBox[{
-             "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<middle\>\""}]}], 
-            "\n", "\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t", "}"}]}], "\n", 
-        "\t\t\t\t", "]"}]}], ",", " ", "\n", "\t\t\t", 
-      RowBox[{"DeleteCases", "[", "\n", "\t\t\t\t", 
+              RowBox[{
+               RowBox[{"diffs", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], ">=", ".5"}], ",", "\n", "\t",
+               "\t\t\t\t\t\t\t", 
+              RowBox[{
+              "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<hanging\>\""}], 
+              ",", "\n", "\t", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"diffs", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "<=", 
+               RowBox[{"-", ".5"}]}], ",", "\n", "\t", "\t\t\t\t\t\t\t", 
+              RowBox[{
+              "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<baseline\>\""}], 
+              ",", "\n", "\t", "\t\t\t\t\t\t", "True", ",", "\n", "\t", 
+              "\t\t\t\t\t\t\t", 
+              RowBox[{
+              "\"\<dominant-baseline\>\"", "\[Rule]", "\"\<middle\>\""}]}], 
+             "\n", "\t", "\t\t\t\t\t\t", "]"}]}], "\n", "\t", "\t\t\t\t\t", 
+           "}"}]}], "\n", "\t", "\t\t\t\t", "]"}]}]}]}], "\n", "\t\t\t", 
+     "}"}], ",", "\n", "\t\t", 
+    RowBox[{"svgText", "[", "\n", "\t\t\t\t", 
+     RowBox[{"boo", ",", " ", "\n", "\t\t\t\t", 
+      RowBox[{"adjustCoord", "@", "coord"}], ",", " ", "\n", "\t\t\t\t", 
+      "pos", ",", " ", "\n", "\t\t\t\t", 
+      RowBox[{"DeleteCases", "[", "\n", "\t\t\t\t\t", 
        RowBox[{
-        RowBox[{"Flatten", "@", 
-         RowBox[{"{", "\n", "\t\t\t\t\t", 
-          RowBox[{"o", ",", "\n", "\t\t\t\t\t", 
-           RowBox[{"Style", "->", "bops"}]}], "\n", "\t\t\t\t\t", "}"}]}], 
-        ",", "\n", "\t\t\t\t", 
+        RowBox[{"Flatten", "@", "\n", "\t\t\t\t\t\t", 
+         RowBox[{"{", "\n", "\t\t\t\t\t\t\t", 
+          RowBox[{"o", ",", " ", "\n", "\t\t\t\t\t\t\t", 
+           RowBox[{"prepTextStyles", "@", "bops"}]}], "\n", "\t", 
+          "\t\t\t\t\t\t", "}"}]}], ",", "\n", "\t\t\t\t\t", 
         RowBox[{
          RowBox[{"EdgeForm", "[", "Thickness", "]"}], "\[Rule]", "_"}]}], 
-       "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "]"}]}], "\n", "\t\t", 
-   "]"}]}]], \
+       "\n", "\t", "\t\t\t\t", "]"}]}], "\n", "\t\t\t\t", "]"}]}], "\n", 
+   "\t\t", "]"}]}]], \
 "CodeInput",ExpressionUUID->"f7273db9-3d59-4afb-a142-14d20c030578"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3771,6 +3891,13 @@ Cell["\[LeftCeiling]prepareSVGGraphics\[RightFloor]", "CodeSubsubsubsection",
 
 Cell[BoxData[
  RowBox[{
+  RowBox[{"$viewCorner", "=", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", " ", "0"}], "}"}]}], 
+  ";"}]], "CodeInput",ExpressionUUID->"28217ee1-5c65-4851-b850-f0ab403bf6ac"],
+
+Cell[BoxData[
+ RowBox[{
   RowBox[{"prepareSVGGraphics", "[", 
    RowBox[{"g_Graphics", ",", " ", 
     RowBox[{"ops", ":", 
@@ -3790,8 +3917,20 @@ Cell[BoxData[
       "defs", ",", "\n", "\t\t\t", "extra", ",", "\n", "\t\t\t", "$$", ",", 
       "\n", "\t\t\t", "asp", ",", "\n", "\t\t\t", "scalingFactors", ",", "\n",
        "\t\t\t", "gpr", ",", "\n", "\t\t\t", "opr", ",", " ", "oim", ",", " ",
-       "viewshift"}], "\n", "\t\t\t", "}"}], ",", "\n", "\t\t", 
+       "viewshift", ",", "\n", "\t\t\t", "corner"}], "\n", "\t\t\t", "}"}], 
+    ",", "\n", "\t\t", 
     RowBox[{
+     RowBox[{"corner", "=", "\n", "\t\t\t", 
+      RowBox[{"Lookup", "[", 
+       RowBox[{
+        RowBox[{"{", "ops", "}"}], ",", " ", "\"\<ViewBoxCorner\>\"", ",", 
+        " ", "$viewCorner"}], "]"}]}], ";", "\n", "\t\t", 
+     RowBox[{"opp", "=", 
+      RowBox[{"FilterRules", "[", 
+       RowBox[{
+        RowBox[{"{", "opp", "}"}], ",", " ", 
+        RowBox[{"Options", "[", "Graphics", "]"}]}], "]"}]}], ";", "\n", 
+     "\t\t", 
      RowBox[{"asp", "=", 
       RowBox[{"getAspRat", "[", "opp", "]"}]}], ";", "\n", "\t\t", 
      RowBox[{"imsize", "=", 
@@ -3841,12 +3980,18 @@ Cell[BoxData[
      "\n", "\t\t", 
      RowBox[{"viewboxBase", "=", "viewbox"}], ";", "\n", "\t\t", 
      RowBox[{"viewshift", "=", 
-      RowBox[{"viewboxBase", "[", 
-       RowBox[{"[", 
-        RowBox[{";;", "2"}], "]"}], "]"}]}], ";", "\n", "\t\t", 
+      RowBox[{
+       RowBox[{"viewboxBase", "[", 
+        RowBox[{"[", 
+         RowBox[{";;", "2"}], "]"}], "]"}], "-", "corner"}]}], ";", "\n", 
+     "\t\t", 
      RowBox[{"viewbox", "=", 
       RowBox[{"{", 
-       RowBox[{"0", ",", " ", "0", ",", " ", 
+       RowBox[{
+        RowBox[{"corner", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+        RowBox[{"corner", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], ",", " ", 
         RowBox[{"viewbox", "[", 
          RowBox[{"[", "3", "]"}], "]"}], ",", " ", 
         RowBox[{"viewbox", "[", 
@@ -3884,7 +4029,7 @@ Cell[BoxData[
    "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"edab59ae-2913-4bfd-a41f-23d46c577557"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -5164,8 +5309,8 @@ Cell[BoxData[{
               RowBox[{"Directive", "[", "d___", "]"}], "\[RuleDelayed]", 
               "d"}]}], "\n", "\t\t\t\t\t", "}"}]}], "//", "Flatten"}]}], "\n",
          "\t\t\t", "]"}]}]}]}], "\n", "\t\t", "]"}]}], 
-  ";"}]}], \
-"CodeInput",ExpressionUUID->"fdcf5169-507f-43ca-9991-84447cb6c0fa"]
+  ";"}]}], "CodeInput",ExpressionUUID->"fdcf5169-507f-43ca-9991-84447cb6c0fa"]\
+
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -5383,7 +5528,7 @@ Cell["", "SectionSeparator",ExpressionUUID->"04101e11-9cad-42d7-9f87-\
 a3306437e5d9"]
 },
 WindowSize->{808, 755},
-WindowMargins->{{Automatic, 34}, {10, Automatic}},
+WindowMargins->{{Automatic, 292}, {0, Automatic}},
 TaggingRules->{
  "UUIDButtons" -> {
    "Active" -> {
