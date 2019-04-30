@@ -40,6 +40,9 @@ CSSGenerate::usage=
 prepareSVGGraphics::usage="";
 getViewBox::usage="";
 getPlotRange::usage="";
+getImSize::usage="";
+getAspRat::usage="";
+getPlotRangePad::usage="";
 axesAndFrame::usage="";
 toSVGCore::usage="";
 exportGraphics::usage="";
@@ -1177,7 +1180,8 @@ Currently directives have to be manually passed down but this isn\[CloseCurlyQuo
 
 
 adjustCoordC=
-  Compile[{{xy, _Real, 1}, {pr, _Real, 2}, {scaling, _Real, 1}},
+  Compile[
+    {{xy, _Real, 1}, {pr, _Real, 2}, {scaling, _Real, 1}},
     {xy[[1]]*scaling[[1]], pr[[2, 2]]-(scaling[[2]]*xy[[2]]-pr[[2, 1]])},
     RuntimeOptions->"Speed",
     RuntimeAttributes->{Listable}
@@ -1192,7 +1196,7 @@ adjustCoord[blah_]:=
 
 
 alias@
-Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
+Disk[center:{_?NumberQ, _?NumberQ}, rad:notOp[]:Automatic, ops:opsPat[]]:=
   If[ListQ@center[[1]],
     MapThread[svgCircle[##, ops]&, 
       {
@@ -1215,7 +1219,10 @@ Disk[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
         ops
         ]
       ]
-    ]
+    ];
+alias@
+Disk[rad:notOp[]:Automatic, ops:opsPat[]]:=
+  toEl[{0, 0}, rad, ops];
 
 
 alias@
@@ -1509,7 +1516,12 @@ ToSVG[g_Graphics,
   Block[
     {
       $defaultDirectives=
-        Replace[defaultDirectives, {Automatic:>$defaultDirectives}]
+        Replace[defaultDirectives, 
+          {
+            Automatic:>$defaultDirectives,
+            None->{}
+            }
+          ]
       },
     Module[
       {
@@ -1584,25 +1596,11 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       scalingFactors,
       gpr
       },
-    asp=Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1];
-    imsize=
-      4/3*Replace[OptionValue[Graphics, opp, ImageSize],
-        {
-          Automatic:>
-           {1, asp}*360,
-          n_?NumericQ:>
-            {1, asp}*n
-          }
-        ];
+    asp=getAspRat[opp];
+    imsize=getImSize[opp, asp];
     gpr=getPlotRange@g;
     viewbox=Flatten@Transpose@gpr;
-    prpad=
-      Replace[OptionValue[Graphics, opp, PlotRangePadding],
-        {
-          i:_?NumericQ|_Scaled:>{i, i},
-          Except[{_, _}]->{Scaled[.02], Scaled[.02]}
-          }
-        ];
+    prpad=getPlotRangePad[opp];
     {prpad, viewbox}=getViewBox[viewbox, prpad, imsize];
     extra=axesAndFrame[opp, gpr, prpad];
     scalingFactors=imsize/viewbox[[3;;4]];
@@ -1611,9 +1609,62 @@ prepareSVGGraphics[g_Graphics, ops:OptionsPattern[]]:=
       ];
     viewbox*=Join[scalingFactors, scalingFactors];
     gpr*=scalingFactors;
-    imsize=Ceiling@viewbox[[3;;4]];
-    {gpr, viewbox, imsize, scalingFactors, ReplacePart[g, 1->{extra, First@g}]}
+    imsize=Ceiling@(viewbox[[3;;4]]);
+    {
+      gpr, 
+      Flatten@{Floor[viewbox[[;;2]]], Ceiling@viewbox[[3;;4]]}, 
+      imsize, scalingFactors, 
+      ReplacePart[g, 1->{extra, First@g}]
+      }
     ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*getPlotRangePad*)
+
+
+
+getPlotRangePad[opp_]:=
+  Replace[OptionValue[Graphics, opp, PlotRangePadding],
+    {
+      i:_?NumericQ|_Scaled:>{i, i},
+      Except[{_, _}]->{Scaled[.02], Scaled[.02]}
+      }
+    ];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*getAspRat*)
+
+
+
+getAspRat[opp_]:=
+  Replace[OptionValue[Graphics, opp, AspectRatio], Except[_?NumericQ]->1];
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*getImSize*)
+
+
+
+getImSize[opp_, asp_]:=
+  4/3*
+    Replace[
+      Replace[OptionValue[Graphics, opp, ImageSize],
+        {
+          Automatic:>
+           {1, asp}*360,
+          n_?NumericQ:>
+            {1, asp}*n
+          }
+        ],
+     {
+       {n_?NumericQ, Automatic}:>
+         {1, asp}*n,
+       {Automatic, n_?NumericQ}:>
+         {asp, 1}*n
+       }
+     ]
 
 
 (* ::Subsubsubsection::Closed:: *)
