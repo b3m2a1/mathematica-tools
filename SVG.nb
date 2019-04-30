@@ -1594,6 +1594,12 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"toSVGString", "[", 
+    RowBox[{"v_", ",", " ", "_", ",", " ", "\"\<JoinForm\>\""}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"ToLowerCase", "[", "v", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"toSVGString", "[", 
     RowBox[{"l_List", ",", " ", "_", ",", " ", "\"\<Dashing\>\""}], "]"}], ":=",
     "\n", "\t", 
    RowBox[{"StringRiffle", "@", 
@@ -1724,7 +1730,7 @@ Cell[BoxData[{
    "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"768c2284-30fe-4f56-86bc-42ff83c9629f"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -2608,7 +2614,7 @@ Cell[BoxData[{
     "$svgViewShift"}], 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"27212f36-036c-4f32-b689-f62def9ac218"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3313,7 +3319,7 @@ Cell[BoxData[
         RowBox[{"\"\<AnnotationData\>\"", "\[Rule]", "d"}], ",", " ", "e"}], 
        "}"}]}]}], "\n", "\t\t", "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"c539acce-d1d0-41af-9eb6-8474dbcebc38"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3446,7 +3452,7 @@ Cell[BoxData[{
         RowBox[{"crd1", "\[Rule]", "crd3"}], "]"}]}], "]"}]}]}], "\n", "\t\t",
     "]"}]}]}], \
 "CodeInput",ExpressionUUID->"73b2c91c-4b0a-45d8-8b4e-660cc5f720ce"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3582,8 +3588,8 @@ Cell[BoxData[
        "]"}]}]}], "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"46aadd91-e314-4f7e-8b0e-302592d6657e"]
-}, Open  ]]
-}, Open  ]]
+}, Closed]]
+}, Closed]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -3756,7 +3762,7 @@ Cell[BoxData[{
    "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"5f952b1a-b63a-4f7a-976b-2cbb30a25bec"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -3878,7 +3884,7 @@ Cell[BoxData[
    "\n", "\t\t", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"edab59ae-2913-4bfd-a41f-23d46c577557"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -5158,8 +5164,8 @@ Cell[BoxData[{
               RowBox[{"Directive", "[", "d___", "]"}], "\[RuleDelayed]", 
               "d"}]}], "\n", "\t\t\t\t\t", "}"}]}], "//", "Flatten"}]}], "\n",
          "\t\t\t", "]"}]}]}]}], "\n", "\t\t", "]"}]}], 
-  ";"}]}], "CodeInput",ExpressionUUID->"fdcf5169-507f-43ca-9991-84447cb6c0fa"]\
-
+  ";"}]}], \
+"CodeInput",ExpressionUUID->"fdcf5169-507f-43ca-9991-84447cb6c0fa"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -5283,7 +5289,7 @@ Cell[BoxData[{
    ")"}]}]}], \
 "CodeInput",ExpressionUUID->"d11d6d34-aa5f-4093-9625-475532355890"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 

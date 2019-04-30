@@ -723,6 +723,8 @@ toSVGString[v_, _, "AbsoluteThickness"]:=
     ];
 toSVGString[v_, _, "CapForm"]:=
   ToLowerCase[v];
+toSVGString[v_, _, "JoinForm"]:=
+  ToLowerCase[v];
 toSVGString[l_List, _, "Dashing"]:=
   StringRiffle@Map[ToString]@
     Module[
