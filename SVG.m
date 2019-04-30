@@ -712,9 +712,17 @@ toSVGString[h_?ColorQ, __]:=
 toSVGString[v_, _, "Style"]:=
   CSSGenerate[Flatten@{Normal@v}];
 toSVGString[v_, _, "Thickness"]:=
-  toSVGString[Scaled[v], None, None];
+  If[StringQ@v, 
+    v,
+    toSVGString[Scaled[v], None, None]
+    ];
 toSVGString[v_, _, "AbsoluteThickness"]:=
-  toSVGString[If[NumericQ@v, Max@{v, 1}, v], None, None]<>"pt";
+  If[StringQ@v, 
+    v,
+    toSVGString[If[NumericQ@v&&v>0, Max@{v, 1}, v], None, None]<>"pt"
+    ];
+toSVGString[v_, _, "CapForm"]:=
+  ToLowerCase[v];
 toSVGString[l_List, _, "Dashing"]:=
   StringRiffle@Map[ToString]@
     Module[

@@ -1555,26 +1555,42 @@ Cell[BoxData[{
    RowBox[{"toSVGString", "[", 
     RowBox[{"v_", ",", " ", "_", ",", " ", "\"\<Thickness\>\""}], "]"}], ":=",
     "\n", "\t", 
-   RowBox[{"toSVGString", "[", 
+   RowBox[{"If", "[", 
     RowBox[{
-     RowBox[{"Scaled", "[", "v", "]"}], ",", " ", "None", ",", " ", "None"}], 
-    "]"}]}], ";"}], "\n", 
+     RowBox[{"StringQ", "@", "v"}], ",", " ", "\n", "\t\t", "v", ",", "\n", 
+     "\t\t", 
+     RowBox[{"toSVGString", "[", 
+      RowBox[{
+       RowBox[{"Scaled", "[", "v", "]"}], ",", " ", "None", ",", " ", 
+       "None"}], "]"}]}], "\n", "\t\t", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"toSVGString", "[", 
     RowBox[{"v_", ",", " ", "_", ",", " ", "\"\<AbsoluteThickness\>\""}], 
     "]"}], ":=", "\n", "\t", 
-   RowBox[{
-    RowBox[{"toSVGString", "[", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"StringQ", "@", "v"}], ",", " ", "\n", "\t\t", "v", ",", "\n", 
+     "\t\t", 
      RowBox[{
-      RowBox[{"If", "[", 
+      RowBox[{"toSVGString", "[", 
        RowBox[{
-        RowBox[{"NumericQ", "@", "v"}], ",", " ", 
-        RowBox[{"Max", "@", 
-         RowBox[{"{", 
-          RowBox[{"v", ",", " ", "1"}], "}"}]}], ",", " ", "v"}], "]"}], ",", 
-      " ", "None", ",", " ", "None"}], "]"}], "<>", "\"\<pt\>\""}]}], 
-  ";"}], "\n", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"NumericQ", "@", "v"}], "&&", 
+           RowBox[{"v", ">", "0"}]}], ",", " ", 
+          RowBox[{"Max", "@", 
+           RowBox[{"{", 
+            RowBox[{"v", ",", " ", "1"}], "}"}]}], ",", " ", "v"}], "]"}], 
+        ",", " ", "None", ",", " ", "None"}], "]"}], "<>", "\"\<pt\>\""}]}], 
+    "\n", "\t\t", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"toSVGString", "[", 
+    RowBox[{"v_", ",", " ", "_", ",", " ", "\"\<CapForm\>\""}], "]"}], ":=", 
+   "\n", "\t", 
+   RowBox[{"ToLowerCase", "[", "v", "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"toSVGString", "[", 
@@ -1708,7 +1724,7 @@ Cell[BoxData[{
    "\n", "\t\t", 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"768c2284-30fe-4f56-86bc-42ff83c9629f"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1880,7 +1896,7 @@ Cell[BoxData[{
     RowBox[{"None", "@", "key"}], ",", " ", "val"}], 
    "]"}]}]}], \
 "CodeInput",ExpressionUUID->"ec8faebf-e8b4-4564-80b0-6cee00afaa53"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -4723,7 +4739,7 @@ Cell[BoxData[
    "splitGraphicsList", "[", "e", 
     "]"}]}]}]], \
 "CodeInput",ExpressionUUID->"4ce4013c-015f-4e89-a46d-5acb0135ce3d"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -4966,7 +4982,7 @@ Cell[BoxData[{
    ")"}]}]}], \
 "CodeInput",ExpressionUUID->"d11d6d34-aa5f-4093-9625-475532355890"]
 }, Open  ]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
