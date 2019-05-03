@@ -2320,7 +2320,7 @@ Cell[BoxData[
   "\n", "\t", "]"}]], "CodeInput",
  CellLabel->
   "In[75]:=",ExpressionUUID->"bcfe5ad5-d03a-4ad6-93c3-946a19dcc262"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -2714,8 +2714,12 @@ Cell[BoxData[{
       "\t\t\t", "]"}], ",", "\n", "\t\t", 
      RowBox[{"If", "[", 
       RowBox[{
-       RowBox[{"!", 
-        RowBox[{"NumericQ", "@", "rad"}]}], ",", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"!", 
+          RowBox[{"NumericQ", "@", "rad"}]}], ")"}], "&&", 
+        RowBox[{"(", 
+         RowBox[{"rad", "=!=", "Automatic"}], ")"}]}], ",", "\n", "\t\t\t", 
        RowBox[{"Ellipsoid", "[", 
         RowBox[{"center", ",", " ", "rad", ",", " ", "ops"}], "]"}], ",", 
        "\n", "\t\t\t", 
@@ -2741,10 +2745,11 @@ Cell[BoxData[{
       RowBox[{"ops", ":", 
        RowBox[{"opsPat", "[", "]"}]}]}], "]"}]}], ":=", "\n", "\t", 
    RowBox[{"toEl", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"0", ",", " ", "0"}], "}"}], ",", " ", "rad", ",", " ", "ops"}],
-     "]"}]}], 
+    RowBox[{"Disk", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", "0"}], "}"}], ",", " ", "rad", ",", " ", 
+      "ops"}], "]"}], "]"}]}], 
   ";"}]}], "CodeInput",ExpressionUUID->"d117fa16-e39b-486a-ab4f-afefba117b7e"],
 
 Cell[BoxData[
@@ -2754,41 +2759,55 @@ Cell[BoxData[
     RowBox[{"DiskBox", "[", "a___", "]"}]}], ":=", "\n", "\t", 
    RowBox[{"Disk", "[", "a", "]"}]}], 
   ";"}]], "CodeInput",ExpressionUUID->"dd177c50-77db-479c-b741-c1d8da0af43f"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell["\[LeftCeiling]Circle\[RightFloor]", "CodeSubsubsubsection",
  Evaluatable->True,ExpressionUUID->"f024bff5-d0b8-4d61-a877-f6bacd5a0a1f"],
 
-Cell[BoxData[
+Cell[BoxData[{
  RowBox[{
   RowBox[{
-   RowBox[{"alias", "[", "True", "]"}], "@", "\n", 
-   RowBox[{"Circle", "[", 
-    RowBox[{"center_", ",", " ", 
-     RowBox[{"rad", ":", 
-      RowBox[{"notOp", "[", "]"}], ":", "Automatic"}], ",", " ", 
-     RowBox[{"ops", ":", 
-      RowBox[{"opsPat", "[", "]"}]}]}], "]"}]}], ":=", "\n", "\t", 
-  RowBox[{
-   RowBox[{"toEl", "[", 
-    RowBox[{"Disk", "[", 
-     RowBox[{
-      RowBox[{"adjustCoord", "@", "center"}], ",", " ", "rad", ",", " ", 
-      "ops"}], "]"}], "]"}], "/.", "\n", "\t\t", 
    RowBox[{
-    RowBox[{"svgElement", "[", 
-     RowBox[{"\"\<circle\>\"", ",", " ", "a_"}], "]"}], "\[RuleDelayed]", 
-    RowBox[{"svgElement", "[", 
-     RowBox[{"\"\<circle\>\"", ",", " ", 
-      RowBox[{"Append", "[", 
-       RowBox[{"a", ",", " ", 
-        RowBox[{
-         RowBox[{"FaceForm", "[", "Filling", "]"}], "\[Rule]", "None"}]}], 
-       "]"}]}], 
-     "]"}]}]}]}]], \
-"CodeInput",ExpressionUUID->"30703804-b53e-4947-b1cd-9f7a9757f41c"],
+    RowBox[{"alias", "[", "True", "]"}], "@", "\n", 
+    RowBox[{"Circle", "[", 
+     RowBox[{"center_", ",", " ", 
+      RowBox[{"rad", ":", 
+       RowBox[{"notOp", "[", "]"}], ":", "Automatic"}], ",", " ", 
+      RowBox[{"ops", ":", 
+       RowBox[{"opsPat", "[", "]"}]}]}], "]"}]}], ":=", "\n", "\t", 
+   RowBox[{
+    RowBox[{"toEl", "[", "\n", "\t\t", 
+     RowBox[{"Disk", "[", 
+      RowBox[{"center", ",", " ", "rad", ",", " ", "ops"}], "]"}], "]"}], "/.",
+     "\n", "\t", "\t\t", 
+    RowBox[{
+     RowBox[{"svgElement", "[", 
+      RowBox[{"\"\<circle\>\"", ",", " ", "a_"}], "]"}], "\[RuleDelayed]", 
+     RowBox[{"svgElement", "[", 
+      RowBox[{"\"\<circle\>\"", ",", " ", 
+       RowBox[{"Append", "[", 
+        RowBox[{"a", ",", " ", 
+         RowBox[{
+          RowBox[{"FaceForm", "[", "Filling", "]"}], "\[Rule]", "None"}]}], 
+        "]"}]}], "\n", "\t\t", "]"}]}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"alias", "@", "\n", 
+    RowBox[{"Circle", "[", 
+     RowBox[{
+      RowBox[{"rad", ":", 
+       RowBox[{"notOp", "[", "]"}], ":", "Automatic"}], ",", " ", 
+      RowBox[{"ops", ":", 
+       RowBox[{"opsPat", "[", "]"}]}]}], "]"}]}], ":=", "\n", "\t", 
+   RowBox[{"toEl", "[", 
+    RowBox[{"Circle", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", " ", "0"}], "}"}], ",", " ", "rad", ",", " ", 
+      "ops"}], "]"}], "]"}]}], 
+  ";"}]}], "CodeInput",ExpressionUUID->"30703804-b53e-4947-b1cd-9f7a9757f41c"],
 
 Cell[BoxData[
  RowBox[{
@@ -2798,7 +2817,7 @@ Cell[BoxData[
   "Circle", "[", "a", 
    "]"}]}]], \
 "CodeInput",ExpressionUUID->"c11c4015-96d3-4fb9-a7da-3b94b62771a2"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 

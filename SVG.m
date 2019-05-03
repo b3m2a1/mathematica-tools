@@ -1236,7 +1236,7 @@ Disk[center:{_?NumberQ, _?NumberQ}, rad:notOp[]:Automatic, ops:opsPat[]]:=
           }]
         }
       ],
-    If[!NumericQ@rad,
+    If[(!NumericQ@rad)&&(rad=!=Automatic),
       Ellipsoid[center, rad, ops],
       svgCircle[adjustCoord@center, 
         Replace[rad,
@@ -1248,7 +1248,7 @@ Disk[center:{_?NumberQ, _?NumberQ}, rad:notOp[]:Automatic, ops:opsPat[]]:=
     ];
 alias@
 Disk[rad:notOp[]:Automatic, ops:opsPat[]]:=
-  toEl[{0, 0}, rad, ops];
+  toEl[Disk[{0, 0}, rad, ops]];
 
 
 alias@
@@ -1263,8 +1263,13 @@ DiskBox[a___]:=
 
 alias[True]@
 Circle[center_, rad:notOp[]:Automatic, ops:opsPat[]]:=
-  toEl[Disk[adjustCoord@center, rad, ops]]/.
-    svgElement["circle", a_]:>svgElement["circle", Append[a, FaceForm[Filling]->None]]
+  toEl[
+    Disk[center, rad, ops]]/.
+      svgElement["circle", a_]:>svgElement["circle", Append[a, FaceForm[Filling]->None]
+    ];
+alias@
+Circle[rad:notOp[]:Automatic, ops:opsPat[]]:=
+  toEl[Circle[{0, 0}, rad, ops]];
 
 
 alias@
